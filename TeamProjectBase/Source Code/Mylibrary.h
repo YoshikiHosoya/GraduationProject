@@ -131,7 +131,7 @@ using namespace std;
 
 #define MYLIB_ERRORCOUNT_MAX		(1048576)						// エラーカウント
 
-#define MYLIB_VSHORT_UNSET			(0x000)							// 
+#define MYLIB_VSHORT_UNSET			(0x000)							//
 
 #define MYLIB_HALFSECONDCOUNT		(30)							// 1フレームカウント毎時のカウント
 
@@ -986,7 +986,7 @@ class CLoadInitSetingfromFile
 {
 public:
 	// * [contents] 列挙型定義
-	// * [memo] 
+	// * [memo]
 	// * LOADRESULT -> LR
 	// * MAKE -> M
 	// * BUFFER -> B

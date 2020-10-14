@@ -179,6 +179,7 @@
     <ClCompile Include="Source Code\modelinfo.cpp" />
     <ClCompile Include="Source Code\module.cpp" />
     <ClCompile Include="Source Code\multinumber.cpp" />
+    <ClCompile Include="Source Code\Mylibrary.cpp" />
     <ClCompile Include="Source Code\Pad_XInput.cpp" />
     <ClCompile Include="Source Code\particle.cpp" />
     <ClCompile Include="Source Code\ParticleManager.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="Source Code\modelinfo.h" />
     <ClInclude Include="Source Code\module.h" />
     <ClInclude Include="Source Code\multinumber.h" />
+    <ClInclude Include="Source Code\Mylibrary.h" />
     <ClInclude Include="Source Code\Pad_XInput.h" />
     <ClInclude Include="Source Code\particle.h" />
     <ClInclude Include="Source Code\ParticleManager.h" />
@@ -248,6 +250,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source Code\Resource\icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source Code\mylibrary.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

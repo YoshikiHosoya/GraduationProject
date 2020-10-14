@@ -8,7 +8,7 @@
 // インクルードファイル
 //-------------------------------------------------------------------------------------------------------------
 #include "Mylibrary.h"
-#include "DebugProc.h"
+#include "Debug/DebugProc.h"
 
 /*
 // class CMylibrary func
@@ -772,7 +772,7 @@ bool CMylibrary::Test3DInsidePlanePolygon(CONST D3DXVECTOR3 & posA, CONST D3DXVE
 	vecCA.z = posA.z - posC.z;	// CA辺
 	vecCA.y = 0.0f;				// CA辺
 
-	
+
 
 	// 外積の計算
 	D3DXVec3Cross(&CrossResult, &vecAB, &vecBP);

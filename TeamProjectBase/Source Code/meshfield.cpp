@@ -127,9 +127,9 @@ std::shared_ptr<CMeshField> CMeshField::Create(D3DXVECTOR3 const pos, D3DXVECTOR
 D3DXVECTOR3 CMeshField::SetVtx(INTEGER2 nCnt, INTEGER2 BlockNum)
 {
 	//座標計算
-	return D3DXVECTOR3(-m_size.x * BlockNum.x * 0.5f + m_size.x * nCnt.x,
-						nCnt.x * 0.0f,
-						m_size.z * BlockNum.y * 0.5f - m_size.z * nCnt.y);;
+	return D3DXVECTOR3(-m_size.x * BlockNum.nX * 0.5f + m_size.x * nCnt.nX,
+						nCnt.nX * 0.0f,
+						m_size.z * BlockNum.nY * 0.5f - m_size.z * nCnt.nY);;
 
 }
 
@@ -144,29 +144,29 @@ bool CMeshField::GetHeight(D3DXVECTOR3 &pos)
 	//ポリゴンのID
 	int nNormalID = 0;
 	//縦
-	for (int nCntVertical = 0; nCntVertical < BlockNum.y; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < BlockNum.nY; nCntVertical++)
 	{
 		//横
-		for (int nCntHorizon = 0; nCntHorizon < BlockNum.x; nCntHorizon++, nNormalID += 2)
+		for (int nCntHorizon = 0; nCntHorizon < BlockNum.nX; nCntHorizon++, nNormalID += 2)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (BlockNum.nX + 1)) + nCntHorizon;
 
 			//ベクトル計算
 			//一枚目のポリゴンのベクトル
-			D3DXVECTOR3 VecAB = m_pVtxMeshList[nID]->pos - m_pVtxMeshList[nID + BlockNum.x + 1]->pos;
-			D3DXVECTOR3 VecBC = m_pVtxMeshList[nID + BlockNum.x + 2]->pos - m_pVtxMeshList[nID]->pos;
-			D3DXVECTOR3 VecCA = m_pVtxMeshList[nID + BlockNum.x + 1]->pos - m_pVtxMeshList[nID + BlockNum.x + 2]->pos;
+			D3DXVECTOR3 VecAB = m_pVtxMeshList[nID]->pos - m_pVtxMeshList[nID + BlockNum.nX + 1]->pos;
+			D3DXVECTOR3 VecBC = m_pVtxMeshList[nID + BlockNum.nX + 2]->pos - m_pVtxMeshList[nID]->pos;
+			D3DXVECTOR3 VecCA = m_pVtxMeshList[nID + BlockNum.nX + 1]->pos - m_pVtxMeshList[nID + BlockNum.nX + 2]->pos;
 
 			//二枚目のポリゴンのベクトル
-			D3DXVECTOR3 VecCB = m_pVtxMeshList[nID]->pos - m_pVtxMeshList[nID + BlockNum.x + 2]->pos;
-			D3DXVECTOR3 VecDC = m_pVtxMeshList[nID + BlockNum.x + 2]->pos - m_pVtxMeshList[nID + 1]->pos;
+			D3DXVECTOR3 VecCB = m_pVtxMeshList[nID]->pos - m_pVtxMeshList[nID + BlockNum.nX + 2]->pos;
+			D3DXVECTOR3 VecDC = m_pVtxMeshList[nID + BlockNum.nX + 2]->pos - m_pVtxMeshList[nID + 1]->pos;
 			D3DXVECTOR3 VecBD = m_pVtxMeshList[nID + 1]->pos - m_pVtxMeshList[nID]->pos;
 
 			//各頂点からプレイヤーへのベクトル
-			D3DXVECTOR3 VecAP = pos - m_pVtxMeshList[nID + BlockNum.x + 1]->pos;
+			D3DXVECTOR3 VecAP = pos - m_pVtxMeshList[nID + BlockNum.nX + 1]->pos;
 			D3DXVECTOR3 VecBP = pos - m_pVtxMeshList[nID]->pos;
-			D3DXVECTOR3 VecCP = pos - m_pVtxMeshList[nID + BlockNum.x + 2]->pos;
+			D3DXVECTOR3 VecCP = pos - m_pVtxMeshList[nID + BlockNum.nX + 2]->pos;
 			D3DXVECTOR3 VecDP = pos - m_pVtxMeshList[nID + 1]->pos;
 
 			//空っぽ

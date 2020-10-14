@@ -84,102 +84,34 @@ bool CHossoLibrary::CheckMove(DIRECTION direction)
 //------------------------------------------------------------------------------
 //選択肢用チェック関数
 //------------------------------------------------------------------------------
-CHossoLibrary::DIRECTION CHossoLibrary::CheckSelect()
+DIRECTION CHossoLibrary::CheckSelect()
 {
-	CHossoLibrary::DIRECTION direction = CHossoLibrary::NONE;
+	DIRECTION direction = DIRECTION::NONE;
 
 	//↑
 	if ((m_pKeyboard->GetTrigger(DIK_W) || m_pKeyboard->GetTrigger(DIK_UP) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_UP,1) || (m_fLeftStickY / JOY_MAX_RANGE > STICK_ON && m_bStickY == false)))
 	{
-		direction = CHossoLibrary::UP;
+		direction = DIRECTION::UP;
 	}
 	//↓
 	else if ((m_pKeyboard->GetTrigger(DIK_S) || m_pKeyboard->GetTrigger(DIK_DOWN) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_DOWN, 1) || (m_fLeftStickY / JOY_MAX_RANGE < -STICK_ON && m_bStickY == false)))
 	{
-		direction = CHossoLibrary::DOWN;
+		direction = DIRECTION::DOWN;
 	}
 	//→
 	else if ((m_pKeyboard->GetTrigger(DIK_D) || m_pKeyboard->GetTrigger(DIK_RIGHT) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_RIGHT, 1) || (m_fLeftStickX / JOY_MAX_RANGE > STICK_ON && m_bStickX == false)))
 	{
-		direction = CHossoLibrary::RIGHT;
+		direction = DIRECTION::RIGHT;
 	}
 	//←
 	else if ((m_pKeyboard->GetTrigger(DIK_A) || m_pKeyboard->GetTrigger(DIK_LEFT) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_LEFT, 1)  || (m_fLeftStickX / JOY_MAX_RANGE < -STICK_ON && m_bStickX == false)))
 	{
-		direction = CHossoLibrary::LEFT;
+		direction = DIRECTION::LEFT;
 	}
 
 	return direction;
 }
 
-//------------------------------------------------------------------------------
-//ジャンプ
-//------------------------------------------------------------------------------
-bool CHossoLibrary::CheckJump(INPUTTYPE type)
-{
-	switch (type)
-	{
-	case CHossoLibrary::PRESS:
-		if (m_pKeyboard->GetPress(DIK_SPACE) || m_pXInput->GetPress(CPad_XInput::JOYPADKEY_A))
-		{
-			return true;
-		}
-		break;
-	case CHossoLibrary::TRIGGER:
-		if (m_pKeyboard->GetTrigger(DIK_SPACE) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_A, 1))
-		{
-			return true;
-		}
-		break;
-	}
-	return false;
-}
-//------------------------------------------------------------------------------
-//決定 トリガーのみ
-//------------------------------------------------------------------------------
-bool CHossoLibrary::CheckDash(INPUTTYPE type)
-{
-	switch (type)
-	{
-	case CHossoLibrary::PRESS:
-		if (m_pKeyboard->GetPress(DIK_LSHIFT) || m_pXInput->GetPress(CPad_XInput::JOYPADKEY_R2))
-		{
-			return true;
-		}
-		break;
-	case CHossoLibrary::TRIGGER:
-		if (m_pKeyboard->GetTrigger(DIK_LSHIFT) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_R2, 5))
-		{
-			return true;
-		}
-		break;
-	}
-
-	return false;
-}
-//------------------------------------------------------------------------------
-//カメラリセット
-//------------------------------------------------------------------------------
-bool CHossoLibrary::CheckCameraReset(INPUTTYPE type)
-{
-	switch (type)
-	{
-	case CHossoLibrary::PRESS:
-		if (m_pKeyboard->GetPress(DIK_V) || m_pXInput->GetPress(CPad_XInput::JOYPADKEY_L2))
-		{
-			return true;
-		}
-		break;
-	case CHossoLibrary::TRIGGER:
-		if (m_pKeyboard->GetTrigger(DIK_V) || m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_L2, 1))
-		{
-			return true;
-		}
-		break;
-	}
-
-	return false;
-}
 //------------------------------------------------------------------------------
 //決定 トリガーのみ
 //------------------------------------------------------------------------------
@@ -193,18 +125,7 @@ bool CHossoLibrary::CheckDecision()
 	}
 	return false;
 }
-//------------------------------------------------------------------------------
-//チュートリアルスキップ
-//------------------------------------------------------------------------------
-bool CHossoLibrary::CheckSkipTutorial()
-{
-	if (m_pKeyboard->GetTrigger(DIK_RETURN) ||
-		m_pXInput->GetTrigger(CPad_XInput::JOYPADKEY_START, 1))
-	{
-		return true;
-	}
-	return false;
-}
+
 //------------------------------------------------------------------------------
 //キャンセル トリガーのみ
 //------------------------------------------------------------------------------
@@ -332,13 +253,6 @@ bool CHossoLibrary::Check3DCameraStick(D3DXVECTOR3 & Rot, float fHolizonMove, fl
 	Rot.x += cosf(fAngle) * (fVerticalMove * fLength);
 
 	return true;
-}
-//------------------------------------------------------------------------------
-//2Dの外積計算
-//------------------------------------------------------------------------------
-float CHossoLibrary::Vec2Cross(D3DXVECTOR2 const &rVecA, D3DXVECTOR2 const &rVecB)
-{
-	return rVecA.x * rVecB.y - rVecB.x * rVecA.y;
 }
 
 //------------------------------------------------------------------------------
@@ -638,72 +552,6 @@ void CHossoLibrary::SetModelVertex(MODEL_VTX & pModelVtx, CModelInfo & pModelInf
 
 }
 
-
-//------------------------------------------------------------------------------
-//モデルの最大頂点と最少頂点を求める　回転した分の調整
-//------------------------------------------------------------------------------
-void CHossoLibrary::SetModelVertexRotation(D3DXMATRIX & pMtx, MODEL_VTX & pModelVtx, CModelInfo & pModelInfo)
-{
-	int		nNumVertices;
-	DWORD	sizeFVF;
-	BYTE	*pVertexBuffer;
-
-	pModelVtx.VtxMax = ZeroVector3;
-	pModelVtx.VtxMin = ZeroVector3;
-
-	//デバイス取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//頂点数取得
-	nNumVertices = pModelInfo.GetMesh()->GetNumVertices();
-
-	//頂点フォーマットのサイズを取得
-	sizeFVF = D3DXGetFVFVertexSize(pModelInfo.GetMesh()->GetFVF());
-
-	// 頂点バッファのロック
-	pModelInfo.GetMesh()->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVertexBuffer);
-
-	//頂点の数だけ繰り返す
-	for (int nCntVtx = 0; nCntVtx < nNumVertices; nCntVtx++)
-	{
-		//頂点情報を取得
-		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVertexBuffer;
-
-		//ワールドマトリックスを掛け合わせる
-		D3DXVec3TransformCoord(&vtx, &vtx, &pMtx);
-
-		//最大の頂点座標と最少の頂点座標を比較して出す
-		if (pModelVtx.VtxMin.x > vtx.x)
-		{
-			pModelVtx.VtxMin.x = vtx.x;
-		}
-		if (pModelVtx.VtxMax.x < vtx.x)
-		{
-			pModelVtx.VtxMax.x = vtx.x;
-		}
-		if (pModelVtx.VtxMin.z > vtx.z)
-		{
-			pModelVtx.VtxMin.z = vtx.z;
-		}
-		if (pModelVtx.VtxMax.z < vtx.z)
-		{
-			pModelVtx.VtxMax.z = vtx.z;
-		}
-		if (pModelVtx.VtxMin.y > vtx.y)
-		{
-			pModelVtx.VtxMin.y = vtx.y;
-		}
-		if (pModelVtx.VtxMax.y < vtx.y)
-		{
-			pModelVtx.VtxMax.y = vtx.y;
-		}
-		//バッファ分進める
-		pVertexBuffer += sizeFVF;
-	}
-	//アンロック
-	pModelInfo.GetMesh()->UnlockVertexBuffer();
-}
-
 //------------------------------------------------------------------------------
 //ビルボード設定 XとZのみ
 //------------------------------------------------------------------------------
@@ -754,55 +602,14 @@ void CHossoLibrary::SetBillboard(D3DXMATRIX * pMtx)
 	pMtx->_32 = mtxView._23;
 	pMtx->_33 = mtxView._33;
 }
-//------------------------------------------------------------------------------
-//範囲内の値に修正
-//------------------------------------------------------------------------------
-bool CHossoLibrary::RangeLimit_Equal_Int(int & nValue, int nMin, int nMax)
-{
-	//最小値より小さい時
-	if (nValue < nMin)
-	{
-		//最小値に合わす
-		nValue = nMin;
-		return true;
-	}
-	//最大値より大きい時
-	if (nValue > nMax)
-	{
-		//最大値に合わす
-		nValue = nMax;
-		return true;
-	}
-	return false;
-}
-//------------------------------------------------------------------------------
-//範囲内の値に修正
-//------------------------------------------------------------------------------
-bool CHossoLibrary::RangeLimit_Equal_Float(float & nValue, float nMin, float nMax)
-{
-	//最小値より小さい時
-	if (nValue < nMin)
-	{
-		//最小値に合わす
-		nValue = nMin;
-		return true;
-	}
-	//最大値より大きい時
-	if (nValue > nMax)
-	{
-		//最大値に合わす
-		nValue = nMax;
-		return true;
-	}
-	return false;
-}
+
 //------------------------------------------------------------------------------
 //縦のメニュー選択
 //------------------------------------------------------------------------------
 void CHossoLibrary::SelectVerticalMenu(int & nSelectNum, int const & nMaxSelect)
 {
 	//↑
-	if (CHossoLibrary::CheckSelect() == CHossoLibrary::UP)
+	if (CHossoLibrary::CheckSelect() == DIRECTION::UP)
 	{
 		nSelectNum--;
 		//一番↑にいったら
@@ -817,7 +624,7 @@ void CHossoLibrary::SelectVerticalMenu(int & nSelectNum, int const & nMaxSelect)
 		}
 	}
 	//↓
-	if (CHossoLibrary::CheckSelect() == CHossoLibrary::DOWN)
+	if (CHossoLibrary::CheckSelect() == DIRECTION::DOWN)
 	{
 		nSelectNum++;
 		//一番↓にいったら
@@ -838,7 +645,7 @@ void CHossoLibrary::SelectVerticalMenu(int & nSelectNum, int const & nMaxSelect)
 void CHossoLibrary::SelectHorizonMenu(int & nSelectNum, int const & nMaxSelect)
 {
 	//←
-	if (CHossoLibrary::CheckSelect() == CHossoLibrary::LEFT)
+	if (CHossoLibrary::CheckSelect() == DIRECTION::LEFT)
 	{
 		nSelectNum--;
 		if (nSelectNum < 0)
@@ -851,7 +658,7 @@ void CHossoLibrary::SelectHorizonMenu(int & nSelectNum, int const & nMaxSelect)
 		}
 	}
 	//→
-	if (CHossoLibrary::CheckSelect() == CHossoLibrary::RIGHT)
+	if (CHossoLibrary::CheckSelect() == DIRECTION::RIGHT)
 	{
 		nSelectNum++;
 		if (nSelectNum > nMaxSelect - 1)

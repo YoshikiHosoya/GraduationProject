@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
+#include "mylibrary.h"
 //------------------------------------------------------------------------------
 //マクロ定義
 //------------------------------------------------------------------------------
@@ -83,8 +84,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 		CLASS_NAME,						//ウィンドウクラス名
 		WINDOW_NAME,					//ウィンドウの名前
 		WS_OVERLAPPEDWINDOW,			//ウィンドウスタイル
-		WINDOW_POS.x,					//ウィンドウ左上のX座標
-		WINDOW_POS.y,					//ウィンドウ左上のY座標
+		WINDOW_POS.nX,					//ウィンドウ左上のX座標
+		WINDOW_POS.nY,					//ウィンドウ左上のY座標
 		(rect.right - rect.left),		//ウィンドウの幅
 		(rect.bottom - rect.top),		//ウィンドウの高さ ウィンドウのバーの分の修正
 		NULL,							//親ウィンドウのハンドル

@@ -114,12 +114,12 @@ std::shared_ptr<CMeshSphere> CMeshSphere::Create(D3DXVECTOR3 const pos,float con
 D3DXVECTOR3 CMeshSphere::SetVtx(INTEGER2 nCnt, INTEGER2 BlockNum)
 {
 	//äpìxÇÇªÇÍÇºÇÍåvéZ
-	float fRotH = (D3DX_PI * 2) / BlockNum.x;
-	float fRotV = (D3DX_PI * 2) / BlockNum.y;
+	float fRotH = (D3DX_PI * 2) / BlockNum.nX;
+	float fRotV = (D3DX_PI * 2) / BlockNum.nY;
 
 	//ç¿ïWåvéZ
-	return D3DXVECTOR3(sinf(fRotH * nCnt.x) * sinf(fRotV * nCnt.y * 0.5f) * m_fRadius,
-						-cosf(fRotV * nCnt.y * 0.5f) * m_fRadius,
-						cosf(fRotH * nCnt.x) * sinf(fRotV * nCnt.y * 0.5f) * m_fRadius);
+	return D3DXVECTOR3(sinf(fRotH * nCnt.nX) * sinf(fRotV * nCnt.nY * 0.5f) * m_fRadius,
+						-cosf(fRotV * nCnt.nY * 0.5f) * m_fRadius,
+						cosf(fRotH * nCnt.nX) * sinf(fRotV * nCnt.nY * 0.5f) * m_fRadius);
 
 }

@@ -42,39 +42,6 @@
 //------------------------------------------------------------------------------
 //構造体定義
 //------------------------------------------------------------------------------
-//int型を二つ格納できる
-typedef struct INTEGER2
-{
-	int x;
-	int y;
-
-	//コンストラクタ
-	INTEGER2() {};
-	INTEGER2(int nX, int nY)
-	{
-		x = nX;
-		y = nY;
-	}
-
-}INTEGER2;
-
-//int型を3つ格納できる
-typedef struct INTEGER3
-{
-	int x;
-	int y;
-	int z;
-
-	//コンストラクタ
-	INTEGER3() {};
-	INTEGER3(int nX, int nY,int nZ)
-	{
-		x = nX;
-		y = nY;
-		z = nZ;
-	}
-}INTEGER3;
-
 //int型を3つ格納できる
 typedef struct MODEL_VTX
 {
@@ -96,15 +63,12 @@ enum class TAG
 {
 	NONE = -1,
 	PLAYER_1,			// プレイヤー1
-	PLAYER_2,			// プレイヤー2
 	ENEMY,				// 敵
-	PRISONER,			// 捕虜
-	OBSTACLE,			// オブジェクト
-	SHIELD,				// 盾
 };
 
 enum class DIRECTION
 {
+	NONE = -1,
 	LEFT,
 	RIGHT,
 	UP,
@@ -136,27 +100,10 @@ public:
 		MAX
 	};
 
-	//方向
-	enum DIRECTION
-	{
-		NONE = -1,
-		UP,			//↑
-		DOWN,		//↓
-		LEFT,		//←
-		RIGHT		//→
-	};
-
 	static bool CheckMove(DIRECTION);								//移動用関数(AWSD + CrossKey) Press
 	static DIRECTION CheckSelect();									//セレクト用関数(AWSD + ARROW + LStick) Trigger
 
-	static bool CheckAttack_X(INPUTTYPE type);						//攻撃ボタン
-	static bool CheckAttack_Y(INPUTTYPE type);						//攻撃ボタン
-	static bool CheckAttack_B(INPUTTYPE type);						//攻撃ボタン
-	static bool CheckJump(INPUTTYPE type);							//ジャンプボタン
-	static bool CheckDash(INPUTTYPE type);							//ダッシュボタン
-	static bool CheckCameraReset(INPUTTYPE type);					//カメラリセットボタン
 	static bool CheckDecision();									//決定ボタン
-	static bool CheckSkipTutorial();								//チュートリアルスキップ
 	static bool CheckCancel();										//キャンセルボタン
 	static bool CheckPause();										//ポーズ
 	static bool CheckAnyButton();									//何かボタンを。。
@@ -167,16 +114,11 @@ public:
 
 	static void StartVibration(int nCntVibration);					//バイブレーション処理
 
-	static float Vec2Cross(D3DXVECTOR2 const &rVecA, D3DXVECTOR2 const &rVecB);									//2D 外積計算
 	static void CalcMatrix(D3DXMATRIX *pMtx,D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot);					//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);		//シャドーマトリックスの計算
 	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);									//モデルの最大頂点と最少頂点を設定
-	static void SetModelVertexRotation(D3DXMATRIX & pMtx, MODEL_VTX & pModelVtx, CModelInfo & pModelInfo);		//モデルの最大頂点と最少頂点を設定　回転した分を補正
 	static void SetBillboard(D3DXMATRIX *pMtx);																	//ビルボード設定
 	static void SetBillboard_XZ_Only(D3DXMATRIX *pMtx);															//ビルボード設定　XとZのみ
-
-	static bool RangeLimit_Equal_Int(int &nValue, int nMin, int nMax);											//範囲内に抑える(int)
-	static bool RangeLimit_Equal_Float(float &nValue, float nMin, float nMax);									//範囲内に抑える(float)
 
 	static void SelectVerticalMenu(int &nSelectNum, int const &nMaxSelect);										//縦メニューの選択
 	static void SelectHorizonMenu(int &nSelectNum, int const &nMaxSelect);										//横メニューの選択
@@ -191,13 +133,36 @@ public:
 	static void CheckCulling();				//カリング確認
 	static void CheckLighting();			//ライティング確認
 
-	static float Random_PI();																					//-3.14から3.14までのランダムで返す
-	static float Random(float fInputValue);																		//入力された値の+-ランダムな値で返す
-	static D3DXVECTOR3 RandomVector3(float Max);																//ランダムなvector3型で値を返す
-	static void CalcRotation(float &fRot);																		//回転を360度以内にする計算
-	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);																	//回転を360度以内にする計算
+	static float Random_PI();													//-3.14から3.14までのランダムで返す
+	static float Random(float fInputValue);										//入力された値の+-ランダムな値で返す
+	static D3DXVECTOR3 RandomVector3(float Max);								//ランダムなvector3型で値を返す
+	static void CalcRotation(float &fRot);										//回転を360度以内にする計算
+	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
 
 	static bool CheckDebugPlayer() { return m_bDebugPlayer; };		//デバッグ用のプレイヤー
+
+	//------------------------------------------------------------------------------
+	//範囲内の値に修正する関数
+	//intでもfloatでもいけるようにテンプレート
+	//------------------------------------------------------------------------------
+	template <class X> static bool RangeLimit_Equal(X &Value, X const &Min, X const &Max)
+	{
+		//最小値より小さい時
+		if (Value < Min)
+		{
+			//最小値に合わす
+			Value = Min;
+			return true;
+		}
+		//最大値より大きい時
+		if (Value > Max)
+		{
+			//最大値に合わす
+			Value = Max;
+			return true;
+		}
+		return false;
+	}
 
 private:
 	static CKeyboard *m_pKeyboard;		//キーボードへのポインタ

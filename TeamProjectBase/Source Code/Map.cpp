@@ -46,10 +46,10 @@ std::unique_ptr<CMap> CMap::Create()
 	std::unique_ptr<CMap> pMap(new CMap);
 
 	//フィールド生成
-	CreateField(D3DXVECTOR3(MESH_SIZE, 0.0f, MESH_SIZE), INTEGER2(MESH_BLOCK_NUM.x, MESH_BLOCK_NUM.y));
+	CreateField(D3DXVECTOR3(MESH_SIZE, 0.0f, MESH_SIZE), INTEGER2(MESH_BLOCK_NUM.nX, MESH_BLOCK_NUM.nY));
 
 	////壁生成　フィールドの半分のサイズ
-	CreateWall(INTEGER2(WALL_BLOCK_NUM.x, WALL_BLOCK_NUM.x));
+	CreateWall(INTEGER2(WALL_BLOCK_NUM.nX, WALL_BLOCK_NUM.nX));
 
 	return pMap;
 }
@@ -58,7 +58,7 @@ std::unique_ptr<CMap> CMap::Create()
 //------------------------------------------------------------------------------
 D3DXVECTOR3 CMap::GetFieldSize()
 {
-	return D3DXVECTOR3(WALL_SIZE * WALL_BLOCK_NUM.x - 130.0f, 0.0f, WALL_SIZE * WALL_BLOCK_NUM.y - 130.0f);
+	return D3DXVECTOR3(WALL_SIZE * WALL_BLOCK_NUM.nX - 130.0f, 0.0f, WALL_SIZE * WALL_BLOCK_NUM.nY - 130.0f);
 }
 //------------------------------------------------------------------------------
 //フィールド作成

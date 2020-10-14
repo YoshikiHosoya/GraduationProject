@@ -136,10 +136,10 @@ std::shared_ptr<CMeshCylinder> CMeshCylinder::Create(D3DXVECTOR3 const pos, D3DX
 D3DXVECTOR3 CMeshCylinder::SetVtx(INTEGER2 nCnt, INTEGER2 BlockNum)
 {
 	//â~ÇÃÇPÉsÅ[ÉXï™ÇÃäpìx
-	float fRot = (D3DX_PI * 2) / BlockNum.x;
+	float fRot = (D3DX_PI * 2) / BlockNum.nX;
 
 	//ç¿ïWåvéZ
-	return D3DXVECTOR3( sinf(fRot * nCnt.x) * m_size.x,
-						m_size.y * nCnt.y,
-						cosf(fRot * nCnt.x) * m_size.x);
+	return D3DXVECTOR3( sinf(fRot * nCnt.nX) * m_size.x,
+						m_size.y * nCnt.nY,
+						cosf(fRot * nCnt.nX) * m_size.x);
 }

@@ -125,12 +125,12 @@ std::shared_ptr<CMeshCircle> CMeshCircle::Create(D3DXVECTOR3 const pos, float fR
 D3DXVECTOR3 CMeshCircle::SetVtx(INTEGER2 nCnt, INTEGER2 BlockNum)
 {
 	//äpìxÇãÅÇﬂÇÈ
-	float fRot = (D3DX_PI * 2) / BlockNum.x;
+	float fRot = (D3DX_PI * 2) / BlockNum.nX;
 
 	//ç¿ïWê›íË
-	return D3DXVECTOR3(sinf(fRot * nCnt.x) * (m_fRadius + m_fWidth * nCnt.y),
+	return D3DXVECTOR3(sinf(fRot * nCnt.nX) * (m_fRadius + m_fWidth * nCnt.nY),
 							//m_fWidth * nCnt.y,
 							0.1f,
-							cosf(fRot * nCnt.x) * (m_fRadius + m_fWidth * nCnt.y));
+							cosf(fRot * nCnt.nX) * (m_fRadius + m_fWidth * nCnt.nY));
 
 }

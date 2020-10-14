@@ -186,12 +186,12 @@ void CMesh::SetCol(D3DXCOLOR const & col)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY + 1; nCntVertical++)
 	{	//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (m_BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (m_BlockNum.nX + 1)) + nCntHorizon;
 
 			//色設定
 			pVtx[nID].col = m_col;
@@ -216,12 +216,12 @@ void CMesh::ResetVtx(D3DXVECTOR3 size)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY + 1; nCntVertical++)
 	{	//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (m_BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (m_BlockNum.nX + 1)) + nCntHorizon;
 
 			//頂点情報設定
 			//派生クラスがオーバーライドで処理を記入
@@ -239,7 +239,7 @@ void CMesh::ResetVtx(D3DXVECTOR3 size)
 //------------------------------------------------------------------------------
 void CMesh::SetTexSphere()
 {
-	D3DXVECTOR2 UVSize = D3DXVECTOR2(1.0f / m_BlockNum.x, 1.0f / m_BlockNum.y);
+	D3DXVECTOR2 UVSize = D3DXVECTOR2(1.0f / m_BlockNum.nX, 1.0f / m_BlockNum.nY);
 
 	//頂点情報へのポインタ
 	VERTEX_3D *pVtx;
@@ -247,12 +247,12 @@ void CMesh::SetTexSphere()
 	//頂点データの範囲をロックし、頂点バッファへのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY + 1; nCntVertical++)
 	{	//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (m_BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (m_BlockNum.nX + 1)) + nCntHorizon;
 
 			//テクスチャ座標
 			pVtx[nID].tex = D3DXVECTOR2(UVSize.x * nCntHorizon, UVSize.y * nCntVertical);
@@ -278,17 +278,17 @@ void CMesh::SetNormal()
 	VERTEX_3D *pVtx;
 
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY; nCntVertical++)
 	{
 		//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x; nCntHorizon++, nCntNormal += 2)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX; nCntHorizon++, nCntNormal += 2)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (m_BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (m_BlockNum.nX + 1)) + nCntHorizon;
 
 			//ベクトル計算
-			VecA = m_pVtxMeshList[nID + m_BlockNum.x + 1]->pos - m_pVtxMeshList[nID]->pos;
-			VecB = m_pVtxMeshList[nID + m_BlockNum.x + 2]->pos - m_pVtxMeshList[nID]->pos;
+			VecA = m_pVtxMeshList[nID + m_BlockNum.nX + 1]->pos - m_pVtxMeshList[nID]->pos;
+			VecB = m_pVtxMeshList[nID + m_BlockNum.nX + 2]->pos - m_pVtxMeshList[nID]->pos;
 			VecC = m_pVtxMeshList[nID + 1]->pos - m_pVtxMeshList[nID]->pos;
 
 			//外積を使って面の法線を求める
@@ -306,19 +306,19 @@ void CMesh::SetNormal()
 
 	nCntNormal = 0;
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY + 1; nCntVertical++)
 	{
 		//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++, nID++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++, nID++)
 		{
 			//右下の端のとこ
-			if (nCntHorizon == m_BlockNum.x && nCntVertical == m_BlockNum.y)
+			if (nCntHorizon == m_BlockNum.nX && nCntVertical == m_BlockNum.nY)
 			{
 				m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[(nCntNormal * 2)] + (*m_apNormalList[(nCntNormal * 2) + 1])) / 2;
 			}
 
 			//一番右と一番下以外の時
-			if (nCntHorizon != m_BlockNum.x && nCntVertical != m_BlockNum.y)
+			if (nCntHorizon != m_BlockNum.nX && nCntVertical != m_BlockNum.nY)
 			{
 				if (nCntVertical == 0 && nCntHorizon == 0)
 				{
@@ -336,7 +336,7 @@ void CMesh::SetNormal()
 				else if (nCntHorizon == 0)
 				{
 					//3面の法線を加算して割る
-					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[(nCntNormal * 2)] + *m_apNormalList[(nCntNormal * 2) + 1] + *m_apNormalList[((nCntNormal - m_BlockNum.x) * 2)]) / 3;
+					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[(nCntNormal * 2)] + *m_apNormalList[(nCntNormal * 2) + 1] + *m_apNormalList[((nCntNormal - m_BlockNum.nX) * 2)]) / 3;
 				}
 				//その他　(端に面してない部分
 				else
@@ -345,9 +345,9 @@ void CMesh::SetNormal()
 						(	*m_apNormalList[(nCntNormal * 2)] +								//下の面
 							*m_apNormalList[(nCntNormal * 2) + 1] + 						//右下の面
 							*m_apNormalList[(nCntNormal * 2) - 1] +							//左下の面
-							*m_apNormalList[((nCntNormal - m_BlockNum.x) * 2)] +			//右上の面
-							*m_apNormalList[((nCntNormal - m_BlockNum.x - 1) * 2)] + 		//左上の面
-							*m_apNormalList[((nCntNormal - m_BlockNum.x - 1) * 2) + 1]) 	//上の面
+							*m_apNormalList[((nCntNormal - m_BlockNum.nX) * 2)] +			//右上の面
+							*m_apNormalList[((nCntNormal - m_BlockNum.nX - 1) * 2)] + 		//左上の面
+							*m_apNormalList[((nCntNormal - m_BlockNum.nX - 1) * 2) + 1]) 	//上の面
 							/ 6;	//を割る
 				}
 
@@ -355,14 +355,14 @@ void CMesh::SetNormal()
 				nCntNormal++;
 
 				//カウンタが超えた時
-				if (nCntNormal >= (m_BlockNum.x * m_BlockNum.y))
+				if (nCntNormal >= (m_BlockNum.nX * m_BlockNum.nY))
 				{
 					//一番下の列も処理するために戻す
-					nCntNormal -= m_BlockNum.x;
+					nCntNormal -= m_BlockNum.nX;
 				}
 			}
 			//右端の時
-			else if (nCntHorizon == m_BlockNum.x)
+			else if (nCntHorizon == m_BlockNum.nX)
 			{
 				//一番上以外の時
 
@@ -370,30 +370,30 @@ void CMesh::SetNormal()
 				{
 					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = *m_apNormalList[(nCntNormal * 2) + 1];
 				}
-				else if (nCntVertical != m_BlockNum.y)
+				else if (nCntVertical != m_BlockNum.nY)
 				{
-					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[((nCntNormal - m_BlockNum.x) * 2)] + *m_apNormalList[((nCntNormal - m_BlockNum.x) * 2) + 1] + *m_apNormalList[(nCntNormal * 2) + 1]) / 3;
+					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[((nCntNormal - m_BlockNum.nX) * 2)] + *m_apNormalList[((nCntNormal - m_BlockNum.nX) * 2) + 1] + *m_apNormalList[(nCntNormal * 2) + 1]) / 3;
 				}
 			}
 			//下端の時
-			else if (nCntVertical == m_BlockNum.y)
+			else if (nCntVertical == m_BlockNum.nY)
 			{
 				if (nCntHorizon == 0)
 				{
 					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = *m_apNormalList[(nCntNormal * 2)];
 				}
-				else if (nCntHorizon != m_BlockNum.x)
+				else if (nCntHorizon != m_BlockNum.nX)
 				{
-					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[((nCntNormal - m_BlockNum.x - 1) * 2)] + *m_apNormalList[((nCntNormal - m_BlockNum.x - 1) * 2) + 1] + *m_apNormalList[((nCntNormal - m_BlockNum.x) * 2)]) / 3;
+					m_pVtxMeshList[nID]->nor = pVtx[nID].nor = (*m_apNormalList[((nCntNormal - m_BlockNum.nX - 1) * 2)] + *m_apNormalList[((nCntNormal - m_BlockNum.nX - 1) * 2) + 1] + *m_apNormalList[((nCntNormal - m_BlockNum.nX) * 2)]) / 3;
 				}
 				//normal用のカウンタ
 				nCntNormal++;
 
 				//カウンタが超えた時
-				if (nCntNormal >= (m_BlockNum.x * m_BlockNum.y))
+				if (nCntNormal >= (m_BlockNum.nX * m_BlockNum.nY))
 				{
 					//一番下の列も処理するために戻す
-					nCntNormal = m_BlockNum.x * m_BlockNum.y - 1;
+					nCntNormal = m_BlockNum.nX * m_BlockNum.nY - 1;
 				}
 			}
 		}
@@ -412,9 +412,9 @@ void CMesh::MakeVertex()
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//ブロック数から必要な情報を引き出す
-	m_nNumVertex = (m_BlockNum.x + 1) * (m_BlockNum.y + 1);						//頂点数
-	m_nNumIdx = (m_BlockNum.x * 2 + 2) * m_BlockNum.y + ((m_BlockNum.y - 1) * 2);	//インデックス数
-	m_nNumPolygon = (m_BlockNum.x * m_BlockNum.y) * 2 + (m_BlockNum.y - 1) * 4;	//ポリゴン数
+	m_nNumVertex = (m_BlockNum.nX + 1) * (m_BlockNum.nY + 1);						//頂点数
+	m_nNumIdx = (m_BlockNum.nX * 2 + 2) * m_BlockNum.nY + ((m_BlockNum.nY - 1) * 2);	//インデックス数
+	m_nNumPolygon = (m_BlockNum.nX * m_BlockNum.nY) * 2 + (m_BlockNum.nY - 1) * 4;	//ポリゴン数
 
 	//メモリ確保
 	//頂点情報
@@ -426,7 +426,7 @@ void CMesh::MakeVertex()
 	}
 
 	//法線情報
-	for (int nCnt = 0; nCnt < (m_BlockNum.x * m_BlockNum.y) * 2; nCnt++)
+	for (int nCnt = 0; nCnt < (m_BlockNum.nX * m_BlockNum.nY) * 2; nCnt++)
 	{
 		//メモリ確保
 		std::unique_ptr<D3DXVECTOR3> normal(new D3DXVECTOR3);
@@ -460,12 +460,12 @@ void CMesh::MakeVertex()
 	float fHeight = 0.0f;
 
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY + 1; nCntVertical++)
 	{	//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++)
 		{
 			//頂点番号
-			int nID = (nCntVertical * (m_BlockNum.x + 1)) + nCntHorizon;
+			int nID = (nCntVertical * (m_BlockNum.nX + 1)) + nCntHorizon;
 
 			//頂点情報設定
 			//派生クラスがオーバーライドで処理を記入
@@ -492,22 +492,22 @@ void CMesh::MakeVertex()
 
 	//インデックス設定
 	//縦
-	for (int nCntVertical = 0; nCntVertical < m_BlockNum.y; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < m_BlockNum.nY; nCntVertical++)
 	{	//横
-		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.x + 1; nCntHorizon++)
+		for (int nCntHorizon = 0; nCntHorizon < m_BlockNum.nX + 1; nCntHorizon++)
 		{
 			//インデックス設定
-			pIdx[0] = (m_BlockNum.x + 1) + nCntHorizon + nCntVertical * (m_BlockNum.x + 1);
-			pIdx[1] = nCntHorizon + nCntVertical * (m_BlockNum.x + 1);
+			pIdx[0] = (m_BlockNum.nX + 1) + nCntHorizon + nCntVertical * (m_BlockNum.nX + 1);
+			pIdx[1] = nCntHorizon + nCntVertical * (m_BlockNum.nX + 1);
 
 			//ポインタ進める
 			pIdx += 2;
 
 			//縮退ポリゴンの分
-			if ((nCntHorizon + 1) % (m_BlockNum.x + 1) == 0 && nCntVertical < m_BlockNum.y - 1)
+			if ((nCntHorizon + 1) % (m_BlockNum.nX + 1) == 0 && nCntVertical < m_BlockNum.nY - 1)
 			{
-				pIdx[0] = nCntHorizon + nCntVertical * (m_BlockNum.x + 1);
-				pIdx[1] = (m_BlockNum.x + 1) + nCntHorizon + nCntVertical * (m_BlockNum.x + 1) + 1;
+				pIdx[0] = nCntHorizon + nCntVertical * (m_BlockNum.nX + 1);
+				pIdx[1] = (m_BlockNum.nX + 1) + nCntHorizon + nCntVertical * (m_BlockNum.nX + 1) + 1;
 
 				//ポインタ進める
 				pIdx += 2;
