@@ -9,10 +9,8 @@
 //-------------------------------------------------------------------------------------------------------------
 #include "camera.h"
 #include "keyboard.h"
-#include "SceneX.h"
 #include "DebugProc.h"
-#include "gamepad.h"
-#include "game.h"
+#include "mouse.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -59,8 +57,6 @@ void CCamera::Init(void)
 	m_fMagnificat = CAMERA_MAGNIFICAT_UNSET;
 	// 長さ
 	m_fLength = sqrtf(CAMERA_V_POS_X*CAMERA_V_POS_Y*CAMERA_V_POS_Z) / 3;	// / xyz分
-	// X軸回転保存用
-	m_fRollRotationsave = m_rot.x;
 	// 視点の行く先
 	m_PosVDest.x = m_HeadPos.x - cosf(m_rot.x)*sinf(m_rot.y)*m_fLength*m_fMagnificat;
 	m_PosVDest.y = m_HeadPos.y + sinf(m_rot.x)*m_fLength*m_fMagnificat;
@@ -126,7 +122,7 @@ void CCamera::Update(void)
 //-------------------------------------------------------------------------------------------------------------
 void CCamera::Set(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer().GetDevice();	// デバイスの取得
 
 	// プロジェクションマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxProjection);
@@ -162,8 +158,44 @@ void CCamera::Set(void)
 void CCamera::Operation(void)
 {
 	// キーボードの取得
-	Ckeyboard *pKeyboard = CManager::GetKeyboard();
-	CGamepad *pGamepad = CManager::GetGamepad();
+	Ckeyboard *pKeyboard = &CManager::GetKeyboard();
+	// マウスの取得
+	CMouse *pMouse = &CManager::GetMouse();
+	// マウスの状態を取得
+	DIMOUSESTATE2* pMouseState = &pMouse->GetMouseState();
+
+	D3DXVECTOR2 NewRotation = D3DXVECTOR2(0.0f, 0.0f);
+
+	if (pMouse->GetPress(1) == true)
+	{
+		// ヨー回転
+		NewRotation.y = ((float)pMouseState->lX) / (D3DX_PI*2.0f) *0.02f;
+		m_rot.y += NewRotation.y;
+
+		// 回転量を360度ないに直す
+		CMylibrary::SetFixTheRotation(&m_rot.y);
+
+		// ピッチロー回転
+		NewRotation.x = ((float)pMouseState->lY) / (D3DX_PI*2.0f) *0.02f;
+
+		// 回転を90度未満に抑える
+		if (NewRotation.x >= D3DX_PI*0.49f)
+		{
+			NewRotation.x = D3DX_PI*0.49f;
+		}
+		else if (NewRotation.x <= -D3DX_PI*0.49f)
+		{
+			NewRotation.x = -D3DX_PI*0.49f;
+		}
+		m_rot.x += NewRotation.x;
+	}
+
+	if (pMouse->GetRelease(1))
+	{
+		m_MouseRotSave.y = m_rot.y;
+		m_MouseRotSave.x = m_rot.x;
+	}
+
 	// カメラの公転
 	if (pKeyboard->GetPress(DIK_RIGHTARROW))
 	{
@@ -176,28 +208,10 @@ void CCamera::Operation(void)
 	if (pKeyboard->GetPress(DIK_UPARROW))
 	{
 		m_rot.x += CAMERA_ROTATION_SPEED*0.3f;
-		m_fRollRotationsave += CAMERA_ROTATION_SPEED*0.3f;
 	}
 	else if (pKeyboard->GetPress(DIK_DOWNARROW))
 	{
 		m_rot.x -= CAMERA_ROTATION_SPEED*0.3f;
-		m_fRollRotationsave -= CAMERA_ROTATION_SPEED*0.3f;
-	}
-
-	// 変数宣言
-	int nValueH = 0;//スティックの横
-	int nValueV = 0;//スティックの縦
-					//ジョイパッドでの処理
-	pGamepad->GetStickRight(0, &nValueH, &nValueV);
-	// 入力情報が存在するとき
-	if (nValueH != 0)
-	{
-		m_rot.y += (nValueH / 1024) * CAMERA_ROTATION_SPEED;
-	}
-	if ( nValueV != 0)
-	{
-		m_rot.x -= (nValueV / 1024) * CAMERA_ROTATION_SPEED*0.3f;
-		m_fRollRotationsave -= (nValueV / 1024) * CAMERA_ROTATION_SPEED*0.3f;
 	}
 	// 距離の倍率変更
 	if (pKeyboard->GetPress(DIK_4))
@@ -241,7 +255,7 @@ void CCamera::Operation(void)
 		m_rot.x = -D3DX_PI*0.49f;
 	}
 	// 回転量を360度ないに直す
-	CMylibrary::FixTheRotation(&m_rot.y);
+	CMylibrary::SetFixTheRotation(&m_rot.y);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -295,14 +309,6 @@ void CCamera::SetRollRotation(float fRollrot)
 }
 
 //-------------------------------------------------------------------------------------------------------------
-// カメラの回転の保存用設定(X軸)
-//-------------------------------------------------------------------------------------------------------------
-void CCamera::SetRollRotationsave(float fRollrotsave)
-{
-	m_fRollRotationsave = fRollrotsave;
-}
-
-//-------------------------------------------------------------------------------------------------------------
 // カメラの回転の取得
 //-------------------------------------------------------------------------------------------------------------
 D3DXVECTOR3 * CCamera::GetRotation(void)
@@ -324,12 +330,4 @@ float CCamera::GetYawRotation(void)
 float CCamera::GetRollRotation(void)
 {
 	return m_rot.x;
-}
-
-//-------------------------------------------------------------------------------------------------------------
-// カメラの回転の保存用取得(X軸)
-//-------------------------------------------------------------------------------------------------------------
-float CCamera::GetRollRotationsave(void)
-{
-	return m_fRollRotationsave;
 }
