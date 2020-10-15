@@ -77,8 +77,7 @@ public:
 	float GetYawRotation(void);
 	// カメラの回転の取得(X軸)
 	float GetRollRotation(void);
-	// カメラの回転の保存用取得(X軸)
-	float GetRollRotationsave(void);
+
 private:
 	D3DXVECTOR3	m_posR;				// 注視点
 	D3DXVECTOR3	m_PosRDest;			// 注視点の行く先
@@ -93,7 +92,8 @@ private:
 	float		m_fMagnificat;		// 長さの変化率
 	D3DXVECTOR3 m_DirecVector;		// 向いてるベクトル
 	D3DXVECTOR3 m_HeadPos;			// 向かう位置
-	float		m_fRollRotationsave;// X軸回転保存用
+	D3DXVECTOR2 m_MouseRotSave;		// 回転を保存
+
 };
 
 
