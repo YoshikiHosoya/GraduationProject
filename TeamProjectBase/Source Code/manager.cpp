@@ -21,13 +21,14 @@
 #include "basemode.h"
 #include "scene.h"
 #include "TestMode.h"
+#include "mouse.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
 std::unique_ptr<CRenderer> CManager::m_pRenderer	= nullptr;
 std::unique_ptr<CSound> CManager::m_pSound			= nullptr;
 std::unique_ptr<CKeyboard> CManager::m_pKeyboard	= nullptr;
-//std::unique_ptr<CMouse> CManager::m_pMouse			= nullptr;
+std::unique_ptr<CMouse> CManager::m_pMouse			= nullptr;
 std::unique_ptr<CPad_XInput> CManager::m_pXInput	= nullptr;
 std::unique_ptr<CBaseMode> CManager::m_pBaseMode	= nullptr;
 
@@ -43,6 +44,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pRenderer.reset(new CRenderer);
 	m_pSound.reset(new CSound);
 	m_pKeyboard.reset(new CKeyboard);
+	m_pMouse.reset(new CMouse);
 	m_pXInput.reset(new CPad_XInput);
 	m_nNumChangeMode = 0;
 
@@ -71,13 +73,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	////マウス初期化
-	//if (FAILED(m_pMouse->Init(hInstance, hWnd)))
-	//{
-	//	//失敗
-	//	MessageBox(hWnd, "初期化失敗", "Mouse", MB_OK | MB_ICONHAND);
-	//	return E_FAIL;
-	//}
+	//マウス初期化
+	if (FAILED(m_pMouse->Init(hInstance, hWnd)))
+	{
+		//失敗
+		MessageBox(hWnd, "初期化失敗", "Mouse", MB_OK | MB_ICONHAND);
+		return E_FAIL;
+	}
 
 	//ゲームパッド初期化
 	if (FAILED(m_pXInput->Init(hInstance, hWnd)))
@@ -127,11 +129,11 @@ void CManager::Uninit()
 		m_pKeyboard.reset();
 	}
 
-	//if (m_pMouse)
-	//{	//マウス
-	//	m_pMouse->Uninit();
-	//	m_pMouse.reset();
-	//}
+	if (m_pMouse)
+	{	//マウス
+		m_pMouse->Uninit();
+		m_pMouse.reset();
+	}
 
 	if (m_pXInput)
 	{	//ゲームパッド
@@ -164,10 +166,10 @@ void CManager::Update()
 		m_pKeyboard->Update();
 	}
 
-	//if (m_pMouse)
-	//{	//マウス
-	//	m_pMouse->Update();
-	//}
+	if (m_pMouse)
+	{	//マウス
+		m_pMouse->Update();
+	}
 
 	if (m_pXInput)
 	{	//ゲームパッド

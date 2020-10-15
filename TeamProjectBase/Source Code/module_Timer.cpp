@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//爆弾の処理  [Bomb.cpp]
+//モジュールの処理  [module.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,11 +8,11 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "Bomb.h"
+#include "module_timer.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
-#include "module_timer.h"
+#include "timer.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -20,109 +20,68 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define MODULE_INTERVAL (D3DXVECTOR3(82.0f,42.0f,50.0f))
+
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CBomb::CBomb()
+CModule_Timer::CModule_Timer()
 {
-
+	m_pTimer.reset();
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CBomb::~CBomb()
+CModule_Timer::~CModule_Timer()
 {
-
+	m_pTimer.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CBomb::Init()
+HRESULT CModule_Timer::Init()
 {
+	//モデル情報設定
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_MODULE));
+
+	//ランプ生成
+	CreateLamp(GetMtxWorldPtr());
+
+	//タイマーの生成
+	m_pTimer = CTimer::Create(ZeroVector3, 360, GetMtxWorldPtr());
+
 	CSceneX::Init();
 	return S_OK;
 }
 //------------------------------------------------------------------------------
 //終了処理
 //------------------------------------------------------------------------------
-void CBomb::Uninit()
+void CModule_Timer::Uninit()
 {
 	CSceneX::Uninit();
 }
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CBomb::Update()
+void CModule_Timer::Update()
 {
+	m_pTimer->UpdateTimer();
+
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CBomb::Draw()
+void CModule_Timer::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CBomb::ShowDebugInfo()
+void CModule_Timer::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
 #endif //DEBUG
-}
-
-//------------------------------------------------------------------------------
-//生成関数
-//------------------------------------------------------------------------------
-std::shared_ptr<CBomb> CBomb::Create(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
-{
-	//メモリ確保
-	std::shared_ptr<CBomb> pBomb = std::make_shared<CBomb>();
-
-	//初期化
-	pBomb->Init();
-
-	//座標とサイズ設定
-	pBomb->SetPos(pos);
-	pBomb->SetRot(rot);
-
-	//モデル情報設定
-	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_BOMB));
-
-	//モジュール生成
-	pBomb->CreateModule(nModuleNum);
-
-	//Scene側で管理
-	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
-	pBomb->AddSharedList(pBomb);
-
-	return pBomb;
-}
-
-//------------------------------------------------------------------------------
-//モジュール生成
-//------------------------------------------------------------------------------
-void CBomb::CreateModule(int const nModuleNum)
-{
-	int nCnt = 0;
-
-	while(nCnt < nModuleNum)
-	{
-		int nSetNumber = nCnt;
-
-		int nX = nSetNumber % 3;
-		int nY = nSetNumber / 3;
-		int nZ = nSetNumber / 6;
-
-		CModule_Base::Create<CModule_Timer>(D3DXVECTOR3(	-MODULE_INTERVAL.x + (MODULE_INTERVAL.x * nX),
-										 	 MODULE_INTERVAL.y - (MODULE_INTERVAL.y * ((nY % 2) * 2)),
-											-MODULE_INTERVAL.z + (MODULE_INTERVAL.z * nZ * 2)),
-											D3DXVECTOR3(0.0f,(D3DX_PI) * nZ,0.0f),GetMtxWorldPtr());
-
-		nCnt++;
-	}
 }

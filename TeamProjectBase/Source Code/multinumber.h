@@ -10,7 +10,7 @@
 //インクルード
 //------------------------------------------------------------------------------
 #include "main.h"
-#include "scene.h"
+#include "scenebase.h"
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
@@ -18,45 +18,53 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CScene2D;
+class CSceneBase;
 
-class CMultiNumber : public CScene
+class CMultiNumber : public CSceneBase
 {
 public:
-	//種類
-	enum TYPE
+
+	//ナンバーのエフェクト
+	enum class NUMBER_TYPE
 	{
-		TYPE_NORMAL,							//通常
-		TYPE_RED,								//赤字
-		TYPE_FLASHING,							//点滅
-		TYPE_CENTER_DISAPPEAR,					//中央に出てきて自然に消えてく
+		NUMBER_2D,							//2D
+		NUMBER_3D,							//3D
+
+	};
+	//ナンバーのエフェクト
+	enum class NUMBER_EFFECT
+	{
+		NONE,								//エフェクト無し
+		FLASHING,							//点滅 表示非表示
+		FLASHING_RED_YELLOW,				//点滅 赤黄色
+
 	};
 
 	CMultiNumber();
 	~CMultiNumber();
-	HRESULT Init();													//初期化
-	void Uninit();													//終了
-	void Update();													//更新
-	void Draw();													//描画
-	void ShowDebugInfo();											//デバッグ情報
-	static std::shared_ptr<CMultiNumber> Create(D3DXVECTOR3 pos, D3DXVECTOR3 onesize, int nValue, int nDigits, CScene::OBJTYPE objtype);	//生成処理
-	void SetMultiNumber(int nValue);								//スコア設定処理
+	virtual HRESULT Init()						override;				//初期化
+	virtual void Uninit()						override;				//終了
+	virtual void Update()						override;				//更新
+	virtual void Draw()							override;				//描画
+	virtual void ShowDebugInfo()				override;				//デバッグ情報表記
+	void SetPos(D3DXVECTOR3 const &pos)			override;				//座標設定
+	void SetSize(D3DXVECTOR3 const &size)		override;				//サイズ設定
+	void SetColor(D3DXCOLOR const &col)			override;				//色設定
 
-	void SetCol(D3DXCOLOR col);										//色設定
-	void SetPos(D3DXVECTOR3 pos);									//座標設定
-	void SetSize(D3DXVECTOR3 size);									//サイズ設定
-	void Settype(CMultiNumber::TYPE type) { m_type = type; };		//種類設定
+	static std::shared_ptr<CMultiNumber> Create(D3DXVECTOR3 const &pos, D3DXVECTOR3 const &onesize,
+		int const nValue, int const  nDigits, NUMBER_TYPE const type, CScene::OBJTYPE const objtype);	//生成処理
 
-	D3DXVECTOR3 GetPos() { return m_pos; };							//座標取得
-	D3DXVECTOR3 GetSize() { return m_onesize; };					//サイズ取得
+	//Set関数
+	void SetMultiNumber(int nValue);										//スコア設定処理
+	void Settype(NUMBER_EFFECT const effect);								//種類設定
+
+	const NUMBER_EFFECT GetNumberType() { return m_NumberEffect; };			//種類取得
 
 private:
-	std::vector<std::unique_ptr<CScene2D>> m_pNumberList;	//ナンバーのポインタのリスト
-	D3DXVECTOR3 m_pos;										//座標
-	D3DXVECTOR3 m_onesize;									//1つ当たりのサイズ
-	int m_nValue;											//値
-	int m_nCnt;												//点滅カウント
-	TYPE m_type;											//種類
+	std::vector<std::unique_ptr<CSceneBase>> m_pNumberList;					//ナンバーのポインタのリスト
+	NUMBER_EFFECT m_NumberEffect;											//種類
+	int m_nValue;															//値
+	int m_nCnt;																//点滅カウント
 
 };
 

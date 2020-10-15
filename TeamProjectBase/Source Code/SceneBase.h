@@ -29,16 +29,17 @@ public:
 
 	//Set関数
 	//仮想関数　頂点バッファの再調整とかオーバーライドでしてもらう
-	virtual void SetPos(D3DXVECTOR3 const pos)					{ m_pos = pos; };							//座標
-	virtual void SetSize(D3DXVECTOR3 const size)				{ m_size = size; };							//サイズ
-	virtual void SetColor(D3DXCOLOR const col)					{ m_col = col; };							//色
-	virtual void SetRot(D3DXVECTOR3 const rot)					{ m_rot = rot; };							//回転量
+	virtual void SetPos(D3DXVECTOR3 const &pos)					{ m_pos = pos; };							//座標
+	virtual void SetSize(D3DXVECTOR3 const &size)				{ m_size = size; };							//サイズ
+	virtual void SetColor(D3DXCOLOR const &col)					{ m_col = col; };							//色
+	virtual void SetRot(D3DXVECTOR3 const &rot)					{ m_rot = rot; };							//回転量
+	virtual void SetDisp(bool bDisp)							{ m_bDisp = bDisp; };						//表示非表示
 	virtual void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const UVsize) {};
 
 	void BindTexture(LPDIRECT3DTEXTURE9 const tex)				{ m_pTexture = tex; };						//テクスチャ
 	void BindVtxBuff(LPDIRECT3DVERTEXBUFFER9 const pVtxBuff)	{ m_pVtxBuff = pVtxBuff; };					//頂点バッファ
 	void SetMtxWorld(D3DXMATRIX const mtxWorld)					{ m_mtxWorld = mtxWorld; };					//ワールドマトリックス
-	void SetDisp(bool bDisp)									{ m_bDisp = bDisp; };						//表示非表示
+	void SetParentMtxPtr(D3DXMATRIX *pMtx)						{ m_pParentMtx = pMtx; };					//親のマトリックス設定
 
 	//Get関数
 	D3DXVECTOR3 &GetPos()										{ return m_pos; };							//座標
@@ -51,6 +52,8 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff()						{ return m_pVtxBuff; };						//頂点バッファのポインタ
 	D3DXVECTOR3 *GetPosPtr()									{ return &m_pos; };							//座標のポインタ　当たり判定とかはこれを使う
 	D3DXMATRIX *GetMtxWorldPtr()								{ return &m_mtxWorld; };					//ワールドマトリックス
+	D3DXMATRIX *GetParentMtxPtr()								{ return m_pParentMtx; };					//親のマトリックス
+
 protected:
 
 private:
@@ -61,6 +64,7 @@ private:
 	D3DXCOLOR m_col;										//色
 	D3DXVECTOR3 m_rot;										//回転量
 	D3DXMATRIX m_mtxWorld;									//ワールドマトリックス
+	D3DXMATRIX *m_pParentMtx;								//親のマトリックス
 	bool m_bDisp;											//表示非表示の設定
 
 };

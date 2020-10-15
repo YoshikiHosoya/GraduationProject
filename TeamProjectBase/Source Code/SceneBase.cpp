@@ -21,6 +21,7 @@ CSceneBase::CSceneBase()
 	m_pTexture = nullptr;
 	m_bDisp = true;
 	D3DXMatrixIdentity(&m_mtxWorld);
+	m_pParentMtx = nullptr;
 
 }
 

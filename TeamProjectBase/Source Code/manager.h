@@ -55,7 +55,7 @@ public:
 	static CRenderer *GetRenderer()		{ return m_pRenderer.get();	};			//レンダラー取得処理
 	static CSound *GetSound()			{ return m_pSound.get(); };				//サウンド取得
 	static CKeyboard *GetKeyboard()		{ return m_pKeyboard.get(); };			//キーボード取得
-	//static CMouse *GetMouse()			{ return m_pMouse.get(); };				//マウス取得
+	static CMouse *GetMouse()			{ return m_pMouse.get(); };				//マウス取得
 	static CPad_XInput *GetXInput()		{ return m_pXInput.get(); };			//XInputの取得
 
 	static CBaseMode *GetBaseMode();											//ベースのモード取得
@@ -65,7 +65,7 @@ private:
 	static std::unique_ptr<CRenderer> m_pRenderer;		//レンダラーへのポインタ
 	static std::unique_ptr <CSound > m_pSound;			//サウンドへのポインタ
 	static std::unique_ptr<CKeyboard> m_pKeyboard;		//キーボードへのポインタ
-	//static std::unique_ptr<CMouse> m_pMouse;			//マウスへのポインタ
+	static std::unique_ptr<CMouse> m_pMouse;			//マウスへのポインタ
 	static std::unique_ptr<CPad_XInput> m_pXInput;		//XInputへのポインタ
 	static std::unique_ptr<CBaseMode> m_pBaseMode;		//ベースのモードへのポインタ
 

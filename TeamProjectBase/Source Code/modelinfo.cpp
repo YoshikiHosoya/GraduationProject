@@ -16,12 +16,14 @@ std::vector<std::shared_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//マップモデル
-	{ "data/MODEL/Map/Block.x" ,			MODEL_MAPOBJECT_BLOCK },				//壁
-	{ "data/MODEL/Map/Sphere.x" ,			MODEL_MAPOBJECT_SPHERE },				//壁
+	{ "data/MODEL/Map/Block.x" ,			MODEL_MAPOBJECT_BLOCK },				//立方体
+	{ "data/MODEL/Map/Sphere.x" ,			MODEL_MAPOBJECT_SPHERE },				//球体
 
 	//爆弾関係
-	{ "data/MODEL/Bomb/Bomb.x" ,			MODEL_BOMBOBJECT_BOMB },				//壁
-	{ "data/MODEL/Bomb/Module.x" ,			MODEL_BOMBOBJECT_MODULE },				//壁
+	{ "data/MODEL/Bomb/Bomb.x" ,			MODEL_BOMBOBJECT_BOMB },				//爆弾
+	{ "data/MODEL/Bomb/Module.x" ,			MODEL_BOMBOBJECT_MODULE },				//モジュール
+	{ "data/MODEL/Bomb/Lamp.x" ,			MODEL_BOMBOBJECT_CLEARLAMP },			//ランプ
+	{ "data/MODEL/Bomb/Timer.x" ,			MODEL_BOMBOBJECT_TIMER },				//タイマー
 
 };
 

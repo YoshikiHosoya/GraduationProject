@@ -40,6 +40,8 @@ public:
 	void SetState(CAMERA_STATE state) { m_CameraState = state; };			//ƒJƒƒ‰‚Ìó‘ÔØ‚è‘Ö‚¦
 	void ResetCamera();
 
+	void Operation(void);
+
 	D3DXVECTOR3 GetCameraRot()		{ return m_rot; };						//‰ñ“]î•ñæ“¾
 	D3DXVECTOR3 GetCameraPosV()		{ return m_posV; };						//‹“_æ“¾
 	D3DXVECTOR3 GetCameraPosR()		{ return m_posR; };						//’‹“_æ“¾

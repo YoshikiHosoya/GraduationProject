@@ -70,11 +70,19 @@ void CSceneX::Update()
 }
 //------------------------------------------------------------------------------
 //描画処理
+//親のマトリックスが存在したときには親のマトリックスを掛け合わせる
 //------------------------------------------------------------------------------
 void CSceneX::Draw()
 {
 	//マトリックス計算
 	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot());
+
+	//nullcheck
+	if (GetParentMtxPtr())
+	{
+		//親のマトリックスを掛け合わせる
+		*GetMtxWorldPtr() *= *GetParentMtxPtr();
+	}
 
 	//メッシュ描画
 	DrawMesh();

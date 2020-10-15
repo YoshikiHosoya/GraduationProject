@@ -11,15 +11,18 @@
 #include "game.h"
 #include "collision.h"
 #include "Map.h"
+#include "mouse.h"
 //-----------------------------------------------------------------------------
 // マクロ定義
 //-----------------------------------------------------------------------------
 #define CAMERA_MOVE_SPEED			(10.0f)			//カメラ移動速度
 #define CAMERA_HORIZON_ROTATION		(0.05f)			//カメラの横回転
 #define CAMERA_VERTICAL_ROTATION	(0.02f)			//カメラの縦回転
+#define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,50.0f,0.0f))
+
 
 #define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
-#define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.17f,0.0f,0.0f))
+#define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.13f,0.0f,0.0f))
 
 #define CAMERA_LENGTH_NEAR			(10.0f)			//カメラの見える距離（近）
 #define CAMERA_LENGTH_FAR			(5000.0f)		//カメラの見える距離（遠）
@@ -107,13 +110,13 @@ void CCamera::Update(void)
 		//カメラ回転
 		RotCameraGame();
 
-		if (m_fDistance <= 700.0f)
-		{
-
-		}
 		break;
 
 	case CCamera::CAMERA_DEBUG:
+
+		//マウスによるカメラ操作
+		Operation();
+
 		//カメラ移動
 		MoveCameraDebug();
 
@@ -385,10 +388,119 @@ void CCamera::ResetCamera()
 	m_rotDest = m_rot = DEFAULT_CAMERA_ROTATION;
 	m_fDistance = DEFAULT_DISTANCE;
 
+	m_posR = m_posRDest = DEFAULT_POS_R;
+
 	m_posV.x = m_posVDest.x = m_posRDest.x - sinf(m_rot.y) * cosf(m_rot.x) * m_fDistance;
 	m_posV.y = m_posVDest.y = m_posRDest.y + sinf(m_rot.x)	* m_fDistance;
 	m_posV.z = m_posVDest.z = m_posRDest.z - cosf(m_rot.y) * cosf(m_rot.x) * m_fDistance;
 
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 操作
+//-------------------------------------------------------------------------------------------------------------
+void CCamera::Operation(void)
+{
+	// キーボードの取得
+	//Ckeyboard *pKeyboard = &CManager::GetKeyboard();
+
+	// マウスの取得
+	CMouse *pMouse = CManager::GetMouse();
+	// マウスの状態を取得
+	DIMOUSESTATE2* pMouseState = &pMouse->GetMouseState();
+
+	D3DXVECTOR2 NewRotation = D3DXVECTOR2(0.0f, 0.0f);
+
+	if (pMouse->GetPress(1) == true)
+	{
+		// ヨー回転
+		NewRotation.y = ((float)pMouseState->lX) / (D3DX_PI*2.0f) *0.02f;
+		m_rotDest.y += NewRotation.y;
+
+		// 回転量を360度ないに直す
+		CMylibrary::SetFixTheRotation(&m_rotDest.y);
+
+		// ピッチロー回転
+		NewRotation.x = ((float)pMouseState->lY) / (D3DX_PI*2.0f) *0.02f;
+
+		// 回転を90度未満に抑える
+		if (NewRotation.x >= D3DX_PI*0.49f)
+		{
+			NewRotation.x = D3DX_PI*0.49f;
+		}
+		else if (NewRotation.x <= -D3DX_PI*0.49f)
+		{
+			NewRotation.x = -D3DX_PI*0.49f;
+		}
+		m_rotDest.x += NewRotation.x;
+	}
+
+	if (pMouse->GetRelease(1))
+	{
+		m_MouseRotSave.y = m_rotDest.y;
+		m_MouseRotSave.x = m_rotDest.x;
+	}
+
+	//// カメラの公転
+	//if (pKeyboard->GetPress(DIK_RIGHTARROW))
+	//{
+	//	m_rot.y += CAMERA_ROTATION_SPEED;
+	//}
+	//else if (pKeyboard->GetPress(DIK_LEFTARROW))
+	//{
+	//	m_rot.y -= CAMERA_ROTATION_SPEED;
+	//}
+	//if (pKeyboard->GetPress(DIK_UPARROW))
+	//{
+	//	m_rot.x += CAMERA_ROTATION_SPEED*0.3f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_DOWNARROW))
+	//{
+	//	m_rot.x -= CAMERA_ROTATION_SPEED*0.3f;
+	//}
+	//// 距離の倍率変更
+	//if (pKeyboard->GetPress(DIK_4))
+	//{
+	//	m_fMagnificat += 0.01f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_5))
+	//{
+	//	m_fMagnificat -= 0.01f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_1))
+	//{
+	//	m_fMagnificat = 1.0f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_2))
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
+	//}
+	//else if (pKeyboard->GetPress(DIK_3))
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
+	//}
+
+	//// 拡大率の制限
+	//if (m_fMagnificat >= CAMERA_MAGNIFICAT_MIN)
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
+	//}
+	//else if (m_fMagnificat <= CAMERA_MAGNIFICAT_MAX)
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
+	//}
+
+	// カメラの回転を90度未満に抑える
+	if (m_rot.x >= D3DX_PI*0.49f)
+	{
+		m_rot.x = D3DX_PI*0.49f;
+	}
+	else if (m_rot.x <= -D3DX_PI*0.49f)
+	{
+		m_rot.x = -D3DX_PI*0.49f;
+	}
+	// 回転量を360度ないに直す
+	CMylibrary::SetFixTheRotation(&m_rot.y);
 }

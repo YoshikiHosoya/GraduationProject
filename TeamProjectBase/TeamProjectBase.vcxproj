@@ -177,7 +177,10 @@
     <ClCompile Include="Source Code\meshfield.cpp" />
     <ClCompile Include="Source Code\meshsphere.cpp" />
     <ClCompile Include="Source Code\modelinfo.cpp" />
-    <ClCompile Include="Source Code\module.cpp" />
+    <ClCompile Include="Source Code\module_base.cpp" />
+    <ClCompile Include="Source Code\module_parts_lamp.cpp" />
+    <ClCompile Include="Source Code\module_Timer.cpp" />
+    <ClCompile Include="Source Code\mouse.cpp" />
     <ClCompile Include="Source Code\multinumber.cpp" />
     <ClCompile Include="Source Code\Mylibrary.cpp" />
     <ClCompile Include="Source Code\Pad_XInput.cpp" />
@@ -195,6 +198,7 @@
     <ClCompile Include="Source Code\TestMode.cpp" />
     <ClCompile Include="Source Code\TexAnimationBase.cpp" />
     <ClCompile Include="Source Code\texture.cpp" />
+    <ClCompile Include="Source Code\timer.cpp" />
     <ClCompile Include="Source Code\title.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +231,11 @@
     <ClInclude Include="Source Code\meshfield.h" />
     <ClInclude Include="Source Code\meshsphere.h" />
     <ClInclude Include="Source Code\modelinfo.h" />
-    <ClInclude Include="Source Code\module.h" />
+    <ClInclude Include="Source Code\module_parts_base.h" />
+    <ClInclude Include="Source Code\module_base.h" />
+    <ClInclude Include="Source Code\module_parts_lamp.h" />
+    <ClInclude Include="Source Code\module_Timer.h" />
+    <ClInclude Include="Source Code\mouse.h" />
     <ClInclude Include="Source Code\multinumber.h" />
     <ClInclude Include="Source Code\Mylibrary.h" />
     <ClInclude Include="Source Code\Pad_XInput.h" />
@@ -246,6 +254,7 @@
     <ClInclude Include="Source Code\TestMode.h" />
     <ClInclude Include="Source Code\TexAnimationBase.h" />
     <ClInclude Include="Source Code\texture.h" />
+    <ClInclude Include="Source Code\timer.h" />
     <ClInclude Include="Source Code\title.h" />
   </ItemGroup>
   <ItemGroup>

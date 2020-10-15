@@ -32,6 +32,8 @@ public:
 		//爆弾関係 100番台
 		MODEL_BOMBOBJECT_BOMB,					//オブジェクト　ボム
 		MODEL_BOMBOBJECT_MODULE,				//オブジェクト　モジュール
+		MODEL_BOMBOBJECT_CLEARLAMP,				//オブジェクト　クリアランプ
+		MODEL_BOMBOBJECT_TIMER,					//オブジェクト　タイマー
 
 	};
 

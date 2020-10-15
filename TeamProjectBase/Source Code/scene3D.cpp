@@ -87,9 +87,18 @@ void CScene3D::Draw()
 	//ワールドマトリックス計算
 	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot());
 
+	//ビルボードかどうか
 	if (m_bBillBoard)
 	{
+		//ビルボード設定
 		CHossoLibrary::SetBillboard(GetMtxWorldPtr());
+	}
+
+	//nullcheck
+	if (GetParentMtxPtr())
+	{
+		//親のマトリックスを掛け合わせる
+		*GetMtxWorldPtr() *= *GetParentMtxPtr();
 	}
 
 	//ポリゴン描画

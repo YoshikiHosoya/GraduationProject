@@ -8,10 +8,11 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module.h"
+#include "module_parts_lamp.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
+#include "timer.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -23,22 +24,23 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule::CModule()
+CModule_Parts_Lamp::CModule_Parts_Lamp()
 {
-
+	m_LampState = LAMP_STATE::OFF;
+	m_nCntLampCnt = 0;
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule::~CModule()
+CModule_Parts_Lamp::~CModule_Parts_Lamp()
 {
 
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule::Init()
+HRESULT CModule_Parts_Lamp::Init()
 {
 	CSceneX::Init();
 	return S_OK;
@@ -46,34 +48,42 @@ HRESULT CModule::Init()
 //------------------------------------------------------------------------------
 //終了処理
 //------------------------------------------------------------------------------
-void CModule::Uninit()
+void CModule_Parts_Lamp::Uninit()
 {
 	CSceneX::Uninit();
 }
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule::Update()
+void CModule_Parts_Lamp::Update()
 {
+	switch (m_LampState)
+	{
+	case CModule_Parts_Lamp::LAMP_STATE::OFF:
+		break;
+	case CModule_Parts_Lamp::LAMP_STATE::RED:
+		m_nCntLampCnt--;
+		if (m_nCntLampCnt < 0)
+		{
+			SetLampState(LAMP_STATE::GREEN);
+		}
+		break;
+	case CModule_Parts_Lamp::LAMP_STATE::GREEN:
+		break;
+	}
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule::Draw()
+void CModule_Parts_Lamp::Draw()
 {
-	//マトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot());
-
-	*GetMtxWorldPtr() *= *m_pBombMatrix;
-
-	CSceneX::DrawMesh();
-
+	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule::ShowDebugInfo()
+void CModule_Parts_Lamp::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -84,24 +94,24 @@ void CModule::ShowDebugInfo()
 //生成関数
 //Bombが管理
 //------------------------------------------------------------------------------
-std::shared_ptr<CModule> CModule::Create(D3DXVECTOR3 const pos, D3DXMATRIX * const pBombMtx)
+std::shared_ptr<CModule_Parts_Lamp> CModule_Parts_Lamp::Create(D3DXVECTOR3 const pos, D3DXMATRIX * const pBomb)
 {
 	//メモリ確保
-	std::shared_ptr<CModule> pBomb = std::make_shared<CModule>();
+	std::shared_ptr<CModule_Parts_Lamp> pModuleTimer = std::make_shared<CModule_Parts_Lamp>();
 
 	//初期化
-	pBomb->Init();
+	pModuleTimer->Init();
 
 	//座標とサイズ設定
-	pBomb->SetPos(pos);
-	pBomb->SetParentMtx(pBombMtx);
+	pModuleTimer->SetPos(pos);
+	pModuleTimer->SetParentMtxPtr(pBomb);
 
 	//モデル情報設定
-	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_MODULE));
+	pModuleTimer->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_CLEARLAMP));
 
 	//Scene側で管理
-	pBomb->SetObjType(CScene::OBJTYPE_MODULE);
-	pBomb->AddSharedList(pBomb);
+	pModuleTimer->SetObjType(CScene::OBJTYPE_MODULE);
+	pModuleTimer->AddSharedList(pModuleTimer);
 
-	return pBomb;
+	return pModuleTimer;
 }

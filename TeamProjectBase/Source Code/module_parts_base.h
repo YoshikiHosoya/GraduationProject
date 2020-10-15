@@ -1,36 +1,33 @@
 //------------------------------------------------------------------------------
 //
-//モジュールの処理  [module.cpp]
+//モジュールのパーツの基底クラス  [module_parts_base.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
-#ifndef _MODULE_H_
-#define _MODULE_H_
+#ifndef _MODULE_PARTS_BASE_H_
+#define _MODULE_PARTS_BASE_H_
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
 #include "main.h"
-#include "SceneX.h"
 
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CModule : public CSceneX
+class CModule_Parts_Base
 {
 public:
-	CModule();
-	virtual ~CModule();
+	CModule_Parts_Base()
+	{
+	};
+	virtual ~CModule_Parts_Base() {};
 
-	virtual HRESULT Init()			override;			//初期化
-	virtual void Uninit()			override;			//終了
-	virtual void Update()			override;			//更新
-	virtual void Draw()				override;			//描画
-	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
-
-	static std::shared_ptr<CModule> Create(D3DXVECTOR3 const pos,D3DXMATRIX* const pBombMtx);
-	void SetParentMtx(D3DXMATRIX* const pBombMtx) { m_pBombMatrix = pBombMtx; };
+	virtual HRESULT Init() = 0;					//初期化
+	virtual void Uninit() = 0;					//終了
+	virtual void Update() = 0;					//更新
+	virtual void Draw() = 0;					//描画
+	virtual void ShowDebugInfo() = 0;			//デバッグ情報表記
 private:
-	D3DXMATRIX *m_pBombMatrix;
 
 
 };

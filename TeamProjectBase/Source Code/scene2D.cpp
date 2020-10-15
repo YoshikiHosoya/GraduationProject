@@ -283,7 +283,7 @@ HRESULT CScene2D::MakeVertex(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DX
 //------------------------------------------------------------------------------
 //サイズ設定 ポリゴン回転用の変数の計算もしておく
 //------------------------------------------------------------------------------
-void CScene2D::SetSize(D3DXVECTOR3 const size)
+void CScene2D::SetSize(D3DXVECTOR3 const &size)
 {
 	SetSize(size);
 

@@ -28,7 +28,7 @@ public:
 	virtual void Draw()													override;						//描画
 	virtual void ShowDebugInfo()										override;						//デバッグ情報表記
 	void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)		override;						//テクスチャUV座標設定
-	void SetSize(D3DXVECTOR3 const size)								override;						//サイズ設定
+	void SetSize(D3DXVECTOR3 const &size)								override;						//サイズ設定
 
 	static std::shared_ptr<CScene2D> Create_Shared			(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（SceneとReturn先で共有管理
 	static void Create_SceneManagement						(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（CSceneのみで管理

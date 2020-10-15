@@ -37,14 +37,20 @@
     <Filter Include="UI">
       <UniqueIdentifier>{69b01558-a66c-4d91-b0b4-39c02d490d7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug">
-      <UniqueIdentifier>{a299ed23-8309-4e1f-824d-594ad8048391}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Bomb">
       <UniqueIdentifier>{d868d8f1-1da5-4067-b633-a823476e0bc2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Library">
       <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb\module">
+      <UniqueIdentifier>{f6824bca-1635-4150-a870-10378bc0252c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb\module_parts">
+      <UniqueIdentifier>{2d0ad257-9f0f-48a6-bc6a-0e5ae2ea5d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb\Debug">
+      <UniqueIdentifier>{a299ed23-8309-4e1f-824d-594ad8048391}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +145,7 @@
       <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Debug\debugproc.cpp">
-      <Filter>Debug</Filter>
+      <Filter>Bomb\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\texture.cpp">
       <Filter>ソース ファイル</Filter>
@@ -171,14 +177,26 @@
     <ClCompile Include="Source Code\Bomb.cpp">
       <Filter>Bomb</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module.cpp">
-      <Filter>Bomb</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Mylibrary.cpp">
       <Filter>Library</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\hossolibrary.cpp">
       <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\timer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\mouse.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_Timer.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_lamp.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_base.cpp">
+      <Filter>Bomb\module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +300,7 @@
       <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Debug\debugproc.h">
-      <Filter>Debug</Filter>
+      <Filter>Bomb\Debug</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\meshcircle.h">
       <Filter>Mesh</Filter>
@@ -320,14 +338,29 @@
     <ClInclude Include="Source Code\Bomb.h">
       <Filter>Bomb</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module.h">
-      <Filter>Bomb</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Mylibrary.h">
       <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\hossolibrary.h">
       <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\timer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\mouse.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_base.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_Timer.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_base.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_lamp.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

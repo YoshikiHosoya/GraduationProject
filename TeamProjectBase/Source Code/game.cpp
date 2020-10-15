@@ -50,7 +50,7 @@ HRESULT CGame::Init(HWND hWnd)
 	SetGamestate(CGame::STATE_READY);
 
 	//îöíeê∂ê¨
-	CBomb::Create(D3DXVECTOR3(0.0f,70.0f,0.0f), ZeroVector3, 1);
+	CBomb::Create(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
 
 	CMap::Create();
 

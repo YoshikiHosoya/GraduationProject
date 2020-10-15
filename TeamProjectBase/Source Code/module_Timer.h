@@ -1,34 +1,36 @@
 //------------------------------------------------------------------------------
 //
-//入力処理  [input.h]
+//モジュールのタイマー処理  [module_timer.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
-#ifndef _INPUT_H_
-#define _INPUT_H_
+#ifndef _MODULE_TIMER_H_
+#define _MODULE_TIMER_H_
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
 #include "main.h"
-#include "dinput.h"
-#include <XInput.h>
-
+#include "module_base.h"
+#include "sceneX.h"
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CInput
+class CTimer;
+
+class CModule_Timer : public CModule_Base,public CSceneX
 {
 public:
-	CInput();			//コンストラクタ
-	virtual ~CInput();	//コンストラクタ
+	CModule_Timer();
+	virtual ~CModule_Timer();
 
-	virtual HRESULT Init(HINSTANCE hInstance, HWND hWnd);	//初期化
-	virtual void Uninit();									//終了
-	virtual void Update() = 0;								//更新
-	LPDIRECTINPUT8 GetInput() { return m_pInput; };			//インプットデバイスの取得
+	virtual HRESULT Init()			override;			//初期化
+	virtual void Uninit()			override;			//終了
+	virtual void Update()			override;			//更新
+	virtual void Draw()				override;			//描画
+	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
+private:
+	std::unique_ptr<CTimer> m_pTimer;
 
-protected:
-	static LPDIRECTINPUT8 m_pInput;							//Input
+
 };
-
 #endif
