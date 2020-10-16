@@ -92,11 +92,11 @@ void CBaseMode::DebugCommand()
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT);
 		}
 
-		////エフェクトビューワ
-		//if (pKeyboard->GetTrigger(DIK_NUMPAD8))
-		//{
-		//	CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
-		//}
+		//エフェクトビューワ
+		if (pKeyboard->GetTrigger(DIK_NUMPAD8))
+		{
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_EFFECT_VIEWER);
+		}
 
 	}
 
@@ -111,14 +111,19 @@ void CBaseMode::BaseLoad(HWND hWnd)
 {
 	//テクスチャロード
 	CTexture::TexLoad(hWnd);
+
+	//モデル情報読み込み
 	CModelInfo::ModelLoad(hWnd);
 
-	//パーティクルのテクスチャと頂点確報
-	if (FAILED(CParticle::MakeVertex()))
-	{
-		//失敗
-		MessageBox(hWnd, "テクスチャ読み込み失敗", "CParticle", MB_OK | MB_ICONHAND);
-	}
+	//パーティクルのパラメータロード
+	CParticleParam::LoadParticleDefaultParam();
+
+	////パーティクルのテクスチャと頂点確報
+	//if (FAILED(CParticle::MakeVertex()))
+	//{
+	//	//失敗
+	//	MessageBox(hWnd, "テクスチャ読み込み失敗", "CParticle", MB_OK | MB_ICONHAND);
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -129,7 +134,7 @@ void CBaseMode::BaseUnload()
 	//テクスチャ破棄
 	CTexture::TexUnload();
 
-	//パーティクルの頂点情報開放
-	CParticle::ReleaseVertex();
+	////パーティクルの頂点情報開放
+	//CParticle::ReleaseVertex();
 
 }

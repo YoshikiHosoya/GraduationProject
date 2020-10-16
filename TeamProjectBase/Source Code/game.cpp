@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "Bomb.h"
 #include "Map.h"
+#include "ParticleManager.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -49,9 +50,13 @@ HRESULT CGame::Init(HWND hWnd)
 	//初期化
 	SetGamestate(CGame::STATE_READY);
 
+	//パーティクルのマネージャ
+	CParticleManager::Create();
+
 	//爆弾生成
 	CBomb::Create(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
 
+	//マップ生成
 	CMap::Create();
 
 	return S_OK;

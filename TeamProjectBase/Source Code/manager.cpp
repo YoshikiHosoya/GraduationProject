@@ -22,6 +22,7 @@
 #include "scene.h"
 #include "TestMode.h"
 #include "mouse.h"
+#include "Debug/Debug_EffectViewer.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -180,14 +181,14 @@ void CManager::Update()
 	//スティックの情報更新
 	CHossoLibrary::ResetStickInfo();
 
+	if (m_pBaseMode)
+	{	//モード
+		m_pBaseMode->Update();
+	}
 	if (m_pRenderer)
 	{	//レンダラー
 		m_pRenderer->Update();
 
-	}
-	if (m_pBaseMode)
-	{	//モード
-		m_pBaseMode->Update();
 	}
 }
 //------------------------------------------------------------------------------
@@ -267,6 +268,13 @@ void CManager::SetMode(MODE nextmode)
 		//result
 	case MODE_TEST:
 		m_pBaseMode.reset(new CTestMode);
+		std::cout << "new BaseMode[CTestMode]" << NEWLINE;
+		m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		break;
+
+		//result
+	case MODE_EFFECT_VIEWER:
+		m_pBaseMode.reset(new CDebug_EffectViewer);
 		std::cout << "new BaseMode[CTestMode]" << NEWLINE;
 		m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;

@@ -20,8 +20,9 @@ std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Map/Sphere.x" ,			MODEL_MAPOBJECT_SPHERE },				//球体
 
 	//爆弾関係
-	{ "data/MODEL/Bomb/Bomb.x" ,			MODEL_BOMBOBJECT_BOMB },				//爆弾
+	{ "data/MODEL/Bomb/bombbox.x" ,			MODEL_BOMBOBJECT_BOMB },				//爆弾
 	{ "data/MODEL/Bomb/Module.x" ,			MODEL_BOMBOBJECT_MODULE },				//モジュール
+	{ "data/MODEL/Bomb/Module_none.x" ,		MODEL_BOMBOBJECT_MODULE_NONE },			//モジュール　中身ないやつ
 	{ "data/MODEL/Bomb/Lamp.x" ,			MODEL_BOMBOBJECT_CLEARLAMP },			//ランプ
 	{ "data/MODEL/Bomb/Timer.x" ,			MODEL_BOMBOBJECT_TIMER },				//タイマー
 

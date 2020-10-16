@@ -15,6 +15,8 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
+class CModule_Base;
+
 class CBomb : public CSceneX
 {
 public:
@@ -30,9 +32,9 @@ public:
 	static std::shared_ptr<CBomb> Create(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
 
 private:
-	int nModuleNum;
+	int m_nModuleNum;																		//モジュール数
+	std::vector<std::shared_ptr<CModule_Base>> m_pModuleList;							//モジュールのリスト
 
-	void CreateModule(int const nModuleNum);
-
+	void CreateModule(int const nModuleNum);											//モジュール生成
 };
 #endif

@@ -25,7 +25,9 @@ public:
 	//パーティクルのテキスト
 	enum PARTICLE_TYPE
 	{
-		EFFECT_DEFAULT = 0,						//
+		EFFECT_DEFAULT = 0,							//デフォルト
+		EFFECT_LED_LIGHT,							//ＬＥＤライト
+
 		PARTICLE_MAX,
 	};
 

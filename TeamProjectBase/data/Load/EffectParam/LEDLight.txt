@@ -1,0 +1,38 @@
+//------------------------------------------------------------
+//
+//ParticleParamater
+//読み込み用のテキストにコピーしてください
+//Author:Yoshiki Hosoya
+//
+//------------------------------------------------------------
+
+SCRIPT
+	PARAMSET
+
+		SPEEDRANDOM = 0							//速度がランダムかどうか
+		GRAVITY = 0								//重力をつけるか
+		ALPHABLEND_ADD = 1						//加算合成するか
+		ALPHABLEND_SUB = 0						//減算合成するか
+		ZTEST = 1								//Zテストするか
+		ZWRITE = 1								//Zライティングするか
+		BILLBOARD = 1							//ビルボードするか
+		FOLLOWING = 0							//追従するか
+		ANIMATION = 0							//アニメーションするか
+		COLLISION = 0							//当たり判定があるかどうか
+		TEXTURE = 1							//テクスチャ
+		SHAPE = 0								//パーティクルの出し方
+		LIFE = 3								//ライフ
+		NUMBER = 1								//個数
+		SPEED = 0.0								//速度
+		RANGE = 0.5								//範囲
+		ALPHADAMPING = 1.00						//アルファ値の減衰値
+		GRAVITYPOWER = 0.80						//重力の強さ
+		LOCALPOS = 0.00 0.00 0.00				//ローカル座標
+		LOCALPOS_RANGE = 0.00 0.00 0.00			//ローカル座標がランダム時の値の範囲
+		SIZE = 8.00 8.00 0.00				//サイズ
+		SIZEDAMPING = 1.00 1.00 0.00			//サイズ減衰量
+		COLOR = 1.0 1.0 1.0 1.0					//色
+		ROT = 0.00 0.00 0.00					//回転量
+
+	END_PARAMSET
+END_SCRIPT

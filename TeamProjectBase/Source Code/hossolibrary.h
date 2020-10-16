@@ -116,6 +116,8 @@ public:
 
 	static void CalcMatrix(D3DXMATRIX *pMtx,D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot);					//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);		//シャドーマトリックスの計算
+	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX *pMtx);														//マトリックスをVector3に変換
+
 	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);									//モデルの最大頂点と最少頂点を設定
 	static void SetBillboard(D3DXMATRIX *pMtx);																	//ビルボード設定
 	static void SetBillboard_XZ_Only(D3DXMATRIX *pMtx);															//ビルボード設定　XとZのみ
@@ -132,6 +134,8 @@ public:
 	static void CheckWireMode();			//ワイヤーフレーム確認
 	static void CheckCulling();				//カリング確認
 	static void CheckLighting();			//ライティング確認
+
+	static bool ImGui_Combobox(std::vector<std::string> aItemNameList, std::string aTitle, int & nValue);		//ImGuiのコンボボックス
 
 	static float Random_PI();													//-3.14から3.14までのランダムで返す
 	static float Random(float fInputValue);										//入力された値の+-ランダムな値で返す

@@ -40,6 +40,7 @@ public:
 		MODE_GAME,							//ゲーム
 		MODE_RESULT,						//リザルト
 		MODE_TEST,							//テスト画面
+		MODE_EFFECT_VIEWER,					//エフェクトビューワ
 		MODE_END							//ゲーム終了
 	};
 

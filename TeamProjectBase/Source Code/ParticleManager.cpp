@@ -125,13 +125,17 @@ void CParticleManager::ShowDebugInfo()
 void CParticleManager::Create()
 {
 	//メモリ確保 Scene側で管理
-	CParticleManager *pParticle = new CParticleManager();
+	std::unique_ptr<CParticleManager> pParticle = std::make_unique<CParticleManager>();
 
 	//初期化
 	pParticle->Init();
 
 	//パーティクルの頂点バッファ確保
 	CParticle::MakeVertex();
+
+	//Sceneで管理
+	pParticle->SetObjType(CScene::OBJTYPE_EFFECT);
+	pParticle->AddUniqueList(std::move(pParticle));
 
 }
 //------------------------------------------------------------------------------

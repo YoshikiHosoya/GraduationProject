@@ -327,7 +327,6 @@ void CParticle::CreateFromParam(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CParticleParam
 		}
 	}
 }
-
 //------------------------------------------------------------------------------
 //テクスチャ破棄
 //------------------------------------------------------------------------------
@@ -353,7 +352,7 @@ void CParticle::ResetVertexID()
 //------------------------------------------------------------------------------
 //テキスト情報を元にパーティクル作成
 //------------------------------------------------------------------------------
-void CParticle::CreateFromText(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CParticleParam::PARTICLE_TYPE type, TAG tag, int nAttack,D3DXCOLOR col, D3DXVECTOR3 *PosPtr)
+void CParticle::CreateFromText(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CParticleParam::PARTICLE_TYPE type, D3DXCOLOR col, D3DXVECTOR3 * PosPtr, TAG tag, int nAttack)
 {
 	//メモリ確保
 	std::unique_ptr<CParticle> pParticle(new CParticle);
@@ -390,7 +389,7 @@ void CParticle::CreateFromText(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CParticleParam:
 			//パーティクルの設定
 			pParticle->SetParticle(pos, rot, pParam);
 
-			//a値が初期値だったとき
+			//a値が初期値じゃないとき
 			if (col.a > 0)
 			{
 				//色設定

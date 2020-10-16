@@ -206,16 +206,6 @@ void CRenderer::Update()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-#endif	//DEBUG
-	//オブジェクトの更新
-	CScene::UpdateAll();
-	m_pCamera->Update();
-
-	//更新
-	m_pFade->Update();
-	m_pLight->Update();
-
-#ifdef _DEBUG
 
 	//Sceneで管理してるやつの情報
 	ImGui::Begin("SceneInfo");
@@ -248,6 +238,16 @@ void CRenderer::Update()
 	//レンダラーで管理してるやつの情報
 	ImGui::Begin("DebugInfo");
 
+#endif	//DEBUG
+	//オブジェクトの更新
+	CScene::UpdateAll();
+	m_pCamera->Update();
+
+	//更新
+	m_pFade->Update();
+	m_pLight->Update();
+
+#ifdef _DEBUG
 	//Imguiのデバッグ情報表示
 	RendererDebugInfo();
 

@@ -35,8 +35,35 @@ CModule_Base::~CModule_Base()
 
 }
 
+//------------------------------------------------------------------------------
+//ランプ生成
+//------------------------------------------------------------------------------
 void CModule_Base::CreateLamp(D3DXMATRIX *pModuleMtx)
 {
 	m_pLamp = CModule_Parts_Lamp::Create(D3DXVECTOR3(25.0f, 25.0f, -10.0f), pModuleMtx);
+}
+
+//------------------------------------------------------------------------------
+//モジュールクリア
+//------------------------------------------------------------------------------
+void CModule_Base::Module_Clear()
+{
+	//nullcheck
+	if (m_pLamp)
+	{
+		m_pLamp->SetLampState(CModule_Parts_Lamp::LAMP_STATE::GREEN);
+	}
+}
+
+//------------------------------------------------------------------------------
+//モジュール失敗
+//------------------------------------------------------------------------------
+void CModule_Base::Module_Failed()
+{
+	//nullcheck
+	if (m_pLamp)
+	{
+		m_pLamp->SetLampState(CModule_Parts_Lamp::LAMP_STATE::RED);
+	}
 }
 

@@ -85,39 +85,41 @@ void CLight::Update()
 //-----------------------------------------------------------------------------
 void CLight::ShowLightInfo()
 {
+
+
 	if (ImGui::CollapsingHeader("LightInfo"))
 	{
+		char aName[MAX_TEXT] = {};
 		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();	// デバイスの取得
 
-		if (ImGui::TreeNode("Light0"))
+		for (int nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
 		{
-			ImGui::SliderFloat3("direction", m_vecDir[0], -1.0f, 1.0f);
 
-			D3DXVec3Normalize(&m_vecDir[0], &m_vecDir[0]);		//正規化
-			m_aLight[0].Direction = m_vecDir[0];
+			sprintf(aName, "Light [%d]", nCnt);
 
-			pDevice->SetLight(0, &m_aLight[0]);
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode("Light1"))
-		{
-			ImGui::SliderFloat3("direction", m_vecDir[1], -1.0f, 1.0f);
+			if (ImGui::TreeNode(aName))
+			{
+				//文字列改良
+				sprintf(aName, "Direction [%d]", nCnt);
+				ImGui::SliderFloat3(aName, m_vecDir[nCnt], -1.0f, 1.0f);
 
-			D3DXVec3Normalize(&m_vecDir[1], &m_vecDir[1]);		//正規化
-			m_aLight[1].Direction = m_vecDir[1];
+				//色のポインタ
+				float *rCol = m_LightCol[nCnt];
 
-			pDevice->SetLight(1, &m_aLight[1]);
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode("Light2"))
-		{
-			ImGui::SliderFloat3("direction", m_vecDir[2], -1.0f, 1.0f);
+				//色の設定
+				sprintf(aName, "Color [%d]", nCnt);
+				ImGui::ColorEdit4(aName, rCol);
 
-			D3DXVec3Normalize(&m_vecDir[2], &m_vecDir[2]);		//正規化
-			m_aLight[2].Direction = m_vecDir[2];
+				//正規化
+				D3DXVec3Normalize(&m_vecDir[nCnt], &m_vecDir[nCnt]);
 
-			pDevice->SetLight(2, &m_aLight[2]);
-			ImGui::TreePop();
+				//ライトの変数に代入
+				m_aLight[nCnt].Direction = m_vecDir[nCnt];
+
+				//ライト設定
+				pDevice->SetLight(nCnt, &m_aLight[nCnt]);
+				ImGui::TreePop();
+			}
 		}
 	}
 }

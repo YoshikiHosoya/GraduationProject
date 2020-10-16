@@ -295,6 +295,11 @@ void CHossoLibrary::CalcShadowMatrix(D3DXMATRIX & rShadowMtx, D3DXVECTOR3 const 
 	D3DXMatrixShadow(&rShadowMtx, &ShadowLightVec, &planeField);
 }
 
+D3DXVECTOR3 CHossoLibrary::CalcMtxToVector3(D3DXMATRIX * pMtx)
+{
+	return D3DXVECTOR3(pMtx->_41, pMtx->_42, pMtx->_43);
+}
+
 //------------------------------------------------------------------------------
 //Imgui初期化
 //------------------------------------------------------------------------------
@@ -670,6 +675,40 @@ void CHossoLibrary::SelectHorizonMenu(int & nSelectNum, int const & nMaxSelect)
 			CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+//ImGuiのコンボボックス
+//------------------------------------------------------------------------------
+bool CHossoLibrary::ImGui_Combobox(std::vector<std::string> aItemNameList, std::string aTitle, int & nValue)
+{
+	bool bChange = false;
+
+#ifdef _DEBUG
+	//combo開始
+	if (ImGui::BeginCombo(aTitle.data(), aItemNameList[nValue].data()))
+	{
+		//要素分繰り返す
+		for (size_t nCnt = 0; nCnt < aItemNameList.size(); nCnt++)
+		{
+
+			//選択番号があってるかどうか
+			bool is_selected = (aItemNameList[nValue] == aItemNameList[nCnt]);
+
+			//選択された時の処理
+			if (ImGui::Selectable(aItemNameList[nCnt].data(), is_selected))
+			{
+				//現在の選択項目設定
+				nValue = nCnt;
+				bChange = true;
+			}
+		}
+		//combo終了
+		ImGui::EndCombo();
+
+	}
+#endif //DEBUG
+	return bChange;
 }
 //------------------------------------------------------------------------------
 //-3.14～3.14を返す
