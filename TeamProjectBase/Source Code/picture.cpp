@@ -19,8 +19,8 @@
 //-------------------------------------------------------------------------------------------------------------
 // マクロ関数
 //-------------------------------------------------------------------------------------------------------------
-#define Paint(col) Mybfunc_bit_clear(col,0)
-#define Clear(col) Mybfunc_bit_set(col,0)
+#define Paint(col) Mybfunc_bit_set(col,0)
+#define Clear(col) Mybfunc_bit_clear(col,0)
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
@@ -230,6 +230,10 @@ std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVEC
 	pPicture->SetRot(rot);
 	// 初期化
 	pPicture->Init();
+
+	//Sceneで管理
+	pPicture->SetObjType(OBJTYPE_MESHFIELD);
+	pPicture->AddSharedList(pPicture);
 	return pPicture;
 }
 
@@ -264,9 +268,9 @@ void CPicture::MakeVertex(LPDIRECT3DDEVICE9 pDevice)
 		for (int nCntHeng = 0; nCntHeng < m_nNumPolyBlock.nX + 1; nCntHeng++)
 		{
 			// 位置の設定
-			pVtx[0].pos = D3DXVECTOR3(sizeUpdate.x, sizeUpdate.y, MYLIB_INT_UNSET);
+			pVtx[0].pos = D3DXVECTOR3(sizeUpdate.x, -sizeUpdate.y, MYLIB_INT_UNSET);
 			// 法線の設定
-			pVtx[0].nor = MYLIB_VEC3_ZONE;
+			pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 			// 色の設定
 			pVtx[0].col = MYLIB_D3DXCOR_SET;
 			// UV情報の設定
@@ -274,12 +278,18 @@ void CPicture::MakeVertex(LPDIRECT3DDEVICE9 pDevice)
 			// 頂点ポインタのインクリメント
 			pVtx++;
 			// 更新する大きさX軸を加算
-			if (nCntHeng % 2 == 0)sizeUpdate.x += m_sizeShift.x;
+			if (nCntHeng % 2 == 0)
+			{
+				sizeUpdate.x += m_sizeShift.x;
+			}
 		}
 		// 更新する大きさX軸の初期化
 		sizeUpdate.x = MYLIB_FLOAT_UNSET;
 		// 更新する大きさY軸を加算
-		if (nCntVertical % 2 == 0)sizeUpdate.y += m_sizeShift.y;
+		if (nCntVertical % 2 == 0)
+		{
+			sizeUpdate.y += m_sizeShift.y;
+		}
 	}
 	// 頂点データをアンロック
 	m_mesh.pVtexBuff->Unlock();

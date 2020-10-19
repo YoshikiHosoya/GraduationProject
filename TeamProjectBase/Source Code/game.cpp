@@ -17,6 +17,8 @@
 #include "Bomb.h"
 #include "Map.h"
 #include "ParticleManager.h"
+#include "picture.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -59,6 +61,9 @@ HRESULT CGame::Init(HWND hWnd)
 	//マップ生成
 	CMap::Create();
 
+	CPicture::Load();
+	// ピクチャの生成
+	CPicture::Create(D3DXVECTOR3(0.0f, 120.0f, 120.0f), ZeroVector3);
 	return S_OK;
 }
 
@@ -67,6 +72,7 @@ HRESULT CGame::Init(HWND hWnd)
 //------------------------------------------------------------------------------
 void CGame::Uninit()
 {
+	CPicture::InitStaticMember();
 }
 
 //------------------------------------------------------------------------------
