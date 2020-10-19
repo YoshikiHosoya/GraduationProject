@@ -190,6 +190,7 @@
     <ClCompile Include="Source Code\particle.cpp" />
     <ClCompile Include="Source Code\ParticleManager.cpp" />
     <ClCompile Include="Source Code\ParticleParamater.cpp" />
+    <ClCompile Include="Source Code\picture.cpp" />
     <ClCompile Include="Source Code\renderer.cpp" />
     <ClCompile Include="Source Code\result.cpp" />
     <ClCompile Include="Source Code\scene.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Source Code\particle.h" />
     <ClInclude Include="Source Code\ParticleManager.h" />
     <ClInclude Include="Source Code\ParticleParamater.h" />
+    <ClInclude Include="Source Code\picture.h" />
     <ClInclude Include="Source Code\renderer.h" />
     <ClInclude Include="Source Code\Resource\resource.h" />
     <ClInclude Include="Source Code\result.h" />
