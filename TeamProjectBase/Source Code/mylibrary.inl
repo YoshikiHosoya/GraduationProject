@@ -12,177 +12,6 @@
 // struct inline func
 // 構造体のインライン関数
 */
-//----------------------------------------------------------------------------------------------------
-// 3成分float
-//----------------------------------------------------------------------------------------------------
-inline FLOAT3
-FLOAT3::operator +(const FLOAT3 &rhs) const
-{
-	return FLOAT3(x + rhs.x, y + rhs.y, z + rhs.z);
-}
-
-inline FLOAT3
-FLOAT3::operator -(const FLOAT3 &rhs) const
-{
-	return FLOAT3(x - rhs.x, y - rhs.y, z - rhs.z);
-}
-
-inline FLOAT3
-FLOAT3::operator -(void) const
-{
-	return FLOAT3(x * -1.0f, y * -1.0f, z * -1.0f);
-}
-
-inline FLOAT3
-FLOAT3::operator *(const FLOAT3 &rhs) const
-{
-	return FLOAT3(x * rhs.x, y * rhs.y, z * rhs.z);
-}
-
-inline FLOAT3
-FLOAT3::operator /(const FLOAT3 &rhs) const
-{
-	return FLOAT3(x / rhs.x, y / rhs.y, z / rhs.z);
-}
-
-inline FLOAT3
-FLOAT3::operator *(float rhs) const
-{
-	return FLOAT3(x * rhs, y * rhs, z * rhs);
-}
-
-inline FLOAT3
-FLOAT3::operator /(float rhs) const
-{
-	return FLOAT3(x / rhs, y / rhs, z / rhs);
-}
-
-inline float
-FLOAT3::Dot(const FLOAT3 &rhs) const
-{
-	return x * rhs.x + y * rhs.y + z * rhs.z;
-}
-
-inline FLOAT3
-FLOAT3::Cross(const FLOAT3 &rhs) const
-{
-	return FLOAT3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
-}
-
-inline float
-FLOAT3::Length() const
-{
-	return sqrtf(LengthSq());
-}
-
-inline float
-FLOAT3::LengthSq() const
-{
-	return x * x + y * y + z * z;
-}
-
-inline void
-FLOAT3::Norm()
-{
-	const float fLength = Length();
-	if (fLength > 0.0f)
-	{
-		x /= fLength;
-		y /= fLength;
-		z /= fLength;
-	}
-}
-
-inline FLOAT3
-FLOAT3::GetNorm() const
-{
-	const float fLength = Length();
-	if (fLength > 0.0f) {
-		return FLOAT3(x / fLength, y / fLength, z / fLength);
-	}
-	return FLOAT3(0.0f, 0.0f, 0.0f);
-}
-
-//----------------------------------------------------------------------------------------------------
-// 3Dベクトル
-//----------------------------------------------------------------------------------------------------
-inline VEC3& VEC3::operator =(const FLOAT3 &rhs)
-{
-	x = rhs.x;
-	y = rhs.y;
-	z = rhs.z;
-	return *this;
-}
-
-inline bool
-VEC3::IsVertical(const VEC3 &rhs) const
-{
-	float DotValue = Dot(rhs);
-	return (-MYLIB_OX_EPSILON < DotValue && DotValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら垂直と判定
-}
-
-inline bool
-VEC3::IsParallel(const VEC3 &rhs) const
-{
-	float CrossValue = Cross(rhs).LengthSq();
-	return (-MYLIB_OX_EPSILON < CrossValue && CrossValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら平行と判定
-}
-
-inline bool
-VEC3::IsSharpAngle(const VEC3 &rhs) const
-{
-	return (Dot(rhs) >= 0.0f);
-}
-
-//----------------------------------------------------------------------------------------------------
-// 直線
-//----------------------------------------------------------------------------------------------------
-inline FLOAT3
-LINE::GetPoint(float fCoffi) const
-{
-	return pos + fCoffi * vec;
-}
-
-//----------------------------------------------------------------------------------------------------
-// 線分
-//----------------------------------------------------------------------------------------------------
-inline FLOAT3
-SEGMENT::GetEndPoint() const
-{
-	return pos + vec;
-}
-
-//----------------------------------------------------------------------------------------------------
-// タイマー情報
-//----------------------------------------------------------------------------------------------------
-/* * コンストラクタ */
-inline _TIMER_INFO::_TIMER_INFO(int nStart, int nEnd)
-{
-	this->nStart = nStart;
-	this->nEnd = nEnd;
-}
-
-
-//----------------------------------------------------------------------------------------------------
-// テクスチャのUV座標の設定用の情報
-//----------------------------------------------------------------------------------------------------
-inline _SETING_UV::_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV)
-{
-	this->nCntU = nCntU;
-	this->nNumU = nNumU;
-	this->nCntV = nCntV;
-	this->nNumV = nNumV;
-}
-
-//----------------------------------------------------------------------------------------------------
-// テクスチャアニメーション情報
-//----------------------------------------------------------------------------------------------------
-inline _TEXTUREANIMEINFO::_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration)
-{
-	this->nFrame = nFrame;
-	this->nFrameMax = nFrameMax;
-	this->nIteration = nIteration;
-}
 
 //----------------------------------------------------------------------------------------------------
 // 範囲
@@ -445,7 +274,7 @@ INTEGER2::INTEGER2(const int nMax, const int nMin)
 	this->nX = nMax;
 	this->nY = nMin;
 }
-inline 
+inline
 INTEGER2::INTEGER2(CONST _RANGE& rhs)
 {
 	this->nX = rhs.nMax;
@@ -475,7 +304,7 @@ INTEGER2::operator - (void) const
 inline INTEGER2
 INTEGER2::operator + (CONST INTEGER2& rhs) const
 {
-	return INTEGER2(this->nX + rhs.nX, this->nY+rhs.nY);
+	return INTEGER2(this->nX + rhs.nX, this->nY + rhs.nY);
 }
 inline INTEGER2
 INTEGER2::operator + (CONST _RANGE& rhs) const
@@ -643,7 +472,7 @@ INTEGER2::operator *= (CONST int rhs)
 }
 
 //* * 代入演算子 /= */
-inline INTEGER2& 
+inline INTEGER2&
 INTEGER2::operator /= (CONST INTEGER2& rhs)
 {
 	this->nX /= rhs.nX;
@@ -897,7 +726,7 @@ INTEGER4::operator + (void) const
 inline INTEGER4
 INTEGER4::operator - (void) const
 {
-	return INTEGER4(-this->x, -this->y, -this->z,-this->w);
+	return INTEGER4(-this->x, -this->y, -this->z, -this->w);
 }
 
 /* * 二項演算子 + */
@@ -909,7 +738,7 @@ INTEGER4::operator + (CONST INTEGER4& rhs) const
 inline INTEGER4
 INTEGER4::operator + (CONST int rhs) const
 {
-	return INTEGER4(this->x + rhs, this->y + rhs, this->z + rhs,this->w + rhs);
+	return INTEGER4(this->x + rhs, this->y + rhs, this->z + rhs, this->w + rhs);
 }
 
 /* * 二項演算子 - */
@@ -1063,6 +892,249 @@ INTEGER4::operator[] (unsigned int nIdx)
 {
 	return (&this->x)[nIdx];
 }
+
+
+//----------------------------------------------------------------------------------------------------
+// 2成分float
+//----------------------------------------------------------------------------------------------------
+inline FLOAT2
+FLOAT2::operator +(const FLOAT2 &rhs) const
+{
+	return FLOAT2(x + rhs.x, y + rhs.y);
+}
+
+inline FLOAT2
+FLOAT2::operator -(const FLOAT2 &rhs) const
+{
+	return FLOAT2(x - rhs.x, y - rhs.y);
+}
+
+inline FLOAT2
+FLOAT2::operator -(void) const
+{
+	return FLOAT2(x * -1.0f, y * -1.0f);
+}
+
+inline FLOAT2
+FLOAT2::operator *(const FLOAT2 &rhs) const
+{
+	return FLOAT2(x * rhs.x, y * rhs.y);
+}
+
+inline FLOAT2
+FLOAT2::operator /(const FLOAT2 &rhs) const
+{
+	return FLOAT2(x / rhs.x, y / rhs.y);
+}
+
+inline FLOAT2
+FLOAT2::operator *(float rhs) const
+{
+	return FLOAT2(x * rhs, y * rhs);
+}
+
+inline FLOAT2
+FLOAT2::operator /(float rhs) const
+{
+	return FLOAT2(x / rhs, y / rhs);
+}
+
+inline FLOAT2
+FLOAT2::operator +(const INTEGER2 &rhs) const
+{
+	return FLOAT2(x + rhs.nX, y + rhs.nY);
+}
+
+inline FLOAT2
+FLOAT2::operator -(const INTEGER2 &rhs) const
+{
+	return FLOAT2(x - rhs.nX, y - rhs.nY);
+}
+
+inline FLOAT2
+FLOAT2::operator *(const INTEGER2 &rhs) const
+{
+	return FLOAT2(x * rhs.nX, y * rhs.nY);
+}
+
+inline FLOAT2
+FLOAT2::operator /(const INTEGER2 &rhs) const
+{
+	return FLOAT2(x / rhs.nX, y / rhs.nY);
+}
+
+//----------------------------------------------------------------------------------------------------
+// 3成分float
+//----------------------------------------------------------------------------------------------------
+inline FLOAT3
+FLOAT3::operator +(const FLOAT3 &rhs) const
+{
+	return FLOAT3(x + rhs.x, y + rhs.y, z + rhs.z);
+}
+
+inline FLOAT3
+FLOAT3::operator -(const FLOAT3 &rhs) const
+{
+	return FLOAT3(x - rhs.x, y - rhs.y, z - rhs.z);
+}
+
+inline FLOAT3
+FLOAT3::operator -(void) const
+{
+	return FLOAT3(x * -1.0f, y * -1.0f, z * -1.0f);
+}
+
+inline FLOAT3
+FLOAT3::operator *(const FLOAT3 &rhs) const
+{
+	return FLOAT3(x * rhs.x, y * rhs.y, z * rhs.z);
+}
+
+inline FLOAT3
+FLOAT3::operator /(const FLOAT3 &rhs) const
+{
+	return FLOAT3(x / rhs.x, y / rhs.y, z / rhs.z);
+}
+
+inline FLOAT3
+FLOAT3::operator *(float rhs) const
+{
+	return FLOAT3(x * rhs, y * rhs, z * rhs);
+}
+
+inline FLOAT3
+FLOAT3::operator /(float rhs) const
+{
+	return FLOAT3(x / rhs, y / rhs, z / rhs);
+}
+
+inline float
+FLOAT3::Dot(const FLOAT3 &rhs) const
+{
+	return x * rhs.x + y * rhs.y + z * rhs.z;
+}
+
+inline FLOAT3
+FLOAT3::Cross(const FLOAT3 &rhs) const
+{
+	return FLOAT3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
+}
+
+inline float
+FLOAT3::Length() const
+{
+	return sqrtf(LengthSq());
+}
+
+inline float
+FLOAT3::LengthSq() const
+{
+	return x * x + y * y + z * z;
+}
+
+inline void
+FLOAT3::Norm()
+{
+	const float fLength = Length();
+	if (fLength > 0.0f)
+	{
+		x /= fLength;
+		y /= fLength;
+		z /= fLength;
+	}
+}
+
+inline FLOAT3
+FLOAT3::GetNorm() const
+{
+	const float fLength = Length();
+	if (fLength > 0.0f) {
+		return FLOAT3(x / fLength, y / fLength, z / fLength);
+	}
+	return FLOAT3(0.0f, 0.0f, 0.0f);
+}
+
+//----------------------------------------------------------------------------------------------------
+// 3Dベクトル
+//----------------------------------------------------------------------------------------------------
+inline VEC3& VEC3::operator =(const FLOAT3 &rhs)
+{
+	x = rhs.x;
+	y = rhs.y;
+	z = rhs.z;
+	return *this;
+}
+
+inline bool
+VEC3::IsVertical(const VEC3 &rhs) const
+{
+	float DotValue = Dot(rhs);
+	return (-MYLIB_OX_EPSILON < DotValue && DotValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら垂直と判定
+}
+
+inline bool
+VEC3::IsParallel(const VEC3 &rhs) const
+{
+	float CrossValue = Cross(rhs).LengthSq();
+	return (-MYLIB_OX_EPSILON < CrossValue && CrossValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら平行と判定
+}
+
+inline bool
+VEC3::IsSharpAngle(const VEC3 &rhs) const
+{
+	return (Dot(rhs) >= 0.0f);
+}
+
+//----------------------------------------------------------------------------------------------------
+// 直線
+//----------------------------------------------------------------------------------------------------
+inline FLOAT3
+LINE::GetPoint(float fCoffi) const
+{
+	return pos + fCoffi * vec;
+}
+
+//----------------------------------------------------------------------------------------------------
+// 線分
+//----------------------------------------------------------------------------------------------------
+inline FLOAT3
+SEGMENT::GetEndPoint() const
+{
+	return pos + vec;
+}
+
+//----------------------------------------------------------------------------------------------------
+// タイマー情報
+//----------------------------------------------------------------------------------------------------
+/* * コンストラクタ */
+inline _TIMER_INFO::_TIMER_INFO(int nStart, int nEnd)
+{
+	this->nStart = nStart;
+	this->nEnd = nEnd;
+}
+
+
+//----------------------------------------------------------------------------------------------------
+// テクスチャのUV座標の設定用の情報
+//----------------------------------------------------------------------------------------------------
+inline _SETING_UV::_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV)
+{
+	this->nCntU = nCntU;
+	this->nNumU = nNumU;
+	this->nCntV = nCntV;
+	this->nNumV = nNumV;
+}
+
+//----------------------------------------------------------------------------------------------------
+// テクスチャアニメーション情報
+//----------------------------------------------------------------------------------------------------
+inline _TEXTUREANIMEINFO::_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration)
+{
+	this->nFrame = nFrame;
+	this->nFrameMax = nFrameMax;
+	this->nIteration = nIteration;
+}
+
 
 //----------------------------------------------------------------------------------------------------
 // トランスフォーム情報
@@ -1571,22 +1643,23 @@ inline CLoadInitSetingfromFile::LOADRESULT
 CLoadInitSetingfromFile::ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData))
 {
 	// 変数宣言
+	CLoadInitSetingfromFile Load;
 	LOADRESULT result;	// 結果
 
 	// 読み込みファイルの情報を作成
-	if((result = LoadFileIntoString(pFileName)) != LR_SUCCESS)
+	if((result = Load.LoadFileIntoString(pFileName)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// 文字列から初期設定を読み込む
-	if ((result = SetingfromString(ReadLine)) != LR_SUCCESS)
+	if ((result = Load.SetingfromString(ReadLine)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// ファイルデータの破棄
-	DeleteFileData();
+	Load.DeleteFileData();
 
 	return result;
 }
@@ -1598,22 +1671,23 @@ inline CLoadInitSetingfromFile::LOADRESULT
 CLoadInitSetingfromFile::ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine))
 {
 	// 変数宣言
+	CLoadInitSetingfromFile Load;
 	LOADRESULT result;	// 結果
 
 	// 読み込みファイルの情報を作成
-	if ((result = LoadFileIntoString(pFileName)) != LR_SUCCESS)
+	if ((result = Load.LoadFileIntoString(pFileName)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// 文字列から初期設定を読み込む
-	if ((result = SetingfromString(ReadLine)) != LR_SUCCESS)
+	if ((result = Load.SetingfromString(ReadLine)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// ファイルデータの破棄
-	DeleteFileData();
+	Load.DeleteFileData();
 
 	return result;
 }
@@ -1625,22 +1699,23 @@ inline CLoadInitSetingfromFile::LOADRESULT
 CLoadInitSetingfromFile::ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, void *pVoidPtr), void * pVoidPtr)
 {
 	// 変数宣言
+	CLoadInitSetingfromFile Load;
 	LOADRESULT result;	// 結果
 
 	// 読み込みファイルの情報を作成
-	if ((result = LoadFileIntoString(pFileName)) != LR_SUCCESS)
+	if ((result = Load.LoadFileIntoString(pFileName)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// 文字列から初期設定を読み込む
-	if ((result = SetingfromString(ReadLine, pVoidPtr)) != LR_SUCCESS)
+	if ((result = Load.SetingfromString(ReadLine, pVoidPtr)) != LR_SUCCESS)
 	{
 		return result;
 	}
 
 	// ファイルデータの破棄
-	DeleteFileData();
+	Load.DeleteFileData();
 
 	return result;
 }

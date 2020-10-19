@@ -369,149 +369,6 @@ private:
 	BITS_4 Bits;
 } UBITS_4;
 
-// 3成分float
-typedef struct FLOAT3 : public D3DXVECTOR3
-{
-	FLOAT3() {}																												// コンストラクタ
-	FLOAT3(float x, float y, float z) : D3DXVECTOR3(x, y, z) {}																// コンストラクタ
-	FLOAT3(CONST FLOAT3& rhs) : D3DXVECTOR3(rhs) {}																			// コンストラクタ
-	FLOAT3(CONST D3DXVECTOR3& rhs) : D3DXVECTOR3(rhs) {}																	// コンストラクタ
-	~FLOAT3() {}																											// デストラクタ
-
-	inline FLOAT3        operator +(const FLOAT3 &rhs) const;																// 四則演算子+
-	inline FLOAT3        operator -(const FLOAT3 &rhs) const;																// 四則演算子-
-	inline FLOAT3        operator -(void) const;																			// 四則演算子-
-	inline FLOAT3        operator *(const FLOAT3 &rhs) const;																// 四則演算子*
-	inline FLOAT3        operator /(const FLOAT3 &rhs) const;																// 四則演算子/
-	inline FLOAT3        operator *(float rhs) const;																		// 四則演算子*
-	inline FLOAT3        operator /(float rhs) const;																		// 四則演算子/
-	inline friend FLOAT3 operator *(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs); }	// 四則演算子*フレンド関数
-	inline friend FLOAT3 operator /(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x / lhs, rhs.y / lhs, rhs.z / lhs); }	// 四則演算子/フレンド関数
-
-	inline float         Dot(const FLOAT3 &rhs) const;																		// 内積
-	inline FLOAT3        Cross(const FLOAT3 &rhs) const;																	// 外積
-	inline float         Length(void) const;																				// 長さ
-	inline float         LengthSq(void) const;																				// べき乗長さ
-	inline void          Norm(void);																						// 正規化
-	inline FLOAT3        GetNorm(void) const;																				// 正規化し取得
-}FLOAT3;
-
-// ベクトル
-typedef struct VEC3 : public FLOAT3
-{
-	VEC3() {}												// コンストラクタ
-	VEC3(float x, float y, float z) : FLOAT3(x, y, z) {}	// コンストラクタ
-	VEC3(const FLOAT3 &rhs) : FLOAT3(rhs) {}				// コンストラクタ
-	~VEC3() {}												// デストラクタ
-	inline VEC3& operator =(const FLOAT3 &rhs);				// 代入演算子
-	inline bool  IsVertical(const VEC3 &rhs) const;			// 垂直関係にある？
-	inline bool  IsParallel(const VEC3 &rhs) const;			// 平行関係にある？
-	inline bool  IsSharpAngle(const VEC3 &rhs) const;		// 鋭角関係？
-}VEC3;
-
-// 直線
-typedef struct LINE
-{
-	FLOAT3 pos;															// 位置
-	VEC3 vec;															// 方向ベクトル
-	LINE() : pos(0.0f, 0.0f, 0.0f), vec(1.0f, 0.0f, 0.0f) {}			// コンストラクタ
-	LINE(const FLOAT3 &pos, const VEC3 &vec) : pos(pos), vec(vec) {}	// コンストラクタ
-	~LINE() {}															// デストラクタ
-	inline FLOAT3 GetPoint(float fCoffi) const;							// 点上の座標を取得
-}LINE;
-
-// 線分
-typedef struct SEGMENT : public LINE
-{
-	SEGMENT() {}														// コンストラクタ
-	SEGMENT(const FLOAT3 &p, const VEC3 &v) : LINE(p, v) {}				// コンストラクタ
-	SEGMENT(const FLOAT3 &p1, const FLOAT3 &p2) : LINE(p1, p2 - p1) {}	// コンストラクタ
-	~SEGMENT() {}														// デストラクタ
-	inline FLOAT3 GetEndPoint(void) const;								// 終点を取得
-}SEGMENT;
-
-// 球
-typedef struct SPHERE
-{
-	FLOAT3 Point;														// 中心点
-	float fRadius;														// 半径
-	SPHERE() : Point(0.0f, 0.0f, 0.0f), fRadius(0.5f) {}				// コンストラクタ
-	SPHERE(const FLOAT3 &p, float r) : Point(p), fRadius(r) {}			// コンストラクタ
-	~SPHERE() {}														// デストラクタ
-}SPHERE;
-
-// カプセル
-typedef struct CAPSULE
-{
-	SEGMENT Segment;																		// 線分
-	float fRadius;																			// 半径
-	CAPSULE() : fRadius(0.5f) {}															// コンストラクタ
-	CAPSULE(const SEGMENT &s, float r) : Segment(s), fRadius(r) {}							// コンストラクタ
-	CAPSULE(const FLOAT3 &p1, const FLOAT3 &p2, float r) : Segment(p1, p2), fRadius(r) {}	// コンストラクタ
-	~CAPSULE() {}																			// デストラクタ
-}CAPSULE;
-
-// AABB
-typedef struct AABB
-{
-	FLOAT3 Point;		// 中心点
-	FLOAT3 HalLength;	// 各軸の辺の長さの半分
-	AABB() {}																// コンストラクタ
-	AABB(const FLOAT3 &p, const FLOAT3 &hl) : Point(p), HalLength(hl) {}	// コンストラクタ
-	inline float LenX(void) const { return HalLength.x * 2.0f; };			// X軸辺の長さを取得
-	inline float LenY(void) const { return HalLength.y * 2.0f; };			// Y軸辺の長さを取得
-	inline float LenZ(void) const { return HalLength.z * 2.0f; };			// Z軸辺の長さを取得
-	inline float Len(int i) { return *((&HalLength.x) + i) * 2.0f; }		// 辺の長さを取得
-}AABB;
-
-/* * 入力キーのセル */
-typedef struct _INPUTKEYCELL
-{
-	int             nKey;		// キー
-	int             nData;		// データ
-	_INPUTKEYCELL*  pNext;		// 次のデータポインタ
-}INPUTKEYCELL;
-
-/* *タイマー情報 */
-typedef struct _TIMER_INFO
-{
-	_TIMER_INFO() {};
-	_TIMER_INFO(int nStart, int nEnd);
-
-	int nStart;		// 開始
-	int nEnd;		// 終了
-}TIMER_INFO;
-
-/* *
-* テクスチャのUV座標の設定用の情報
-* Previous version TEXTUREVARIABLES
-*/
-typedef struct _SETING_UV
-{
-	/* * コンストラクタ */
-	_SETING_UV() {}
-	_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV);
-	int nCntU;	// 横のカウント
-	int nNumU;	// 横の個数
-	int nCntV;	// 縦のカウント
-	int nNumV;	// 縦の個数
-}SETING_UV;
-
-/* *
-* テクスチャアニメーション情報
-* Previous version ANIMTEXVARIABLES
-*/
-typedef struct _TEXTUREANIMEINFO
-{
-	/* * コンストラクタ */
-	_TEXTUREANIMEINFO() {}
-	_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration);
-
-	int nFrame;		// フレーム
-	int nFrameMax;	// 最大フレーム数
-	int nIteration;	// 切り返し(1か-1)
-}TEXTUREANIMEINFO;
-
 typedef struct _INTEGER2SOURCE
 {
 	int nX;	// 最大値
@@ -664,6 +521,11 @@ public:
 	inline int  operator[] (unsigned int nIdx) const;
 	inline int& operator[] (unsigned int nIdx);
 
+	/* * メンバが0か ?*/
+	inline bool IsZero(void) { return (nX == MYLIB_INT_UNSET && nY == MYLIB_INT_UNSET); }
+	inline bool IsNotZero(void) { return (nX != MYLIB_INT_UNSET && nY != MYLIB_INT_UNSET); }
+	inline bool OneIsZero(void) { return (nX == MYLIB_INT_UNSET || nY == MYLIB_INT_UNSET); }
+
 }INTEGER2, *PINTEGER2;
 
 /* * int型3つ分 */
@@ -792,6 +654,175 @@ public:
 	int z;		// Z軸成分
 	int w;		// W軸成分
 } INTEGER4, *PINTEGER4;
+
+// 2成分のfloat
+typedef struct FLOAT2 : public D3DXVECTOR2
+{
+	FLOAT2() {}																												// コンストラクタ
+	FLOAT2(float x, float y) : D3DXVECTOR2(x, y) {}																			// コンストラクタ
+	FLOAT2(CONST FLOAT2& rhs) : D3DXVECTOR2(rhs) {}																			// コンストラクタ
+	FLOAT2(CONST D3DXVECTOR2& rhs) : D3DXVECTOR2(rhs) {}																	// コンストラクタ
+	~FLOAT2() {}																											// デストラクタ
+
+	inline FLOAT2        operator +(const FLOAT2 &rhs) const;																// 四則演算子+
+	inline FLOAT2        operator -(const FLOAT2 &rhs) const;																// 四則演算子-
+	inline FLOAT2        operator -(void) const;																			// 四則演算子-
+	inline FLOAT2        operator *(const FLOAT2 &rhs) const;																// 四則演算子*
+	inline FLOAT2        operator /(const FLOAT2 &rhs) const;																// 四則演算子/
+	inline FLOAT2        operator *(float rhs) const;																		// 四則演算子*
+	inline FLOAT2        operator /(float rhs) const;																		// 四則演算子/
+	inline friend FLOAT2 operator *(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x * lhs, rhs.y * lhs); }				// 四則演算子*フレンド関数
+	inline friend FLOAT2 operator /(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x / lhs, rhs.y / lhs); }				// 四則演算子/フレンド関数
+
+	inline FLOAT2        operator +(const INTEGER2 &rhs) const;																// 四則演算子+
+	inline FLOAT2        operator -(const INTEGER2 &rhs) const;																// 四則演算子-
+	inline FLOAT2        operator *(const INTEGER2 &rhs) const;																// 四則演算子*
+	inline FLOAT2        operator /(const INTEGER2 &rhs) const;																// 四則演算子/
+
+}FLOAT2;
+
+// 3成分float
+typedef struct FLOAT3 : public D3DXVECTOR3
+{
+	FLOAT3() {}																												// コンストラクタ
+	FLOAT3(float x, float y, float z) : D3DXVECTOR3(x, y, z) {}																// コンストラクタ
+	FLOAT3(CONST FLOAT3& rhs) : D3DXVECTOR3(rhs) {}																			// コンストラクタ
+	FLOAT3(CONST D3DXVECTOR3& rhs) : D3DXVECTOR3(rhs) {}																	// コンストラクタ
+	~FLOAT3() {}																											// デストラクタ
+
+	inline FLOAT3        operator +(const FLOAT3 &rhs) const;																// 四則演算子+
+	inline FLOAT3        operator -(const FLOAT3 &rhs) const;																// 四則演算子-
+	inline FLOAT3        operator -(void) const;																			// 四則演算子-
+	inline FLOAT3        operator *(const FLOAT3 &rhs) const;																// 四則演算子*
+	inline FLOAT3        operator /(const FLOAT3 &rhs) const;																// 四則演算子/
+	inline FLOAT3        operator *(float rhs) const;																		// 四則演算子*
+	inline FLOAT3        operator /(float rhs) const;																		// 四則演算子/
+	inline friend FLOAT3 operator *(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs); }	// 四則演算子*フレンド関数
+	inline friend FLOAT3 operator /(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x / lhs, rhs.y / lhs, rhs.z / lhs); }	// 四則演算子/フレンド関数
+
+	inline float         Dot(const FLOAT3 &rhs) const;																		// 内積
+	inline FLOAT3        Cross(const FLOAT3 &rhs) const;																	// 外積
+	inline float         Length(void) const;																				// 長さ
+	inline float         LengthSq(void) const;																				// べき乗長さ
+	inline void          Norm(void);																						// 正規化
+	inline FLOAT3        GetNorm(void) const;																				// 正規化し取得
+}FLOAT3;
+
+// ベクトル
+typedef struct VEC3 : public FLOAT3
+{
+	VEC3() {}												// コンストラクタ
+	VEC3(float x, float y, float z) : FLOAT3(x, y, z) {}	// コンストラクタ
+	VEC3(const FLOAT3 &rhs) : FLOAT3(rhs) {}				// コンストラクタ
+	~VEC3() {}												// デストラクタ
+	inline VEC3& operator =(const FLOAT3 &rhs);				// 代入演算子
+	inline bool  IsVertical(const VEC3 &rhs) const;			// 垂直関係にある？
+	inline bool  IsParallel(const VEC3 &rhs) const;			// 平行関係にある？
+	inline bool  IsSharpAngle(const VEC3 &rhs) const;		// 鋭角関係？
+}VEC3;
+
+// 直線
+typedef struct LINE
+{
+	FLOAT3 pos;															// 位置
+	VEC3 vec;															// 方向ベクトル
+	LINE() : pos(0.0f, 0.0f, 0.0f), vec(1.0f, 0.0f, 0.0f) {}			// コンストラクタ
+	LINE(const FLOAT3 &pos, const VEC3 &vec) : pos(pos), vec(vec) {}	// コンストラクタ
+	~LINE() {}															// デストラクタ
+	inline FLOAT3 GetPoint(float fCoffi) const;							// 点上の座標を取得
+}LINE;
+
+// 線分
+typedef struct SEGMENT : public LINE
+{
+	SEGMENT() {}														// コンストラクタ
+	SEGMENT(const FLOAT3 &p, const VEC3 &v) : LINE(p, v) {}				// コンストラクタ
+	SEGMENT(const FLOAT3 &p1, const FLOAT3 &p2) : LINE(p1, p2 - p1) {}	// コンストラクタ
+	~SEGMENT() {}														// デストラクタ
+	inline FLOAT3 GetEndPoint(void) const;								// 終点を取得
+}SEGMENT;
+
+// 球
+typedef struct SPHERE
+{
+	FLOAT3 Point;														// 中心点
+	float fRadius;														// 半径
+	SPHERE() : Point(0.0f, 0.0f, 0.0f), fRadius(0.5f) {}				// コンストラクタ
+	SPHERE(const FLOAT3 &p, float r) : Point(p), fRadius(r) {}			// コンストラクタ
+	~SPHERE() {}														// デストラクタ
+}SPHERE;
+
+// カプセル
+typedef struct CAPSULE
+{
+	SEGMENT Segment;																		// 線分
+	float fRadius;																			// 半径
+	CAPSULE() : fRadius(0.5f) {}															// コンストラクタ
+	CAPSULE(const SEGMENT &s, float r) : Segment(s), fRadius(r) {}							// コンストラクタ
+	CAPSULE(const FLOAT3 &p1, const FLOAT3 &p2, float r) : Segment(p1, p2), fRadius(r) {}	// コンストラクタ
+	~CAPSULE() {}																			// デストラクタ
+}CAPSULE;
+
+// AABB
+typedef struct AABB
+{
+	FLOAT3 Point;		// 中心点
+	FLOAT3 HalLength;	// 各軸の辺の長さの半分
+	AABB() {}																// コンストラクタ
+	AABB(const FLOAT3 &p, const FLOAT3 &hl) : Point(p), HalLength(hl) {}	// コンストラクタ
+	inline float LenX(void) const { return HalLength.x * 2.0f; };			// X軸辺の長さを取得
+	inline float LenY(void) const { return HalLength.y * 2.0f; };			// Y軸辺の長さを取得
+	inline float LenZ(void) const { return HalLength.z * 2.0f; };			// Z軸辺の長さを取得
+	inline float Len(int i) { return *((&HalLength.x) + i) * 2.0f; }		// 辺の長さを取得
+}AABB;
+
+/* * 入力キーのセル */
+typedef struct _INPUTKEYCELL
+{
+	int             nKey;		// キー
+	int             nData;		// データ
+	_INPUTKEYCELL*  pNext;		// 次のデータポインタ
+}INPUTKEYCELL;
+
+/* *タイマー情報 */
+typedef struct _TIMER_INFO
+{
+	_TIMER_INFO() {};
+	_TIMER_INFO(int nStart, int nEnd);
+
+	int nStart;		// 開始
+	int nEnd;		// 終了
+}TIMER_INFO;
+
+/* *
+* テクスチャのUV座標の設定用の情報
+* Previous version TEXTUREVARIABLES
+*/
+typedef struct _SETING_UV
+{
+	/* * コンストラクタ */
+	_SETING_UV() {}
+	_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV);
+	int nCntU;	// 横のカウント
+	int nNumU;	// 横の個数
+	int nCntV;	// 縦のカウント
+	int nNumV;	// 縦の個数
+}SETING_UV;
+
+/* *
+* テクスチャアニメーション情報
+* Previous version ANIMTEXVARIABLES
+*/
+typedef struct _TEXTUREANIMEINFO
+{
+	/* * コンストラクタ */
+	_TEXTUREANIMEINFO() {}
+	_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration);
+
+	int nFrame;		// フレーム
+	int nFrameMax;	// 最大フレーム数
+	int nIteration;	// 切り返し(1か-1)
+}TEXTUREANIMEINFO;
 
 // トランスフォーム情報
 typedef struct TRANSFORM
@@ -1012,17 +1043,17 @@ public:
 	// * [contents] ファイルから一行ずつ読みこむ
 	// * [input] ファイル名 関数のアドレス
 	// * [return] enum型(結果)
-	inline LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData));
+	inline static LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData));
 
 	// * [contents] ファイル情報の読み込み
 	// * [input] ファイル名 関数のアドレス
 	// * [return] enum型(結果)
-	inline LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine));
+	inline static LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine));
 
 	// * [contents] ファイル情報の読み込み
 	// * [input] ファイル名 関数のアドレス
 	// * [return] enum型(結果)
-	inline LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, void * pVoidPtr), void * pVoidPtr);
+	inline static LOADRESULT ReadLineByLineFromFile(FILE_NAME pFileName, void(*ReadLine)(CONST_STRING cnpLine, void * pVoidPtr), void * pVoidPtr);
 
 	// * [contents] ファイル情報の作成
 	// * [output] クラスのポインタ
