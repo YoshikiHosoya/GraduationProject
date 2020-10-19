@@ -19,9 +19,11 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define ZeroVector4			(D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f))		//初期化用
-#define ZeroVector3			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))				//初期化用
-#define ZeroVector2			(D3DXVECTOR2(0.0f, 0.0f))					//初期化用
+#define ZeroVector4			(D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f))		//初期化用 全部0.0f
+#define ZeroVector3			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))				//初期化用 全部0.0f
+#define ZeroVector2			(D3DXVECTOR2(0.0f, 0.0f))					//初期化用 全部0.0f
+#define OneVector3			(D3DXVECTOR3(1.0f, 1.0f, 1.0f))				//初期化用 全部1.0f
+#define OneVector2			(D3DXVECTOR2(1.0f, 1.0f))					//初期化用 全部1.0f
 #define ZeroColor			(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f))			//透明
 #define WhiteColor			(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))			//白
 #define RedColor			(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f))			//赤
@@ -114,16 +116,16 @@ public:
 
 	static void StartVibration(int nCntVibration);					//バイブレーション処理
 
-	static void CalcMatrix(D3DXMATRIX *pMtx,D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot);					//ワールドマトリックス計算
-	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);		//シャドーマトリックスの計算
-	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX *pMtx);														//マトリックスをVector3に変換
+	static void CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot, D3DXVECTOR3 const &rScale);		//ワールドマトリックス計算
+	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);						//シャドーマトリックスの計算
+	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX *pMtx);																		//マトリックスをVector3に変換
 
-	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);									//モデルの最大頂点と最少頂点を設定
-	static void SetBillboard(D3DXMATRIX *pMtx);																	//ビルボード設定
-	static void SetBillboard_XZ_Only(D3DXMATRIX *pMtx);															//ビルボード設定　XとZのみ
+	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);													//モデルの最大頂点と最少頂点を設定
+	static void SetBillboard(D3DXMATRIX *pMtx);																					//ビルボード設定
+	static void SetBillboard_XZ_Only(D3DXMATRIX *pMtx);																			//ビルボード設定　XとZのみ
 
-	static void SelectVerticalMenu(int &nSelectNum, int const &nMaxSelect);										//縦メニューの選択
-	static void SelectHorizonMenu(int &nSelectNum, int const &nMaxSelect);										//横メニューの選択
+	static void SelectVerticalMenu(int &nSelectNum, int const &nMaxSelect);														//縦メニューの選択
+	static void SelectHorizonMenu(int &nSelectNum, int const &nMaxSelect);														//横メニューの選択
 
 
 	static HRESULT InitImgui(HWND hWnd);	//Imgui生成処理
@@ -142,8 +144,6 @@ public:
 	static D3DXVECTOR3 RandomVector3(float Max);								//ランダムなvector3型で値を返す
 	static void CalcRotation(float &fRot);										//回転を360度以内にする計算
 	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
-
-	static bool CheckDebugPlayer() { return m_bDebugPlayer; };		//デバッグ用のプレイヤー
 
 	//------------------------------------------------------------------------------
 	//範囲内の値に修正する関数
@@ -179,7 +179,6 @@ private:
 	static bool m_WireFrame;			//ワイヤーフレームか
 	static bool m_Lighting;				//ライティングするか
 	static int m_Culling;				//カリング情報
-	static bool m_bDebugPlayer;			//プレイヤー自動操作化
 
 
 };

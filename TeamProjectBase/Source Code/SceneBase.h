@@ -33,6 +33,7 @@ public:
 	virtual void SetSize(D3DXVECTOR3 const &size)				{ m_size = size; };							//サイズ
 	virtual void SetColor(D3DXCOLOR const &col)					{ m_col = col; };							//色
 	virtual void SetRot(D3DXVECTOR3 const &rot)					{ m_rot = rot; };							//回転量
+	virtual void SetScale(D3DXVECTOR3 const &scale)				{ m_scale = scale; };						//拡大率
 	virtual void SetDisp(bool bDisp)							{ m_bDisp = bDisp; };						//表示非表示
 	virtual void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const UVsize) {};
 
@@ -46,6 +47,7 @@ public:
 	D3DXVECTOR3 &GetSize()										{ return m_size; };							//サイズ
 	D3DXCOLOR &GetColor()										{ return m_col; };							//色
 	D3DXVECTOR3 &GetRot()										{ return m_rot; };							//回転量
+	D3DXVECTOR3 &GetScale()										{ return m_scale; };						//拡大率
 	bool &GetDisp()												{ return m_bDisp; };						//表示非表示
 
 	LPDIRECT3DTEXTURE9 GetTexture()								{ return m_pTexture; };						//テクスチャのポインタ
@@ -63,6 +65,7 @@ private:
 	D3DXVECTOR3 m_size;										//サイズ
 	D3DXCOLOR m_col;										//色
 	D3DXVECTOR3 m_rot;										//回転量
+	D3DXVECTOR3 m_scale;									//拡大率
 	D3DXMATRIX m_mtxWorld;									//ワールドマトリックス
 	D3DXMATRIX *m_pParentMtx;								//親のマトリックス
 	bool m_bDisp;											//表示非表示の設定

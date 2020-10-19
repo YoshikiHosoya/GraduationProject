@@ -68,7 +68,7 @@ void CMeshField::Update()
 void CMeshField::Draw()
 {
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot());
+	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot(), OneVector3);
 
 	//フォグON
 	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_FOG_ON);

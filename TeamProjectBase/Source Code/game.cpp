@@ -63,7 +63,7 @@ HRESULT CGame::Init(HWND hWnd)
 
 	CPicture::Load();
 	// ÉsÉNÉ`ÉÉÇÃê∂ê¨
-	CPicture::Create(D3DXVECTOR3(0.0f, 120.0f, 120.0f), ZeroVector3);
+	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
 	return S_OK;
 }
 

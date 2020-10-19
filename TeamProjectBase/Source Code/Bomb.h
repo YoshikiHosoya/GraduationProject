@@ -13,6 +13,11 @@
 #include "SceneX.h"
 
 //------------------------------------------------------------------------------
+//マクロ
+//------------------------------------------------------------------------------
+#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,50.0f,60.0f))
+
+//------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Base;
@@ -36,5 +41,20 @@ private:
 	std::vector<std::shared_ptr<CModule_Base>> m_pModuleList;							//モジュールのリスト
 
 	void CreateModule(int const nModuleNum);											//モジュール生成
+
+	//テンプレート関数
+	template<class Module> void CreateModuleOne(int nNumber)
+	{
+		int nX = nNumber % 3;
+		int nY = nNumber / 3;
+		int nZ = nNumber / 6;
+
+		m_pModuleList.emplace_back(CModule_Base::Create<Module>
+									(D3DXVECTOR3((-MODULE_INTERVAL.x + (MODULE_INTERVAL.x * nX)) * (1 - (nZ * 2)),
+												MODULE_INTERVAL.y - (MODULE_INTERVAL.y * ((nY % 2) * 2)),
+												-MODULE_INTERVAL.z + (MODULE_INTERVAL.z * nZ * 2)),
+									D3DXVECTOR3(0.0f, (D3DX_PI)* nZ, 0.0f), GetMtxWorldPtr()));
+
+	}
 };
 #endif

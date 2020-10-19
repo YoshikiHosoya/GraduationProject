@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 //ƒNƒ‰ƒX’è‹`
 //------------------------------------------------------------------------------
-class CModule_None : public CModule_Base,public CSceneX
+class CModule_None : public CModule_Base
 {
 public:
 	CModule_None();

@@ -70,6 +70,7 @@ void CModule_Button::Update()
 //------------------------------------------------------------------------------
 void CModule_Button::Draw()
 {
+
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
@@ -78,7 +79,6 @@ void CModule_Button::Draw()
 void CModule_Button::ShowDebugInfo()
 {
 #ifdef _DEBUG
-
 
 #endif //DEBUG
 }

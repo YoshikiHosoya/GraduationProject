@@ -85,7 +85,7 @@ void CScene3D::Update()
 void CScene3D::Draw()
 {
 	//ワールドマトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot());
+	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), GetScale());
 
 	//ビルボードかどうか
 	if (m_bBillBoard)

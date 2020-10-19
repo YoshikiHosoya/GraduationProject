@@ -11,6 +11,8 @@
 #include "multinumber.h"
 #include "scene2D.h"
 #include "scene3D.h"
+#include "manager.h"
+#include "renderer.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -122,7 +124,7 @@ void CMultiNumber::Draw()
 	}
 
 	//ワールドマトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot());
+	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), OneVector3);
 
 	//nullcheck
 	if (GetParentMtxPtr())
@@ -131,6 +133,8 @@ void CMultiNumber::Draw()
 		*GetMtxWorldPtr() *= *GetParentMtxPtr();
 	}
 
+	//ライティングOFF
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_OFF);
 
 	//nullcheck
 	if (!m_pNumberList.empty())
@@ -146,6 +150,9 @@ void CMultiNumber::Draw()
 			}
 		}
 	}
+
+	//ライティングON
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_ON);
 }
 
 //------------------------------------------------------------------------------

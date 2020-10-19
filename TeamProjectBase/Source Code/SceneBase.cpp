@@ -15,6 +15,7 @@ CSceneBase::CSceneBase()
 {
 	m_pos = ZeroVector3;
 	m_size = ZeroVector3;
+	m_scale = OneVector3;
 	m_col = WhiteColor;
 	m_rot = ZeroVector3;
 	m_pVtxBuff = nullptr;

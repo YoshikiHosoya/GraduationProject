@@ -137,14 +137,14 @@ void CParticle::Draw()
 		pDevice->SetTexture(0, CTexture::GetTexture(m_pParticleParam->GetTex()));
 
 	//ワールドマトリックス計算
-	CHossoLibrary::CalcMatrix(&m_WorldMtx, m_posOrigin, ZeroVector3);
+	CHossoLibrary::CalcMatrix(&m_WorldMtx, m_posOrigin, ZeroVector3,OneVector3);
 
 	//パーティクルのリストの数分
 
 	for (size_t nCnt = 0; nCnt < m_pParticleList.size(); nCnt++)
 	{
 		//マトリック計算
-		CHossoLibrary::CalcMatrix(&m_pParticleList[nCnt]->m_Mtx, m_pParticleList[nCnt]->m_pos, m_pParticleList[nCnt]->m_rot);
+		CHossoLibrary::CalcMatrix(&m_pParticleList[nCnt]->m_Mtx, m_pParticleList[nCnt]->m_pos, m_pParticleList[nCnt]->m_rot,OneVector3);
 
 		//原点のマトリックスを掛け合わせる
 		m_pParticleList[nCnt]->m_Mtx *= m_WorldMtx;
@@ -203,7 +203,7 @@ void CParticle::UpdateVertex()
 		if (m_pParticleParam->GetCollisionSizeCalc())
 		{
 			//マトリックス計算
-			CHossoLibrary::CalcMatrix(&m_WorldMtx, *m_pPosOriginPtr, m_rotOrigin);
+			CHossoLibrary::CalcMatrix(&m_WorldMtx, *m_pPosOriginPtr, m_rotOrigin, OneVector3);
 
 			//当たり判定用の原点作成　ちょっとキャラクター側とかに寄せる
 			D3DXVec3TransformCoord(&m_posOrigin, &ZeroVector3, &m_WorldMtx);
@@ -409,7 +409,7 @@ void CParticle::CalcCollisionSize(D3DXVECTOR3 size)
 	D3DXMATRIX RotationMatrix;
 
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(&RotationMatrix, m_posOrigin, m_rotOrigin);
+	CHossoLibrary::CalcMatrix(&RotationMatrix, m_posOrigin, m_rotOrigin, OneVector3);
 
 	//頂点座標
 	D3DXVECTOR3 VtxPos[4] = {};

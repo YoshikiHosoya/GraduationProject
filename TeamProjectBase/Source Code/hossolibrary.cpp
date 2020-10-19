@@ -38,7 +38,6 @@ float CHossoLibrary::m_fLeftStickX = false;
 float CHossoLibrary::m_fLeftStickY = false;
 bool CHossoLibrary::m_WireFrame = false;
 bool CHossoLibrary::m_Lighting = true;
-bool CHossoLibrary::m_bDebugPlayer = false;
 int CHossoLibrary::m_Culling = false;
 
 //------------------------------------------------------------------------------
@@ -258,16 +257,20 @@ bool CHossoLibrary::Check3DCameraStick(D3DXVECTOR3 & Rot, float fHolizonMove, fl
 //------------------------------------------------------------------------------
 //マトリックス計算
 //------------------------------------------------------------------------------
-void CHossoLibrary::CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot)
+void CHossoLibrary::CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot,D3DXVECTOR3 const &rScale)
 {
-	D3DXMATRIX	mtxRot, mtxTrans;			//計算用
+	D3DXMATRIX	mtxRot, mtxTrans,mtxScale;			//計算用
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(pMtx);
 
+
 	// 回転を反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, rRot.y, rRot.x, rRot.z);
 	D3DXMatrixMultiply(pMtx, pMtx, &mtxRot);
+	// 拡大率を反映
+	D3DXMatrixScaling(&mtxScale, rScale.x, rScale.y, rScale.z);
+	D3DXMatrixMultiply(pMtx, pMtx, &mtxScale);
 
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTrans, rPos.x, rPos.y, rPos.z);
@@ -348,71 +351,61 @@ void CHossoLibrary::ShowDebugInfo()
 #ifdef _DEBUG
 
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	//開始
-	if (ImGui::CollapsingHeader("Debug"))
+	//FPS情報
+	if (ImGui::TreeNode("FPS"))
 	{
-		//FPS情報
-		if (ImGui::TreeNode("FPS"))
+		//FPS
+		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::TreePop();
+	}
+	//Sceneの数
+	if (ImGui::TreeNode("NumInfo"))
+	{
+		ImGui::Text("NumAll (%d)", CScene::GetNumAll());
+		ImGui::Text("NumScene2D (%d)", CScene2D::GetNumScene2D());
+		ImGui::Text("NumScene3D (%d)", CScene3D::GetNumScene3D());
+		ImGui::Text("ParticleAll (%d)", COneParticle::GetNumAll());
+		ImGui::TreePop();
+	}
+
+	//情報
+	if (ImGui::TreeNode("DebugCommand"))
+	{
+		//ワイヤーフレーム
+		if (ImGui::Checkbox("WireFrame", &m_WireFrame))
 		{
-			//FPS
-			ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::TreePop();
+			CheckWireMode();
 		}
-		//Sceneの数
-		if (ImGui::TreeNode("NumInfo"))
+
+		//ライティング
+		if (ImGui::Checkbox("Lighting", &m_Lighting))
 		{
-			ImGui::Text("NumAll (%d)", CScene::GetNumAll());
-			ImGui::Text("NumScene2D (%d)", CScene2D::GetNumScene2D());
-			ImGui::Text("NumScene3D (%d)", CScene3D::GetNumScene3D());
-			ImGui::Text("ParticleAll (%d)", COneParticle::GetNumAll());
-			ImGui::TreePop();
+			pDevice->SetRenderState(D3DRS_LIGHTING, m_Lighting);		// ライティングモード切り替え
 		}
 
-		//情報
-		if (ImGui::TreeNode("DebugCommand"))
+		//カリング
+		if (ImGui::TreeNode("tree1", "CULLING"))
 		{
-			//ワイヤーフレーム
-			if (ImGui::Checkbox("WireFrame", &m_WireFrame))
+			if (ImGui::RadioButton("D3DCULL_CCW", &m_Culling, 0))
 			{
-				CheckWireMode();
+				//裏面カリング
+				CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_CCW);
 			}
-
-			//ライティング
-			if (ImGui::Checkbox("Lighting", &m_Lighting))
+			ImGui::SameLine();
+			if (ImGui::RadioButton("D3DCULL_CW", &m_Culling, 1))
 			{
-				pDevice->SetRenderState(D3DRS_LIGHTING, m_Lighting);		// ライティングモード切り替え
+				//表面カリング
+				CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_CW);
 			}
-
-			//カリング
-			if (ImGui::TreeNode("tree1", "CULLING"))
+			ImGui::SameLine();
+			if (ImGui::RadioButton("D3DCULL_NONE", &m_Culling, 2))
 			{
-				if (ImGui::RadioButton("D3DCULL_CCW", &m_Culling, 0))
-				{
-					//裏面カリング
-					CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_CCW);
-				}
-				ImGui::SameLine();
-				if (ImGui::RadioButton("D3DCULL_CW", &m_Culling, 1))
-				{
-					//表面カリング
-					CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_CW);
-				}
-				ImGui::SameLine();
-				if (ImGui::RadioButton("D3DCULL_NONE", &m_Culling, 2))
-				{
-					//カリングしない
-					CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_NONE);
-				}
-				ImGui::TreePop();
-			}
-			//プレイヤーデバッグ
-			if (ImGui::Checkbox("DebugPlayer", &m_bDebugPlayer))
-			{
-
+				//カリングしない
+				CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_CULLING_NONE);
 			}
 			ImGui::TreePop();
 		}
+		ImGui::TreePop();
 	}
 
 #endif //DEBUG

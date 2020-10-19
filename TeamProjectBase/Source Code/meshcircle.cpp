@@ -71,7 +71,7 @@ void CMeshCircle::Update()
 void CMeshCircle::Draw()
 {
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot());
+	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot(), OneVector3);
 
 	//描画
 	CMesh::Draw();

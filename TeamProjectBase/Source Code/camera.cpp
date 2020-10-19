@@ -21,7 +21,7 @@
 #define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,50.0f,0.0f))
 
 
-#define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
+#define DEFAULT_DISTANCE			(600.0f)		//カメラの距離
 #define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.13f,0.0f,0.0f))
 
 #define CAMERA_LENGTH_NEAR			(10.0f)			//カメラの見える距離（近）
@@ -70,7 +70,7 @@ CCamera::~CCamera()
 void CCamera::Init(void)
 {
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot);
+	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot, OneVector3);
 
 	//コリジョン生成
 	m_pCollision = CCollision::Create(&m_mtxWorld, CCollision::COLLISION_CAMERA);
@@ -125,7 +125,7 @@ void CCamera::Update(void)
 		break;
 	}
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot);
+	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot,OneVector3);
 
 }
 //-----------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 class CTimer;
 
-class CModule_Timer : public CModule_Base,public CSceneX
+class CModule_Timer : public CModule_Base
 {
 public:
 	CModule_Timer();

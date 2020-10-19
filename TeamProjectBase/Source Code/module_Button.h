@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 //ƒNƒ‰ƒX’è‹`
 //------------------------------------------------------------------------------
-class CModule_Button : public CModule_Base,public CSceneX
+class CModule_Button : public CModule_Base
 {
 public:
 	CModule_Button();

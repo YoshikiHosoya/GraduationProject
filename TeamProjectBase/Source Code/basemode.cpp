@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "fade.h"
+#include "light.h"
 #include "keyboard.h"
 #include "sound.h"
 #include "modelinfo.h"
@@ -31,7 +32,7 @@ void CBaseMode::DebugCommand()
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [0] : 現在のModeに遷移\n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [1] : Titleに遷移\n");
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [2] : Gameに遷移\n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [3] : Gameに遷移\n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [4] : Resultに遷移\n");
 	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [7] : MapEditorに遷移\n");
 	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Ctrl] + テンキー [8] : EffectViewerに遷移\n");
@@ -82,7 +83,7 @@ void CBaseMode::DebugCommand()
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
 		}
 		//ゲーム
-		if (pKeyboard->GetTrigger(DIK_NUMPAD2))
+		if (pKeyboard->GetTrigger(DIK_NUMPAD3))
 		{
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
 		}
@@ -98,6 +99,20 @@ void CBaseMode::DebugCommand()
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_EFFECT_VIEWER);
 		}
 
+	}
+
+
+	//Shift押しながら
+	if (pKeyboard->GetPress(DIK_LSHIFT))
+	{
+		if (pKeyboard->GetTrigger(DIK_LBRACKET))
+		{
+			CManager::GetRenderer()->GetLight()->SetBlackLight();
+		}
+		if (pKeyboard->GetTrigger(DIK_RBRACKET))
+		{
+			CManager::GetRenderer()->GetLight()->SetDefaultLight();
+		}
 	}
 
 	//デバッグ情報表記

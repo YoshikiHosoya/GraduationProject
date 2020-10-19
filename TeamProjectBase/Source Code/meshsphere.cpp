@@ -62,7 +62,7 @@ void CMeshSphere::Update()
 //------------------------------------------------------------------------------
 void CMeshSphere::Draw()
 {
-	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot());
+	CHossoLibrary::CalcMatrix(GetMtx(), GetPos(), GetRot(),OneVector3);
 
 	CMesh::Draw();
 }

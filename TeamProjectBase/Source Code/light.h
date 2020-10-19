@@ -30,13 +30,20 @@ public:
 	void Uninit();								//終了
 	void Update();								//更新
 	void ShowLightInfo();						//imgui ライト情報表示
-	D3DXVECTOR3 GetLightDir(int nLightNum);		//ライトの方向取得　引数のライトを貰う
-	D3DXCOLOR GetLightColor(int nLightNum);		//ライトの方向取得　引数のライトを貰うけでいい
+
+	//Set関数
+	void SetBlackLight();
+	void SetDefaultLight();
+
+	//Get関数
+	D3DXVECTOR3 GetLightDir(int nLightNum)		{ return m_vecDir[nLightNum]; };				//ライトの方向取得　引数のライトを貰う
+	D3DXCOLOR GetLightColor(int nLightNum)		{ return m_LightCol[nLightNum]; };		//ライトの方向取得　引数のライトを貰うけでいい
 
 private:
-	D3DLIGHT9 m_aLight[MAX_LIGHT];		//ライト
-	D3DXVECTOR3 m_vecDir[MAX_LIGHT];	//ライトの向き
-	D3DXCOLOR m_LightCol[MAX_LIGHT];	//ライトの向き
+	D3DLIGHT9 m_aLight[MAX_LIGHT];					//ライト
+	D3DXVECTOR3 m_vecDir[MAX_LIGHT];				//ライトの向き
+	D3DXCOLOR m_LightCol[MAX_LIGHT];				//現在のライトの色
+	D3DXCOLOR m_DefaultLightCol[MAX_LIGHT];			//ライトの初期色
 
 };
 
