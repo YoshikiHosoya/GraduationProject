@@ -27,6 +27,14 @@ public:
 		FLAG_MAX
 	};
 
+	enum
+	{
+		MASK_NONE = 0,
+		MASK_DISP = 0b0001,
+		MASK_UPDATE = 0b0010,
+		MASK_MAX = 0b0011,
+	};
+
 	/* 構造体定義 */
 	typedef struct MESHINFO
 	{
@@ -56,12 +64,10 @@ public:
 	inline void      SetPos(CONST D3DXVECTOR3 &pos) { m_mesh.trans.pos = pos; }					// 位置の設定
 	inline void      SetRot(CONST D3DXVECTOR3 &rot) { m_mesh.trans.rot = rot; }					// 向きの設定
 	inline void      SetScal(CONST D3DXVECTOR3 &scal) { m_mesh.trans.scal = scal; }				// スケールの設定
-	inline void      SetFlag(int nIndex) { Mybfunc_bit_set(m_Flags.cValue, nIndex); }			// フラグの設定
-	inline void      ClearFlag(int nIndex) { Mybfunc_bit_clear(m_Flags.cValue, nIndex); }		// フラグの削除
-
+	inline void      SetFlag(const int nMask) { m_Flags.cValue = nMask; }
 	// 取得関数
-	inline MESHINFO* GetInfo(void) { return &m_mesh; }											// 情報の取得
-	inline bool      GetFlag(int nIndex) { return Mybfunc_bit_comp(m_Flags.cValue, nIndex) != 0; }	// フラグの取得
+	inline MESHINFO* GetInfo(void) { return &m_mesh; }												// 情報の取得
+	inline UVSHORT*  GetFlag(void) { return &m_Flags.cValue; }										// フラグの取得
 	// クリエイト関数
 	static std::shared_ptr<CPicture> Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot);			// 生成
 private:

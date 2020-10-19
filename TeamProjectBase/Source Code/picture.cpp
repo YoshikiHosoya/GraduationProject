@@ -12,9 +12,15 @@
 #include "renderer.h"
 
 //-------------------------------------------------------------------------------------------------------------
-//マクロ定義
+// マクロ定義
 //-------------------------------------------------------------------------------------------------------------
 #define PICTURE_FILENAME  "data/TEXT/PictureInfo.txt"
+
+//-------------------------------------------------------------------------------------------------------------
+// マクロ関数
+//-------------------------------------------------------------------------------------------------------------
+#define Paint(col) Mybfunc_bit_clear(col,0)
+#define Clear(col) Mybfunc_bit_set(col,0)
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
@@ -116,6 +122,11 @@ void CPicture::MatrixCal(void)
 	// マトリックスの初期化
 	m_mesh.trans.Identity();
 
+	// スケールの反映
+	m_mesh.trans.mtxWorld.m[0][0] = m_mesh.trans.scal.x;
+	m_mesh.trans.mtxWorld.m[1][1] = m_mesh.trans.scal.y;
+	m_mesh.trans.mtxWorld.m[2][2] = m_mesh.trans.scal.z;
+
 	// 回転を反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_mesh.trans.rot.y, m_mesh.trans.rot.x, m_mesh.trans.rot.z);
 	D3DXMatrixMultiply(&m_mesh.trans.mtxWorld, &m_mesh.trans.mtxWorld, &mtxRot);
@@ -135,7 +146,7 @@ HRESULT CPicture::Init()
 
 	// 初期化
 	MatrixCal();
-	m_Flags.cValue = 3;
+	m_Flags.cValue = MASK_DISP;
 
 	try
 	{	// 頂点情報の作成
@@ -155,11 +166,13 @@ HRESULT CPicture::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Uninit()
 {
+	// 頂点バッファの取得
 	if (m_mesh.pVtexBuff != nullptr)
 	{
 		m_mesh.pVtexBuff->Release();
 		m_mesh.pVtexBuff = nullptr;
 	}
+	// インデックスバッファの取得
 	if (m_mesh.pIdxBuff != nullptr)
 	{
 		m_mesh.pIdxBuff->Release();
