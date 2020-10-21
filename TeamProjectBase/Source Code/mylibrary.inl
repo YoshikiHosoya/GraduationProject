@@ -1104,6 +1104,75 @@ SEGMENT::GetEndPoint() const
 }
 
 //----------------------------------------------------------------------------------------------------
+// マトリックス
+//----------------------------------------------------------------------------------------------------
+inline MATRIX
+MATRIX::operator +(CONST MATRIX &rhs) const
+{
+	return MATRIX(_11 + rhs._11, _12 + rhs._12, _13 + rhs._13, _14 + rhs._14,
+		_21 + rhs._21, _22 + rhs._22, _23 + rhs._23, _24 + rhs._24,
+		_31 + rhs._31, _32 + rhs._32, _33 + rhs._33, _34 + rhs._34,
+		_41 + rhs._41, _42 + rhs._42, _43 + rhs._43, _44 + rhs._44);
+}
+inline MATRIX
+MATRIX::operator -(CONST MATRIX &rhs) const
+{
+	return MATRIX(_11 - rhs._11, _12 - rhs._12, _13 - rhs._13, _14 - rhs._14,
+		_21 - rhs._21, _22 - rhs._22, _23 - rhs._23, _24 - rhs._24,
+		_31 - rhs._31, _32 - rhs._32, _33 - rhs._33, _34 - rhs._34,
+		_41 - rhs._41, _42 - rhs._42, _43 - rhs._43, _44 - rhs._44);
+}
+inline MATRIX
+MATRIX::operator -(void) const
+{
+	return MATRIX(
+		-_11, -_12, -_13, -_14,
+		-_21, -_22, -_23, -_24,
+		-_31, -_32, -_33, -_34,
+		-_41, -_42, -_43, -_44);
+}
+inline MATRIX
+MATRIX::operator *(CONST MATRIX &rhs) const
+{
+	D3DXMATRIX matT;
+	D3DXMatrixMultiply(&matT, this, &rhs);
+	return matT;
+}
+
+inline MATRIX
+MATRIX::operator * (float rhs) const
+{
+	return MATRIX(
+		_11 * rhs, _12 * rhs, _13 * rhs, _14 * rhs,
+		_21 * rhs, _22 * rhs, _23 * rhs, _24 * rhs,
+		_31 * rhs, _32 * rhs, _33 * rhs, _34 * rhs,
+		_41 * rhs, _42 * rhs, _43 * rhs, _44 * rhs);
+}
+
+inline MATRIX
+MATRIX::operator / (float rhs) const
+{
+	float fInv = 1.0f / rhs;
+	return MATRIX(
+		_11 * fInv, _12 * fInv, _13 * fInv, _14 * fInv,
+		_21 * fInv, _22 * fInv, _23 * fInv, _24 * fInv,
+		_31 * fInv, _32 * fInv, _33 * fInv, _34 * fInv,
+		_41 * fInv, _42 * fInv, _43 * fInv, _44 * fInv);
+}
+
+inline void
+MATRIX::Identity(void)
+{
+	D3DXMatrixIdentity(this);
+}
+
+inline void
+MATRIX::Inverse(MATRIX *pMat, float *pDeterminant)
+{
+	D3DXMatrixInverse(this, pDeterminant, pMat);
+}
+
+//----------------------------------------------------------------------------------------------------
 // タイマー情報
 //----------------------------------------------------------------------------------------------------
 /* * コンストラクタ */

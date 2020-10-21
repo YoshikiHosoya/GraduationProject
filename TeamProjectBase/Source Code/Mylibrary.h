@@ -165,15 +165,17 @@ using namespace std;
 #define Mybfunc_gate(b)					if(b)								// 扉:真の時 ※使わない
 #define Mybfunc_iif(b)					(b == true) ? true: false			// 条件文から真偽を返す
 #define Mybfunc_iifEx(b ,t ,f)			(b == true) ? t: f					// 条件文から真偽を返す(真偽引数)
-#define Mybfunc_WhenBiggerSet(o ,src)	if(o > src) {o = src;}				// sよりoが大きいとき設定する
-#define Mybfunc_WhenSmallerSet(o ,src)	if(o < src) {o = src;}				// sよりoが小さいとき設定する
-#define Mybfunc_swap(lhs,rhs,tmp)		do{tmp = rhs; rhs = lhs; lhs = tmp}while(false);	// 交換
+#define Mybfunc_WhenBiggerSet(o ,src)	if(o > src) {o = src;}				// srcよりoが大きいとき設定する
+#define Mybfunc_WhenSmallerSet(o ,src)	if(o < src) {o = src;}				// srcよりoが小さいとき設定する
+#define Mybfunc_swap(lhs,rhs,tmp)		do{tmp = rhs; rhs = lhs; lhs = tmp;}while(false);	// 交換
 #define Mybfunc_bit_clear(lhs,rhs)		(lhs &= ~(1 << rhs))
 #define Mybfunc_bit_set(lhs,rhs)		(lhs |= (1 << rhs))
 #define Mybfunc_bit_comp(lhs,rhs)		(lhs & (1 << rhs))
 
-#define MLB_CASE(t)     break;case (t):
-#define MLB_DEFAULT     break;default
+/* マクロキーワード */
+#define MLB_CASE(t)						break;case (t):						// ケース 条件
+#define MLB_DEFAULT						break;default:						// Switch文 それ以外
+#define MLB_CASEEND						break;default:break;				// ケース 最後
 
 //-------------------------------------------------------------------------------------------------------------
 // 列挙型定義
@@ -776,6 +778,35 @@ typedef struct AABB
 	inline float Len(int i) { return *((&HalLength.x) + i) * 2.0f; }		// 辺の長さを取得
 }AABB;
 
+// マトリックス
+typedef struct MATRIX : public D3DXMATRIX
+{
+	MATRIX() {}																// コンストラクタ
+	MATRIX(CONST MATRIX& rhs) : D3DXMATRIX(rhs) {}							// コンストラクタ
+	MATRIX(CONST D3DXMATRIX& rhs) : D3DXMATRIX(rhs) {}						// コンストラクタ
+	MATRIX(FLOAT _11, FLOAT _12, FLOAT _13, FLOAT _14,
+		   FLOAT _21, FLOAT _22, FLOAT _23, FLOAT _24,
+		   FLOAT _31, FLOAT _32, FLOAT _33, FLOAT _34,
+		   FLOAT _41, FLOAT _42, FLOAT _43, FLOAT _44) :
+	D3DXMATRIX(  _11,  _12,  _13,  _14,
+				 _21,  _22,  _23,  _24,
+				 _31,  _32,  _33,  _34,
+				 _41,  _42,  _43,  _44) {}									// コンストラクタ
+
+	~MATRIX() {}															// デストラクタ
+
+	inline MATRIX operator +(CONST MATRIX &rhs) const;						// 四則演算子+
+	inline MATRIX operator -(CONST MATRIX &rhs) const;						// 四則演算子-
+	inline MATRIX operator -(void) const;									// 四則演算子-
+	inline MATRIX operator *(CONST MATRIX &rhs) const;						// 四則演算子*
+
+	inline MATRIX operator * (float rhs) const;								// 四則演算子*
+	inline MATRIX operator / (float rhs) const;								// 四則演算子/
+
+	inline void   Identity(void);											// マトリックスの初期化
+	inline void   Inverse(MATRIX *pMat, float *pDeterminant = NULL);		// 逆行列
+} MATRIX;
+
 /* * 入力キーのセル */
 typedef struct _INPUTKEYCELL
 {
@@ -920,8 +951,6 @@ private:
 
 #endif
 };
-
-
 
 /* ベクター型 */
 template<class T>
@@ -1481,6 +1510,19 @@ public:
 	//* [contents] 回転量を直す
 	//* [out] Vec3向きor回転量
 	static void SetVec3FixTheRotation(D3DXVECTOR3 *Rotation);
+
+	//-------------------------------------------------------------------------------------------------------------
+	// WorldMatrix
+	//-------------------------------------------------------------------------------------------------------------
+	//* [contents] スクリーン座標をワールド座標に変換
+	//* [in] スクリーン座標、射影空間でのZ値、スクリーンの大きさ、ビュー行列、プロジェクション行列
+	//* [out] 算出したワールド座標
+	static void CalScreenToWorld(FLOAT3* pOut, INTEGER2 *pPos, float fZ, INTEGER2 *pScreenSize, MATRIX* pView, MATRIX* pPrj);
+
+	//* [contents] スクリーン座標のレイを算出する
+	//* [in] スクリーン座標、射影空間でのZ値、スクリーンの大きさ、ビュー行列、プロジェクション行列
+	//* [out] 算出したレイ、近い位置、遠い位置
+	static void CalScreenRay(VEC3 *pOutRay, FLOAT3 *pOutNearPos, FLOAT3 *pOutFarPos, INTEGER2 *pPos, INTEGER2 *pScreenSize, MATRIX* pView, MATRIX* pPrj);
 
 	//-------------------------------------------------------------------------------------------------------------
 	// Quaternion
