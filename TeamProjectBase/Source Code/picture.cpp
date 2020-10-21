@@ -208,7 +208,7 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
-	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
 	//デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -233,7 +233,7 @@ void CPicture::Draw()
 		0,						//頂点の読み取りを開始する位置
 		m_nNumPolygon);			//ポリゴンの枚数
 
-	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
 }
 
 //-------------------------------------------------------------------------------------------------------------
