@@ -15,6 +15,7 @@
 #include "modelinfo.h"
 #include "timer.h"
 #include "keyboard.h"
+#include "game.h"
 #include "Mylibrary.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -96,10 +97,12 @@ void CModule_KeyPad::Operation()
 {
 	static int nSelectNum = 0;
 
-	//入力が無かった時はbreak
-	CHossoLibrary::Selecting(nSelectNum, 3, 3);
+	int nSelectNumOld = nSelectNum;
 
-	for (int nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
+	//入力が無かった時はbreak
+	CHossoLibrary::Selecting(nSelectNum, nSelectNumOld, 3, 3);
+
+	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
 	{
 		//nullcheck
 		if (m_pKeyPadList[nCnt].get())
@@ -110,6 +113,37 @@ void CModule_KeyPad::Operation()
 				m_pKeyPadList[nCnt]->SetSelect(false);
 		}
 	}
+
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	{
+		if (m_pKeyPadList[nSelectNum].get())
+		{
+			m_pKeyPadList[nSelectNum]->SetLampState(CModule_Parts_Key::KEYPAD_STATE::CLEAR);
+		}
+	}
+	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSLASH))
+	{
+		if (m_pKeyPadList[nSelectNum].get())
+		{
+			m_pKeyPadList[nSelectNum]->SetLampState(CModule_Parts_Key::KEYPAD_STATE::FAILED);
+		}
+	}
+
+	//nullcheck
+	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	{
+		for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
+		{
+			if (m_pKeyPadList[nCnt].get())
+			{
+				//現在の選択番号と同じモノだけtrueにしておく
+				m_pKeyPadList[nCnt]->SetSelect(false);
+
+				CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+			}
+		}
+	}
+
 }
 //------------------------------------------------------------------------------
 //キーパッド生成

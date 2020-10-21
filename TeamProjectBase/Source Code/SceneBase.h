@@ -36,13 +36,14 @@ public:
 	virtual void SetColor(D3DXCOLOR const &col)					{ m_col = col; };							//色
 	virtual void SetRot(D3DXVECTOR3 const &rot)					{ m_rot = rot; };							//回転量
 	virtual void SetScale(D3DXVECTOR3 const &scale)				{ m_scale = scale; };						//拡大率
-	virtual void SetDisp(bool bDisp)							{ m_bDisp = bDisp; };						//表示非表示
 	virtual void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const UVsize) {};
 
 	void BindTexture(LPDIRECT3DTEXTURE9 const tex)				{ m_pTexture = tex; };						//テクスチャ
 	void BindVtxBuff(LPDIRECT3DVERTEXBUFFER9 const pVtxBuff)	{ m_pVtxBuff = pVtxBuff; };					//頂点バッファ
 	void SetMtxWorld(D3DXMATRIX const mtxWorld)					{ m_mtxWorld = mtxWorld; };					//ワールドマトリックス
 	void SetParentMtxPtr(D3DXMATRIX *pMtx)						{ m_pParentMtx = pMtx; };					//親のマトリックス設定
+	void SetDisp(bool bDisp)									{ m_bDisp = bDisp; };						//表示非表示
+	void SetLighting(bool bLighting)							{ m_bLighting = bLighting; };				//ライティング設定
 
 	//Get関数
 	D3DXVECTOR3 &GetPos()										{ return m_pos; };							//座標
@@ -51,6 +52,7 @@ public:
 	D3DXVECTOR3 &GetRot()										{ return m_rot; };							//回転量
 	D3DXVECTOR3 &GetScale()										{ return m_scale; };						//拡大率
 	bool &GetDisp()												{ return m_bDisp; };						//表示非表示
+	bool &GetLighting()											{ return m_bLighting; };					//ライティングしているかどうか
 
 	LPDIRECT3DTEXTURE9 GetTexture()								{ return m_pTexture; };						//テクスチャのポインタ
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff()						{ return m_pVtxBuff; };						//頂点バッファのポインタ
@@ -66,7 +68,7 @@ public:
 	template<class T>
 	static std::shared_ptr<T> ScenePolygonCreateShared
 	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
-		CTexture::TEX_TYPE const tex, CScene::OBJTYPE const objtype, D3DXVECTOR3 const & rot = ZeroVector3)
+		LPDIRECT3DTEXTURE9 const tex, CScene::OBJTYPE const objtype)
 	{
 		//メモリ確保
 		std::shared_ptr<T> ptr = std::make_shared<T>();
@@ -75,9 +77,8 @@ public:
 		ptr->SetPos(pos);
 		ptr->SetSize(size);
 		ptr->SetColor(col);
-		ptr->SetRot(rot);
 		ptr->SetObjType(objtype);
-		ptr->BindTexture(CTexture::GetTexture(tex));
+		ptr->BindTexture(tex);
 
 		//初期化処理
 		ptr->Init();
@@ -94,7 +95,7 @@ public:
 	template<class T>
 	static std::unique_ptr<T> ScenePolygonCreateSelfManagement
 	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
-		CTexture::TEX_TYPE const tex, D3DXVECTOR3 const & rot = ZeroVector3)
+		LPDIRECT3DTEXTURE9 const tex)
 	{
 		//メモリ確保
 		std::unique_ptr<T> ptr = std::make_unique<T>();
@@ -103,8 +104,7 @@ public:
 		ptr->SetPos(pos);
 		ptr->SetSize(size);
 		ptr->SetColor(col);
-		ptr->SetRot(rot);
-		ptr->BindTexture(CTexture::GetTexture(tex));
+		ptr->BindTexture(tex);
 
 		//初期化処理
 		ptr->Init();
@@ -120,7 +120,7 @@ public:
 	template<class T>
 	static void ScenePolygonCreateSceneManagement
 	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
-		CTexture::TEX_TYPE const tex, CScene::OBJTYPE const objtype, D3DXVECTOR3 const & rot = ZeroVector3)
+		LPDIRECT3DTEXTURE9 const tex, CScene::OBJTYPE const objtype)
 	{
 		//メモリ確保
 		std::unique_ptr<T> ptr = std::make_unique<T>();
@@ -129,8 +129,7 @@ public:
 		ptr->SetPos(pos);
 		ptr->SetSize(size);
 		ptr->SetColor(col);
-		ptr->SetRot(rot);
-		ptr->BindTexture(CTexture::GetTexture(tex));
+		ptr->BindTexture(tex);
 
 		//初期化処理
 		ptr->Init();
@@ -153,6 +152,7 @@ private:
 	D3DXMATRIX m_mtxWorld;									//ワールドマトリックス
 	D3DXMATRIX *m_pParentMtx;								//親のマトリックス
 	bool m_bDisp;											//表示非表示の設定
+	bool m_bLighting;										//ライティングするかどうか
 
 };
 #endif

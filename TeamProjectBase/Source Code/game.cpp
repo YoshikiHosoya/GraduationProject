@@ -33,13 +33,16 @@
 CGame::CGame()
 {
 	m_nCntState = 0;
-	m_gamestate = STATE_READY;
+	m_State = STATE_READY;
+	m_Gaze = GAZE_BOMB;
+	m_pBomb.reset();
 }
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
 CGame::~CGame()
 {
+	m_pBomb.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -50,19 +53,19 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetGamestate(CGame::STATE_READY);
+	SetState(CGame::STATE_READY);
 
 	//パーティクルのマネージャ
 	CParticleManager::Create();
 
 	//爆弾生成
-	CBomb::CreateBomb(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
+	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
 
 	//マップ生成
 	CMap::Create();
 
-	CPicture::Load();
 	// ピクチャの生成
+	CPicture::Load();
 	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
 	return S_OK;
 }
@@ -105,13 +108,43 @@ void CGame::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //ゲームステートセット
 //------------------------------------------------------------------------------
-void CGame::SetGamestate(STATE gamestate)
+void CGame::SetState(STATE state)
 {
 	//ステートが進んでいる場合
-	if (m_gamestate != CGame::STATE_NONE)
+	if (m_State != CGame::STATE_NONE)
 	{
 		//ステート変更
-		m_gamestate = gamestate;
+		m_State = state;
 
 	}
+}
+
+//------------------------------------------------------------------------------
+//視線設定
+//------------------------------------------------------------------------------
+void CGame::SetGaze(GAZE gaze)
+{
+	//前の状態と違う時
+	if (m_Gaze != gaze)
+	{
+		//視線情報設定
+		m_Gaze = gaze;
+		switch (m_Gaze)
+		{
+		case CGame::GAZE_DEFAULT:
+
+			break;
+		case CGame::GAZE_BOMB:
+			//CManager::GetRenderer()->GetCamera()->
+			break;
+		case CGame::GAZE_MODULE:
+
+			break;
+		default:
+			break;
+		}
+
+
+	}
+
 }

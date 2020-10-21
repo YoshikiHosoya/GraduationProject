@@ -133,9 +133,6 @@ void CMultiNumber::Draw()
 		*GetMtxWorldPtr() *= *GetParentMtxPtr();
 	}
 
-	//ライティングOFF
-	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_OFF);
-
 	//nullcheck
 	if (!m_pNumberList.empty())
 	{
@@ -150,9 +147,6 @@ void CMultiNumber::Draw()
 			}
 		}
 	}
-
-	//ライティングON
-	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_ON);
 }
 
 //------------------------------------------------------------------------------
@@ -192,15 +186,15 @@ std::shared_ptr<CMultiNumber> CMultiNumber::Create(D3DXVECTOR3 const & pos, D3DX
 			{
 				//配列に追加
 				//数値の並ぶ中心をposとする
-				pMultiNumber->m_pNumberList.emplace_back(CScene3D::ScenePolygonCreateSelfManagement<CScene3D>(D3DXVECTOR3(-onesize.x * (nDigits - 1) * 0.5f + onesize.x * nCnt, 0.0f, 0.0f), onesize, WhiteColor, CTexture::TEX_NONE));
+				pMultiNumber->m_pNumberList.emplace_back(CScene3D::ScenePolygonCreateSelfManagement<CScene3D>(D3DXVECTOR3(-onesize.x * (nDigits - 1) * 0.5f + onesize.x * nCnt, 0.0f, 0.0f), onesize, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER)));
 				pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->SetParentMtxPtr(pMultiNumber->GetMtxWorldPtr());
+				pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->SetLighting(false);
+
 			}
-			pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->BindTexture(CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER));
 		}
 
 		pMultiNumber->SetPos(pos);
 		pMultiNumber->SetSize(onesize);
-
 
 		//数値の初期化
 		pMultiNumber->SetMultiNumber(nValue);

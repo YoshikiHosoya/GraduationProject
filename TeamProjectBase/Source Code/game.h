@@ -18,6 +18,8 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
+class CBomb;
+
 class CGame : public CBaseMode
 {
 public:
@@ -46,20 +48,26 @@ public:
 
 	CGame();
 	~CGame();
-	virtual HRESULT Init(HWND hWnd);								//初期化
-	virtual void Uninit();											//終了
-	virtual void Update();											//更新
-	virtual void Draw();											//描画
-	virtual void ShowDebugInfo();									//デバッグ情報表記
+	virtual HRESULT Init(HWND hWnd);						//初期化
+	virtual void Uninit();									//終了
+	virtual void Update();									//更新
+	virtual void Draw();									//描画
+	virtual void ShowDebugInfo();							//デバッグ情報表記
 
-	void SetGamestate(STATE gamestate);						//ゲームの状態設定
-	STATE GetGamestate() { return m_gamestate; };			//ゲームの状態取得
+	void SetState(STATE state);								//ゲームの状態設定
+	void SetGaze(GAZE gaze);								//視線設定
 
+	STATE GetState() { return m_State; };					//ゲームの状態取得
+	GAZE GetGaze() { return m_Gaze; };						//現在の視線取得
+	CBomb *GetBombPtr() { return m_pBomb.get(); };			//ボムのポインタ取得
 protected:
 
 private:
-	STATE m_gamestate;									//ゲームステート
-	int m_nCntState;									//ステートのカウンタ
+	STATE m_State;											//ゲームステート
+	GAZE m_Gaze;											//視線
+	int m_nCntState;										//ステートのカウンタ
+	std::shared_ptr<CBomb>	m_pBomb;						//ボムのポインタ
+
 };
 
 #endif

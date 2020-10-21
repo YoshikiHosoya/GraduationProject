@@ -29,8 +29,13 @@ FILENAME_LIST CTexture::m_aTexFileName =
 FILENAME_LIST CTexture::m_aSeparateTexFileNameList =
 {
 	{ "data/TEXTURE/other/TexNone.png"},						//白紙
+
 	{ "data/TEXTURE/other/Number.png" },						//ナンバー
 	{ "data/TEXTURE/Effect/Explosion00.png" },					//爆発
+
+	{ "data/TEXTURE/ModuleParts/Icon_Module00.png" },					//爆発
+	{ "data/TEXTURE/ModuleParts/Icon_Module01.png" },					//爆発
+
 };
 
 
@@ -39,9 +44,11 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 {
 	//テクスチャのポインタ、テクスチャのパス、テクスチャのタイプ、テクスチャの分割数、テクスチャのUVサイズ
 	//ポインタとUVサイズに関してはLoad関数で読み込み＆計算する
-	{ nullptr, CTexture::SEPARATE_TEX_NONE,					D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
-	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,	D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
-	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,			D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_NONE,								D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
+	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,				D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,						D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00,				D3DXVECTOR2(12,2),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01,				D3DXVECTOR2(4,1),	ZeroVector2 },		//爆発
 
 };
 

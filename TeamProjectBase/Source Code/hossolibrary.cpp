@@ -493,16 +493,13 @@ void CHossoLibrary::CalcRotation_XYZ(D3DXVECTOR3 & rot)
 //------------------------------------------------------------------------------
 //選択
 //------------------------------------------------------------------------------
-bool CHossoLibrary::Selecting(int & nSelectNum, int const nNumX, int const nNumY)
+bool CHossoLibrary::Selecting(int &nSelectNum, int const &nSelectNumOld, int const nNumX, int const nNumY)
 {
 
 	//←→↑↓どれか入力されていた場合
 	if (m_pKeyboard->GetTrigger(DIK_LEFT) || m_pKeyboard->GetTrigger(DIK_RIGHT) ||
 		m_pKeyboard->GetTrigger(DIK_UP) || m_pKeyboard->GetTrigger(DIK_DOWN))
 	{
-		//Numが変わる前の数値を覚えておく
-		int nSelectNumOld = nSelectNum;
-
 		//←
 		if (m_pKeyboard->GetTrigger(DIK_LEFT))
 		{
@@ -536,7 +533,7 @@ bool CHossoLibrary::Selecting(int & nSelectNum, int const nNumX, int const nNumY
 		}
 
 		//範囲内に抑える
-		if (CHossoLibrary::RangeLimit_Equal(nSelectNum, 0, nNumX * nNumY))
+		if (CHossoLibrary::RangeLimit_Equal(nSelectNum, 0, (nNumX * nNumY) - 1))
 		{
 			nSelectNum = nSelectNumOld;
 
@@ -808,3 +805,18 @@ D3DXVECTOR3 CHossoLibrary::RandomVector3(float Max)
 
 	return Value;
 }
+
+//------------------------------------------------------------------------------
+//UV計算
+//------------------------------------------------------------------------------
+D3DXVECTOR2 CHossoLibrary::CalcUV_StaticFunc(int nNumUV, CTexture::SEPARATE_TEX_TYPE tex)
+{
+	//UV座標計算
+	D3DXVECTOR2 UV;
+	UV.x = nNumUV % (int)CTexture::GetSparateTex_UVCnt(tex).x * CTexture::GetSparateTex_UVSize(tex).x;
+	UV.y = nNumUV / (int)CTexture::GetSparateTex_UVCnt(tex).x * CTexture::GetSparateTex_UVSize(tex).y;
+
+	return UV;
+}
+
+

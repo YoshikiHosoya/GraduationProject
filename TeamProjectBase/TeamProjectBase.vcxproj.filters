@@ -25,9 +25,6 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{37429a27-1909-43a1-8a3f-2718d7d10ef3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mesh">
-      <UniqueIdentifier>{d97b8b58-b6af-4afd-80d0-e41c34b76607}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect">
       <UniqueIdentifier>{52237fd5-d6c7-49aa-8b64-64bf7855d974}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{a299ed23-8309-4e1f-824d-594ad8048391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{d97b8b58-b6af-4afd-80d0-e41c34b76607}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

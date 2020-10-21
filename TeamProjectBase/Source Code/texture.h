@@ -46,12 +46,17 @@ public:
 		SEPARATE_TEX_NONE = 0,
 
 		//UI
-		SEPARATE_TEX_UI_NUMBER,						//ナンバー
+		SEPARATE_TEX_UI_NUMBER,								//ナンバー
 
 		//エフェクト
-		SEPARATE_TEX_EFFECT_EXPLOSION00,			//爆発
+		SEPARATE_TEX_EFFECT_EXPLOSION00,					//爆発
 
-		SEPARATE_TEX_MAX							//MAX
+		//モジュールのパーツ
+		SEPARATE_TEX_MODULEPARTS_MODULE00,					//モジュールナンバー0 暗号みたいなやつ
+		SEPARATE_TEX_MODULEPARTS_MODULE01,					//モジュールナンバー1 〇×△□
+
+
+		SEPARATE_TEX_MAX									//MAX
 	};
 
 	typedef struct

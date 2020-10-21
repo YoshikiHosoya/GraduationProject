@@ -21,6 +21,7 @@ CSceneBase::CSceneBase()
 	m_pVtxBuff = nullptr;
 	m_pTexture = nullptr;
 	m_bDisp = true;
+	m_bLighting = true;
 	D3DXMatrixIdentity(&m_mtxWorld);
 	m_pParentMtx = nullptr;
 

@@ -12,6 +12,7 @@
 #include "renderer.h"
 #include "manager.h"
 #include "keyboard.h"
+#include "game.h"
 #include "modelinfo.h"
 #include "module_none.h"
 #include "module_timer.h"
@@ -80,7 +81,6 @@ void CBomb::ShowDebugInfo()
 
 	//選択番号
 	static  int nSelectNum = 0;
-
 	//1F前の選択番号
 	int nSelectNumOld = nSelectNum;
 
@@ -93,55 +93,75 @@ void CBomb::ShowDebugInfo()
 	//キーボードのポインタ
 	CKeyboard *pKeyboard = CManager::GetKeyboard();
 
-	while (1)
+	switch (CManager::GetGame()->GetGaze())
 	{
-		//入力が無かった時はbreak
-		if (!CHossoLibrary::Selecting(nSelectNum, 3, 4))
-		{
-			break;
-		}
+	case CGame::GAZE_DEFAULT:
+		break;
 
-		//nullcheck
-		if (m_pModuleList[nSelectNum].get())
+	case CGame::GAZE_BOMB:
+		while (1)
 		{
-			if (m_pModuleList[nSelectNum]->GetCanModuleSelect())
+			//入力が無かった時はbreak
+			if (!CHossoLibrary::Selecting(nSelectNum, nSelectNumOld, 3, 4))
 			{
 				break;
 			}
+
+			//nullcheck
+			if (m_pModuleList[nSelectNum].get())
+			{
+				if (m_pModuleList[nSelectNum]->GetCanModuleSelect())
+				{
+					break;
+				}
+			}
 		}
-	}
 
-
-	for (int nCnt = 0; nCnt < 12; nCnt++)
-	{
-		//nullcheck
-		if (m_pModuleList[nCnt].get())
+		for (int nCnt = 0; nCnt < 12; nCnt++)
 		{
-			//現在の選択番号と同じモノだけtrueにしておく
-			nCnt == nSelectNum ?
-				m_pModuleList[nCnt]->SetSelect(true) :
-				m_pModuleList[nCnt]->SetSelect(false);
+			//nullcheck
+			if (m_pModuleList[nCnt].get())
+			{
+				//現在の選択番号と同じモノだけtrueにしておく
+				nCnt == nSelectNum ?
+					m_pModuleList[nCnt]->SetSelect(true) :
+					m_pModuleList[nCnt]->SetSelect(false);
+			}
 		}
+
+
+		if (pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			CManager::GetGame()->SetGaze(CGame::GAZE::GAZE_MODULE);
+
+			//カメラを近づける
+			m_pModuleList[nSelectNum]->CameraApproach();
+		}
+
+		break;
+
+	case CGame::GAZE_MODULE:
+		for (int nCnt = 0; nCnt < 12; nCnt++)
+		{
+			//nullcheck
+			if (m_pModuleList[nCnt].get())
+			{
+				m_pModuleList[nCnt]->SetSelect(false);
+
+			}
+		}
+		//nullcheck
+		if (m_pModuleList[nSelectNum].get())
+		{
+			m_pModuleList[nSelectNum]->Operation();
+		}
+
+		break;
+
+	default:
+		break;
 	}
 
-	////Enter
-	//if (pKeyboard->GetTrigger(DIK_RETURN))
-	//{
-	//	//nullcheck
-	//	if (m_pModuleList[nSelectNum].get())
-	//	{
-	//		//カメラが近づいている時
-	//		if (m_pModuleList[nSelectNum]->GetModelSelecting())
-	//		{
-	//			m_pModuleList[nSelectNum]->Module_Clear();
-	//		}
-	//		else
-	//		{
-	//			//カメラを近づける
-	//			m_pModuleList[nSelectNum]->CameraApproach();
-	//		}
-	//	}
-	//}
 
 
 	//左のCtrlキー
@@ -216,15 +236,15 @@ void CBomb::CreateModule(int const nModuleNum)
 		//モジュールタイプに応じて生成
 		switch (type)
 		{
-		//	//モジュール無し
-		//case CModule_Base::MODULE_TYPE::NONE:
-		//	CBomb::CreateModuleOne<CModule_None>();
-		//	break;
+			//モジュール無し
+		case CModule_Base::MODULE_TYPE::NONE:
+			CBomb::CreateModuleOne<CModule_None>();
+			break;
 
-		//	//ボタンモジュール
-		//case CModule_Base::MODULE_TYPE::BUTTON:
-		//	CBomb::CreateModuleOne<CModule_Button>();
-		//	break;
+			//ボタンモジュール
+		case CModule_Base::MODULE_TYPE::BUTTON:
+			CBomb::CreateModuleOne<CModule_Button>();
+			break;
 
 			//キーパッド
 		case CModule_Base::MODULE_TYPE::KEYPAD:

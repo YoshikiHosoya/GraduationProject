@@ -25,7 +25,8 @@
 //------------------------------------------------------------------------------
 #define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,2.0f,-3.0f))
 #define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,7.0f,0.0f))
-
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-5.0f))
+#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(8.0f,8.0f,0.0f))
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -34,6 +35,8 @@ CModule_Parts_Key::CModule_Parts_Key()
 {
 	m_LampState = KEYPAD_STATE::NORMAL;
 	m_nCntLampCnt = 0;
+	m_pLight.reset();
+	m_pSymbol.reset();
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +44,7 @@ CModule_Parts_Key::CModule_Parts_Key()
 //------------------------------------------------------------------------------
 CModule_Parts_Key::~CModule_Parts_Key()
 {
-
+	m_pLight.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -52,13 +55,18 @@ HRESULT CModule_Parts_Key::Init()
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_KEYPAD));
 
 	//パッドのライト生成
-	m_pLight = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>(KEYPAD_LIGHT_OFFSET, KEYPAD_LIGHTPOLYGON_SIZE, BlackColor, CTexture::TEX_TYPE::TEX_NONE);
+	m_pLight = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>(KEYPAD_LIGHT_OFFSET, KEYPAD_LIGHTPOLYGON_SIZE, BlackColor, nullptr);
 
 	//マトリックス設定
 	m_pLight->SetParentMtxPtr(GetMtxWorldPtr());
 
 	//ライティングoff
 	m_pLight->SetLighting(false);
+
+	//文字の生成
+	m_pSymbol = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
+	m_pSymbol->SetParentMtxPtr(GetMtxWorldPtr());
+	m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(0, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
 
 	CSceneX::Init();
 
@@ -116,14 +124,6 @@ void CModule_Parts_Key::Draw()
 void CModule_Parts_Key::ShowDebugInfo()
 {
 #ifdef _DEBUG
-	if (CManager::GetKeyboard()->GetTrigger(DIK_5))
-	{
-		SetLampState(KEYPAD_STATE::CLEAR);
-	}
-	if (CManager::GetKeyboard()->GetTrigger(DIK_6))
-	{
-		SetLampState(KEYPAD_STATE::FAILED);
-	}
 
 #endif //DEBUG
 }

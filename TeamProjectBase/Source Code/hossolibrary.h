@@ -142,8 +142,9 @@ public:
 	static D3DXVECTOR3 RandomVector3(float Max);								//ƒ‰ƒ“ƒ_ƒ€‚Èvector3Œ^‚Å’l‚ð•Ô‚·
 	static void CalcRotation(float &fRot);										//‰ñ“]‚ð360“xˆÈ“à‚É‚·‚éŒvŽZ
 	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//‰ñ“]‚ð360“xˆÈ“à‚É‚·‚éŒvŽZ
-	
-	static bool Selecting(int &nSelectNum, int const nNumX, int const nNumY);
+
+	static bool Selecting(int &nSelectNum,int const &nSelectNumOld, int const nNumX, int const nNumY);
+	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, CTexture::SEPARATE_TEX_TYPE tex);
 
 
 	//------------------------------------------------------------------------------

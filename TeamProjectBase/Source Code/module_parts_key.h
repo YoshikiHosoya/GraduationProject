@@ -43,8 +43,9 @@ protected:
 
 private:
 	std::unique_ptr<CScene3D> m_pLight;			//ライト
-	int m_nCntLampCnt;							//ライト用のカウント
+	std::shared_ptr<CScene3D> m_pSymbol;		//シンボル
 	KEYPAD_STATE m_LampState;					//ライトの状態
+	int m_nCntLampCnt;							//ライト用のカウント
 
 };
 #endif

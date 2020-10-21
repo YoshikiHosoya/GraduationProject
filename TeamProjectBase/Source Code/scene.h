@@ -31,7 +31,8 @@ public:
 		OBJTYPE_MAPOBJECT,					//マップに配置されるオブジェクト
 		OBJTYPE_BOMB,						//爆弾
 		OBJTYPE_MODULE,						//モジュール
-		OBJTYPE_MODULE_PARTS,				//モジュール
+		OBJTYPE_MODULE_PARTS,				//モジュールのパーツ
+		OBJTYPE_MODULE_PARTS_SYMBOL,		//モジュールのパーツ上のポリゴン
 		OBJTYPE_EFFECT,						//エフェクト
 		OBJTYPE_UI,							//UI
 		OBJTYPE_NUMBER,						//数字
