@@ -12,29 +12,19 @@
 //-------------------------------------------------------------------------------------------------------------
 // インクルードファイル
 //-------------------------------------------------------------------------------------------------------------
-#include <windows.h>
+#include "main.h"
 #include <stdio.h>
-#include "d3dx9.h"
 #include "XAudio2.h"
 #define DIRECTINPUT_VERSION (0x0800)	// 警告対処用
 #include "dinput.h"
 #define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 #include <time.h>
-#include <vector>
 #include <list>
-#include <iostream>
 //using namespace std;
 
 //-------------------------------------------------------------------------------------------------------------
 // ライブラリのリンク
 //-------------------------------------------------------------------------------------------------------------
-#pragma comment (lib, "d3d9.lib")
-#pragma comment (lib, "d3dx9.lib")
-#pragma comment (lib, "dxguid.lib")
-#pragma comment (lib, "winmm.lib")
-#pragma comment (lib, "dinput8.lib")
 
 //-------------------------------------------------------------------------------------------------------------
 // 全体メモ
