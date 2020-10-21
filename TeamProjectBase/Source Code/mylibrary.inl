@@ -1278,7 +1278,7 @@ inline void
 CMeasurement::Draw(void)
 {
 #ifdef MYLIB_MEASURE
-	cout << "ˆ—‘¬“x == " << (m_end.QuadPart - m_start.QuadPart) * 1000.0 / m_freq.QuadPart  << "[ms.]\n";
+	std::cout << "ˆ—‘¬“x == " << (m_end.QuadPart - m_start.QuadPart) * 1000.0 / m_freq.QuadPart  << "[ms.]\n";
 #endif
 }
 
