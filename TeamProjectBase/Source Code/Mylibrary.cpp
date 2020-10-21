@@ -1176,7 +1176,7 @@ void CMylibrary::SetBillboard(LPDIRECT3DDEVICE9 pDevice, D3DXMATRIX * mtxOutput)
 	// ヴュー情報を取得
 	pDevice->GetTransform(D3DTS_VIEW, &mtxView);
 
-	//逆行列　ビルボード
+	//逆行列 ビルボード
 	mtxOutput->_11 = mtxView._11;
 	mtxOutput->_12 = mtxView._21;
 	mtxOutput->_13 = mtxView._31;
@@ -1353,6 +1353,53 @@ void CMylibrary::SetVec3FixTheRotation(D3DXVECTOR3 * Rotation)
 	{
 		Rotation->z -= D3DX_PI * 2;
 	}
+}
+
+//* [contents] スクリーン座標をワールド座標に変換
+//* [in] スクリーン座標、射影空間でのZ値、スクリーンの大きさ、ビュー行列、プロジェクション行列
+//* [out] 算出したワールド座標
+void CMylibrary::CalScreenToWorld(FLOAT3* pOut, INTEGER2 *pPos, float fZ, INTEGER2 *pScreenSize, MATRIX* pView, MATRIX* pPrj)
+{
+	// 各行列の逆行列を算出
+	MATRIX InvView;			// ビューの逆行列
+	MATRIX InvPrj;			// プロジェクションの逆行列
+	MATRIX Viewport;		// ビューポートの行列
+	MATRIX InvViewport;		// ビューポートの逆行列
+
+	// ビュー行列とプロジェクション行列の逆行列の計算
+	InvView.Inverse(pView);
+	InvPrj.Inverse(pPrj);
+
+	// ビューポートの初期化
+	Viewport.Identity();
+	// ビューポートの計算
+	Viewport._11 = pScreenSize->nX / 2.0f;
+	Viewport._22 = -pScreenSize->nY / 2.0f;
+	Viewport._41 = pScreenSize->nX / 2.0f;
+	Viewport._42 = pScreenSize->nY / 2.0f;
+
+	// ビューポートの逆行列の計算
+	InvViewport.Inverse(&Viewport);
+
+	// 逆変換
+	D3DXMATRIX tmp = InvViewport * InvPrj * InvView;
+	// ワールド座標へ変換
+	D3DXVec3TransformCoord(pOut, &D3DXVECTOR3((float)pPos->nX, (float)pPos->nY, fZ), &tmp);
+}
+
+//* [contents] マウスのレイを算出する
+//* [in] スクリーン座標、射影空間でのZ値、スクリーンの大きさ、ビュー行列、プロジェクション行列
+//* [out] 算出したレイ、近い位置、遠い位置
+void CMylibrary::CalScreenRay(VEC3 *pOutRay, FLOAT3 *pOutNearPos, FLOAT3 *pOutFarPos, INTEGER2 * pPos, INTEGER2 * pScreenSize, MATRIX * pView, MATRIX * pPrj)
+{
+	// スクリーン座標をワールド座標に変換
+	CalScreenToWorld(pOutNearPos, pPos, 0.0f, pScreenSize, pView, pPrj);
+	CalScreenToWorld(pOutFarPos, pPos, 1.0f, pScreenSize, pView, pPrj);
+
+	// ベクトルを算出
+	*pOutRay = *pOutFarPos - *pOutNearPos;
+	// 正規化
+	pOutRay->Norm();
 }
 
 //* [contents] 方向ベクトルからクォータニオンを求める
