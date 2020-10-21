@@ -41,7 +41,7 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 	//ポインタとUVサイズに関してはLoad関数で読み込み＆計算する
 	{ nullptr, CTexture::SEPARATE_TEX_NONE,					D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
 	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,	D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
-	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,		D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,			D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
 
 };
 

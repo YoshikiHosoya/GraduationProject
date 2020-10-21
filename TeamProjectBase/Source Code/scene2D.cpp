@@ -161,7 +161,7 @@ std::shared_ptr<CScene2D> CScene2D::Create_Shared(D3DXVECTOR3 const pos, D3DXVEC
 	pScene2D->Init();
 
 	//頂点バッファ生成
-	pScene2D->MakeVertex(pos, size, col);
+	//pScene2D->MakeVertex(pos, size, col);
 
 	//Sceneで管理
 	pScene2D->SetObjType(objtype);
@@ -183,7 +183,7 @@ void CScene2D::Create_SceneManagement(D3DXVECTOR3 const pos, D3DXVECTOR3 const s
 	pScene2D->Init();
 
 	//頂点バッファ生成
-	pScene2D->MakeVertex(pos, size, col);
+	//pScene2D->MakeVertex(pos, size, col);
 
 	//Sceneで管理
 	pScene2D->SetObjType(objtype);
@@ -201,7 +201,7 @@ std::unique_ptr<CScene2D> CScene2D::Create_SelfManagement(D3DXVECTOR3 const pos,
 	pScene2D->Init();
 
 	//頂点バッファ生成
-	pScene2D->MakeVertex(pos, size, col);
+	//pScene2D->MakeVertex(pos, size, col);
 
 	//return
 	return std::move(pScene2D);
@@ -210,13 +210,8 @@ std::unique_ptr<CScene2D> CScene2D::Create_SelfManagement(D3DXVECTOR3 const pos,
 //------------------------------------------------------------------------------
 //頂点バッファ作成
 //------------------------------------------------------------------------------
-HRESULT CScene2D::MakeVertex(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col)
+HRESULT CScene2D::MakeVertex()
 {
-	//情報設定
-	SetPos(pos);
-	SetSize(size);
-	SetColor(col);
-
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	LPDIRECT3DVERTEXBUFFER9 pVtxBuff;	//頂点バッファ

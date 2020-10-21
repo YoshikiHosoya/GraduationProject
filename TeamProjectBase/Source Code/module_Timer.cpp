@@ -43,7 +43,10 @@ CModule_Timer::~CModule_Timer()
 HRESULT CModule_Timer::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_MODULE));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+
+	//モジュール選択不可
+	CModule_Base::SetCanModuleSelect(false);
 
 	//タイマーの生成
 	m_pTimer = CTimer::Create(ZeroVector3, 360, GetMtxWorldPtr());

@@ -23,6 +23,7 @@ CScene3D::CScene3D()
 {
 	//初期化
 	m_bBillBoard = false;
+	m_bLighting = true;
 
 	//総数加算
 	m_nNumScene3D++;
@@ -41,6 +42,8 @@ CScene3D::~CScene3D()
 //------------------------------------------------------------------------------
 HRESULT CScene3D::Init()
 {
+	MakeVertex();
+
 	return S_OK;
 }
 //------------------------------------------------------------------------------
@@ -93,6 +96,12 @@ void CScene3D::Draw()
 		//ビルボード設定
 		CHossoLibrary::SetBillboard(GetMtxWorldPtr());
 	}
+	//ライティングしない時
+	if (!m_bLighting)
+	{
+		//ライティングoff
+		CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_OFF);
+	}
 
 	//nullcheck
 	if (GetParentMtxPtr())
@@ -103,6 +112,8 @@ void CScene3D::Draw()
 
 	//ポリゴン描画
 	DrawPolygon();
+
+	CHossoLibrary::CheckLighting();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
@@ -173,71 +184,10 @@ void CScene3D::SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)
 }
 
 //------------------------------------------------------------------------------
-//生成処理　共有管理用
-//------------------------------------------------------------------------------
-std::shared_ptr<CScene3D> CScene3D::Create_Shared(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col, OBJTYPE const objtype)
-{
-	//メモリ確保
-	std::shared_ptr<CScene3D> pScene3D = std::make_shared<CScene3D>();
-
-	//初期化
-	pScene3D->Init();
-
-	//座標とサイズ設定
-	pScene3D->MakeVertex(pos, size, col);
-
-	//Scene側で管理
-	pScene3D->SetObjType(objtype);
-	pScene3D->AddSharedList(pScene3D);
-
-	return pScene3D;
-}
-//------------------------------------------------------------------------------
-//生成処理　Csceneで管理用
-//------------------------------------------------------------------------------
-void CScene3D::Create_SceneManagement(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col, OBJTYPE const objtype)
-{
-	//メモリ確保
-	std::unique_ptr<CScene3D> pScene3D = std::make_unique<CScene3D>();
-
-	//初期化
-	pScene3D->Init();
-
-	//座標とサイズ設定
-	pScene3D->MakeVertex(pos, size, col);
-
-	//Sceneで管理
-	pScene3D->SetObjType(objtype);
-	pScene3D->AddUniqueList(std::move(pScene3D));
-}
-//------------------------------------------------------------------------------
-//生成処理　Return先で管理用
-//------------------------------------------------------------------------------
-std::unique_ptr<CScene3D> CScene3D::Create_SelfManagement(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col)
-{
-	//メモリ確保
-	std::unique_ptr<CScene3D> pScene3D = std::make_unique<CScene3D>();
-
-	//初期化
-	pScene3D->Init();
-
-	//座標とサイズ設定
-	pScene3D->MakeVertex(pos, size, col);
-
-	//return
-	return std::move(pScene3D);
-}
-
-
-//------------------------------------------------------------------------------
 //頂点バッファ生成
 //------------------------------------------------------------------------------
-HRESULT CScene3D::MakeVertex(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col)
+HRESULT CScene3D::MakeVertex()
 {
-	//情報設定
-	SetPos(pos);
-	SetSize(size);
-	SetColor(col);
 
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();

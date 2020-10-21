@@ -28,24 +28,22 @@ public:
 	virtual void Draw()														override;			//描画
 	virtual void ShowDebugInfo()											override;			//デバッグ情報表記
 	void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)			override;			//テクスチャUV座標設定
+	HRESULT MakeVertex()														override;			//頂点バッファ作成
 
 	void DrawSettingMtx(D3DXMATRIX const &Mtx);													//渡す側で計算したワールドマトリックスを元に描画
 	void DrawPolygon();																			//ポリゴンの描画
 
 	void SetBillBoard(bool bBillBoard)	{ m_bBillBoard = bBillBoard;};							//ビルボード化
+	void SetLighting(bool bLighting) { m_bLighting = bLighting; };								//ライティング設定
+
 	bool GetBillBoard() { return m_bBillBoard; };												//ビルボードかどうか取得
+	bool GetLighting() { return m_bLighting; };													//ライティングしているかどうか
 	static int GetNumScene3D() { return m_nNumScene3D; };										//3Dポリゴン総数取得
 
-	static std::shared_ptr<CScene3D> Create_Shared			(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（SceneとReturn先で共有管理
-	static void Create_SceneManagement						(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（CSceneのみで管理
-	static std::unique_ptr<CScene3D> Create_SelfManagement	(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col);							//生成処理（Return先で管理
-
-
 protected:
-	HRESULT MakeVertex(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col);		//頂点バッファ作成
-
 private:
 	static int m_nNumScene3D;		//3Dポリゴンの総数
 	bool m_bBillBoard;				//ビルボードかどうか
+	bool m_bLighting;				//ライティングするかどうか
 };
 #endif

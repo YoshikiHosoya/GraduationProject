@@ -491,6 +491,67 @@ void CHossoLibrary::CalcRotation_XYZ(D3DXVECTOR3 & rot)
 
 }
 //------------------------------------------------------------------------------
+//選択
+//------------------------------------------------------------------------------
+bool CHossoLibrary::Selecting(int & nSelectNum, int const nNumX, int const nNumY)
+{
+
+	//←→↑↓どれか入力されていた場合
+	if (m_pKeyboard->GetTrigger(DIK_LEFT) || m_pKeyboard->GetTrigger(DIK_RIGHT) ||
+		m_pKeyboard->GetTrigger(DIK_UP) || m_pKeyboard->GetTrigger(DIK_DOWN))
+	{
+		//Numが変わる前の数値を覚えておく
+		int nSelectNumOld = nSelectNum;
+
+		//←
+		if (m_pKeyboard->GetTrigger(DIK_LEFT))
+		{
+			//選択番号--
+			nSelectNum--;
+
+			if (nSelectNumOld / nNumX != nSelectNum / nNumX)
+			{
+				nSelectNum = nSelectNumOld;
+			}
+		}
+		//→
+		else if (m_pKeyboard->GetTrigger(DIK_RIGHT))
+		{
+			//選択番号++
+			nSelectNum++;
+			if (nSelectNumOld / nNumX != nSelectNum / nNumX)
+			{
+				nSelectNum = nSelectNumOld;
+			}
+		}
+		//↑
+		else if (m_pKeyboard->GetTrigger(DIK_UP))
+		{
+			nSelectNum -= nNumX;
+		}
+		//↓
+		else if (m_pKeyboard->GetTrigger(DIK_DOWN))
+		{
+			nSelectNum += nNumX;
+		}
+
+		//範囲内に抑える
+		if (CHossoLibrary::RangeLimit_Equal(nSelectNum, 0, nNumX * nNumY))
+		{
+			nSelectNum = nSelectNumOld;
+
+			//これ以上動けないのでreturn
+			return false;
+		}
+
+		//trueを返す
+		return true;
+	}
+
+	//入力が無かったのでreturn
+	return false;
+}
+//------------------------------------------------------------------------------
 //モデルの最大頂点と最少頂点を求める
 //------------------------------------------------------------------------------
 void CHossoLibrary::SetModelVertex(MODEL_VTX & pModelVtx, CModelInfo & pModelInfo)

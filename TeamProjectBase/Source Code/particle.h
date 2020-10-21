@@ -21,8 +21,6 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CParticleParam;
-class CCollision;
-
 //パーティクルの粒子
 class COneParticle
 {
@@ -89,7 +87,7 @@ private:
 	D3DXMATRIX m_WorldMtx;											//ワールドマトリックス
 	D3DXVECTOR3 *m_pPosOriginPtr;									//原点座標のポインタ 追従する時はこれを使う
 
-	CCollision *m_pCollision;										//コリジョンのポインタ
+	//CCollision *m_pCollision;										//コリジョンのポインタ
 	std::unique_ptr<CParticleParam> m_pParticleParam;				//パーティクルの現在のパラメータのポインタ
 
 	std::vector<std::unique_ptr<COneParticle>> m_pParticleList;		//パーティクルの構造体のリスト

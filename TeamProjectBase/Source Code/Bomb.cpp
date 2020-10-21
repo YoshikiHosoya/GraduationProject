@@ -16,6 +16,7 @@
 #include "module_none.h"
 #include "module_timer.h"
 #include "module_Button.h"
+#include "module_keypad.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -23,7 +24,7 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-//#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,50.0f,60.0f))
+
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
@@ -77,8 +78,11 @@ void CBomb::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
+	//選択番号
 	static  int nSelectNum = 0;
 
+	//1F前の選択番号
+	int nSelectNumOld = nSelectNum;
 
 	//配列が空だったらreturn
 	if (m_pModuleList.empty())
@@ -89,31 +93,55 @@ void CBomb::ShowDebugInfo()
 	//キーボードのポインタ
 	CKeyboard *pKeyboard = CManager::GetKeyboard();
 
-	if (pKeyboard->GetTrigger(DIK_LEFT))
+	while (1)
 	{
-		nSelectNum--;
-	}
-	if (pKeyboard->GetTrigger(DIK_RIGHT))
-	{
-		nSelectNum++;
+		//入力が無かった時はbreak
+		if (!CHossoLibrary::Selecting(nSelectNum, 3, 4))
+		{
+			break;
+		}
+
+		//nullcheck
+		if (m_pModuleList[nSelectNum].get())
+		{
+			if (m_pModuleList[nSelectNum]->GetCanModuleSelect())
+			{
+				break;
+			}
+		}
 	}
 
-	//範囲内に抑える
-	CHossoLibrary::RangeLimit_Equal(nSelectNum, 0, (int)m_pModuleList.size() - 1);
 
 	for (int nCnt = 0; nCnt < 12; nCnt++)
 	{
-
 		//nullcheck
 		if (m_pModuleList[nCnt].get())
 		{
-			//現在の選択番号とあっていた場合はtrueにしておく
+			//現在の選択番号と同じモノだけtrueにしておく
 			nCnt == nSelectNum ?
 				m_pModuleList[nCnt]->SetSelect(true) :
 				m_pModuleList[nCnt]->SetSelect(false);
-
 		}
 	}
+
+	////Enter
+	//if (pKeyboard->GetTrigger(DIK_RETURN))
+	//{
+	//	//nullcheck
+	//	if (m_pModuleList[nSelectNum].get())
+	//	{
+	//		//カメラが近づいている時
+	//		if (m_pModuleList[nSelectNum]->GetModelSelecting())
+	//		{
+	//			m_pModuleList[nSelectNum]->Module_Clear();
+	//		}
+	//		else
+	//		{
+	//			//カメラを近づける
+	//			m_pModuleList[nSelectNum]->CameraApproach();
+	//		}
+	//	}
+	//}
 
 
 	//左のCtrlキー
@@ -140,7 +168,7 @@ void CBomb::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //生成関数
 //------------------------------------------------------------------------------
-std::shared_ptr<CBomb> CBomb::Create(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
+std::shared_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
 {
 	//メモリ確保
 	std::shared_ptr<CBomb> pBomb = std::make_shared<CBomb>();
@@ -153,7 +181,7 @@ std::shared_ptr<CBomb> CBomb::Create(D3DXVECTOR3 const pos, D3DXVECTOR3 const ro
 	pBomb->SetRot(rot);
 
 	//モデル情報設定
-	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_BOMB));
+	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBBOX));
 
 	//モジュール生成
 	pBomb->CreateModule(nModuleNum);
@@ -170,53 +198,67 @@ std::shared_ptr<CBomb> CBomb::Create(D3DXVECTOR3 const pos, D3DXVECTOR3 const ro
 //------------------------------------------------------------------------------
 void CBomb::CreateModule(int const nModuleNum)
 {
-//	int nCnt = 0;
-//	m_nModuleNum = nModuleNum;
-//
-//	while(nCnt < nModuleNum)
-//	{
-//		int nSetNumber = nCnt;
-//
-//		int nX = nSetNumber % 3;
-//		int nY = nSetNumber / 3;
-//		int nZ = nSetNumber / 6;
-//
-//		m_pModuleList.emplace_back(CModule_Base::Create<CModule_Timer>
-//		(D3DXVECTOR3(	(-MODULE_INTERVAL.x + (MODULE_INTERVAL.x * nX) ) * (1 - (nZ * 2)),
-//					MODULE_INTERVAL.y - (MODULE_INTERVAL.y * ((nY % 2) * 2)),
-//					-MODULE_INTERVAL.z + (MODULE_INTERVAL.z * nZ * 2)),
-//		D3DXVECTOR3(0.0f,(D3DX_PI) * nZ,0.0f),GetMtxWorldPtr()));
-//
-//		nCnt++;
-//	}
+	//モデル数代入
+	m_nModuleNum = nModuleNum;
 
+	//もしモジュールを表示できる範囲外の時は収める
+	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
+
+	//タイマー生成
+	CBomb::CreateModuleOne<CModule_Timer>();
+
+	//モジュール数分に達するまで
+	while ((int)m_pModuleList.size() < m_nModuleNum)
+	{
+		//モジュールタイプをランダムに
+		CModule_Base::MODULE_TYPE type = (CModule_Base::MODULE_TYPE)(rand() % (int)CModule_Base::MODULE_TYPE::MAX);
+
+		//モジュールタイプに応じて生成
+		switch (type)
+		{
+		//	//モジュール無し
+		//case CModule_Base::MODULE_TYPE::NONE:
+		//	CBomb::CreateModuleOne<CModule_None>();
+		//	break;
+
+		//	//ボタンモジュール
+		//case CModule_Base::MODULE_TYPE::BUTTON:
+		//	CBomb::CreateModuleOne<CModule_Button>();
+		//	break;
+
+			//キーパッド
+		case CModule_Base::MODULE_TYPE::KEYPAD:
+			CBomb::CreateModuleOne<CModule_KeyPad>();
+			break;
+		}
+	}
 //Debug用
 #ifdef _DEBUG
-	//1番目
-	CBomb::CreateModuleOne<CModule_Timer>(0);
-	//2番目
-	CBomb::CreateModuleOne<CModule_Button>(1);
-	//3番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_None>(D3DXVECTOR3(MODULE_INTERVAL.x,		MODULE_INTERVAL.y,	-MODULE_INTERVAL.z), ZeroVector3, GetMtxWorldPtr()));
-	//4番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(-MODULE_INTERVAL.x,		-MODULE_INTERVAL.y, -MODULE_INTERVAL.z), ZeroVector3, GetMtxWorldPtr()));
-	//5番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(0.0f,					-MODULE_INTERVAL.y, -MODULE_INTERVAL.z), ZeroVector3, GetMtxWorldPtr()));
-	//6番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(MODULE_INTERVAL.x,		-MODULE_INTERVAL.y, -MODULE_INTERVAL.z), ZeroVector3, GetMtxWorldPtr()));
+	////1番目
+	//CBomb::CreateModuleOne<CModule_Timer>();
+	////2番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////3番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////4番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////5番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////6番目
+	//CBomb::CreateModuleOne<CModule_Button>();
 
-	//7番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(MODULE_INTERVAL.x,		MODULE_INTERVAL.y,	MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
-	//8番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(0.0f,					MODULE_INTERVAL.y,	MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
-	//9番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(-MODULE_INTERVAL.x,		MODULE_INTERVAL.y,	MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
-	//10番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(MODULE_INTERVAL.x,		-MODULE_INTERVAL.y, MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
-	//11番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(0.0f,					-MODULE_INTERVAL.y, MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
-	//12番目
-	m_pModuleList.emplace_back(CModule_Base::Create<CModule_Button>(D3DXVECTOR3(-MODULE_INTERVAL.x,		-MODULE_INTERVAL.y, MODULE_INTERVAL.z), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), GetMtxWorldPtr()));
+	////7番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////8番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////9番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////10番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////11番目
+	//CBomb::CreateModuleOne<CModule_Button>();
+	////12番目
+	//CBomb::CreateModuleOne<CModule_Button>();
 
 #endif //_DEBUG
 }

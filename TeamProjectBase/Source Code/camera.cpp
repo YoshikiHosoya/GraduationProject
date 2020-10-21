@@ -9,7 +9,6 @@
 #include "renderer.h"
 #include "keyboard.h"
 #include "game.h"
-#include "collision.h"
 #include "Map.h"
 #include "mouse.h"
 //-----------------------------------------------------------------------------
@@ -21,7 +20,7 @@
 #define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,50.0f,0.0f))
 
 
-#define DEFAULT_DISTANCE			(600.0f)		//カメラの距離
+#define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
 #define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.13f,0.0f,0.0f))
 
 #define CAMERA_LENGTH_NEAR			(10.0f)			//カメラの見える距離（近）
@@ -48,7 +47,6 @@ CCamera::CCamera()
 	m_move = ZeroVector3;
 	m_fDistance = 0.0f;
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	m_pCollision = nullptr;
 	m_CameraState = CCamera::CAMERA_FIXED;
 	m_MousePosCurrent = ZeroVector2;
 	m_MousePosOld = ZeroVector2;
@@ -62,7 +60,7 @@ CCamera::CCamera()
 //-----------------------------------------------------------------------------
 CCamera::~CCamera()
 {
-	m_pCollision.reset();
+
 }
 //-----------------------------------------------------------------------------
 //初期化
@@ -71,12 +69,6 @@ void CCamera::Init(void)
 {
 	//マトリックス計算
 	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot, OneVector3);
-
-	//コリジョン生成
-	m_pCollision = CCollision::Create(&m_mtxWorld, CCollision::COLLISION_CAMERA);
-
-	//コリジョン情報設定
-	m_pCollision->SetCollisionInfo(10.0f, 10.0f);
 
 	//初期の距離初期化
 	m_fDefaultDistace = 0.0f;
@@ -125,7 +117,7 @@ void CCamera::Update(void)
 		break;
 	}
 	//マトリックス計算
-	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot,OneVector3);
+	CHossoLibrary::CalcMatrix(&m_mtxWorld, m_posV, m_rot, OneVector3);
 
 }
 //-----------------------------------------------------------------------------
@@ -220,14 +212,14 @@ void CCamera::MoveCameraDebug(void)
 	}
 
 	//[1]キーを押した時
-	else if (pKeyboard->GetPress(DIK_1))
+	else if (pKeyboard->GetPress(DIK_Q))
 	{
 		//上に移動
 		m_posRDest.x += sinf(D3DX_PI * 0.0f) * CAMERA_MOVE_SPEED;
 		m_posRDest.y += cosf(D3DX_PI * 0.0f) * CAMERA_MOVE_SPEED;
 	}
 	//[3]キーを押した時
-	else if (pKeyboard->GetPress(DIK_3))
+	else if (pKeyboard->GetPress(DIK_E))
 	{
 		//下に移動
 		m_posRDest.x += sinf(D3DX_PI * 1.0f) * CAMERA_MOVE_SPEED;
@@ -396,6 +388,15 @@ void CCamera::ResetCamera()
 
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// カメラを近づける処理
+//-------------------------------------------------------------------------------------------------------------
+void CCamera::ApproachCamera(D3DXVECTOR3 posRDest)
+{
+	m_posRDest = posRDest;
+	m_rot = DEFAULT_CAMERA_ROTATION;
 }
 
 //-------------------------------------------------------------------------------------------------------------

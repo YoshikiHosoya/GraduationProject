@@ -27,6 +27,8 @@ public:
 	virtual	void Draw()				= 0;							//描画
 	virtual void ShowDebugInfo()	= 0;							//デバッグ情報表記
 
+	virtual HRESULT MakeVertex() { return E_FAIL; };	//頂点バッファ生成関数 ポリゴンの場合はこの関数をオーバーライド
+
 	//Set関数
 	//仮想関数　頂点バッファの再調整とかオーバーライドでしてもらう
 	virtual void SetPos(D3DXVECTOR3 const &pos)					{ m_pos = pos; };							//座標
@@ -56,7 +58,89 @@ public:
 	D3DXMATRIX *GetMtxWorldPtr()								{ return &m_mtxWorld; };					//ワールドマトリックス
 	D3DXMATRIX *GetParentMtxPtr()								{ return m_pParentMtx; };					//親のマトリックス
 
-protected:
+
+	//テンプレート関数
+	//ポリゴン生成関数
+	//2D3D両方可能
+	//SharedPtrを利用して共用管理するポインタ
+	template<class T>
+	static std::shared_ptr<T> ScenePolygonCreateShared
+	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
+		CTexture::TEX_TYPE const tex, CScene::OBJTYPE const objtype, D3DXVECTOR3 const & rot = ZeroVector3)
+	{
+		//メモリ確保
+		std::shared_ptr<T> ptr = std::make_shared<T>();
+
+		//情報設定
+		ptr->SetPos(pos);
+		ptr->SetSize(size);
+		ptr->SetColor(col);
+		ptr->SetRot(rot);
+		ptr->SetObjType(objtype);
+		ptr->BindTexture(CTexture::GetTexture(tex));
+
+		//初期化処理
+		ptr->Init();
+
+		//Sceneにポインタを渡す
+		ptr->AddSharedList(ptr);
+		return ptr;
+	}
+
+	//テンプレート関数
+	//ポリゴン生成関数
+	//2D3D両方可能
+	//UniquePtrで呼び出した側が管理
+	template<class T>
+	static std::unique_ptr<T> ScenePolygonCreateSelfManagement
+	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
+		CTexture::TEX_TYPE const tex, D3DXVECTOR3 const & rot = ZeroVector3)
+	{
+		//メモリ確保
+		std::unique_ptr<T> ptr = std::make_unique<T>();
+
+		//情報設定
+		ptr->SetPos(pos);
+		ptr->SetSize(size);
+		ptr->SetColor(col);
+		ptr->SetRot(rot);
+		ptr->BindTexture(CTexture::GetTexture(tex));
+
+		//初期化処理
+		ptr->Init();
+
+		//return
+		return std::move(ptr);
+	}
+
+	//テンプレート関数
+	//ポリゴン生成関数
+	//2D3D両方可能
+	//UniquePtrでSceneが管理
+	template<class T>
+	static void ScenePolygonCreateSceneManagement
+	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
+		CTexture::TEX_TYPE const tex, CScene::OBJTYPE const objtype, D3DXVECTOR3 const & rot = ZeroVector3)
+	{
+		//メモリ確保
+		std::unique_ptr<T> ptr = std::make_unique<T>();
+
+		//情報設定
+		ptr->SetPos(pos);
+		ptr->SetSize(size);
+		ptr->SetColor(col);
+		ptr->SetRot(rot);
+		ptr->BindTexture(CTexture::GetTexture(tex));
+
+		//初期化処理
+		ptr->Init();
+
+		//Sceneにポインタを渡す
+		ptr->SetObjType(objtype);
+		ptr->AddUniqueList(std::move(ptr));
+	}
+
+
 
 private:
 	LPDIRECT3DTEXTURE9 m_pTexture;							//テクスチャへのポインタ
@@ -72,3 +156,4 @@ private:
 
 };
 #endif
+

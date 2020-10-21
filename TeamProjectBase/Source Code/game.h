@@ -35,6 +35,15 @@ public:
 		STATE_MAX
 	};
 
+	//ゲーム中の視線
+	enum GAZE
+	{
+		GAZE_DEFAULT,	//デフォルトの視線
+		GAZE_BOMB,		//爆弾を見てる
+		GAZE_MODULE		//モジュールを見てる
+	};
+
+
 	CGame();
 	~CGame();
 	virtual HRESULT Init(HWND hWnd);								//初期化

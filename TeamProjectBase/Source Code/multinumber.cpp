@@ -192,7 +192,7 @@ std::shared_ptr<CMultiNumber> CMultiNumber::Create(D3DXVECTOR3 const & pos, D3DX
 			{
 				//”z—ñ‚É’Ç‰Á
 				//”’l‚Ì•À‚Ô’†S‚ðpos‚Æ‚·‚é
-				pMultiNumber->m_pNumberList.emplace_back(CScene3D::Create_SelfManagement(D3DXVECTOR3(-onesize.x * (nDigits - 1) * 0.5f + onesize.x * nCnt, 0.0f, 0.0f), onesize, WhiteColor));
+				pMultiNumber->m_pNumberList.emplace_back(CScene3D::ScenePolygonCreateSelfManagement<CScene3D>(D3DXVECTOR3(-onesize.x * (nDigits - 1) * 0.5f + onesize.x * nCnt, 0.0f, 0.0f), onesize, WhiteColor, CTexture::TEX_NONE));
 				pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->SetParentMtxPtr(pMultiNumber->GetMtxWorldPtr());
 			}
 			pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->BindTexture(CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER));

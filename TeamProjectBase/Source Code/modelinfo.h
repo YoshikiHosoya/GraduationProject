@@ -30,11 +30,16 @@ public:
 		MODEL_MAPOBJECT_SPHERE,					//オブジェクト　スフィア
 
 		//爆弾関係 100番台
-		MODEL_BOMBOBJECT_BOMB,					//オブジェクト　ボム
-		MODEL_BOMBOBJECT_MODULE,				//オブジェクト　モジュール
-		MODEL_BOMBOBJECT_MODULE_NONE,			//オブジェクト　モジュール　何も入ってない
-		MODEL_BOMBOBJECT_CLEARLAMP,				//オブジェクト　クリアランプ
-		MODEL_BOMBOBJECT_TIMER,					//オブジェクト　タイマー
+		MODEL_BOMBBOX = 100,					//オブジェクト　ボム
+
+		//モジュール 200番台
+		MODEL_MODULE_DEFAULT,					//オブジェクト　モジュール
+		MODEL_MODULE_NONE,						//オブジェクト　モジュール　何も入ってない
+		MODEL_MODULE_TIMER,						//オブジェクト　タイマー
+
+		//モジュールパーツ 300番台
+		MODEL_MODULEPARTS_CLEARLAMP,			//オブジェクト　クリアランプ
+		MODEL_MODULEPARTS_KEYPAD,				//オブジェクト　キーパッド
 
 	};
 

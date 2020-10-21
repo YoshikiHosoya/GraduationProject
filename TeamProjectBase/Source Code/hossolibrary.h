@@ -127,9 +127,7 @@ public:
 	static void SelectVerticalMenu(int &nSelectNum, int const &nMaxSelect);														//縦メニューの選択
 	static void SelectHorizonMenu(int &nSelectNum, int const &nMaxSelect);														//横メニューの選択
 
-
 	static HRESULT InitImgui(HWND hWnd);	//Imgui生成処理
-
 
 	static void UninitImgui();				//Imgui終了
 	static void ShowDebugInfo();			//デバッグ情報表示
@@ -144,6 +142,9 @@ public:
 	static D3DXVECTOR3 RandomVector3(float Max);								//ランダムなvector3型で値を返す
 	static void CalcRotation(float &fRot);										//回転を360度以内にする計算
 	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
+	
+	static bool Selecting(int &nSelectNum, int const nNumX, int const nNumY);
+
 
 	//------------------------------------------------------------------------------
 	//範囲内の値に修正する関数

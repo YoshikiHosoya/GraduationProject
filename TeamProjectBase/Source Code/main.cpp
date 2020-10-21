@@ -16,7 +16,7 @@
 //マクロ定義
 //------------------------------------------------------------------------------
 #define CLASS_NAME		("WindowClass")			//ウィンドウクラスの名前
-#define WINDOW_NAME		("Electric Chain")		//ウィンドウの名前（キャプション表示）
+#define WINDOW_NAME		("爆弾物処理班")		//ウィンドウの名前（キャプション表示）
 #define WINDOW_MODE		(TRUE)					//ウィンドウモードかどうか (FALSEでフルスクリーン）
 #define WINDOW_POS		(INTEGER2(230,50))		//ウィンドウの左上の座標
 //------------------------------------------------------------------------------
@@ -44,6 +44,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 
 	//_CrtSetBreakAlloc(8768);
+
+	//乱数のシード値を初期化
+	srand((unsigned)time(NULL));
 
 	CManager *pManager;
 	pManager = new CManager;

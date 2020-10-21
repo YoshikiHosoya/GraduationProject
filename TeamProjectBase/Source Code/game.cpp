@@ -56,7 +56,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CParticleManager::Create();
 
 	//îöíeê∂ê¨
-	CBomb::Create(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
+	CBomb::CreateBomb(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 12);
 
 	//É}ÉbÉvê∂ê¨
 	CMap::Create();

@@ -12,7 +12,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "ParticleManager.h"
-#include "collision.h"
+//#include "collision.h"
 #include "sound.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -46,13 +46,13 @@ CParticle::~CParticle()
 	//リストの開放
 	m_pParticleList.clear();
 
-	//nullcheck
-	if (m_pCollision)
-	{
-		//コリジョンの開放
-		delete m_pCollision;
-		m_pCollision = nullptr;
-	}
+	////nullcheck
+	//if (m_pCollision)
+	//{
+	//	//コリジョンの開放
+	//	delete m_pCollision;
+	//	m_pCollision = nullptr;
+	//}
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -76,27 +76,27 @@ void CParticle::Update()
 	//ライフを減らす
 	m_pParticleParam->UpdateParam();
 
-	//当たり判定
-	if (m_pParticleParam->GetCollision())
-	{
-		//nullcheck
-		if (m_pCollision)
-		{
-			//当たり判定処理
-			Collision();
+	////当たり判定
+	//if (m_pParticleParam->GetCollision())
+	//{
+	//	//nullcheck
+	//	if (m_pCollision)
+	//	{
+	//		//当たり判定処理
+	//		Collision();
 
-			//カウントダウン
-			m_pParticleParam->GetCollisionCnt()--;
+	//		//カウントダウン
+	//		m_pParticleParam->GetCollisionCnt()--;
 
-			//当たり判定のカウントが0になったら消す
-			if (m_pParticleParam->GetCollisionCnt() <= 0)
-			{
-				//メモリ開放
-				delete m_pCollision;
-				m_pCollision = nullptr;
-			}
-		}
-	}
+	//		//当たり判定のカウントが0になったら消す
+	//		if (m_pParticleParam->GetCollisionCnt() <= 0)
+	//		{
+	//			//メモリ開放
+	//			delete m_pCollision;
+	//			m_pCollision = nullptr;
+	//		}
+	//	}
+	//}
 
 	//アニメーションの処理をする場合
 	if (m_pParticleParam->GetAnimation())

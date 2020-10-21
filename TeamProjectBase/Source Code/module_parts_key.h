@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
 //
-//モジュールのランプ  [module_parts_lamp.cpp]
+//モジュールパーツのキーパッド  [module_parts_key.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
-#ifndef _MODULE_PARTS_LAMP_H_
-#define _MODULE_PARTS_LAMP_H_
+#ifndef _MODULE_PARTS_KEY_H_
+#define _MODULE_PARTS_KEY_H_
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
@@ -15,20 +15,21 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CTimer;
+class CScene3D;
 
-class CModule_Parts_Lamp : public CModule_Parts_Base
+class CModule_Parts_Key : public CModule_Parts_Base
 {
 public:
-	enum class LAMP_STATE
+
+	enum class KEYPAD_STATE
 	{
-		OFF,
-		RED,
-		GREEN,
+		NORMAL,
+		FAILED,
+		CLEAR,
 	};
 
-
-	CModule_Parts_Lamp();
-	virtual ~CModule_Parts_Lamp();
+	CModule_Parts_Key();
+	virtual ~CModule_Parts_Key();
 
 	virtual HRESULT Init()			override;			//初期化
 	virtual void Uninit()			override;			//終了
@@ -36,10 +37,14 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetLampState(LAMP_STATE lampstate);
-	LAMP_STATE GetLampState()					{ return m_LampState; };
+	void SetLampState(KEYPAD_STATE lampstate);
+	KEYPAD_STATE GetLampState()					{ return m_LampState; };
+protected:
+
 private:
-	int m_nCntLampCnt;					//ランプ用のカウント
-	LAMP_STATE m_LampState;				//ランプの状態
+	std::unique_ptr<CScene3D> m_pLight;			//ライト
+	int m_nCntLampCnt;							//ライト用のカウント
+	KEYPAD_STATE m_LampState;					//ライトの状態
+
 };
 #endif

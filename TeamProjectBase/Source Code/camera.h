@@ -17,8 +17,6 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CCollision;
-
 class CCamera
 {
 public:
@@ -38,7 +36,8 @@ public:
 
 	void ShowCameraInfo();													//カメラ情報表示
 	void SetState(CAMERA_STATE state) { m_CameraState = state; };			//カメラの状態切り替え
-	void ResetCamera();
+	void ResetCamera();														//カメラリセット
+	void ApproachCamera(D3DXVECTOR3 posRDest);								//カメラを近づける処理
 
 	void Operation(void);
 
@@ -71,8 +70,6 @@ private:
 	D3DXVECTOR2		m_MousePosOld;					//前回のマウスの位置
 	D3DXVECTOR2		m_MouseRotSave;					//回転を保存
 	D3DXVECTOR3		m_DirecVector;					//向いてるベクトル
-
-	std::unique_ptr<CCollision> m_pCollision;		//判定
 
 	CAMERA_STATE	m_CameraState;					//カメラの状態
 

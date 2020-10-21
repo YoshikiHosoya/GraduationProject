@@ -44,6 +44,9 @@ CModule_Parts_Lamp::~CModule_Parts_Lamp()
 //------------------------------------------------------------------------------
 HRESULT CModule_Parts_Lamp::Init()
 {
+	//モデル情報設定
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_CLEARLAMP));
+
 	CSceneX::Init();
 	return S_OK;
 }
@@ -127,30 +130,4 @@ void CModule_Parts_Lamp::SetLampState(LAMP_STATE lampstate)
 		break;
 
 	}
-}
-
-//------------------------------------------------------------------------------
-//生成関数
-//Bombが管理
-//------------------------------------------------------------------------------
-std::shared_ptr<CModule_Parts_Lamp> CModule_Parts_Lamp::Create(D3DXVECTOR3 const pos, D3DXMATRIX * const pBomb)
-{
-	//メモリ確保
-	std::shared_ptr<CModule_Parts_Lamp> pModuleTimer = std::make_shared<CModule_Parts_Lamp>();
-
-	//初期化
-	pModuleTimer->Init();
-
-	//座標とサイズ設定
-	pModuleTimer->SetPos(pos);
-	pModuleTimer->SetParentMtxPtr(pBomb);
-
-	//モデル情報設定
-	pModuleTimer->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBOBJECT_CLEARLAMP));
-
-	//Scene側で管理
-	pModuleTimer->SetObjType(CScene::OBJTYPE_MODULE);
-	pModuleTimer->AddSharedList(pModuleTimer);
-
-	return pModuleTimer;
 }
