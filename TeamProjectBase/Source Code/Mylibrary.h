@@ -12,29 +12,19 @@
 //-------------------------------------------------------------------------------------------------------------
 // インクルードファイル
 //-------------------------------------------------------------------------------------------------------------
-#include <windows.h>
+#include "main.h"
 #include <stdio.h>
-#include "d3dx9.h"
 #include "XAudio2.h"
 #define DIRECTINPUT_VERSION (0x0800)	// 警告対処用
 #include "dinput.h"
 #define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 #include <time.h>
-#include <vector>
 #include <list>
-#include <iostream>
-using namespace std;
+//using namespace std;
 
 //-------------------------------------------------------------------------------------------------------------
 // ライブラリのリンク
 //-------------------------------------------------------------------------------------------------------------
-#pragma comment (lib, "d3d9.lib")
-#pragma comment (lib, "d3dx9.lib")
-#pragma comment (lib, "dxguid.lib")
-#pragma comment (lib, "winmm.lib")
-#pragma comment (lib, "dinput8.lib")
 
 //-------------------------------------------------------------------------------------------------------------
 // 全体メモ
@@ -153,14 +143,14 @@ using namespace std;
 // マクロ関数
 //-------------------------------------------------------------------------------------------------------------
 # ifdef _DEBUG
-#define Mybfunc_Debug_brackets_L		cout << MYLIB_BRACKETS_L			// 区切りの括弧(大)の出力
-#define Mybfunc_Debug_brackets_M		cout << MYLIB_BRACKETS_M			// 区切りの括弧(中)の出力
-#define Mybfunc_Debug_brackets_S		cout << MYLIB_BRACKETS_S			// 区切りの括弧(小)の出力
-#define Mybfunc_Debug_start(str)		cout << str << " == start!!\n"		// 開始(start!!)の出力
-#define Mybfunc_Debug_end(str)			cout << str << " == end!!\n"		// 終了(end!!)の出力
-#define Mybfunc_Debug_open(str)			cout << str << " == open!!\n"		// 開いた(open!!)の出力
-#define Mybfunc_Debug_openfailed(str)	cout << str << " == open failed!!\n"// 開くの失敗(open failed!!)の出力
-#define Mybfunc_Debug_close(str)		cout << str << " == close!!\n"		// 閉じる(close!!)の出力
+#define Mybfunc_Debug_brackets_L		std::cout << MYLIB_BRACKETS_L			// 区切りの括弧(大)の出力
+#define Mybfunc_Debug_brackets_M		std::cout << MYLIB_BRACKETS_M			// 区切りの括弧(中)の出力
+#define Mybfunc_Debug_brackets_S		std::cout << MYLIB_BRACKETS_S			// 区切りの括弧(小)の出力
+#define Mybfunc_Debug_start(str)		std::cout << str << " == start!!\n"		// 開始(start!!)の出力
+#define Mybfunc_Debug_end(str)			std::cout << str << " == end!!\n"		// 終了(end!!)の出力
+#define Mybfunc_Debug_open(str)			std::cout << str << " == open!!\n"		// 開いた(open!!)の出力
+#define Mybfunc_Debug_openfailed(str)	std::cout << str << " == open failed!!\n"// 開くの失敗(open failed!!)の出力
+#define Mybfunc_Debug_close(str)		std::cout << str << " == close!!\n"		// 閉じる(close!!)の出力
 #endif
 #define Mybfunc_gate(b)					if(b)								// 扉:真の時 ※使わない
 #define Mybfunc_iif(b)					(b == true) ? true: false			// 条件文から真偽を返す

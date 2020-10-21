@@ -10,6 +10,8 @@
 #include "picture.h"
 #include "manager.h"
 #include "renderer.h"
+#include "mouse.h"
+#include "camera.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -71,7 +73,7 @@ HRESULT CPicture::Load(void)
 	if (CLoadFile::ReadLineByLineFromFile(PICTURE_FILENAME, ReadFromLine) != CLoadFile::LR_SUCCESS)
 	{
 #ifdef _DEBUG
-		cout << "<<<<<<CPictureのファイル読み込みが失敗しました。>>>>>>\n";
+		std::cout << "<<<<<<CPictureのファイル読み込みが失敗しました。>>>>>>\n";
 #endif // _DEBUG
 		return E_FAIL;
 	}
@@ -79,7 +81,7 @@ HRESULT CPicture::Load(void)
 	if (m_nNumPolyBlock.OneIsZero() == true)
 	{
 #ifdef _DEBUG
-		cout << "<<<<<<CPictureのどちらかのポリゴン数が0でした。>>>>>>\n";
+		std::cout << "<<<<<<CPictureのどちらかのポリゴン数が0でした。>>>>>>\n";
 #endif // _DEBUG
 		return E_FAIL;
 	}
@@ -94,6 +96,9 @@ HRESULT CPicture::Load(void)
 	m_nNumVertex  = (m_nNumPolyBlock.nX + 1) * (m_nNumPolyBlock.nY + 1);								// 総頂点数
 	m_nNumIndex   = (m_nNumPolyBlock.nX * 2 + 2) * m_nNumPolyBlock.nY + ((m_nNumPolyBlock.nY - 1) * 2);	// 総インデックス数
 	m_nNumPolygon = (m_nNumPolyBlock.nX * m_nNumPolyBlock.nY) * 2 + (m_nNumPolyBlock.nY - 1) * 4;		// 総ポリゴン数
+
+
+	int nNewIndex = (m_nNumPolyBlock.nX * 2 + 2) * m_nNumPolyBlock.nY + ((m_nNumPolyBlock.nY - 1) * 2);
 
 	return S_OK;
 }
@@ -185,6 +190,17 @@ void CPicture::Uninit()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Update()
 {
+	// 変数宣言
+	//CMouse  *pMouse = CManager::GetMouse();
+	//CCamera *pCamera = CManager::GetRenderer()->GetCamera();
+	//INTEGER2 MousePos(pMouse->GetMousePoint().x, pMouse->GetMousePoint().y);
+	//INTEGER2 ScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	//FLOAT3 StartPos;
+	//FLOAT3 EndPos;
+	//VEC3 Ray;
+	//CMylibrary::CalScreenRay(&Ray, &StartPos, &EndPos,&MousePos, &ScreenSize, &(MATRIX)pCamera->GetMtxView(),&(MATRIX)pCamera->GetMtxProjection());
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -192,6 +208,7 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
 	//デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -215,6 +232,8 @@ void CPicture::Draw()
 		m_nNumVertex,			//使用する頂点数
 		0,						//頂点の読み取りを開始する位置
 		m_nNumPolygon);			//ポリゴンの枚数
+
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
 }
 
 //-------------------------------------------------------------------------------------------------------------
