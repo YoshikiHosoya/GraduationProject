@@ -17,6 +17,7 @@
 #include "keyboard.h"
 #include "game.h"
 #include "Mylibrary.h"
+#include <algorithm>
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -25,7 +26,7 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define MAX_KEYPAD (9)
-#define KEYPAD_INTERVAL (D3DXVECTOR3(50.0f,50.0f,0.0f))
+#define KEYPAD_INTERVAL (D3DXVECTOR3(30.0f,30.0f,0.0f))
 #define KEYPAD_OFFSET (D3DXVECTOR3(-10.0f,-10.0f,-15.0f))
 
 //------------------------------------------------------------------------------
@@ -49,13 +50,13 @@ CModule_KeyPad::~CModule_KeyPad()
 HRESULT CModule_KeyPad::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TEST_BUTTON));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_KEYPAD));
 
 	//ランプ生成
 	CModule_Base::CreateLamp();
 
 	//キーパッド生成
-	CreateKeyPad();
+	CreateKeyPad(CModule_KeyPad::ANSWER_1);
 
 	CSceneX::Init();
 	return S_OK;
@@ -148,8 +149,53 @@ void CModule_KeyPad::Operation()
 //------------------------------------------------------------------------------
 //キーパッド生成
 //------------------------------------------------------------------------------
-void CModule_KeyPad::CreateKeyPad()
+void CModule_KeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 {
+	//シンボルのナンバーのリスト
+	std::vector<int> nAllSymbolPatternList(24);
+	std::vector<int> nSymbolNumList = {};
+
+	//初期化
+	for (int nCnt = 0; nCnt < (int)nAllSymbolPatternList.size(); nCnt++)
+	{
+		nAllSymbolPatternList[nCnt] = nCnt;
+	}
+
+	//答え設定
+	for (int nCnt = 0; nCnt < 4; nCnt++)
+	{
+		//配列に追加
+		nSymbolNumList.emplace_back(nAllSymbolPatternList[answer * 4]);
+
+		//削除
+		nAllSymbolPatternList.erase(nAllSymbolPatternList.begin() + (answer * 4));
+	}
+
+	while (nSymbolNumList.size() <= 9)
+	{
+		int nNum = rand() % nAllSymbolPatternList.size();
+
+		//ランダムで番号設定
+		nSymbolNumList.emplace_back(nAllSymbolPatternList[nNum]);
+		nAllSymbolPatternList.erase(nAllSymbolPatternList.begin() + nNum);
+	}
+
+
+
+	//for (auto iterator = nAllSymbolPatternList.begin(); iterator != nAllSymbolPatternList.end(); iterator++)
+	//{
+	//	//std::find_if()
+	//}
+
+	////答えの設定
+	//for (int nCnt = 0; nCnt < 4; nCnt++)
+	//{
+	//	//答えの分を設定
+	//	nSymbolNumList.emplace_back();
+	//	nAllSymbolPatternList.erase(nAllSymbolPatternList.begin() + nCnt + answer * 4);
+	//}
+
+
 	for (int nCnt = 0; nCnt < MAX_KEYPAD; nCnt++)
 	{
 		INTEGER2 Value;
@@ -160,6 +206,8 @@ void CModule_KeyPad::CreateKeyPad()
 		m_pKeyPadList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_Key>
 			(KEYPAD_OFFSET + D3DXVECTOR3(	-KEYPAD_INTERVAL.x + KEYPAD_INTERVAL.x * Value.nX,
 											KEYPAD_INTERVAL.y - KEYPAD_INTERVAL.y * Value.nY, 0.0f), GetMtxWorldPtr()));
+
+		m_pKeyPadList[m_pKeyPadList.size() - 1]->SetSymbol(nSymbolNumList[nCnt]);
 
 	}
 }

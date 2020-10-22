@@ -25,8 +25,8 @@
 //------------------------------------------------------------------------------
 #define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,2.0f,-3.0f))
 #define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,7.0f,0.0f))
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-5.0f))
-#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(8.0f,8.0f,0.0f))
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-15.0f))
+#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -52,7 +52,7 @@ CModule_Parts_Key::~CModule_Parts_Key()
 HRESULT CModule_Parts_Key::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TEST_BUTTONPARTS));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_KEYPAD));
 
 	//パッドのライト生成
 	m_pLight = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>(KEYPAD_LIGHT_OFFSET, KEYPAD_LIGHTPOLYGON_SIZE, BlackColor, nullptr);
@@ -66,7 +66,6 @@ HRESULT CModule_Parts_Key::Init()
 	//文字の生成
 	m_pSymbol = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
 	m_pSymbol->SetParentMtxPtr(GetMtxWorldPtr());
-	m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(0, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
 
 	CSceneX::Init();
 
@@ -125,9 +124,28 @@ void CModule_Parts_Key::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
+	static int SymbolNum = 0;
+	if (CManager::GetKeyboard()->GetTrigger(DIK_O))
+	{
+		SymbolNum--;
+		m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(SymbolNum, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
+
+	}
+	if (CManager::GetKeyboard()->GetTrigger(DIK_P))
+	{
+		SymbolNum++;
+		m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(SymbolNum, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
+	}
 #endif //DEBUG
 }
 
+//------------------------------------------------------------------------------
+//シンボルの設定
+//------------------------------------------------------------------------------
+void CModule_Parts_Key::SetSymbol(int nSymbol)
+{
+	m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(nSymbol, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
+}
 
 //------------------------------------------------------------------------------
 //ランプの状態切り替え

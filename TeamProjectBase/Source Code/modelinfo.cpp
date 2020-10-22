@@ -16,24 +16,21 @@ std::vector<std::shared_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//マップモデル
-	{ "data/MODEL/Map/Block.x" ,			MODEL_MAPOBJECT_BLOCK },				//立方体
-	{ "data/MODEL/Map/Sphere.x" ,			MODEL_MAPOBJECT_SPHERE },				//球体
+	{ "data/MODEL/Map/Block.x" ,					MODEL_MAPOBJECT_BLOCK },				//立方体
+	{ "data/MODEL/Map/Sphere.x" ,					MODEL_MAPOBJECT_SPHERE },				//球体
 
 	//爆弾関係
-	{ "data/MODEL/Bomb/bombbox.x" ,			MODEL_BOMBBOX },						//爆弾
+	{ "data/MODEL/Bomb/bombbox.x" ,					MODEL_BOMBBOX },						//爆弾
 
 	//モジュール
-	{ "data/MODEL/Bomb/Module.x" ,			MODEL_MODULE_DEFAULT },							//モジュール
-	{ "data/MODEL/Bomb/Module_none.x" ,		MODEL_MODULE_NONE },					//モジュール　何もないやつ　茶色の
-	{ "data/MODEL/Bomb/Timer.x" ,			MODEL_MODULE_TIMER },					//タイマー
+	{ "data/MODEL/Bomb/Module.x" ,					MODEL_MODULE_DEFAULT },							//モジュール
+	{ "data/MODEL/Bomb/Module_none.x" ,				MODEL_MODULE_NONE },					//モジュール　何もないやつ　茶色の
+	{ "data/MODEL/BombTimer/BombTimer.x" ,			MODEL_MODULE_TIMER },					//タイマー
+	{ "data/MODEL/ButtonParts/ButtonParts.x" ,			MODEL_MODULE_KEYPAD },				//キーパッド
 
-	//モジュールのパーツ
-	{ "data/MODEL/Bomb/Lamp.x" ,			MODEL_MODULEPARTS_CLEARLAMP },			//ランプ
-	{ "data/MODEL/Bomb/keypad.x" ,			MODEL_MODULEPARTS_KEYPAD },				//キーパッド
-
-	{ "data/MODEL/BombTimer/BombTimer.x" ,			MODEL_TEST_BOMBTIMER },				//キーパッド
-	{ "data/MODEL/ButtonParts/ButtonParts.x" ,		MODEL_TEST_BUTTON },				//キーパッド
-	{ "data/MODEL/ButtonParts/button.x" ,			MODEL_TEST_BUTTONPARTS },				//キーパッド
+																						//モジュールのパーツ
+	{ "data/MODEL/Bomb/Lamp.x" ,					MODEL_MODULEPARTS_CLEARLAMP },			//ランプ
+	{ "data/MODEL/ButtonParts/button.x" ,			MODEL_MODULEPARTS_KEYPAD },				//キーパッド
 
 };
 

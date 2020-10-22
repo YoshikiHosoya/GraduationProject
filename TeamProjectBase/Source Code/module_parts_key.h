@@ -37,6 +37,7 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
+	void SetSymbol(int nSymbol);
 	void SetLampState(KEYPAD_STATE lampstate);
 	KEYPAD_STATE GetLampState()					{ return m_LampState; };
 protected:

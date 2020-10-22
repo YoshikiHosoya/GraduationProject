@@ -19,6 +19,17 @@ class CModule_Parts_Key;
 class CModule_KeyPad : public CModule_Base
 {
 public:
+	enum ANSWER_PATTERN
+	{
+		ANSWER_1 = 0,
+		ANSWER_2,
+		ANSWER_3,
+		ANSWER_4,
+		ANSWER_5,
+		ANSWER_6,
+
+	};
+
 	CModule_KeyPad();
 	virtual ~CModule_KeyPad();
 
@@ -28,7 +39,7 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 	void Operation()				override;			//モジュール操作
-	void CreateKeyPad();								//キーパッド生成
+	void CreateKeyPad(ANSWER_PATTERN answer);								//キーパッド生成
 
 private:
 	std::vector<std::shared_ptr<CModule_Parts_Key>> m_pKeyPadList;				//キーパッドのポインタの配列
