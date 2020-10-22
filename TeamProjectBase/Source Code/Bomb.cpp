@@ -241,10 +241,10 @@ void CBomb::CreateModule(int const nModuleNum)
 			CBomb::CreateModuleOne<CModule_None>();
 			break;
 
-			//ボタンモジュール
-		case CModule_Base::MODULE_TYPE::BUTTON:
-			CBomb::CreateModuleOne<CModule_Button>();
-			break;
+		//	//ボタンモジュール
+		//case CModule_Base::MODULE_TYPE::BUTTON:
+		//	CBomb::CreateModuleOne<CModule_Button>();
+		//	break;
 
 			//キーパッド
 		case CModule_Base::MODULE_TYPE::KEYPAD:

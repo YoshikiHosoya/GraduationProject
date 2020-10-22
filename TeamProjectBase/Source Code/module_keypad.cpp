@@ -26,8 +26,8 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define MAX_KEYPAD (9)
-#define KEYPAD_INTERVAL (D3DXVECTOR3(30.0f,30.0f,0.0f))
-#define KEYPAD_OFFSET (D3DXVECTOR3(-10.0f,-10.0f,-15.0f))
+#define KEYPAD_INTERVAL (D3DXVECTOR3(20.0f,20.0f,0.0f))
+#define KEYPAD_OFFSET (D3DXVECTOR3(-10.0f,0.0f,-20.0f))
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -35,6 +35,7 @@
 CModule_KeyPad::CModule_KeyPad()
 {
 	m_pKeyPadList = {};
+	m_nNextSymbolNum = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -99,6 +100,7 @@ void CModule_KeyPad::Operation()
 	static int nSelectNum = 0;
 
 	int nSelectNumOld = nSelectNum;
+	int nCntClearPad = 0;
 
 	//入力が無かった時はbreak
 	CHossoLibrary::Selecting(nSelectNum, nSelectNumOld, 3, 3);
@@ -112,21 +114,37 @@ void CModule_KeyPad::Operation()
 			nCnt == nSelectNum ?
 				m_pKeyPadList[nCnt]->SetSelect(true) :
 				m_pKeyPadList[nCnt]->SetSelect(false);
+
+			//クリアしていた時
+			if (m_pKeyPadList[nCnt]->GetKeyPadState() == CModule_Parts_Key::KEYPAD_STATE::CLEAR)
+			{
+				//クリアカウント++
+				nCntClearPad++;
+			}
 		}
+	}
+
+	if (nCntClearPad >= 4)
+	{
+		CModule_Base::Module_Clear();
 	}
 
 	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
 	{
 		if (m_pKeyPadList[nSelectNum].get())
 		{
-			m_pKeyPadList[nSelectNum]->SetLampState(CModule_Parts_Key::KEYPAD_STATE::CLEAR);
-		}
-	}
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSLASH))
-	{
-		if (m_pKeyPadList[nSelectNum].get())
-		{
-			m_pKeyPadList[nSelectNum]->SetLampState(CModule_Parts_Key::KEYPAD_STATE::FAILED);
+			if (m_nNextSymbolNum == m_pKeyPadList[nSelectNum]->GetSymbolNum())
+			{
+				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_Key::KEYPAD_STATE::CLEAR);
+				m_nNextSymbolNum++;
+			}
+			else
+			{
+				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_Key::KEYPAD_STATE::FAILED);
+				CModule_Base::Module_Failed();
+
+			}
+
 		}
 	}
 

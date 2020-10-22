@@ -43,6 +43,6 @@ public:
 
 private:
 	std::vector<std::shared_ptr<CModule_Parts_Key>> m_pKeyPadList;				//キーパッドのポインタの配列
-
+	int m_nNextSymbolNum;														//次のシンボル番号
 };
 #endif
