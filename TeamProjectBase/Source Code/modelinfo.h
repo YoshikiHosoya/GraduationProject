@@ -41,6 +41,13 @@ public:
 		MODEL_MODULEPARTS_CLEARLAMP,			//オブジェクト　クリアランプ
 		MODEL_MODULEPARTS_KEYPAD,				//オブジェクト　キーパッド
 
+
+		//test
+		MODEL_TEST_BOMBTIMER,
+		MODEL_TEST_BUTTONPARTS,
+		MODEL_TEST_BUTTON,
+
+
 	};
 
 

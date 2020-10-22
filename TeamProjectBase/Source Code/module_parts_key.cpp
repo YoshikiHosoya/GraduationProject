@@ -52,7 +52,7 @@ CModule_Parts_Key::~CModule_Parts_Key()
 HRESULT CModule_Parts_Key::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TEST_BUTTONPARTS));
 
 	//パッドのライト生成
 	m_pLight = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>(KEYPAD_LIGHT_OFFSET, KEYPAD_LIGHTPOLYGON_SIZE, BlackColor, nullptr);

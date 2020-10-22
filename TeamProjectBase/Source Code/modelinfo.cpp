@@ -31,6 +31,10 @@ std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Bomb/Lamp.x" ,			MODEL_MODULEPARTS_CLEARLAMP },			//ランプ
 	{ "data/MODEL/Bomb/keypad.x" ,			MODEL_MODULEPARTS_KEYPAD },				//キーパッド
 
+	{ "data/MODEL/BombTimer/BombTimer.x" ,			MODEL_TEST_BOMBTIMER },				//キーパッド
+	{ "data/MODEL/ButtonParts/ButtonParts.x" ,		MODEL_TEST_BUTTON },				//キーパッド
+	{ "data/MODEL/ButtonParts/button.x" ,			MODEL_TEST_BUTTONPARTS },				//キーパッド
+
 };
 
 //-----------------------------------------------------------------------------

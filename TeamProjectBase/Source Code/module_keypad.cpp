@@ -25,7 +25,7 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define MAX_KEYPAD (9)
-#define KEYPAD_INTERVAL (D3DXVECTOR3(18.0f,18.0f,0.0f))
+#define KEYPAD_INTERVAL (D3DXVECTOR3(50.0f,50.0f,0.0f))
 #define KEYPAD_OFFSET (D3DXVECTOR3(-10.0f,-10.0f,-15.0f))
 
 //------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ CModule_KeyPad::~CModule_KeyPad()
 HRESULT CModule_KeyPad::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TEST_BUTTON));
 
 	//ランプ生成
 	CModule_Base::CreateLamp();

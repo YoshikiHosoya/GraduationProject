@@ -43,7 +43,7 @@ CModule_Timer::~CModule_Timer()
 HRESULT CModule_Timer::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TEST_BOMBTIMER));
 
 	//モジュール選択不可
 	CModule_Base::SetCanModuleSelect(false);
