@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "main.h"
 #include "texture.h"
 #include "Debug/debugproc.h"
 #include "ImGui/Imgui.h"
@@ -144,7 +143,7 @@ public:
 	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
 
 	static bool Selecting(int &nSelectNum,int const &nSelectNumOld, int const nNumX, int const nNumY);
-	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, CTexture::SEPARATE_TEX_TYPE tex);
+	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, int tex);
 
 
 	//------------------------------------------------------------------------------

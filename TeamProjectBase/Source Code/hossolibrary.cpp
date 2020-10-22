@@ -809,12 +809,12 @@ D3DXVECTOR3 CHossoLibrary::RandomVector3(float Max)
 //------------------------------------------------------------------------------
 //UVåvéZ
 //------------------------------------------------------------------------------
-D3DXVECTOR2 CHossoLibrary::CalcUV_StaticFunc(int nNumUV, CTexture::SEPARATE_TEX_TYPE tex)
+D3DXVECTOR2 CHossoLibrary::CalcUV_StaticFunc(int nNumUV, int tex)
 {
 	//UVç¿ïWåvéZ
 	D3DXVECTOR2 UV;
-	UV.x = nNumUV % (int)CTexture::GetSparateTex_UVCnt(tex).x * CTexture::GetSparateTex_UVSize(tex).x;
-	UV.y = nNumUV / (int)CTexture::GetSparateTex_UVCnt(tex).x * CTexture::GetSparateTex_UVSize(tex).y;
+	UV.x = nNumUV % (int)CTexture::GetSparateTex_UVCnt((CTexture::SEPARATE_TEX_TYPE)tex).x * CTexture::GetSparateTex_UVSize((CTexture::SEPARATE_TEX_TYPE)tex).x;
+	UV.y = nNumUV / (int)CTexture::GetSparateTex_UVCnt((CTexture::SEPARATE_TEX_TYPE)tex).x * CTexture::GetSparateTex_UVSize((CTexture::SEPARATE_TEX_TYPE)tex).y;
 
 	return UV;
 }
