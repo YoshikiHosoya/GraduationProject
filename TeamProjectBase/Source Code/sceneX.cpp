@@ -126,6 +126,11 @@ void CSceneX::DrawMesh()
 		//描画用のマテリアル取得
 		DrawMat = pMat[nCntMat].MatD3D;
 
+		if (DrawMat.Diffuse.a <= 0)
+		{
+			continue;
+		}
+
 		// マテリアルの設定
 		pDevice->SetMaterial(&DrawMat);
 

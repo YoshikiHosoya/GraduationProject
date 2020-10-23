@@ -23,9 +23,9 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,2.0f,-3.0f))
-#define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,7.0f,0.0f))
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-15.0f))
+#define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,1.0f,-5.0f))
+#define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-7.0f))
 #define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
 
 //------------------------------------------------------------------------------
@@ -33,10 +33,11 @@
 //------------------------------------------------------------------------------
 CModule_Parts_Key::CModule_Parts_Key()
 {
-	m_LampState = KEYPAD_STATE::NORMAL;
+	m_KeyPadState = KEYPAD_STATE::NORMAL;
 	m_nCntLampCnt = 0;
 	m_pLight.reset();
 	m_pSymbol.reset();
+	m_nSymbolNum = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +86,7 @@ void CModule_Parts_Key::Update()
 {
 	D3DXVECTOR3 vec;
 
-	switch (m_LampState)
+	switch (m_KeyPadState)
 	{
 	case CModule_Parts_Key::KEYPAD_STATE::NORMAL:
 		break;
@@ -94,7 +95,7 @@ void CModule_Parts_Key::Update()
 
 		if (m_nCntLampCnt < 0)
 		{
-			SetLampState(KEYPAD_STATE::NORMAL);
+			SetKeypadState(KEYPAD_STATE::NORMAL);
 		}
 		break;
 	}
@@ -144,25 +145,27 @@ void CModule_Parts_Key::ShowDebugInfo()
 //------------------------------------------------------------------------------
 void CModule_Parts_Key::SetSymbol(int nSymbol)
 {
+	m_nSymbolNum = nSymbol;
+
 	m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(nSymbol, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00));
 }
 
 //------------------------------------------------------------------------------
 //ランプの状態切り替え
 //------------------------------------------------------------------------------
-void CModule_Parts_Key::SetLampState(KEYPAD_STATE lampstate)
+void CModule_Parts_Key::SetKeypadState(KEYPAD_STATE keypadstate)
 {
 	//同じステートだった時はreturn
-	if (m_LampState == lampstate)
+	if (m_KeyPadState == keypadstate)
 	{
 		return;
 	}
 
 	//ステート切り替え
-	m_LampState = lampstate;
+	m_KeyPadState = keypadstate;
 
 	//切り替わったステートに応じて処理
-	switch (lampstate)
+	switch (m_KeyPadState)
 	{
 	case CModule_Parts_Key::KEYPAD_STATE::NORMAL:
 		m_pLight->SetColor(BlackColor);
