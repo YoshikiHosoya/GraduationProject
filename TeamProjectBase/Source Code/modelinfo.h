@@ -25,10 +25,6 @@ public:
 	{
 		MODEL_NONE = -1,
 
-		//オブジェクト 0番台
-		MODEL_MAPOBJECT_BLOCK,					//オブジェクト　ブロック
-		MODEL_MAPOBJECT_SPHERE,					//オブジェクト　スフィア
-
 		//爆弾関係 100番台
 		MODEL_BOMBBOX = 100,					//オブジェクト　ボム
 
@@ -41,7 +37,6 @@ public:
 		//モジュールパーツ 300番台
 		MODEL_MODULEPARTS_CLEARLAMP = 300,		//オブジェクト　クリアランプ
 		MODEL_MODULEPARTS_KEYPAD,				//オブジェクト　キーパッド
-
 
 	};
 

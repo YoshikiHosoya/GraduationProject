@@ -33,7 +33,7 @@
 CGame::CGame()
 {
 	m_nCntState = 0;
-	m_State = STATE_READY;
+	m_State = STATE_NORMAL;
 	m_Gaze = GAZE_BOMB;
 	m_pBomb.reset();
 }
@@ -53,7 +53,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(CGame::STATE_READY);
+	SetState(CGame::STATE_NORMAL);
 
 	//パーティクルのマネージャ
 	CParticleManager::Create();
