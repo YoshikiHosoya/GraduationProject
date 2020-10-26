@@ -36,6 +36,10 @@ public:
 		TEX_MATERIAL_FIELD003,					//マテリアル
 		TEX_MATERIAL_FIELD004,					//マテリアル
 
+		TEX_UI_PRESSBUTTON,						//UI プレス
+		TEX_UI_TITLE,							//UI タイトル
+		TEX_UI_RESULT,							//UI リザルト
+
 		TEX_MAX									//MAX
 	};
 

@@ -264,8 +264,14 @@ void CSceneX::DrawHardEdgeStencil()
 	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);		//ステンシルの条件 ==
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシル･バッファ有効
 
+	//ZWriteoff
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_ZTEST_ON_ZWRITING_OFF);
+
 	//ステンシル用の描画
 	CSceneX::DrawStencil();
+
+	//Zwrite元に戻す
+	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_ZTEST_DEFAULT);
 
 	//マトリックス計算
 	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), HARDEDGE_SCALE);

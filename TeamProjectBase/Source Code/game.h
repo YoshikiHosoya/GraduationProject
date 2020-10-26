@@ -53,6 +53,7 @@ public:
 	virtual void Update();									//更新
 	virtual void Draw();									//描画
 	virtual void ShowDebugInfo();							//デバッグ情報表記
+	void UpdateState();										//ステートに応じた処理
 
 	void SetState(STATE state);								//ゲームの状態設定
 	void SetGaze(GAZE gaze);								//視線設定

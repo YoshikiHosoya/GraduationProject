@@ -27,6 +27,7 @@
 #define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
 #define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-7.0f))
 #define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
+#define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -95,13 +96,18 @@ void CModule_Parts_Key::Update()
 
 		if (m_nCntLampCnt < 0)
 		{
-			SetKeypadState(KEYPAD_STATE::NORMAL);
+			//クリア済なら緑、そうでないなら消す
+			GetClearFlag() ?
+				SetKeypadState(KEYPAD_STATE::CLEAR) :
+				SetKeypadState(KEYPAD_STATE::NORMAL);
 		}
 		break;
 	}
 
+	//nullcheck
 	if (m_pLight)
 	{
+		//ライトの更新
 		m_pLight->Update();
 	}
 
@@ -172,10 +178,11 @@ void CModule_Parts_Key::SetKeypadState(KEYPAD_STATE keypadstate)
 		break;
 	case CModule_Parts_Key::KEYPAD_STATE::FAILED:
 		m_pLight->SetColor(RedColor);
-		m_nCntLampCnt = 120;
+		m_nCntLampCnt = KEYPAD_LIGHT_REDLIGHTING_TIME;
 		break;
 	case CModule_Parts_Key::KEYPAD_STATE::CLEAR:
 		m_pLight->SetColor(GreenColor);
+		SetClearFlag(true);
 		break;
 
 	}

@@ -83,7 +83,7 @@ void CGame::Uninit()
 //------------------------------------------------------------------------------
 void CGame::Update()
 {
-
+	UpdateState();
 }
 
 //------------------------------------------------------------------------------
@@ -104,6 +104,33 @@ void CGame::ShowDebugInfo()
 #endif //_DEBUG
 }
 
+//------------------------------------------------------------------------------
+//ステートの更新
+//------------------------------------------------------------------------------
+void CGame::UpdateState()
+{
+	m_nCntState--;
+
+	switch (m_State)
+	{
+	case CGame::STATE_READY:
+		break;
+	case CGame::STATE_NORMAL:
+		break;
+	case CGame::STATE_PAUSE:
+		break;
+	case CGame::STATE_GAMEOVER:
+		break;
+	case CGame::STATE_GAMECLEAR:
+		if (m_nCntState <= 0)
+		{
+			SetState(CGame::STATE_NONE);
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT);
+		}
+		break;
+	}
+}
+
 
 //------------------------------------------------------------------------------
 //ゲームステートセット
@@ -111,11 +138,34 @@ void CGame::ShowDebugInfo()
 void CGame::SetState(STATE state)
 {
 	//ステートが進んでいる場合
-	if (m_State != CGame::STATE_NONE)
+	if (m_State != CGame::STATE_NONE && m_State != state)
 	{
 		//ステート変更
 		m_State = state;
 
+		switch (m_State)
+		{
+		case CGame::STATE_NONE:
+			break;
+		case CGame::STATE_READY:
+			break;
+		case CGame::STATE_NORMAL:
+			break;
+		case CGame::STATE_PAUSE:
+			break;
+		case CGame::STATE_GAMEOVER:
+			break;
+		case CGame::STATE_GAMECLEAR:
+			m_nCntState = 120;
+
+			break;
+		case CGame::STATE_DEBUG:
+			break;
+		case CGame::STATE_MAX:
+			break;
+		default:
+			break;
+		}
 	}
 }
 

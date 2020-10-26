@@ -188,7 +188,6 @@ void CScene3D::SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)
 //------------------------------------------------------------------------------
 HRESULT CScene3D::MakeVertex()
 {
-
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	LPDIRECT3DVERTEXBUFFER9 pVtxBuff;	//頂点バッファ

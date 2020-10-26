@@ -43,6 +43,8 @@ CScene2D::~CScene2D()
 //------------------------------------------------------------------------------
 HRESULT CScene2D::Init()
 {
+	MakeVertex();
+
 	return S_OK;
 }
 //------------------------------------------------------------------------------
@@ -148,65 +150,6 @@ void CScene2D::SetAnimation(D3DXVECTOR2 UV, D3DXVECTOR2 size)
 	//頂点データをアンロック
 	GetVtxBuff()->Unlock();
 }
-
-//------------------------------------------------------------------------------
-//生成処理　共有管理用
-//------------------------------------------------------------------------------
-std::shared_ptr<CScene2D> CScene2D::Create_Shared(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col, OBJTYPE const objtype)
-{
-	//メモリ確保
-	std::shared_ptr<CScene2D> pScene2D = std::make_shared<CScene2D>();
-
-	//初期化
-	pScene2D->Init();
-
-	//頂点バッファ生成
-	//pScene2D->MakeVertex(pos, size, col);
-
-	//Sceneで管理
-	pScene2D->SetObjType(objtype);
-	pScene2D->AddSharedList(pScene2D);
-
-	//return
-	return pScene2D;
-}
-
-//------------------------------------------------------------------------------
-//生成処理　Csceneで管理 returnしない
-//------------------------------------------------------------------------------
-void CScene2D::Create_SceneManagement(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col, OBJTYPE const objtype)
-{
-	//メモリ確保
-	std::unique_ptr<CScene2D> pScene2D = std::make_unique<CScene2D>();
-
-	//初期化
-	pScene2D->Init();
-
-	//頂点バッファ生成
-	//pScene2D->MakeVertex(pos, size, col);
-
-	//Sceneで管理
-	pScene2D->SetObjType(objtype);
-	pScene2D->AddUniqueList(std::move(pScene2D));
-}
-//------------------------------------------------------------------------------
-//生成処理　Return先で管理用
-//------------------------------------------------------------------------------
-std::unique_ptr<CScene2D> CScene2D::Create_SelfManagement(D3DXVECTOR3 const pos, D3DXVECTOR3 const size, D3DXCOLOR const col)
-{
-	//メモリ確保
-	std::unique_ptr<CScene2D> pScene2D = std::make_unique<CScene2D>();
-
-	//初期化
-	pScene2D->Init();
-
-	//頂点バッファ生成
-	//pScene2D->MakeVertex(pos, size, col);
-
-	//return
-	return std::move(pScene2D);
-}
-
 //------------------------------------------------------------------------------
 //頂点バッファ作成
 //------------------------------------------------------------------------------
@@ -280,7 +223,7 @@ HRESULT CScene2D::MakeVertex()
 //------------------------------------------------------------------------------
 void CScene2D::SetSize(D3DXVECTOR3 const &size)
 {
-	SetSize(size);
+	CSceneBase::SetSize(size);
 
 	m_fAngle = atan2f(GetSize().x, GetSize().y);
 	m_fLength = (float)sqrt(GetSize().x * GetSize().x + GetSize().y * GetSize().y) / 2;

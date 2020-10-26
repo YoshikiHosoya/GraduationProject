@@ -18,11 +18,16 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/other/TexNone.png" },					//白紙
 	{ "data/TEXTURE/Effect/particle.jpg" },					//パーティクル用の丸いの
 
-	{ "data/TEXTURE/Material/field000.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field001.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field002.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field003.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field004.jpg" },					//パーティクル用の丸いの
+	{ "data/TEXTURE/Material/field000.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field001.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field002.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field004.jpg" },					//マテリアル
+
+	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
+	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
+	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト
+
 };
 
 //テクスチャ名の設定

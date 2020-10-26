@@ -145,7 +145,6 @@ public:
 	static bool Selecting(int &nSelectNum,int const &nSelectNumOld, int const nNumX, int const nNumY);
 	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, int tex);
 
-
 	//------------------------------------------------------------------------------
 	//範囲内の値に修正する関数
 	//intでもfloatでもいけるようにテンプレート
@@ -168,7 +167,32 @@ public:
 		}
 		return false;
 	}
+	//------------------------------------------------------------------------------
+	//AとBを入れ替える処理
+	//intでもfloatでもいけるようにテンプレート
+	//------------------------------------------------------------------------------
+	template <class X> static void Swap(X &nValueA, X &nValueB)
+	{
+		X SaveValue = nValueA;
+		nValueA = nValueB;
+		nValueB = SaveValue;
+	}
 
+	//------------------------------------------------------------------------------
+	//vector型用　シャッフル処理
+	//------------------------------------------------------------------------------
+	template <class X> static void Vec_Shuffle(std::vector<X> &vec)
+	{
+		//サイズ分
+		for (int nCnt = 0; nCnt < (int)vec.size(); nCnt++)
+		{
+			//交換先の配列番号をランダムで設定
+			int SwapIterator = rand() % (vec.size() - 1);
+
+			//入れ替え
+			CHossoLibrary::Swap(vec[nCnt], vec[SwapIterator]);
+		}
+	}
 private:
 	static CKeyboard *m_pKeyboard;		//キーボードへのポインタ
 	static CPad_XInput *m_pXInput;		//XInputのパッドへのポインタ

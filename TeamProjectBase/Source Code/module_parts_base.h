@@ -19,22 +19,26 @@ class CModule_Parts_Base : public CSceneX
 public:
 	CModule_Parts_Base()
 	{
+		m_bClearFlag = false;
 	};
 	virtual ~CModule_Parts_Base() {};
 
-	virtual HRESULT Init() = 0;					//初期化
-	virtual void Uninit() = 0;					//終了
-	virtual void Update() = 0;					//更新
-	virtual void Draw() = 0;					//描画
-	virtual void ShowDebugInfo() = 0;			//デバッグ情報表記
+	virtual HRESULT Init() = 0;						//初期化
+	virtual void Uninit() = 0;						//終了
+	virtual void Update() = 0;						//更新
+	virtual void Draw() = 0;						//描画
+	virtual void ShowDebugInfo() = 0;				//デバッグ情報表記
+
+	void SetClearFlag(bool bClearFlag)		{ m_bClearFlag = bClearFlag; };		//クリアフラグ設定
+
+
+	bool GetClearFlag() { return m_bClearFlag; };								//クリアフラグ取得
 
 	//Create関数
 	template<class Module> static std::shared_ptr<Module> Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr);
 
 private:
-
-
-
+	bool m_bClearFlag;
 };
 #endif
 

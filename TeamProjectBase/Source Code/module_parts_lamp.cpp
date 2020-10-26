@@ -76,7 +76,10 @@ void CModule_Parts_Lamp::Update()
 
 		if (m_nCntLampCnt < 0)
 		{
-			SetLampState(LAMP_STATE::OFF);
+			//ƒNƒŠƒAÏ‚È‚ç—ÎA‚»‚¤‚Å‚È‚¢‚È‚çÁ‚·
+			GetClearFlag() ?
+				SetLampState(LAMP_STATE::GREEN) :
+				SetLampState(LAMP_STATE::RED);
 		}
 		break;
 	case CModule_Parts_Lamp::LAMP_STATE::GREEN:
@@ -127,6 +130,7 @@ void CModule_Parts_Lamp::SetLampState(LAMP_STATE lampstate)
 		m_nCntLampCnt = 180;
 		break;
 	case CModule_Parts_Lamp::LAMP_STATE::GREEN:
+		SetClearFlag(true);
 		break;
 
 	}

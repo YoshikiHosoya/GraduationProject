@@ -31,10 +31,6 @@ public:
 	void SetSize(D3DXVECTOR3 const &size)								override;						//サイズ設定
 	HRESULT MakeVertex()													override;						//頂点バッファ作成
 
-	static std::shared_ptr<CScene2D> Create_Shared			(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（SceneとReturn先で共有管理
-	static void Create_SceneManagement						(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col, OBJTYPE const objtype);		//生成処理（CSceneのみで管理
-	static std::unique_ptr<CScene2D> Create_SelfManagement	(D3DXVECTOR3 const pos, D3DXVECTOR3 const size,D3DXCOLOR const col);							//生成処理（Return先で管理
-
 	static int GetNumScene2D()	{ return m_nNumScene2D; };		//2Dの総数取得
 
 protected:

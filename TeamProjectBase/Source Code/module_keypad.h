@@ -27,7 +27,7 @@ public:
 		ANSWER_4,
 		ANSWER_5,
 		ANSWER_6,
-
+		ANSWER_MAX,
 	};
 
 	CModule_KeyPad();
@@ -39,10 +39,11 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 	void Operation()				override;			//モジュール操作
-	void CreateKeyPad(ANSWER_PATTERN answer);								//キーパッド生成
-
+	void CreateKeyPad(ANSWER_PATTERN answer);			//キーパッド生成
+	void CheckClear();									//クリアしたか確認
 private:
 	std::vector<std::shared_ptr<CModule_Parts_Key>> m_pKeyPadList;				//キーパッドのポインタの配列
+	ANSWER_PATTERN m_Answer;													//答えのパターン
 	int m_nNextSymbolNum;														//次のシンボル番号
 };
 #endif
