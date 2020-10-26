@@ -36,6 +36,10 @@ public:
 		TEX_MATERIAL_FIELD003,					//マテリアル
 		TEX_MATERIAL_FIELD004,					//マテリアル
 
+		TEX_CHAT_BACK,							// チャットタブの背景
+		TEX_CHAT_TABOPEN,						// チャットタブ (開く)
+		TEX_CHAT_TABCLOSE,						// チャットタブ (閉じる)
+
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル
 		TEX_UI_RESULT,							//UI リザルト

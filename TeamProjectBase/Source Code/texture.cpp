@@ -24,6 +24,10 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/field004.jpg" },					//マテリアル
 
+	{ "data/TEXTURE/CHAT/chatFrame.png" },						// チャットタブの背景
+	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
+	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
+
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
 	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト
