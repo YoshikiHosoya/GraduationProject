@@ -24,7 +24,7 @@
 #define SIZE_TABBACK	(D3DXVECTOR3(300.0f, 720.0f, 0.0f))	// タブ背景のサイズ
 #define SIZE_TABBUTTON	(D3DXVECTOR3(40.0f, 100.0f, 0.0f))	// タブ開閉ボタンのサイズ
 
-#define TIME_TABMOVE	(30)	// タブ開閉の時間
+#define TIME_TABMOVE	(10)	// タブ開閉の時間
 
 #define COLOR_TABCLICK	(D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f))	// タブクリック時のカラー
 
@@ -94,7 +94,7 @@ void CChatTab::SlideTab(void)
 	}
 
 	// カラー更新
-	if (m_nCntState == 19)
+	if (m_nCntState == TIME_TABMOVE - 1)
 		m_pPolyTab->SetCol(WhiteColor);
 
 	// カウンタを加算

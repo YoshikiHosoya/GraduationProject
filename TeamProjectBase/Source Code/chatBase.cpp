@@ -50,7 +50,7 @@ std::shared_ptr<CChatBase> CChatBase::Create(void)
 
 	//Sceneにポインタを渡す
 	pBase->SetObjType(OBJTYPE_UI);
-	pBase->AddSharedList(std::move(pBase));
+	pBase->AddSharedList(pBase);
 
 	// 値を返す
 	return pBase;
