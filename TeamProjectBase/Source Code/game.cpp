@@ -18,6 +18,7 @@
 #include "Map.h"
 #include "ParticleManager.h"
 #include "picture.h"
+#include "chatBase.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -67,6 +68,10 @@ HRESULT CGame::Init(HWND hWnd)
 	// ピクチャの生成
 	CPicture::Load();
 	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
+
+	// チャットの生成
+	m_pChatBase = CChatBase::Create();
+
 	return S_OK;
 }
 
@@ -76,6 +81,9 @@ HRESULT CGame::Init(HWND hWnd)
 void CGame::Uninit()
 {
 	CPicture::InitStaticMember();
+
+	// チャットの破棄
+	m_pChatBase->Uninit();
 }
 
 //------------------------------------------------------------------------------
