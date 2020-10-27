@@ -36,10 +36,11 @@ public:
 	CChatText() {};		// コンストラクタ
 	~CChatText() {};	// デストラクタ
 
-	void Init(void);				// 初期化
-	void Uninit(void);				// 終了
-	static void Draw(void);			// 描画
-	void ShowDebugInfo() {};		//デバッグ情報表記
+	void Init(void);					// 初期化
+	void Uninit(void);					// 終了
+	static void Print(char* fmt, ...);	// 表示
+	static void Draw(void);				// 描画
+	void ShowDebugInfo() {};			//デバッグ情報表記
 
 	D3DXCOLOR &GetTextColor(void) { return m_textColor; } // テキストカラーの取得
 	void SetTextColor(D3DXCOLOR &col) { m_textColor = col; } // テキストカラーの設定
@@ -48,6 +49,7 @@ public:
 	static void SetChatKeyInfo(int nKeyID);
 	static void SetChatShiftKeyInfo(int nKeyID);
 	static void PressKey(int nKeyID, bool bShift);
+	static void SendChatText(void);
 
 private:
 	static LPD3DXFONT	m_pFont;				// フォント情報格納用

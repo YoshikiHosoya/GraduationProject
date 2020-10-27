@@ -21,9 +21,12 @@
 //=============================================================================
 #define POS_OPENTAB		(D3DXVECTOR2(980.0f, 720.0f))	// 開いたタブの座標
 #define POS_CLOSETAB	(D3DXVECTOR2(1280.0f, 720.0f))	// 閉じたタブの座標
+#define DIFPOS_X_TEXTBOX (10.0f)
+#define DIFPOS_Y_TEXTBOX (110.0f)
 
 #define SIZE_TABBACK	(D3DXVECTOR3(300.0f, 720.0f, 0.0f))	// タブ背景のサイズ
 #define SIZE_TABBUTTON	(D3DXVECTOR3(40.0f, 100.0f, 0.0f))	// タブ開閉ボタンのサイズ
+#define SIZE_X_TEXTBOX	(280.0f)
 
 #define TIME_TABMOVE	(10)	// タブ開閉の時間
 
@@ -35,6 +38,7 @@
 D3DXVECTOR2			CChatTab::m_TabPos		= ZeroVector2;
 CChatTab::TABSTATE	CChatTab::m_tabState	= CChatTab::TABSTATE_CLOSED;
 CChatText			* CChatTab::m_pChatText = nullptr;
+std::vector<CPolygon2D*> CChatTab::m_pBoxBack = {};	// テキストの背景ポリゴン
 
 //=============================================================================
 // コンストラクタ
@@ -50,6 +54,23 @@ CChatTab::CChatTab()
 CChatTab::~CChatTab()
 {
 
+}
+
+//=============================================================================
+// テキストボックスの追加
+//=============================================================================
+void CChatTab::AddTextBox(char * cText)
+{
+	// テキストボックスの背景を生成
+	m_pBoxBack.push_back(CPolygon2D::Create());
+
+	// 番号を取得
+	int nNumBox = (int)m_pBoxBack.size() - 1;
+	// 初期設定
+	m_pBoxBack[nNumBox]->SetPos(D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX, 0.0f));
+	m_pBoxBack[nNumBox]->SetSize(D3DXVECTOR3(SIZE_X_TEXTBOX, 150.0f, 0.0f));
+	m_pBoxBack[nNumBox]->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+	m_pBoxBack[nNumBox]->SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
 }
 
 //=============================================================================
@@ -197,6 +218,16 @@ void CChatTab::Uninit(void)
 		m_pPolyTab = nullptr;
 	}
 
+	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
+	{
+		if (m_pBoxBack[nCnt])
+		{
+			m_pBoxBack[nCnt]->Uninit();
+			delete m_pBoxBack[nCnt];
+			m_pBoxBack[nCnt] = nullptr;
+		}
+	}
+
 	// テキストの終了
 	if (m_pChatText)
 	{
@@ -229,8 +260,15 @@ void CChatTab::Update(void)
 
 	if (m_pPolyTab)
 		m_pPolyTab->Update();
+	
+	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
+	{
+		m_pBoxBack[nCnt]->Update();
+	}
 
-	CChatText::InputText();
+	// タブが開いているときのみ、文字を入力できる
+	if (m_tabState == TABSTATE_OPENED)
+		CChatText::InputText();
 }
 
 //=============================================================================
@@ -243,6 +281,11 @@ void CChatTab::Draw(void)
 
 	if (m_pPolyTab)
 		m_pPolyTab->Draw();
+
+	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
+	{
+		m_pBoxBack[nCnt]->Draw();
+	}
 
 	CChatText::Draw();
 }
