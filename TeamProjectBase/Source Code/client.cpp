@@ -22,8 +22,8 @@
 // 静的メンバ変数の初期化
 // ===================================================================
 bool CClient::m_bConnecting = false;
-bool CClient::m_bSend = false;
 char CClient::m_cSendText[256] = {};
+SOCKET CClient::m_socket = NULL;
 
 // ===================================================================
 // メイン関数
@@ -31,7 +31,6 @@ char CClient::m_cSendText[256] = {};
 int CClient::main(void)
 {
 	struct sockaddr_in server;
-	SOCKET sock;
 	char buf[32];
 
 	// winsockの初期化
@@ -42,7 +41,7 @@ int CClient::main(void)
 	}
 
 	// ソケットの作成
-	sock = socket(AF_INET, SOCK_STREAM, 0);
+	m_socket = socket(AF_INET, SOCK_STREAM, 0);
 
 	// 接続先指定用構造体の準備
 	server.sin_family = AF_INET;
@@ -50,28 +49,21 @@ int CClient::main(void)
 	server.sin_addr.S_un.S_addr = inet_addr(IPADDRESS_SERVER);
 
 	// サーバに接続
-	connect(sock, (struct sockaddr *)&server, sizeof(server));
+	connect(m_socket, (struct sockaddr *)&server, sizeof(server));
 	
 	while (1)
 	{
 		// 接続しない
 		if (!m_bConnecting)
-			continue;
+			break;
 
 		// サーバからデータを受信
 		memset(buf, 0, sizeof(buf));
-		int n = recv(sock, buf, sizeof(buf), 0);
+		// 接続待ち
+		int n = recv(m_socket, buf, sizeof(buf), 0);
 		// 受信したデータを表示
-		printf("%d, %s\n", n, buf);
-
-		// 送信時
-		if (m_bSend)
-		{
-			// テキスト送信
-			send(sock, m_cSendText, strlen(m_cSendText), 0);
-			strcpy(m_cSendText, "");
-			m_bSend = false;
-		}
+		if (n > 0)
+			printf("%d, %s\n", n, buf);
 	}
 	// winsock2の終了処理
 	WSACleanup();
@@ -113,6 +105,7 @@ HRESULT CClient::InitClient(void)
 // ===================================================================
 void CClient::UninitClient(void)
 {
+	m_bConnecting = false;
 	// winsock2の終了処理
 	WSACleanup();
 }
@@ -161,5 +154,7 @@ void CClient::ErrorReport(int err)
 void CClient::Send(char * cSendText)
 {
 	strcpy(m_cSendText, cSendText);
-	m_bSend = true;
+	// テキスト送信
+	send(m_socket, m_cSendText, strlen(m_cSendText), 0);
+	strcpy(m_cSendText, "");
 }

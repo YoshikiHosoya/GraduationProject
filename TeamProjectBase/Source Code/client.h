@@ -37,8 +37,8 @@ public:
 	static void Send(char* cSendText);
 private:
 	static bool m_bConnecting;			// クライアント受け入れのフラグ
-	static bool m_bSend;
 	static char m_cSendText[256];		// 送るテキスト
+	static SOCKET m_socket;				// 通信に使うソケット
 };
 
 #endif
