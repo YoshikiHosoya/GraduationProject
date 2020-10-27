@@ -28,6 +28,7 @@ std::string		CChatText::m_cSendText					= {};
 D3DXCOLOR		CChatText::m_textColor					= WhiteColor;
 char			CChatText::m_cKeepText[MAX_KEEPTEXT][SIZE_CHATTEXT] = {};
 int				CChatText::m_nCntPress = 0;
+int			CChatText::m_nPressKey = 0;
 
 //==========================================================================================================================================================
 // 初期化
@@ -130,44 +131,40 @@ void CChatText::Draw(void)
 //==========================================================================================================================================================
 void CChatText::InputText(void)
 {
-	// 入力のフラグ
-	bool bInput = false;
+	bool bPress = false;
+
 	// キーボードの取得
 	CKeyboard *pKey = CManager::GetKeyboard();
 
 	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
 	{
 		// 押されていないならば、終了
-		if (pKey->GetPress(nCnt) != true)
+		if (pKey->GetPress(nCnt) != true ||
+			nCnt == DIK_LSHIFT || nCnt == DIK_RSHIFT)
 			continue;
 
-		// 他のキーが入力されていれば、カウンタリセット
-		if (bInput)
-			m_nCntPress = 0;
+		// 入力した
+		bPress = true;
 
-		// 最初だけ
-		if (m_nCntPress == 0 || m_nCntPress >= TIME_PRESSKEY)
-		{
-			// シフトテキスト入力
-			if (pKey->GetPress(DIK_LSHIFT) || pKey->GetPress(DIK_RSHIFT))
-				SetChatShiftKeyInfo(nCnt);
-			// テキスト入力
-			else
-				SetChatKeyInfo(nCnt);
-			// テキスト削除
-			if (nCnt == DIK_BACKSPACE && m_cSendText.size() > 0)
-				m_cSendText.pop_back();
-		}
-		// 入力
-		bInput = true;
+		// 他のキーを入力していたら、カウンタリセット
+		if (m_nPressKey != nCnt)
+			m_nCntPress = 0;
+		// キー番号を保存
+		m_nPressKey = nCnt;
+
+		// キー入力
+		PressKey(nCnt, (pKey->GetPress(DIK_LSHIFT) || pKey->GetPress(DIK_RSHIFT)));
+
+		// 長押しカウンタ加算
+		if (m_nCntPress < TIME_PRESSKEY)
+			m_nCntPress++;
 	}
 
-	// 長押しでカウンタ加算
-	if (bInput && m_nCntPress < TIME_PRESSKEY)
-		m_nCntPress++;
-	// 入力されていなければ、カウンタリセット
-	else
+	if (!bPress)
+	{
 		m_nCntPress = 0;
+		m_nPressKey = 0;
+	}
 }
 
 //==========================================================================================================================================================
@@ -315,5 +312,43 @@ void CChatText::SetChatShiftKeyInfo(int nKeyID)
 	case DIK_SUBTRACT:		break;
 	case DIK_MULTIPLY:		break;
 	case DIK_DIVIDE:		break;
+	}
+}
+
+//==========================================================================================================================================================
+// 長押し
+//==========================================================================================================================================================
+void CChatText::PressKey(int nKeyID, bool bShift)
+{
+	// シフトキーが有効
+	if (bShift)
+	{
+		// 単発入力
+		if (m_nCntPress == 1)
+			SetChatShiftKeyInfo(nKeyID);
+		// 連続入力
+		if (m_nCntPress >= TIME_PRESSKEY)
+			SetChatShiftKeyInfo(nKeyID);
+		// 処理を終える
+		return;
+	}
+
+	if (nKeyID != DIK_BACKSPACE)
+	{
+		// 単発入力
+		if (m_nCntPress == 1)
+			SetChatKeyInfo(nKeyID);
+		// 連続入力
+		if (m_nCntPress >= TIME_PRESSKEY)
+			SetChatKeyInfo(nKeyID);
+	}
+	else
+	{
+		// 単発入力
+		if (m_nCntPress == 1 && m_cSendText.size() > 0)
+			m_cSendText.pop_back();
+		// 連続入力
+		if (m_nCntPress >= TIME_PRESSKEY && m_cSendText.size() > 0)
+			m_cSendText.pop_back();
 	}
 }
