@@ -33,7 +33,7 @@
 CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
 {
 	m_pShape.reset();
-	m_nShapeNum = 0;
+	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
 }
 
 //------------------------------------------------------------------------------
@@ -96,12 +96,12 @@ void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //ƒVƒ“ƒ{ƒ‹‚ÌÝ’è
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(int nShape)
+void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
 {
 	// ShapeÝ’è
-	m_nShapeNum = nShape;
+	m_Shape = shape;
 
 	//UVÝ’è
-	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(nShape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
+	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
 							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
 }

@@ -23,7 +23,7 @@ std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/test/test_module_none.x" ,			MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
 	{ "data/MODEL/BombTimer/BombTimer.x" ,				MODEL_MODULE_TIMER },								//タイマー
 	{ "data/MODEL/ButtonParts/ButtonParts.x" ,			MODEL_MODULE_NO1 },									//キーパッド
-	{ "data/MODEL/ButtonModule/Module2.x" ,				MODEL_MODULE_NO2 },									//キーパッド
+	{ "data/MODEL/ButtonModule/Module3.x" ,				MODEL_MODULE_NO2 },									//キーパッド
 
 	//モジュールのパーツ
 	{ "data/MODEL/Lamp/Lamp.x" ,						MODEL_MODULEPARTS_CLEARLAMP },						//ランプ

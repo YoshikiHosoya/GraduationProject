@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "module_parts_base.h"
+#include "module_No2_ShapeKeypad.h"
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
@@ -30,15 +31,13 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetShape(int nShape);
+	void SetShape(CModule_No2_ShapeKeyPad::SHAPE shape);
 
-	int GetShape() { return m_nShapeNum; };
-
-	int GetSymbolNum()							{ return m_nShapeNum; };
+	CModule_No2_ShapeKeyPad::SHAPE GetShape() { return m_Shape; };
 protected:
 
 private:
 	std::shared_ptr<CScene3D> m_pShape;			//シンボル
-	int m_nShapeNum;							//シンボルの番号
+	CModule_No2_ShapeKeyPad::SHAPE m_Shape;							//シンボルの番号
 };
 #endif

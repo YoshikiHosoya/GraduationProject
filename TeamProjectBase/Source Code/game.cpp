@@ -19,6 +19,7 @@
 #include "ParticleManager.h"
 #include "picture.h"
 #include "chatBase.h"
+#include "light.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -34,7 +35,7 @@
 CGame::CGame()
 {
 	m_nCntState = 0;
-	m_State = STATE_NORMAL;
+	m_State = STATE::STATE_NORMAL;
 	m_Gaze = GAZE_BOMB;
 	m_pBomb.reset();
 }
@@ -54,7 +55,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(CGame::STATE_NORMAL);
+	SetState(STATE::STATE_READY);
 
 	//パーティクルのマネージャ
 	CParticleManager::Create();
@@ -122,6 +123,10 @@ void CGame::UpdateState()
 	switch (m_State)
 	{
 	case CGame::STATE_READY:
+		if (m_nCntState <= 0)
+		{
+			SetState(CGame::STATE_NORMAL);
+		}
 		break;
 	case CGame::STATE_NORMAL:
 		break;
@@ -156,8 +161,13 @@ void CGame::SetState(STATE state)
 		case CGame::STATE_NONE:
 			break;
 		case CGame::STATE_READY:
+			m_nCntState = 120;
+			CManager::GetRenderer()->GetLight()->SetBlackLight();
+
 			break;
 		case CGame::STATE_NORMAL:
+			CManager::GetRenderer()->GetLight()->SetDefaultLight();
+
 			break;
 		case CGame::STATE_PAUSE:
 			break;
