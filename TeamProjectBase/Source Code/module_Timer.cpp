@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-
+#define TIMER_OFFSET_POS (D3DXVECTOR3(0.0f,-8.0f,-2.0f))
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
@@ -43,13 +43,13 @@ CModule_Timer::~CModule_Timer()
 HRESULT CModule_Timer::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_TIMER));
 
 	//モジュール選択不可
 	CModule_Base::SetCanModuleSelect(false);
 
 	//タイマーの生成
-	m_pTimer = CTimer::Create(ZeroVector3, 360, GetMtxWorldPtr());
+	m_pTimer = CTimer::Create(TIMER_OFFSET_POS, 360, GetMtxWorldPtr());
 
 	CSceneX::Init();
 	return S_OK;

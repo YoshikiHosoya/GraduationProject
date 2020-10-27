@@ -49,15 +49,19 @@ CTimer::~CTimer()
 //------------------------------------------------------------------------------
 void CTimer::UpdateTimer()
 {
+	if (CManager::GetGame()->GetState() != CGame::STATE_NORMAL)
+	{
+		return;
+	}
 	//タイマーが動いている時
 	if (m_nTimer > 0 && m_bStop == false)
 	{
 		//フレーム加算
 		m_nCntFlame--;
 
-		m_pMultiNumber[CTimer::TIMER_TYPE::MINUTE]->SetMultiNumber(m_nCntFlame / 60 / 60);
-		m_pMultiNumber[CTimer::TIMER_TYPE::SECOND]->SetMultiNumber(m_nCntFlame / 60 % 60);
-		m_pMultiNumber[CTimer::TIMER_TYPE::COMMA]->SetMultiNumber((int)((m_nCntFlame % 60) * (10.0f / 6.0f)));
+		//数値の更新
+		ChangeNumber();
+
 		//1秒おき
 		if (m_nCntFlame % 60 == 0)
 		{
@@ -66,6 +70,17 @@ void CTimer::UpdateTimer()
 
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+//数値の更新
+//------------------------------------------------------------------------------
+void CTimer::ChangeNumber()
+{
+	m_pMultiNumber[CTimer::TIMER_TYPE::MINUTE]->SetMultiNumber(m_nCntFlame / 60 / 60);
+	m_pMultiNumber[CTimer::TIMER_TYPE::SECOND]->SetMultiNumber(m_nCntFlame / 60 % 60);
+	m_pMultiNumber[CTimer::TIMER_TYPE::COMMA]->SetMultiNumber((int)((m_nCntFlame % 60) * (10.0f / 6.0f)));
+
 }
 
 //------------------------------------------------------------------------------
@@ -99,6 +114,9 @@ std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, int c
 		pTimer->m_pMultiNumber[nCnt]->SetParentMtxPtr(pMtx);
 		pTimer->m_pMultiNumber[nCnt]->SetColor(RedColor);
 	}
+
+	pTimer->ChangeNumber();
+
 
 	//リターン
 	return pTimer;

@@ -98,6 +98,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,6 +132,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,6 +157,10 @@
     <ClCompile Include="Source Code\basemode.cpp" />
     <ClCompile Include="Source Code\Bomb.cpp" />
     <ClCompile Include="Source Code\camera.cpp" />
+    <ClCompile Include="Source Code\chatBase.cpp" />
+    <ClCompile Include="Source Code\chatTab.cpp" />
+    <ClCompile Include="Source Code\chatText.cpp" />
+    <ClCompile Include="Source Code\client.cpp" />
     <ClCompile Include="Source Code\Debug\debugproc.cpp" />
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp" />
     <ClCompile Include="Source Code\fade.cpp" />
@@ -193,6 +199,7 @@
     <ClCompile Include="Source Code\ParticleManager.cpp" />
     <ClCompile Include="Source Code\ParticleParamater.cpp" />
     <ClCompile Include="Source Code\picture.cpp" />
+    <ClCompile Include="Source Code\polygon2D.cpp" />
     <ClCompile Include="Source Code\renderer.cpp" />
     <ClCompile Include="Source Code\result.cpp" />
     <ClCompile Include="Source Code\scene.cpp" />
@@ -211,6 +218,10 @@
     <ClInclude Include="Source Code\basemode.h" />
     <ClInclude Include="Source Code\Bomb.h" />
     <ClInclude Include="Source Code\camera.h" />
+    <ClInclude Include="Source Code\chatBase.h" />
+    <ClInclude Include="Source Code\chatTab.h" />
+    <ClInclude Include="Source Code\chatText.h" />
+    <ClInclude Include="Source Code\client.h" />
     <ClInclude Include="Source Code\Debug\debugproc.h" />
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h" />
     <ClInclude Include="Source Code\fade.h" />
@@ -254,6 +265,7 @@
     <ClInclude Include="Source Code\ParticleManager.h" />
     <ClInclude Include="Source Code\ParticleParamater.h" />
     <ClInclude Include="Source Code\picture.h" />
+    <ClInclude Include="Source Code\polygon2D.h" />
     <ClInclude Include="Source Code\renderer.h" />
     <ClInclude Include="Source Code\Resource\resource.h" />
     <ClInclude Include="Source Code\result.h" />

@@ -25,9 +25,6 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{37429a27-1909-43a1-8a3f-2718d7d10ef3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mesh">
-      <UniqueIdentifier>{d97b8b58-b6af-4afd-80d0-e41c34b76607}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect">
       <UniqueIdentifier>{52237fd5-d6c7-49aa-8b64-64bf7855d974}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,12 @@
     </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{a299ed23-8309-4e1f-824d-594ad8048391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{d97b8b58-b6af-4afd-80d0-e41c34b76607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Chat">
+      <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +218,21 @@
     </ClCompile>
     <ClCompile Include="Source Code\PaintingPen.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\client.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatText.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatTab.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatBase.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\polygon2D.cpp">
+      <Filter>Chat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +415,21 @@
     </ClInclude>
     <ClInclude Include="Source Code\PaintingPen.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\client.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatText.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatTab.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatBase.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\polygon2D.h">
+      <Filter>Chat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

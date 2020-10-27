@@ -18,19 +18,33 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/other/TexNone.png" },					//白紙
 	{ "data/TEXTURE/Effect/particle.jpg" },					//パーティクル用の丸いの
 
-	{ "data/TEXTURE/Material/field000.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field001.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field002.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field003.jpg" },					//パーティクル用の丸いの
-	{ "data/TEXTURE/Material/field004.jpg" },					//パーティクル用の丸いの
+	{ "data/TEXTURE/Material/field000.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field001.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field002.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/field004.jpg" },					//マテリアル
+
+	{ "data/TEXTURE/CHAT/chatFrame.png" },						// チャットタブの背景
+	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
+	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
+
+	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
+	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
+	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト
+
 };
 
 //テクスチャ名の設定
 FILENAME_LIST CTexture::m_aSeparateTexFileNameList =
 {
 	{ "data/TEXTURE/other/TexNone.png"},						//白紙
+
 	{ "data/TEXTURE/other/Number.png" },						//ナンバー
 	{ "data/TEXTURE/Effect/Explosion00.png" },					//爆発
+
+	{ "data/TEXTURE/ModuleParts/Icon_Module00.png" },					//爆発
+	{ "data/TEXTURE/ModuleParts/Icon_Module01.png" },					//爆発
+
 };
 
 
@@ -39,9 +53,11 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 {
 	//テクスチャのポインタ、テクスチャのパス、テクスチャのタイプ、テクスチャの分割数、テクスチャのUVサイズ
 	//ポインタとUVサイズに関してはLoad関数で読み込み＆計算する
-	{ nullptr, CTexture::SEPARATE_TEX_NONE,					D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
-	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,	D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
-	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,			D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_NONE,								D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
+	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,				D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,						D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00,				D3DXVECTOR2(12,2),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01,				D3DXVECTOR2(4,1),	ZeroVector2 },		//爆発
 
 };
 

@@ -31,6 +31,7 @@ public:
 	CTimer();
 	~CTimer();
 	void UpdateTimer();															//更新
+	void ChangeNumber();														//ディスプレイの数値更新
 	void ShowDebugInfo();														//デバッグ情報表記
 	static std::unique_ptr<CTimer> Create(D3DXVECTOR3 const &TimerCenterPos,int const nTimer,D3DXMATRIX *pMtx);			//生成処理
 

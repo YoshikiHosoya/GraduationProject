@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,50.0f,60.0f))
+#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,50.0f,40.0f))
 #define MAX_MODULE_NUM	 (12)
 //------------------------------------------------------------------------------
 //クラス定義
@@ -38,12 +38,22 @@ public:
 	static std::shared_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
 
 private:
-	int m_nModuleNum;																		//モジュール数
+	int m_nModuleNum;																	//モジュール数
+	int m_nSelectModuleNum;																//選択しているモジュール数
 	std::vector<std::shared_ptr<CModule_Base>> m_pModuleList;							//モジュールのリスト
 
-	void CreateModule(int const nModuleNum);											//モジュール生成
+	void ModuleClearCheck();
 
-	//テンプレート関数
+	void CreateModule(int const nModuleNum);											//モジュール生成
+	void CreateModule_Random(int const nModuleNum);
+
+#ifdef _DEBUG
+	void CreateModuleDebug();
+#endif
+
+	//------------------------------------------------------------------------------
+	//モジュール生成関数
+	//------------------------------------------------------------------------------
 	template<class Module> bool CreateModuleOne()
 	{
 		//モジュールが最大数に達したとき

@@ -25,20 +25,17 @@ public:
 	{
 		MODEL_NONE = -1,
 
-		//オブジェクト 0番台
-		MODEL_MAPOBJECT_BLOCK,					//オブジェクト　ブロック
-		MODEL_MAPOBJECT_SPHERE,					//オブジェクト　スフィア
-
 		//爆弾関係 100番台
 		MODEL_BOMBBOX = 100,					//オブジェクト　ボム
 
 		//モジュール 200番台
-		MODEL_MODULE_DEFAULT,					//オブジェクト　モジュール
+		MODEL_MODULE_DEFAULT = 200,				//オブジェクト　モジュール
 		MODEL_MODULE_NONE,						//オブジェクト　モジュール　何も入ってない
 		MODEL_MODULE_TIMER,						//オブジェクト　タイマー
+		MODEL_MODULE_KEYPAD,					//オブジェクト　キーパッド
 
 		//モジュールパーツ 300番台
-		MODEL_MODULEPARTS_CLEARLAMP,			//オブジェクト　クリアランプ
+		MODEL_MODULEPARTS_CLEARLAMP = 300,		//オブジェクト　クリアランプ
 		MODEL_MODULEPARTS_KEYPAD,				//オブジェクト　キーパッド
 
 	};

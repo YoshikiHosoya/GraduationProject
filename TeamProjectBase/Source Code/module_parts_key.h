@@ -37,14 +37,20 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetLampState(KEYPAD_STATE lampstate);
-	KEYPAD_STATE GetLampState()					{ return m_LampState; };
+	void SetSymbol(int nSymbol);
+	void SetKeypadState(KEYPAD_STATE keypadstate);
+
+	KEYPAD_STATE GetKeyPadState()				{ return m_KeyPadState; };
+	int GetSymbolNum()							{ return m_nSymbolNum; };
 protected:
 
 private:
 	std::unique_ptr<CScene3D> m_pLight;			//ライト
+	std::shared_ptr<CScene3D> m_pSymbol;		//シンボル
+
+	KEYPAD_STATE m_KeyPadState;					//ライトの状態
 	int m_nCntLampCnt;							//ライト用のカウント
-	KEYPAD_STATE m_LampState;					//ライトの状態
+	int m_nSymbolNum;							//シンボルの番号
 
 };
 #endif

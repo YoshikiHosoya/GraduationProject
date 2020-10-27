@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS
 #define	DIRECTINPUT_VERSION	(0x0800)
+#define _WINSOCKAPI_					// windows.hの後にwinsock2.hを呼び出すときに必要
 
 #ifndef _MAIN_H_
 #define _MAIN_H_
@@ -14,16 +15,19 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include <stdlib.h>
-#include <crtdbg.h>
-#include <windows.h>
-#include "d3dx9.h"
-#include <vector>
+#include <iostream>				// std::coutとか
+#include <stdlib.h>				// ライブラリ
+#include <windows.h>			// window生成
+#include <WinSock2.h>			// winsock2の使用に必要
+#include <crtdbg.h>				// CRTライブラリでメモリーリーク検出に必要
+#include <vector>				// vector型に必要
+#include <algorithm>			// find_if関数等に必要
+#include <memory>				// unique_ptr等に必要
+#include <thread>				// マルチスレッドに必要
 
+#include "d3dx9.h"
 #include "hossolibrary.h"
 
-#include <iostream>
-#include <memory>
 #include "Resource/resource.h"
 
 //------------------------------------------------------------------------------

@@ -23,7 +23,6 @@ CScene3D::CScene3D()
 {
 	//初期化
 	m_bBillBoard = false;
-	m_bLighting = true;
 
 	//総数加算
 	m_nNumScene3D++;
@@ -97,7 +96,7 @@ void CScene3D::Draw()
 		CHossoLibrary::SetBillboard(GetMtxWorldPtr());
 	}
 	//ライティングしない時
-	if (!m_bLighting)
+	if (!GetLighting())
 	{
 		//ライティングoff
 		CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_OFF);
@@ -113,6 +112,7 @@ void CScene3D::Draw()
 	//ポリゴン描画
 	DrawPolygon();
 
+	//ライティング設定を元に戻す
 	CHossoLibrary::CheckLighting();
 }
 //------------------------------------------------------------------------------
@@ -188,7 +188,6 @@ void CScene3D::SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)
 //------------------------------------------------------------------------------
 HRESULT CScene3D::MakeVertex()
 {
-
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	LPDIRECT3DVERTEXBUFFER9 pVtxBuff;	//頂点バッファ
