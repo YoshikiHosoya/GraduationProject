@@ -963,6 +963,99 @@ FLOAT2::operator /(const INTEGER2 &rhs) const
 	return FLOAT2(x / rhs.nX, y / rhs.nY);
 }
 
+inline float
+FLOAT2::Dot(const FLOAT2 &rhs) const
+{
+	return x * rhs.x + y * rhs.y;
+}
+
+inline float
+FLOAT2::Cross(const FLOAT2 &rhs) const
+{
+	return x * rhs.y - y * rhs.x;
+}
+
+inline float
+FLOAT2::Length(void) const
+{
+	return sqrtf(LengthSq());
+}
+
+inline float
+FLOAT2::LengthSq(void) const
+{
+	return x * x + y * y;
+}
+
+inline void
+FLOAT2::Norm(void)
+{
+	const float fLength = Length();
+	if (fLength > 0.0f)
+	{
+		x /= fLength;
+		y /= fLength;
+	}
+}
+
+inline FLOAT2
+FLOAT2::GetNorm(void) const
+{
+	const float fLength = Length();
+	if (fLength > 0.0f) {
+		return FLOAT2(x / fLength, y / fLength);
+	}
+	return FLOAT2(0.0f, 0.0f);
+}
+
+//----------------------------------------------------------------------------------------------------
+// 2Dベクトル
+//----------------------------------------------------------------------------------------------------
+inline VEC2
+& VEC2::operator=(const FLOAT2 & rhs)
+{
+	x = rhs.x;
+	y = rhs.y;
+	return *this;
+}
+
+inline bool
+VEC2::IsVertical(const VEC2 &rhs) const
+{
+	float DotValue = Dot(rhs);
+	return (-MYLIB_OX_EPSILON < DotValue && DotValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら垂直と判定
+}
+
+inline bool
+VEC2::IsParallel(const VEC2 &rhs) const
+{
+	float CrossValue = Cross(rhs);
+	return (-MYLIB_OX_EPSILON < CrossValue && CrossValue < MYLIB_OX_EPSILON);	// 誤差範囲内なら平行と判定
+}
+
+inline bool
+VEC2::IsSharpAngle(const VEC2 &rhs) const
+{
+	return (Dot(rhs) >= 0.0f);
+}
+
+//----------------------------------------------------------------------------------------------------
+// 2D直線
+//----------------------------------------------------------------------------------------------------
+inline FLOAT2
+LINE_2D::GetPoint(float fCoffi) const
+{
+	return pos + fCoffi * vec;
+}
+
+//----------------------------------------------------------------------------------------------------
+// 2D線分
+//----------------------------------------------------------------------------------------------------
+inline FLOAT2 SEGMENT_2D::GetEndPoint(void) const
+{
+	return pos + vec;
+}
+
 //----------------------------------------------------------------------------------------------------
 // 3成分float
 //----------------------------------------------------------------------------------------------------

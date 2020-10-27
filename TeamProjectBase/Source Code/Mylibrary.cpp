@@ -1355,6 +1355,89 @@ void CMylibrary::SetVec3FixTheRotation(D3DXVECTOR3 * Rotation)
 	}
 }
 
+//* [contents] ∠p1p2p3は鋭角かどうか
+//* [in] Point（点）, Line（直線）
+//* [return] 鋭角かどうか（true : 鋭角, false : 鋭角ではない）
+bool CMylibrary::IsSharpAngle(CONST FLOAT2 & Point1, CONST FLOAT2 & Point2, CONST FLOAT2 & Point3)
+{
+	return VEC2(Point1 - Point2).IsSharpAngle(Point3 - Point2);
+}
+
+//* [contents] 点と直線の最短距離2D
+//* [in] Point（点）, Line（直線）
+//* [out] Perp（垂線）, fVecCoeffi（ベクトル係数）
+//* [return] 最短距離
+float CMylibrary::calcPointLineDist2D(const FLOAT2 & Point, const LINE_2D & Line)
+{
+	// 変数宣言
+	float fLenV = Line.vec.Length();
+
+	VEC2 vec = Point - Line.pos;
+	
+	return abs(Line.vec.Cross(vec)) / fLenV;
+
+}
+
+//* [contents] 点と線分の最短距離2D
+//* [in] Point（点）, Seg（線分）
+//* [out] EndPtShortdist（最短距離となる端点）, EndPoint（端点）
+//* [return] 最短距離
+float CMylibrary::CalPointSegmentDist2D(const FLOAT2 & Point, const SEGMENT_2D & Seg)
+{
+	// 線分の終点の取得
+	CONST FLOAT2 SegEndPoint = Seg.GetEndPoint();
+
+	// 鋭角じゃない時
+	if (IsSharpAngle(Point, Seg.pos, SegEndPoint) == false) {
+		return (Seg.pos - Point).Length();
+	}
+	// 鋭角じゃない時
+	else if (IsSharpAngle(Point, SegEndPoint, Seg.pos) == false) {
+		return (SegEndPoint - Point).Length();
+	}
+	// 垂線の長さ、垂線の足の座標及びtを算出
+	float fLength = calcPointLineDist2D(Point, Seg);
+
+	return fLength;
+}
+
+//* [contents] 0～1の間に制限する
+//* [out] fValue（制限する値）
+void CMylibrary::Limit0to1(float & fValue)
+{
+	if (fValue < 0.0f)
+	{
+		fValue = 0.0f;
+	}
+	else if (fValue > 1.0f)
+	{
+		fValue = 1.0f;
+	}
+}
+
+//* [contents] 線分と球の距離2D
+//* [in] Seg1（線分1）, Seg2（線分2）
+//* [out] PerpendFoot1（線分1側の垂線の足）,PerpendFoot2（線分2側の垂線の足）,fVecCoeffi1（線分1側のベクトル係数）, fVecCoeffi2（線分2側のベクトル係数）
+//* [return] 最短距離
+float CMylibrary::calSegmentPosDist2D(const SEGMENT_2D & Seg1, const D3DXVECTOR2 & pos)
+{
+	if (Seg1.vec.LengthSq() == MYLIB_OX_EPSILON)
+	{
+		return (Seg1.pos - pos).Length();
+	}
+
+	return CalPointSegmentDist2D(pos, Seg1);
+}
+
+//* [contents] カプセル同士の衝突判定2D
+//* [in] Cap1（カプセル1）, Cap2（カプセル2）
+//* [return] 衝突している時true
+bool CMylibrary::calCapsuleSphere2D(const CAPSULE_2D & Cap1, const D3DXVECTOR2 & pos)
+{
+	// 変数宣言
+	return (calSegmentPosDist2D(Cap1.Segment, pos) <= Cap1.fRadius);
+}
+
 //* [contents] スクリーン座標をワールド座標に変換
 //* [in] スクリーン座標、射影空間でのZ値、スクリーンの大きさ、ビュー行列、プロジェクション行列
 //* [out] 算出したワールド座標

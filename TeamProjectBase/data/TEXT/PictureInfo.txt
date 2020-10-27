@@ -4,7 +4,7 @@
 //
 //*************************************************************************************************************
 [Picture][Parameter]
-NumPolygon = 256 256
+NumPolygon = 128 128
 Size = 300 300
 TextureFile = data/TEXTURE/BMP/BaseBMP.bmp
 
