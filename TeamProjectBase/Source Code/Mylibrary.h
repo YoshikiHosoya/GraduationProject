@@ -671,7 +671,69 @@ typedef struct FLOAT2 : public D3DXVECTOR2
 	inline FLOAT2        operator *(const INTEGER2 &rhs) const;																// 四則演算子*
 	inline FLOAT2        operator /(const INTEGER2 &rhs) const;																// 四則演算子/
 
+	inline float         Dot(const FLOAT2 &rhs) const;																		// 内積
+	inline float         Cross(const FLOAT2 &rhs) const;																	// 外積
+	inline float         Length(void) const;																				// 長さ
+	inline float         LengthSq(void) const;																				// べき乗長さ
+	inline void          Norm(void);																						// 正規化
+	inline FLOAT2        GetNorm(void) const;																				// 正規化し取得
+
 }FLOAT2;
+
+// ベクトル
+typedef struct VEC2 : public FLOAT2
+{
+	VEC2() {}												// コンストラクタ
+	VEC2(float x, float y) : FLOAT2(x, y) {}				// コンストラクタ
+	VEC2(const FLOAT2 &rhs) : FLOAT2(rhs) {}				// コンストラクタ
+	~VEC2() {}												// デストラクタ
+	inline VEC2& operator =(const FLOAT2 &rhs);				// 代入演算子
+	inline bool  IsVertical(const VEC2 &rhs) const;			// 垂直関係にある？
+	inline bool  IsParallel(const VEC2 &rhs) const;			// 平行関係にある？
+	inline bool  IsSharpAngle(const VEC2 &rhs) const;		// 鋭角関係？
+}VEC2;
+
+// 直線
+typedef struct LINE_2D
+{
+	FLOAT2 pos;															// 位置
+	VEC2 vec;															// 方向ベクトル
+	LINE_2D() : pos(0.0f, 0.0f), vec(1.0f, 0.0f) {}						// コンストラクタ
+	LINE_2D(const FLOAT2 &pos, const VEC2 &vec) : pos(pos), vec(vec) {}	// コンストラクタ
+	~LINE_2D() {}														// デストラクタ
+	inline FLOAT2 GetPoint(float fCoffi) const;							// 点上の座標を取得
+}LINE_2D;
+
+// 線分
+typedef struct SEGMENT_2D : public LINE_2D
+{
+	SEGMENT_2D() {}																// コンストラクタ
+	SEGMENT_2D(const FLOAT2 &p, const VEC2 &v) : LINE_2D(p, v) {}				// コンストラクタ
+	SEGMENT_2D(const FLOAT2 &p1, const FLOAT2 &p2) : LINE_2D(p1, p2 - p1) {}	// コンストラクタ
+	~SEGMENT_2D() {}															// デストラクタ
+	inline FLOAT2 GetEndPoint(void) const;										// 終点を取得
+}SEGMENT_2D;
+
+// 球
+typedef struct SPHERE_2D
+{
+	FLOAT2 Point;														// 中心点
+	float fRadius;														// 半径
+	SPHERE_2D() : Point(0.0f, 0.0f), fRadius(0.5f) {}				// コンストラクタ
+	SPHERE_2D(const FLOAT2 &p, float r) : Point(p), fRadius(r) {}			// コンストラクタ
+	~SPHERE_2D() {}														// デストラクタ
+}SPHERE_2D;
+
+// カプセル
+typedef struct CAPSULE_2D
+{
+	SEGMENT_2D Segment;																		// 線分
+	float fRadius;																			// 半径
+	CAPSULE_2D() : fRadius(0.5f) {}															// コンストラクタ
+	CAPSULE_2D(const SEGMENT_2D &s, float r) : Segment(s), fRadius(r) {}							// コンストラクタ
+	CAPSULE_2D(const FLOAT2 &p1, const FLOAT2 &p2, float r) : Segment(p1, p2), fRadius(r) {}	// コンストラクタ
+	~CAPSULE_2D() {}																			// デストラクタ
+}CAPSULE_2D;
 
 // 3成分float
 typedef struct FLOAT3 : public D3DXVECTOR3
@@ -1500,6 +1562,41 @@ public:
 	//* [contents] 回転量を直す
 	//* [out] Vec3向きor回転量
 	static void SetVec3FixTheRotation(D3DXVECTOR3 *Rotation);
+
+	//----------------------------------------------------------------------------------------------------
+	// カプセル
+	//----------------------------------------------------------------------------------------------------
+	//* [contents] ∠p1p2p3は鋭角かどうか
+	//* [in] Point（点）, Line（直線）
+	//* [return] 鋭角かどうか（true : 鋭角, false : 鋭角ではない）
+	static bool IsSharpAngle(CONST FLOAT2 &Point1, CONST FLOAT2 &Point2, CONST FLOAT2 &Point3);
+
+	//* [contents] 点と直線の最短距離2D
+	//* [in] Point（点）, Line（直線）
+	//* [out] Perp（垂線）, fVecCoeffi（ベクトル係数）
+	//* [return] 最短距離
+	static float calcPointLineDist2D(const FLOAT2 &Point, const LINE_2D &Line);
+
+	//* [contents] 点と線分の最短距離2D
+	//* [in] Point（点）, Seg（線分）
+	//* [out] EndPtShortdist（最短距離となる端点）, EndPoint（端点）
+	//* [return] 最短距離
+	static float CalPointSegmentDist2D(const FLOAT2 &Point, const SEGMENT_2D &Seg);
+
+	//* [contents] 0～1の間に制限する
+	//* [out] fValue（制限する値）
+	static void Limit0to1(float &fValue);
+
+	//* [contents] 線分と球の距離2D
+	//* [in] Seg1（線分1）, Seg2（線分2）
+	//* [out] PerpendFoot1（線分1側の垂線の足）,PerpendFoot2（線分2側の垂線の足）,fVecCoeffi1（線分1側のベクトル係数）, fVecCoeffi2（線分2側のベクトル係数）
+	//* [return] 最短距離
+	static float calSegmentPosDist2D(const SEGMENT_2D &Seg1, const D3DXVECTOR2 &pos);
+
+	//* [contents] カプセル同士の衝突判定2D
+	//* [in] Cap1（カプセル1）, Cap2（カプセル2）
+	//* [return] 衝突している時true
+	static bool calCapsuleSphere2D(const CAPSULE_2D &Cap1, const D3DXVECTOR2 &pos);
 
 	//-------------------------------------------------------------------------------------------------------------
 	// WorldMatrix
