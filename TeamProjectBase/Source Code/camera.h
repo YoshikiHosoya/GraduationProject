@@ -44,8 +44,8 @@ public:
 	D3DXVECTOR3 GetCameraRot()		{ return m_rot; };						//回転情報取得
 	D3DXVECTOR3 GetCameraPosV()		{ return m_posV; };						//視点取得
 	D3DXVECTOR3 GetCameraPosR()		{ return m_posR; };						//注視点取得
-	D3DXMATRIX GetMtxView()			{ return m_mtxView; };					//ビューマトリックス取得
-	D3DXMATRIX GetMtxProjection()	{ return m_mtxProjection; };			//プロジェクションマトリック取得
+	D3DXMATRIX* GetMtxView()		{ return &m_mtxView; };					//ビューマトリックス取得
+	D3DXMATRIX* GetMtxProjection()	{ return &m_mtxProjection; };			//プロジェクションマトリック取得
 
 	CAMERA_STATE GetCameraState()	{return m_CameraState;};
 

@@ -196,6 +196,7 @@
     <ClCompile Include="Source Code\multinumber.cpp" />
     <ClCompile Include="Source Code\Mylibrary.cpp" />
     <ClCompile Include="Source Code\Pad_XInput.cpp" />
+    <ClCompile Include="Source Code\PaintingPen.cpp" />
     <ClCompile Include="Source Code\particle.cpp" />
     <ClCompile Include="Source Code\ParticleManager.cpp" />
     <ClCompile Include="Source Code\ParticleParamater.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Source Code\multinumber.h" />
     <ClInclude Include="Source Code\Mylibrary.h" />
     <ClInclude Include="Source Code\Pad_XInput.h" />
+    <ClInclude Include="Source Code\PaintingPen.h" />
     <ClInclude Include="Source Code\particle.h" />
     <ClInclude Include="Source Code\ParticleManager.h" />
     <ClInclude Include="Source Code\ParticleParamater.h" />

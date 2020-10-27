@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
@@ -448,4 +449,450 @@
       <Filter>Library</Filter>
     </None>
   </ItemGroup>
+=======
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{cb7ef032-2e2e-4fea-80aa-2c76b3f21148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mode">
+      <UniqueIdentifier>{975a09ff-46fd-4774-b7c8-c7b264c598ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{42fe8858-0f8a-49a8-ab99-383728b611cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{37429a27-1909-43a1-8a3f-2718d7d10ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{52237fd5-d6c7-49aa-8b64-64bf7855d974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{e2254ce4-1811-4024-b5bc-1f8fbd3fc118}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{69b01558-a66c-4d91-b0b4-39c02d490d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb">
+      <UniqueIdentifier>{d868d8f1-1da5-4067-b633-a823476e0bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb\module">
+      <UniqueIdentifier>{f6824bca-1635-4150-a870-10378bc0252c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bomb\module_parts">
+      <UniqueIdentifier>{2d0ad257-9f0f-48a6-bc6a-0e5ae2ea5d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{a299ed23-8309-4e1f-824d-594ad8048391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{d97b8b58-b6af-4afd-80d0-e41c34b76607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Chat">
+      <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source Code\camera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\fade.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\light.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\renderer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\sound.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ImGui\imgui.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ImGui\imgui_draw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ImGui\imgui_impl_dx9.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ImGui\imgui_impl_win32.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ImGui\imgui_widgets.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\title.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\result.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\basemode.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\game.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\sceneX.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\scene3D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\scene2D.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\meshsphere.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\meshfield.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\meshcylinder.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\mesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\multinumber.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Pad_XInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\keyboard.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\particle.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Debug\debugproc.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\meshcircle.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Map.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\modelinfo.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\TestMode.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\SceneBase.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ParticleManager.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ParticleParamater.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\TexAnimationBase.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Bomb.cpp">
+      <Filter>Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Mylibrary.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\hossolibrary.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\timer.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\mouse.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_Timer.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_lamp.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_base.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_Button.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_none.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\picture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_keypad.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_key.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\PaintingPen.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\client.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatText.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatTab.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\chatBase.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\polygon2D.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source Code\camera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\fade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\light.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\main.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\manager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\renderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\sound.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imconfig.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imgui.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imgui_impl_dx9.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imgui_impl_win32.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imgui_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imstb_rectpack.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imstb_textedit.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGui\imstb_truetype.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\title.h">
+      <Filter>Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\result.h">
+      <Filter>Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\game.h">
+      <Filter>Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\basemode.h">
+      <Filter>Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\sceneX.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\scene3D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\scene2D.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\mesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\meshfield.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\meshsphere.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\meshcylinder.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\multinumber.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Pad_XInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\keyboard.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\particle.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Debug\debugproc.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\meshcircle.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Map.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\modelinfo.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Resource\resource.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\TestMode.h">
+      <Filter>Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\SceneBase.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ParticleManager.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ParticleParamater.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\TexAnimationBase.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\GameObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Bomb.h">
+      <Filter>Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Mylibrary.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\hossolibrary.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\timer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\mouse.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_base.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_Timer.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_base.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_lamp.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_Button.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_none.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\picture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_keypad.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_key.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PaintingPen.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\client.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatText.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatTab.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\chatBase.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\polygon2D.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Source Code\Resource\icon.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source Code\mylibrary.inl">
+      <Filter>Library</Filter>
+    </None>
+  </ItemGroup>
+>>>>>>> af67bfe04ea4dee5b69f4543df7498622b82ee46
 </Project>
