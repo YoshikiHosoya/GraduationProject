@@ -60,6 +60,7 @@ public:
 	static D3DXVECTOR2 &GetTabPos(void) { return m_TabPos; }		// タブ座標の取得
 	static TABSTATE &GetTabState(void)	{ return m_tabState; }		// タブの状態の取得
 	static void SetTabPos(D3DXVECTOR2 &pos) { m_TabPos = pos; }		// タブ座標の設定
+	static void AddTextBox(char* cText);							// テキストボックス追加
 
 private:
 	void ClickTab(void);	// タブクリック
@@ -67,6 +68,7 @@ private:
 
 	CPolygon2D	*m_pPolyBack;		// 背景タブのポリゴン
 	CPolygon2D	*m_pPolyTab;		// 開閉タブのポリゴン
+	static std::vector<CPolygon2D*>	m_pBoxBack;	// テキストの背景ポリゴン
 	static CChatText	*m_pChatText;		// テキスト
 	static TABSTATE m_tabState;		// タブの状態
 	int m_nCntState;				// 状態管理のカウンタ

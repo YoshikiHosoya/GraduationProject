@@ -32,11 +32,13 @@ public:
 	static void UninitClient(void);		// 強制終了
 	static void ErrorReport(int err);	// エラーレポート
 
-	static bool &GetAccepting(void) { return m_bAccepting; }
-	static void SetAccepting(bool bAccept) { m_bAccepting = bAccept; }
-
+	static bool &GetAccepting(void) { return m_bConnecting; }
+	static void SetAccepting(bool bConnect) { m_bConnecting = bConnect; }
+	static void Send(char* cSendText);
 private:
-	static bool m_bAccepting;			// クライアント受け入れのフラグ
+	static bool m_bConnecting;			// クライアント受け入れのフラグ
+	static bool m_bSend;
+	static char m_cSendText[256];		// 送るテキスト
 };
 
 #endif

@@ -21,7 +21,9 @@
 // ===================================================================
 // 静的メンバ変数の初期化
 // ===================================================================
-bool CClient::m_bAccepting = false;
+bool CClient::m_bConnecting = false;
+bool CClient::m_bSend = false;
+char CClient::m_cSendText[256] = {};
 
 // ===================================================================
 // メイン関数
@@ -49,20 +51,28 @@ int CClient::main(void)
 
 	// サーバに接続
 	connect(sock, (struct sockaddr *)&server, sizeof(server));
+	
+	while (1)
+	{
+		// 接続しない
+		if (!m_bConnecting)
+			continue;
 
-	// サーバからデータを受信
-	memset(buf, 0, sizeof(buf));
-	int n = recv(sock, buf, sizeof(buf), 0);
+		// サーバからデータを受信
+		memset(buf, 0, sizeof(buf));
+		int n = recv(sock, buf, sizeof(buf), 0);
+		// 受信したデータを表示
+		printf("%d, %s\n", n, buf);
 
-	printf("%d, %s\n", n, buf);
-
-	char cText[32];
-
-	strcpy(cText, "HELLO");
-
-	// 7文字送信
-	send(sock, cText, strlen(cText), 0);
-
+		// 送信時
+		if (m_bSend)
+		{
+			// テキスト送信
+			send(sock, m_cSendText, strlen(m_cSendText), 0);
+			strcpy(m_cSendText, "");
+			m_bSend = false;
+		}
+	}
 	// winsock2の終了処理
 	WSACleanup();
 
@@ -78,7 +88,7 @@ HRESULT CClient::InitClient(void)
 	int err;			// エラー番号
 
 	// 要素の初期化
-	m_bAccepting = true;
+	m_bConnecting = true;
 
 	// サーバ・クライアント共通で開始時のみ、必ず行う
 	err = WSAStartup(MAKEWORD(VERSION_WINSOCK, 0), &wsaData);
@@ -143,4 +153,13 @@ void CClient::ErrorReport(int err)
 	// キー入力待ち
 	printf("終了します。Enterキーを入力してください。\n");
 	getchar();
+}
+
+// ===================================================================
+// テキストの送信
+// ===================================================================
+void CClient::Send(char * cSendText)
+{
+	strcpy(m_cSendText, cSendText);
+	m_bSend = true;
 }

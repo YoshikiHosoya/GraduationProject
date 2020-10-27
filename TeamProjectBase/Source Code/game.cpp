@@ -20,7 +20,7 @@
 #include "picture.h"
 #include "chatBase.h"
 #include "light.h"
-
+#include "client.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -70,9 +70,12 @@ HRESULT CGame::Init(HWND hWnd)
 	CPicture::Load();
 	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
 
+	std::thread t1(CClient::main);
+	t1.detach();
+
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
-
+	
 	return S_OK;
 }
 
@@ -85,6 +88,8 @@ void CGame::Uninit()
 
 	// チャットの破棄
 	m_pChatBase->Uninit();
+
+	CClient::UninitClient();
 }
 
 //------------------------------------------------------------------------------

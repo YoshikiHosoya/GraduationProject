@@ -9,6 +9,8 @@
 #include "manager.h"
 #include "keyboard.h"
 #include "input.h"
+#include "client.h"
+#include "chatTab.h"
 
 //==========================================================================================================================================================
 // マクロ定義
@@ -74,7 +76,7 @@ void CChatText::Uninit(void)
 //==========================================================================================================================================================
 // 表示
 //==========================================================================================================================================================
-/*void CChatText::Print(char* fmt, ...)
+void CChatText::Print(char* fmt, ...)
 {
 	va_list args;
 
@@ -103,14 +105,14 @@ void CChatText::Uninit(void)
 
 	// argsを使えない状態にする
 	va_end(args);
-}*/
+}
 
 //==========================================================================================================================================================
 // 描画
 //==========================================================================================================================================================
 void CChatText::Draw(void)
 {
-	/*RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	// テキスト描画
 	m_pFont->DrawText(NULL, 
@@ -118,7 +120,7 @@ void CChatText::Draw(void)
 		-1,
 		&rect,
 		DT_LEFT,
-		m_textColor);*/
+		m_textColor);
 
 	// 連続して文字数計算をしないよう\0を置く
 	//m_cSendText[0] = '\0';
@@ -164,6 +166,11 @@ void CChatText::InputText(void)
 	{
 		m_nCntPress = 0;
 		m_nPressKey = 0;
+	}
+
+	if (pKey->GetTrigger(DIK_RETURN) && strlen(m_cSendText.c_str()) > 0)
+	{
+		SendChatText();
 	}
 }
 
@@ -316,7 +323,7 @@ void CChatText::SetChatShiftKeyInfo(int nKeyID)
 }
 
 //==========================================================================================================================================================
-// 長押し
+// キー入力
 //==========================================================================================================================================================
 void CChatText::PressKey(int nKeyID, bool bShift)
 {
@@ -351,4 +358,34 @@ void CChatText::PressKey(int nKeyID, bool bShift)
 		if (m_nCntPress >= TIME_PRESSKEY && m_cSendText.size() > 0)
 			m_cSendText.pop_back();
 	}
+}
+
+//==========================================================================================================================================================
+// メッセージの送信
+//==========================================================================================================================================================
+void CChatText::SendChatText(void)
+{
+	// 元々の文字列を一つずつ後ろにずらす
+	for (int nCnt = MAX_KEEPTEXT - 1; nCnt > -1; nCnt--)
+	{
+		// 文字が格納されているなら、処理しない
+		if (strlen(m_cKeepText[nCnt]) > 0)
+			continue;
+
+		// 末尾は消す
+		if (nCnt == MAX_KEEPTEXT - 1)
+			strcpy(m_cKeepText[nCnt], "");
+		// 末尾以外は、一つ先の文字列を格納
+		else 
+			strcpy(m_cKeepText[nCnt + 1], m_cKeepText[nCnt]);
+	}
+
+	// 先頭の文字列を上書き
+	strcpy(m_cKeepText[0], m_cSendText.c_str());
+	// 送信
+	CClient::Send((char*)m_cSendText.c_str());
+	// チャットタブに保存
+	CChatTab::AddTextBox((char*)m_cSendText.c_str());
+	// 文字列を破棄
+	m_cSendText.clear();
 }
