@@ -143,20 +143,20 @@
 // マクロ関数
 //-------------------------------------------------------------------------------------------------------------
 # ifdef _DEBUG
-#define Mybfunc_Debug_brackets_L		std::cout << MYLIB_BRACKETS_L			// 区切りの括弧(大)の出力
-#define Mybfunc_Debug_brackets_M		std::cout << MYLIB_BRACKETS_M			// 区切りの括弧(中)の出力
-#define Mybfunc_Debug_brackets_S		std::cout << MYLIB_BRACKETS_S			// 区切りの括弧(小)の出力
-#define Mybfunc_Debug_start(str)		std::cout << str << " == start!!\n"		// 開始(start!!)の出力
-#define Mybfunc_Debug_end(str)			std::cout << str << " == end!!\n"		// 終了(end!!)の出力
-#define Mybfunc_Debug_open(str)			std::cout << str << " == open!!\n"		// 開いた(open!!)の出力
-#define Mybfunc_Debug_openfailed(str)	std::cout << str << " == open failed!!\n"// 開くの失敗(open failed!!)の出力
-#define Mybfunc_Debug_close(str)		std::cout << str << " == close!!\n"		// 閉じる(close!!)の出力
+#define Mybfunc_Debug_brackets_L		std::cout << MYLIB_BRACKETS_L						// 区切りの括弧(大)の出力
+#define Mybfunc_Debug_brackets_M		std::cout << MYLIB_BRACKETS_M						// 区切りの括弧(中)の出力
+#define Mybfunc_Debug_brackets_S		std::cout << MYLIB_BRACKETS_S						// 区切りの括弧(小)の出力
+#define Mybfunc_Debug_start(str)		std::cout << str << " == start!!\n"					// 開始(start!!)の出力
+#define Mybfunc_Debug_end(str)			std::cout << str << " == end!!\n"					// 終了(end!!)の出力
+#define Mybfunc_Debug_open(str)			std::cout << str << " == open!!\n"					// 開いた(open!!)の出力
+#define Mybfunc_Debug_openfailed(str)	std::cout << str << " == open failed!!\n"			// 開くの失敗(open failed!!)の出力
+#define Mybfunc_Debug_close(str)		std::cout << str << " == close!!\n"					// 閉じる(close!!)の出力
 #endif
-#define Mybfunc_gate(b)					if(b)								// 扉:真の時 ※使わない
-#define Mybfunc_iif(b)					(b == true) ? true: false			// 条件文から真偽を返す
-#define Mybfunc_iifEx(b ,t ,f)			(b == true) ? t: f					// 条件文から真偽を返す(真偽引数)
-#define Mybfunc_WhenBiggerSet(o ,src)	if(o > src) {o = src;}				// srcよりoが大きいとき設定する
-#define Mybfunc_WhenSmallerSet(o ,src)	if(o < src) {o = src;}				// srcよりoが小さいとき設定する
+#define Mybfunc_gate(b)					if(b)												// 扉:真の時 ※使わない
+#define Mybfunc_iif(b)					(b == true) ? true: false							// 条件文から真偽を返す
+#define Mybfunc_iifEx(b ,t ,f)			(b == true) ? t: f									// 条件文から真偽を返す(真偽引数)
+#define Mybfunc_WhenBiggerSet(o ,src)	if(o > src) {o = src;}								// srcよりoが大きいとき設定する
+#define Mybfunc_WhenSmallerSet(o ,src)	if(o < src) {o = src;}								// srcよりoが小さいとき設定する
 #define Mybfunc_swap(lhs,rhs,tmp)		do{tmp = rhs; rhs = lhs; lhs = tmp;}while(false);	// 交換
 #define Mybfunc_bit_clear(lhs,rhs)		(lhs &= ~(1 << rhs))
 #define Mybfunc_bit_set(lhs,rhs)		(lhs |= (1 << rhs))
@@ -224,9 +224,9 @@ typedef unsigned int       FILE_SIZE;		// ファイルデータサイズ
 typedef char *             FILE_DATA;		// ファイルデータ
 typedef const char *       OPEN_MODE;		// ファイルを開くモード
 
-typedef const INT          CINT;
-typedef const UINT         CUINT;
-typedef const FLOAT        CFLOAT;
+typedef const INT          CINT;			// コンストINT
+typedef const UINT         CUINT;			// コンスト符号なしINT
+typedef const FLOAT        CFLOAT;			// コンストFLOAT
 
 
 // ビットフィールド
