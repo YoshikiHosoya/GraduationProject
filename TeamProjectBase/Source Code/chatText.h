@@ -47,6 +47,7 @@ public:
 	static void InputText(void);
 	static void SetChatKeyInfo(int nKeyID);
 	static void SetChatShiftKeyInfo(int nKeyID);
+	static void PressKey(int nKeyID, bool bShift);
 
 private:
 	static LPD3DXFONT	m_pFont;				// フォント情報格納用
@@ -55,6 +56,7 @@ private:
 	static std::string	m_cSendText;			// 送るための文字列
 	static D3DXCOLOR	m_textColor;			// テキストのカラー
 	static int			m_nCntPress;			// 長押しのカウンタ
+	static int			m_nPressKey;
 };
 
 #endif
