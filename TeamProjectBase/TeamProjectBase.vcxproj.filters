@@ -216,6 +216,9 @@
     <ClCompile Include="Source Code\module_parts_key.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\PaintingPen.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Source Code\client.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\module_parts_key.h">
       <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PaintingPen.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\client.h">
       <Filter>ヘッダー ファイル</Filter>

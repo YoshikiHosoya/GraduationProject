@@ -28,40 +28,13 @@
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
 INTEGER2    CPicture::m_nNumPolyBlock   = MYLIB_INT2_UNSET;		// ポリゴン数(ずらす大きさの設定後2倍にする)
-UINT        CPicture::m_nNumVertex      = MYLIB_INT_UNSET;		// 総頂点数
-UINT        CPicture::m_nNumIndex       = MYLIB_INT_UNSET;		// 総インデックス数
-UINT        CPicture::m_nNumPolygon     = MYLIB_INT_UNSET;		// 総ポリゴン数
 FLOAT2      CPicture::m_size            = MYLIB_2DVECTOR_ZERO;	// 大きさ
-FLOAT2      CPicture::m_sizeShift       = MYLIB_2DVECTOR_ZERO;	// ずらす大きさ
-
-//-------------------------------------------------------------------------------------------------------------
-// メッシュ情報のコンストラクタ
-//-------------------------------------------------------------------------------------------------------------
-CPicture::MESHINFO::MESHINFO()
-{
-	pVtexBuff = nullptr;								// 頂点バッファのポインタ
-	pIdxBuff = nullptr;								// インデックスのバッファのポインタ
-	pTexture = nullptr;								// テクスチャのポインタ}
-}
-
-//-------------------------------------------------------------------------------------------------------------
-// メッシュ情報のデストラクタ
-//-------------------------------------------------------------------------------------------------------------
-CPicture::MESHINFO::~MESHINFO()
-{
-	// 頂点バッファの開放
-	if (pVtexBuff != nullptr)
-	{
-		pVtexBuff->Release();
-		pVtexBuff = nullptr;
-	}
-	// インデックスバッファの開放
-	if (pIdxBuff != nullptr)
-	{
-		pIdxBuff->Release();
-		pIdxBuff = nullptr;
-	}
-}
+D3DXMATRIX* CPicture::m_pMtxView = nullptr;
+D3DXMATRIX* CPicture::m_pMtxProj = nullptr;
+INTEGER2    CPicture::m_MousePos = MYLIB_INT2_UNSET;
+INTEGER2    CPicture::m_ScreenPos = INTEGER2(SCREEN_WIDTH, SCREEN_HEIGHT);
+D3DXVECTOR3 CPicture::m_PlaneNor = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+D3DXVECTOR2 CPicture::m_PixelSize = MYLIB_VEC2_UNSET;
 
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
@@ -85,21 +58,11 @@ HRESULT CPicture::Load(void)
 #endif // _DEBUG
 		return E_FAIL;
 	}
+	CCamera *pCamera = CManager::GetRenderer()->GetCamera();
+	m_pMtxView = pCamera->GetMtxView();
+	m_pMtxProj = pCamera->GetMtxProjection();
 
-	// ずらす大きさを設定
-	m_sizeShift = m_size / m_nNumPolyBlock;
-
-	// ポリゴン数を2倍にする
-	m_nNumPolyBlock *= 2;
-	
-	// 総数の設定
-	m_nNumVertex  = (m_nNumPolyBlock.nX + 1) * (m_nNumPolyBlock.nY + 1);								// 総頂点数
-	m_nNumIndex   = (m_nNumPolyBlock.nX * 2 + 2) * m_nNumPolyBlock.nY + ((m_nNumPolyBlock.nY - 1) * 2);	// 総インデックス数
-	m_nNumPolygon = (m_nNumPolyBlock.nX * m_nNumPolyBlock.nY) * 2 + (m_nNumPolyBlock.nY - 1) * 4;		// 総ポリゴン数
-
-
-	int nNewIndex = (m_nNumPolyBlock.nX * 2 + 2) * m_nNumPolyBlock.nY + ((m_nNumPolyBlock.nY - 1) * 2);
-
+	m_PixelSize = m_size / m_nNumPolyBlock;
 	return S_OK;
 }
 
@@ -109,11 +72,9 @@ HRESULT CPicture::Load(void)
 void CPicture::InitStaticMember(void)
 {
 	m_nNumPolyBlock = MYLIB_INT2_UNSET;		// ポリゴン数(ずらす大きさの設定後2倍にする)
-	m_nNumVertex    = MYLIB_INT_UNSET;		// 総頂点数
-	m_nNumIndex     = MYLIB_INT_UNSET;		// 総インデックス数
-	m_nNumPolygon   = MYLIB_INT_UNSET;		// 総ポリゴン数
 	m_size          = MYLIB_2DVECTOR_ZERO;	// 大きさ
-	m_sizeShift     = MYLIB_2DVECTOR_ZERO;	// ずらす大きさ
+	m_pMtxView = nullptr;
+	m_pMtxProj = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -125,20 +86,20 @@ void CPicture::MatrixCal(void)
 	D3DXMATRIX mtxRot, mtxTrans;
 
 	// マトリックスの初期化
-	m_mesh.trans.Identity();
+	trans.Identity();
 
 	// スケールの反映
-	m_mesh.trans.mtxWorld.m[0][0] = m_mesh.trans.scal.x;
-	m_mesh.trans.mtxWorld.m[1][1] = m_mesh.trans.scal.y;
-	m_mesh.trans.mtxWorld.m[2][2] = m_mesh.trans.scal.z;
+	trans.mtxWorld.m[0][0] = trans.scal.x;
+	trans.mtxWorld.m[1][1] = trans.scal.y;
+	trans.mtxWorld.m[2][2] = trans.scal.z;
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_mesh.trans.rot.y, m_mesh.trans.rot.x, m_mesh.trans.rot.z);
-	D3DXMatrixMultiply(&m_mesh.trans.mtxWorld, &m_mesh.trans.mtxWorld, &mtxRot);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, trans.rot.y, trans.rot.x, trans.rot.z);
+	D3DXMatrixMultiply(&trans.mtxWorld, &trans.mtxWorld, &mtxRot);
 
 	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_mesh.trans.pos.x, m_mesh.trans.pos.y, m_mesh.trans.pos.z);
-	D3DXMatrixMultiply(&m_mesh.trans.mtxWorld, &m_mesh.trans.mtxWorld, &mtxTrans);
+	D3DXMatrixTranslation(&mtxTrans, trans.pos.x, trans.pos.y, trans.pos.z);
+	D3DXMatrixMultiply(&trans.mtxWorld, &trans.mtxWorld, &mtxTrans);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -154,13 +115,14 @@ HRESULT CPicture::Init()
 	m_Flags.cValue = MASK_DISP;
 
 	try
-	{	// 頂点情報の作成
+	{	// テクスチャの作成
+		MakeTexture(pDevice);
+		// 頂点情報の作成
 		MakeVertex(pDevice);
-		// インデックス情報の作成
-		MakeIndex(pDevice);
 	}
 	catch (HRESULT rh)
 	{// 例外を返す
+		std::cout << "例外が発生しました。\n";
 		return rh;
 	}
 	return S_OK;
@@ -172,16 +134,10 @@ HRESULT CPicture::Init()
 void CPicture::Uninit()
 {
 	// 頂点バッファの取得
-	if (m_mesh.pVtexBuff != nullptr)
+	if (pVtexBuff != nullptr)
 	{
-		m_mesh.pVtexBuff->Release();
-		m_mesh.pVtexBuff = nullptr;
-	}
-	// インデックスバッファの取得
-	if (m_mesh.pIdxBuff != nullptr)
-	{
-		m_mesh.pIdxBuff->Release();
-		m_mesh.pIdxBuff = nullptr;
+		pVtexBuff->Release();
+		pVtexBuff = nullptr;
 	}
 }
 
@@ -191,16 +147,60 @@ void CPicture::Uninit()
 void CPicture::Update()
 {
 	// 変数宣言
-	//CMouse  *pMouse = CManager::GetMouse();
-	//CCamera *pCamera = CManager::GetRenderer()->GetCamera();
-	//INTEGER2 MousePos(pMouse->GetMousePoint().x, pMouse->GetMousePoint().y);
-	//INTEGER2 ScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	CMouse  *pMouse = CManager::GetMouse();
+	INTEGER2 MousePos(pMouse->GetMousePoint().x, pMouse->GetMousePoint().y);
+	FLOAT3 StartPos;
+	FLOAT3 EndPos;
+	VEC3 Ray;
+	CMylibrary::CalScreenRay(&Ray, &StartPos, &EndPos,&MousePos, &m_ScreenPos, (MATRIX*)m_pMtxView,(MATRIX*)m_pMtxProj);
+	D3DXVECTOR3 pos;
+	CMylibrary::CalIntersectionPointToPlaneAndLine(&pos, &trans.pos, &m_PlaneNor, &StartPos, &Ray);
 
-	//FLOAT3 StartPos;
-	//FLOAT3 EndPos;
-	//VEC3 Ray;
-	//CMylibrary::CalScreenRay(&Ray, &StartPos, &EndPos,&MousePos, &ScreenSize, &(MATRIX)pCamera->GetMtxView(),&(MATRIX)pCamera->GetMtxProjection());
+	if (pMouse->GetPress(0))
+	{
 
+#ifdef _DEBUG
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, "マウスのワールド座標 == [%.3f][%.3f][%.3f]\n", pos.x, pos.y, pos.z);
+#endif
+
+		if (trans.pos.x < pos.x && pos.x < trans.pos.x + m_size.x &&
+			trans.pos.y > pos.y && pos.y > trans.pos.y - m_size.y)
+		{
+#ifdef _DEBUG
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "X軸Y軸に入っている\n");
+#endif
+			D3DXVECTOR2 PicturePos = { pos.x - trans.pos.x,trans.pos.y - pos.y };
+
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "マウスの絵上の座標 == [%.3f][%.3f]\n", PicturePos.x, PicturePos.y);
+
+			float fNumX = PicturePos.x / m_PixelSize.x;
+			float fNumY = PicturePos.y / m_PixelSize.y;
+			int nNumX = (int)fNumX;
+			int nNumY = (int)fNumY;
+
+			D3DXCOLOR *data;
+			D3DLOCKED_RECT LockRect;
+			m_pTexture->LockRect(0, &LockRect, NULL, 0);
+			data = (D3DXCOLOR*)LockRect.pBits;
+			for (int nY = 0; nY < m_nNumPolyBlock.nY; nY++)
+			{
+				for (int nX = 0; nX < m_nNumPolyBlock.nX; nX++)
+				{
+					D3DXVECTOR2 PixelPos = {
+						nX * m_PixelSize.x + m_PixelSize.x * 0.5f,
+						nY * m_PixelSize.y + m_PixelSize.y * 0.5f };
+					D3DXVECTOR2 Dist = PixelPos - PicturePos;
+					float fSize = 20.0f;
+					if (Dist.x * Dist.x + Dist.y * Dist.y <= fSize)
+					{
+						*data = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+					}
+					data++;
+				}
+			}
+			m_pTexture->UnlockRect(0);
+		}
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -208,32 +208,28 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
-	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
+	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
 	//デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_mesh.trans.mtxWorld);
+	pDevice->SetTransform(D3DTS_WORLD, &trans.mtxWorld);
 
 	//頂点バッファをデバイスのデータストリームにバインド
-	pDevice->SetStreamSource(0, m_mesh.pVtexBuff, 0, sizeof(VERTEX_3D));
-
-	//インデックスバッファをデバイスのデータストリームにバインド
-	pDevice->SetIndices(m_mesh.pIdxBuff);
+	pDevice->SetStreamSource(0, pVtexBuff, 0, sizeof(VERTEX_3D));
 
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	//テクスチャの設定
-	pDevice->SetTexture(0, m_mesh.pTexture);
+	pDevice->SetTexture(0, m_pTexture);
 
 	// ポリゴンの描画
-	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0,
-		m_nNumVertex,			//使用する頂点数
-		0,						//頂点の読み取りを開始する位置
-		m_nNumPolygon);			//ポリゴンの枚数
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//プリミティブの種類
+		0,					//開始するインデックス(頂点)
+		2);					//ポリゴンの枚数
 
-	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
+	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -257,17 +253,58 @@ std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVEC
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// テクスチャの作成
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
+{
+#if 1
+	if (FAILED(pDevice->CreateTexture(m_nNumPolyBlock.nX, m_nNumPolyBlock.nY, 1, 0, D3DFMT_A32B32G32R32F,
+		D3DPOOL_MANAGED, &m_pTexture, NULL)))
+	{
+		throw E_FAIL;
+	}
+#else
+	if (D3DXCreateTextureFromFile(pDevice, m_TextureFile.Get(), &m_pTexture) != S_OK)
+	{
+		throw E_FAIL;
+	}
+#endif
+	D3DXCOLOR *data;
+	//RECT           Rect;
+	D3DLOCKED_RECT LockRect;
+	HRESULT hr = m_pTexture->LockRect(0, &LockRect, NULL, 0);
+	data = (D3DXCOLOR*)LockRect.pBits;
+	for (int nY = 0; nY < m_nNumPolyBlock.nY; nY++)
+	{
+		for (int nX = 0; nX < m_nNumPolyBlock.nX; nX++)
+		{
+			if (nX == 0 || nX == m_nNumPolyBlock.nX - 1 ||
+				nX == 0 || nY == m_nNumPolyBlock.nY - 1)
+			{
+				*data = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
+			}
+			else
+			{
+				*data = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+			data++;
+		}
+	}
+	m_pTexture->UnlockRect(0);
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // 頂点情報の作成
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::MakeVertex(LPDIRECT3DDEVICE9 pDevice)
 {
 	// 頂点バッファを生成
 	if (FAILED(pDevice->CreateVertexBuffer(
-		sizeof(VERTEX_3D) * m_nNumVertex,
+		sizeof(VERTEX_3D) * 4,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,									// 頂点フォーマット
 		D3DPOOL_MANAGED,
-		&m_mesh.pVtexBuff,
+		&pVtexBuff,
 		NULL)))
 	{
 		throw E_FAIL;
@@ -278,16 +315,16 @@ void CPicture::MakeVertex(LPDIRECT3DDEVICE9 pDevice)
 	FLOAT2    sizeUpdate = MYLIB_2DVECTOR_ZERO;		// 更新する大きさ
 
 	// 頂点データの範囲ロックし、頂点バッファへのポインタ取得
-	m_mesh.pVtexBuff->Lock(0, 0, (void**)&pVtx, 0);
+	pVtexBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 縦の四角形の個数分
-	for (int nCntVertical = 0; nCntVertical < m_nNumPolyBlock.nY + 1; nCntVertical++)
+	for (int nCntVertical = 0; nCntVertical < 2; nCntVertical++)
 	{
 		// 横の四角形の個数分
-		for (int nCntHeng = 0; nCntHeng < m_nNumPolyBlock.nX + 1; nCntHeng++)
+		for (int nCntHeng = 0; nCntHeng < 2; nCntHeng++)
 		{
 			// 位置の設定
-			pVtx[0].pos = D3DXVECTOR3(sizeUpdate.x, -sizeUpdate.y, MYLIB_INT_UNSET);
+			pVtx[0].pos = D3DXVECTOR3(sizeUpdate.x, sizeUpdate.y, MYLIB_INT_UNSET);
 			// 法線の設定
 			pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 			// 色の設定
@@ -297,75 +334,15 @@ void CPicture::MakeVertex(LPDIRECT3DDEVICE9 pDevice)
 			// 頂点ポインタのインクリメント
 			pVtx++;
 			// 更新する大きさX軸を加算
-			if (nCntHeng % 2 == 0)
-			{
-				sizeUpdate.x += m_sizeShift.x;
-			}
+			sizeUpdate.x += m_size.x;
 		}
 		// 更新する大きさX軸の初期化
 		sizeUpdate.x = MYLIB_FLOAT_UNSET;
 		// 更新する大きさY軸を加算
-		if (nCntVertical % 2 == 0)
-		{
-			sizeUpdate.y += m_sizeShift.y;
-		}
+		sizeUpdate.y -= m_size.y;
 	}
 	// 頂点データをアンロック
-	m_mesh.pVtexBuff->Unlock();
-}
-
-//-------------------------------------------------------------------------------------------------------------
-// インデックス情報の作成
-//-------------------------------------------------------------------------------------------------------------
-void CPicture::MakeIndex(LPDIRECT3DDEVICE9 pDevice)
-{
-	// インデックスバッファの生成
-	if (FAILED(pDevice->CreateIndexBuffer(
-		sizeof(WORD) * m_nNumIndex,
-		D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,
-		D3DPOOL_MANAGED,
-		&m_mesh.pIdxBuff,
-		NULL)))
-	{
-		throw E_FAIL;
-	}
-
-	// インデックスデータへのポインタ
-	WORD *pIdx;
-
-	// インデックスバッファをロックし、インデックスバッファのポインタ取得
-	m_mesh.pIdxBuff->Lock(0, 0, (void**)&pIdx, 0);
-
-	// インデックスの設定
-	// 奥行の個数
-	for (int nCntVertical = 0; nCntVertical < m_nNumPolyBlock.nY ; nCntVertical++)
-	{
-		// 最初だけはいらないようにするため
-		if (nCntVertical > 0)
-		{
-			// 縮退ポリゴン分
-			pIdx[0] = (nCntVertical*(m_nNumPolyBlock.nX + 1) + m_nNumPolyBlock.nX + 1);
-			pIdx++;
-		}
-		// 横の個数
-		for (int nCntInd = 0; nCntInd < m_nNumPolyBlock.nX + 1; nCntInd++)
-		{
-			// 縮退ポリゴンを除いた分
-			pIdx[0] = nCntVertical*(m_nNumPolyBlock.nX + 1) + nCntInd + m_nNumPolyBlock.nX + 1;
-			pIdx[1] = nCntVertical*(m_nNumPolyBlock.nX + 1) + nCntInd;
-			pIdx += 2;
-		}
-		// 最後だけ入らないようにする
-		if (nCntVertical < m_nNumPolyBlock.nY - 1)
-		{
-			// 縮退ポリゴン分
-			pIdx[0] = (nCntVertical*(m_nNumPolyBlock.nX + 1) + m_nNumPolyBlock.nX);
-			pIdx++;
-		}
-	}
-	// インデックスバッファをアンロック
-	m_mesh.pIdxBuff->Unlock();
+	pVtexBuff->Unlock();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -375,6 +352,8 @@ void CPicture::ReadFromLine(CONST_STRING Line)
 {
 	INTEGER2    NumPoly = MYLIB_INT2_UNSET;
 	D3DXVECTOR2 size    = MYLIB_2DVECTOR_ZERO;
+	char aFileName[MYLIB_STRINGSIZE] = { '\0' };
+
 	if (sscanf(Line, "NumPolygon = %d %d", &NumPoly.nX , &NumPoly.nY) == 2)
 	{
 		m_nNumPolyBlock = NumPoly;
