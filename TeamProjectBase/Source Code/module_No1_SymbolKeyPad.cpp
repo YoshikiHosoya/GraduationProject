@@ -8,8 +8,8 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_keypad.h"
-#include "module_parts_key.h"
+#include "module_No1_SymbolKeyPad.h"
+#include "module_parts_No1_SymbolKey.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -32,7 +32,7 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_KeyPad::CModule_KeyPad()
+CModule_No1_SymbolKeyPad::CModule_No1_SymbolKeyPad()
 {
 	m_pKeyPadList = {};
 	m_nNextSymbolNum = 0;
@@ -41,23 +41,23 @@ CModule_KeyPad::CModule_KeyPad()
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_KeyPad::~CModule_KeyPad()
+CModule_No1_SymbolKeyPad::~CModule_No1_SymbolKeyPad()
 {
 	m_pKeyPadList.clear();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_KeyPad::Init()
+HRESULT CModule_No1_SymbolKeyPad::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO1));
 
 	//ランプ生成
 	CModule_Base::CreateLamp();
 
 	//答えのパターンをランダムで設定
-	m_Answer = (CModule_KeyPad::ANSWER_PATTERN)(rand() & CModule_KeyPad::ANSWER_6);
+	m_Answer = (CModule_No1_SymbolKeyPad::ANSWER_PATTERN)(rand() & CModule_No1_SymbolKeyPad::ANSWER_6);
 
 	//キーパッド生成
 	CreateKeyPad(m_Answer);
@@ -71,28 +71,28 @@ HRESULT CModule_KeyPad::Init()
 //------------------------------------------------------------------------------
 //終了処理
 //------------------------------------------------------------------------------
-void CModule_KeyPad::Uninit()
+void CModule_No1_SymbolKeyPad::Uninit()
 {
 	CSceneX::Uninit();
 }
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_KeyPad::Update()
+void CModule_No1_SymbolKeyPad::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_KeyPad::Draw()
+void CModule_No1_SymbolKeyPad::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_KeyPad::ShowDebugInfo()
+void CModule_No1_SymbolKeyPad::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -101,7 +101,7 @@ void CModule_KeyPad::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_KeyPad::Operation()
+void CModule_No1_SymbolKeyPad::Operation()
 {
 	static int nSelectNum = 0;
 
@@ -130,7 +130,7 @@ void CModule_KeyPad::Operation()
 			//次のシンボルと同じシンボルだった時
 			if (m_nNextSymbolNum == m_pKeyPadList[nSelectNum]->GetSymbolNum())
 			{
-				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_Key::KEYPAD_STATE::CLEAR);
+				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_No1_SymbolKey::KEYPAD_STATE::CLEAR);
 				m_nNextSymbolNum++;
 
 				//クリアしたかチェック
@@ -138,7 +138,7 @@ void CModule_KeyPad::Operation()
 			}
 			else
 			{	//失敗
-				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_Key::KEYPAD_STATE::FAILED);
+				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_No1_SymbolKey::KEYPAD_STATE::FAILED);
 				CModule_Base::Module_Failed();
 			}
 		}
@@ -169,7 +169,7 @@ void CModule_KeyPad::Operation()
 //------------------------------------------------------------------------------
 //キーパッド生成
 //------------------------------------------------------------------------------
-void CModule_KeyPad::CreateKeyPad(ANSWER_PATTERN answer)
+void CModule_No1_SymbolKeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 {
 	//シンボルのナンバーのリスト
 	std::vector<int> nAllSymbolPatternList(24);
@@ -229,7 +229,7 @@ void CModule_KeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 		Value.nY = nCnt / 3;
 
 		//キー生成
-		m_pKeyPadList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_Key>
+		m_pKeyPadList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No1_SymbolKey>
 			(KEYPAD_OFFSET + D3DXVECTOR3(	-KEYPAD_INTERVAL.x + KEYPAD_INTERVAL.x * Value.nX,
 											KEYPAD_INTERVAL.y - KEYPAD_INTERVAL.y * Value.nY, 0.0f), GetMtxWorldPtr()));
 
@@ -242,11 +242,11 @@ void CModule_KeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 //------------------------------------------------------------------------------
 //クリアしたかチェック
 //------------------------------------------------------------------------------
-void CModule_KeyPad::CheckClear()
+void CModule_No1_SymbolKeyPad::CheckClear()
 {
 	//クリアに必要なキー数に達したかどうか
 	if (std::count_if(m_pKeyPadList.begin(), m_pKeyPadList.end(),
-		[](std::shared_ptr<CModule_Parts_Key> &vec) {return (vec->GetClearFlag()); }) >= KEYPAD_NEED_CLEAR_KEY_NUM)
+		[](std::shared_ptr<CModule_Parts_No1_SymbolKey> &vec) {return (vec->GetClearFlag()); }) >= KEYPAD_NEED_CLEAR_KEY_NUM)
 	{
 		//モジュールクリア
 		CModule_Base::Module_Clear();

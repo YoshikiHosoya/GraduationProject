@@ -17,19 +17,12 @@
 class CTimer;
 class CScene3D;
 
-class CModule_Parts_Key : public CModule_Parts_Base
+class CModule_Parts_No2_ShapeKey : public CModule_Parts_Base
 {
 public:
 
-	enum class KEYPAD_STATE
-	{
-		NORMAL,
-		FAILED,
-		CLEAR,
-	};
-
-	CModule_Parts_Key();
-	virtual ~CModule_Parts_Key();
+	CModule_Parts_No2_ShapeKey();
+	virtual ~CModule_Parts_No2_ShapeKey();
 
 	virtual HRESULT Init()			override;			//初期化
 	virtual void Uninit()			override;			//終了
@@ -37,20 +30,15 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetSymbol(int nSymbol);
-	void SetKeypadState(KEYPAD_STATE keypadstate);
+	void SetShape(int nShape);
 
-	KEYPAD_STATE GetKeyPadState()				{ return m_KeyPadState; };
-	int GetSymbolNum()							{ return m_nSymbolNum; };
+	int GetShape() { return m_nShapeNum; };
+
+	int GetSymbolNum()							{ return m_nShapeNum; };
 protected:
 
 private:
-	std::unique_ptr<CScene3D> m_pLight;			//ライト
-	std::shared_ptr<CScene3D> m_pSymbol;		//シンボル
-
-	KEYPAD_STATE m_KeyPadState;					//ライトの状態
-	int m_nCntLampCnt;							//ライト用のカウント
-	int m_nSymbolNum;							//シンボルの番号
-
+	std::shared_ptr<CScene3D> m_pShape;			//シンボル
+	int m_nShapeNum;							//シンボルの番号
 };
 #endif

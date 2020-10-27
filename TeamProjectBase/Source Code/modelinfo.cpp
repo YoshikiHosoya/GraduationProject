@@ -16,17 +16,19 @@ std::vector<std::shared_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//爆弾関係
-	{ "data/MODEL/BombBox/bombbox.x" ,					MODEL_BOMBBOX },					//爆弾
+	{ "data/MODEL/BombBox/bombbox.x" ,					MODEL_BOMBBOX },									//爆弾
 
 	//モジュール
-	{ "data/MODEL/test/test_module.x" ,					MODEL_MODULE_DEFAULT },				//モジュール
-	{ "data/MODEL/test/test_module_none.x" ,			MODEL_MODULE_NONE },				//モジュール　何もないやつ　茶色の
-	{ "data/MODEL/BombTimer/BombTimer.x" ,				MODEL_MODULE_TIMER },				//タイマー
-	{ "data/MODEL/ButtonParts/ButtonParts.x" ,			MODEL_MODULE_KEYPAD },				//キーパッド
+	{ "data/MODEL/test/test_module.x" ,					MODEL_MODULE_DEFAULT },								//モジュール
+	{ "data/MODEL/test/test_module_none.x" ,			MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
+	{ "data/MODEL/BombTimer/BombTimer.x" ,				MODEL_MODULE_TIMER },								//タイマー
+	{ "data/MODEL/ButtonParts/ButtonParts.x" ,			MODEL_MODULE_NO1 },									//キーパッド
+	{ "data/MODEL/ButtonModule/Module2.x" ,				MODEL_MODULE_NO2 },									//キーパッド
 
 	//モジュールのパーツ
-	{ "data/MODEL/Lamp/Lamp.x" ,					MODEL_MODULEPARTS_CLEARLAMP },			//ランプ
-	{ "data/MODEL/ButtonParts/button.x" ,			MODEL_MODULEPARTS_KEYPAD },				//キーパッド
+	{ "data/MODEL/Lamp/Lamp.x" ,						MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
+	{ "data/MODEL/ButtonParts/button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
+	{ "data/MODEL/ButtonModule/button2.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
 
 };
 

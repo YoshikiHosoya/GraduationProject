@@ -17,7 +17,9 @@
 #include "module_none.h"
 #include "module_timer.h"
 #include "module_Button.h"
-#include "module_keypad.h"
+#include "module_No1_SymbolKeyPad.h"
+#include "module_No2_ShapeKeypad.h"
+
 //------------------------------------------------------------------------------
 //Ã“Iƒƒ“ƒo•Ï”‚Ì‰Šú‰»
 //------------------------------------------------------------------------------
@@ -270,7 +272,7 @@ void CBomb::CreateModule_Random(int const nModuleNum)
 		case CModule_Base::MODULE_TYPE::KEYPAD:
 			if (nCntModule < m_nModuleNum)
 			{
-				CBomb::CreateModuleOne<CModule_KeyPad>();
+				CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
 				m_nModuleNum++;
 			}
 			break;
@@ -292,9 +294,9 @@ void CBomb::CreateModuleDebug()
 	//1”Ô–Ú
 	CBomb::CreateModuleOne<CModule_Timer>();
 	//2”Ô–Ú
-	CBomb::CreateModuleOne<CModule_KeyPad>();
+	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
 	//3”Ô–Ú
-	CBomb::CreateModuleOne<CModule_KeyPad>();
+	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
 	//4”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
 	//5”Ô–Ú

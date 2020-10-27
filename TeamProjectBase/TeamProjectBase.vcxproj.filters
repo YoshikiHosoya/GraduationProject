@@ -210,12 +210,6 @@
     <ClCompile Include="Source Code\picture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module_keypad.cpp">
-      <Filter>Bomb\module</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\module_parts_key.cpp">
-      <Filter>Bomb\module_parts</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\client.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -230,6 +224,18 @@
     </ClCompile>
     <ClCompile Include="Source Code\polygon2D.cpp">
       <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No1_SymbolKeyPad.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No1_SymbolKey.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No2_ShapeKEypad.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp">
+      <Filter>Bomb\module_parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,12 +410,6 @@
     <ClInclude Include="Source Code\picture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module_keypad.h">
-      <Filter>Bomb\module</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\module_parts_key.h">
-      <Filter>Bomb\module_parts</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\client.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -424,6 +424,18 @@
     </ClInclude>
     <ClInclude Include="Source Code\polygon2D.h">
       <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No1_SymbolKeyPad.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No1_SymbolKey.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No2_ShapeKEypad.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
