@@ -17,12 +17,13 @@ CSceneBase::CSceneBase()
 	//èâä˙âª
 	m_pos = ZeroVector3;
 	m_size = ZeroVector3;
-	m_scale = ZeroVector3;
 	m_rot = ZeroVector3;
 	m_col = WhiteColor;
+	m_scale = OneVector3;
 	m_bLighting = true;
 	D3DXMatrixIdentity(&m_mtxWorld);
 	m_pParentMtx = nullptr;
+	m_bDisp = true;
 	m_pVtxBuff = nullptr;
 	m_pTexture = nullptr;
 }

@@ -84,6 +84,7 @@ public:
 		ptr->Init();
 
 		//Scene‚Éƒ|ƒCƒ“ƒ^‚ð“n‚·
+		ptr->SetObjType(objtype);
 		ptr->AddSharedList(ptr);
 		return ptr;
 	}
