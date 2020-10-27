@@ -23,6 +23,7 @@
 // クラス定義
 // ===================================================================
 class CPolygon2D;
+class CChatText;
 
 class CChatTab : public CChatBase
 {
@@ -66,6 +67,7 @@ private:
 
 	CPolygon2D	*m_pPolyBack;		// 背景タブのポリゴン
 	CPolygon2D	*m_pPolyTab;		// 開閉タブのポリゴン
+	static CChatText	*m_pChatText;		// テキスト
 	static TABSTATE m_tabState;		// タブの状態
 	int m_nCntState;				// 状態管理のカウンタ
 	static D3DXVECTOR2 m_TabPos;	// タブの親座標

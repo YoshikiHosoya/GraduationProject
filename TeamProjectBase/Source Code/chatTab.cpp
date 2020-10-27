@@ -11,6 +11,7 @@
 #include "keyboard.h"
 #include "texture.h"
 #include "polygon2D.h"
+#include "chatText.h"
 #include "ImGui/imgui.h"			// Imguiの実装に必要
 #include "ImGui/imgui_impl_dx9.h"	// Imguiの実装に必要
 #include "ImGui/imgui_impl_win32.h"	// Imguiの実装に必要
@@ -31,8 +32,9 @@
 //=============================================================================
 // 静的メンバ変数の初期化
 //=============================================================================
-D3DXVECTOR2 CChatTab::m_TabPos = ZeroVector2;
-CChatTab::TABSTATE CChatTab::m_tabState = CChatTab::TABSTATE_CLOSED;
+D3DXVECTOR2			CChatTab::m_TabPos		= ZeroVector2;
+CChatTab::TABSTATE	CChatTab::m_tabState	= CChatTab::TABSTATE_CLOSED;
+CChatText			* CChatTab::m_pChatText = nullptr;
 
 //=============================================================================
 // コンストラクタ
@@ -169,6 +171,10 @@ HRESULT CChatTab::Init(void)
 	m_pPolyTab->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
 	m_pPolyTab->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
 
+	// チャットテキストの生成
+	m_pChatText = new CChatText;
+	m_pChatText->Init();
+
 	return S_OK;
 }
 
@@ -189,6 +195,14 @@ void CChatTab::Uninit(void)
 		m_pPolyTab->Uninit();
 		delete m_pPolyTab;
 		m_pPolyTab = nullptr;
+	}
+
+	// テキストの終了
+	if (m_pChatText)
+	{
+		m_pChatText->Uninit();
+		delete m_pChatText;
+		m_pChatText = nullptr;
 	}
 }
 
@@ -215,6 +229,8 @@ void CChatTab::Update(void)
 
 	if (m_pPolyTab)
 		m_pPolyTab->Update();
+
+	CChatText::InputText();
 }
 
 //=============================================================================
@@ -227,4 +243,6 @@ void CChatTab::Draw(void)
 
 	if (m_pPolyTab)
 		m_pPolyTab->Draw();
+
+	CChatText::Draw();
 }
