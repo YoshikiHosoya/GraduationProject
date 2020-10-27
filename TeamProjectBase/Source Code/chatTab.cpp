@@ -263,7 +263,8 @@ void CChatTab::Update(void)
 	
 	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
 	{
-		m_pBoxBack[nCnt]->Update();
+		if (m_pBoxBack[nCnt])
+			m_pBoxBack[nCnt]->Update();
 	}
 
 	// タブが開いているときのみ、文字を入力できる
@@ -284,7 +285,8 @@ void CChatTab::Draw(void)
 
 	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
 	{
-		m_pBoxBack[nCnt]->Draw();
+		if (m_pBoxBack[nCnt])
+			m_pBoxBack[nCnt]->Draw();
 	}
 
 	CChatText::Draw();

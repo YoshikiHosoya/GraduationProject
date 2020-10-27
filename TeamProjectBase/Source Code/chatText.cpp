@@ -383,7 +383,9 @@ void CChatText::SendChatText(void)
 	// 先頭の文字列を上書き
 	strcpy(m_cKeepText[0], m_cSendText.c_str());
 	// 送信
-	CClient::Send((char*)m_cSendText.c_str());
+	std::thread t2(CClient::Send, (char*)m_cSendText.c_str());
+	t2.detach();
+
 	// チャットタブに保存
 	CChatTab::AddTextBox((char*)m_cSendText.c_str());
 	// 文字列を破棄
