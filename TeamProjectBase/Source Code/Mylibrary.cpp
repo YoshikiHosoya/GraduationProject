@@ -1435,7 +1435,7 @@ float CMylibrary::calSegmentPosDist2D(const SEGMENT_2D & Seg1, const D3DXVECTOR2
 bool CMylibrary::calCapsuleSphere2D(const CAPSULE_2D & Cap1, const D3DXVECTOR2 & pos)
 {
 	// 変数宣言
-	return (calSegmentPosDist2D(Cap1.Segment, pos) <= Cap1.fRadius);
+	return (CalPointSegmentDist2D(pos, Cap1.Segment) <= Cap1.fRadius);
 }
 
 //* [contents] スクリーン座標をワールド座標に変換

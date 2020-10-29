@@ -84,7 +84,8 @@ HRESULT CGame::Init(HWND hWnd)
 //------------------------------------------------------------------------------
 void CGame::Uninit()
 {
-	CPicture::InitStaticMember();
+	// ピクチャの静的メンバの終了
+	CPicture::UninitStaticMember();
 
 	// チャットの破棄
 	m_pChatBase->Uninit();

@@ -1228,8 +1228,51 @@ public:
 	/* * •¶š—ñ‚Ìİ’è(İ’è‚µ‚Ä‚¢‚½ê‡‚ÍÄİ’è‚·‚é) */
 	inline void Set(STRING string);
 	inline void Set(CONST_STRING string);
+	inline STRING operator = (CONST_STRING string)
+	{
+		this->Set(string);
+		return this->m_string;
+	}
+
+	/* * •¶š—ñ‚ğ’Ç‰Á‚·‚é */
+	inline STRING operator += (CONST_STRING string)
+	{
+		if (m_string == NULL) {
+			this->Set(string);
+		}
+		else {
+			// •¶š—ñ‚Ì’·‚³‚ğ‰ÁZ
+			this->m_nStringLength += strlen(string);
+			// 
+			STRING str = new char[this->m_nStringLength];
+			strcpy(str, this->m_string);
+			strcat(str, string);
+			delete[]this->m_string;
+			this->m_string = nullptr;
+
+			this->m_string = new char[this->m_nStringLength];
+			strcpy(this->m_string, str);
+			delete[]str;
+			str = nullptr;
+		}
+		return this->m_string;
+	}
+
+	/* * •¶š—ñ‚ğ‡¬‚·‚é(MAX256) */
+	inline void Synthesize(char * fmt, ...)
+	{
+		char aStr[256];
+		aStr[0] = '\0';
+		va_list list;
+		va_start(list, fmt);
+		vsprintf(aStr, fmt, list);
+		va_end(list);
+		*this += aStr;
+	}
+
 	/* * •¶š—ñ‚Ìæ“¾ */
 	inline STRING Get(void);
+
 	/* * ƒTƒCƒY‚Ìæ“¾ */
 	inline int & size(void);
 private:

@@ -126,9 +126,9 @@ void CPaintingPen::SetCapsule(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::PaintBrush(D3DXCOLOR * pCol)
 {
-	pCol->r = 1.0f;
-	pCol->g = 1.0f;
-	pCol->b = 1.0f;
+	pCol->r = 0.0f;
+	pCol->g = 0.0f;
+	pCol->b = 0.0f;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ void CPaintingPen::PaintBrush(D3DXCOLOR * pCol)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::PaintEraser(D3DXCOLOR * pCol)
 {
-	pCol->r = 0.0f;
-	pCol->g = 0.0f;
-	pCol->b = 0.0f;
+	pCol->r = 1.0f;
+	pCol->g = 1.0f;
+	pCol->b = 1.0f;
 }
