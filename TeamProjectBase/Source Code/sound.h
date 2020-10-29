@@ -42,9 +42,10 @@ public:
 		LABEL_MAX,
 	} LABEL;
 
-	HRESULT Init(HWND hWnd);
-	void Uninit(void);
+	CSound();
+	~CSound();
 
+	HRESULT Init(HWND hWnd);
 	HRESULT Play(LABEL label);
 
 	void Stop(LABEL label);

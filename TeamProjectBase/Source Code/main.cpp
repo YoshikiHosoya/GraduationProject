@@ -43,7 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 
-	//_CrtSetBreakAlloc(8768);
+	//ブレークポイント検出用
+	//_CrtSetBreakAlloc(15371);
 
 	//乱数のシード値を初期化
 	srand((unsigned)time(NULL));

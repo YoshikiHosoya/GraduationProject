@@ -49,7 +49,6 @@ public:
 
 
 	HRESULT Init();				//初期化
-	inline void Uninit() {}		//終了
 	void Update();				//更新
 	void Draw();				//描画
 	void ShowDebugInfo();		//デバッグ情報表記

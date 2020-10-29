@@ -120,40 +120,33 @@ void CManager::Uninit()
 	//メモリ開放
 	if (m_pRenderer)
 	{	//レンダラー
-		m_pRenderer->Uninit();
 		m_pRenderer.reset();
 	}
 
 	if (m_pKeyboard)
 	{	//キーボード
-		m_pKeyboard->Uninit();
 		m_pKeyboard.reset();
 	}
 
 	if (m_pMouse)
 	{	//マウス
-		m_pMouse->Uninit();
 		m_pMouse.reset();
 	}
 
 	if (m_pXInput)
 	{	//ゲームパッド
-		m_pXInput->Uninit();
 		m_pXInput.reset();
 	}
 	if (m_pBaseMode)
 	{
 		//モード
-		m_pBaseMode->Uninit();
 		m_pBaseMode.reset();
-
 	}
 
 	if (m_pSound)
-	{//サウンド
-		m_pSound->Uninit();
+	{
+		//サウンド
 		m_pSound.reset();
-		m_pSound = nullptr;
 	}
 }
 //------------------------------------------------------------------------------
@@ -222,9 +215,6 @@ void CManager::SetMode(MODE nextmode)
 	//nullcheck
 	if (m_pBaseMode)
 	{
-		//終了処理
-		m_pBaseMode->Uninit();
-
 		//メモリ開放
 		m_pBaseMode.reset();
 		std::cout << "delete BaseMode" << NEWLINE;;
@@ -248,35 +238,35 @@ void CManager::SetMode(MODE nextmode)
 	case MODE_TITLE:
 		m_pBaseMode.reset(new CTitle);
 		std::cout << "new BaseMode[Title]" << NEWLINE;
-		m_pSound->Play(CSound::LABEL_BGM_TITLE);
+		//m_pSound->Play(CSound::LABEL_BGM_TITLE);
 		break;
 
 		//game
 	case MODE_GAME:
 		m_pBaseMode.reset(new CGame);
 		std::cout << "new BaseMode[Game]" << NEWLINE;
-		m_pSound->Play(CSound::LABEL_BGM_GAME);
+		//m_pSound->Play(CSound::LABEL_BGM_GAME);
 		break;
 
 		//result
 	case MODE_RESULT:
 		m_pBaseMode.reset(new CResult);
 		std::cout << "new BaseMode[result]" << NEWLINE;
-		m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
 		//result
 	case MODE_TEST:
 		m_pBaseMode.reset(new CTestMode);
 		std::cout << "new BaseMode[CTestMode]" << NEWLINE;
-		m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
 		//result
 	case MODE_EFFECT_VIEWER:
 		m_pBaseMode.reset(new CDebug_EffectViewer);
 		std::cout << "new BaseMode[CTestMode]" << NEWLINE;
-		m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
 		//gameend

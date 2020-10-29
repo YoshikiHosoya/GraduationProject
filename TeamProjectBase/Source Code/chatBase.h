@@ -31,7 +31,6 @@ public:
 	~CChatBase();
 
 	virtual HRESULT Init(void);			// 初期化
-	virtual void Uninit(void);			// 終了
 	virtual void Update(void);			// 更新
 	virtual void Draw(void);			// 描画
 	virtual void ShowDebugInfo() {};		//デバッグ情報表記

@@ -18,6 +18,7 @@
 #include "Map.h"
 #include "ParticleManager.h"
 #include "picture.h"
+#include "scene2D.h"
 #include "chatBase.h"
 #include "light.h"
 #include "client.h"
@@ -45,6 +46,11 @@ CGame::CGame()
 CGame::~CGame()
 {
 	m_pBomb.reset();
+
+	// ピクチャの静的メンバの終了
+	CPicture::UninitStaticMember();
+
+	CClient::UninitClient();
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -79,19 +85,6 @@ HRESULT CGame::Init(HWND hWnd)
 	return S_OK;
 }
 
-//------------------------------------------------------------------------------
-//終了処理
-//------------------------------------------------------------------------------
-void CGame::Uninit()
-{
-	// ピクチャの静的メンバの終了
-	CPicture::UninitStaticMember();
-
-	// チャットの破棄
-	m_pChatBase->Uninit();
-
-	CClient::UninitClient();
-}
 
 //------------------------------------------------------------------------------
 //更新処理
@@ -139,6 +132,11 @@ void CGame::UpdateState()
 	case CGame::STATE_PAUSE:
 		break;
 	case CGame::STATE_GAMEOVER:
+		if (m_nCntState <= 0)
+		{
+			SetState(CGame::STATE_NONE);
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT, BlackColor);
+		}
 		break;
 	case CGame::STATE_GAMECLEAR:
 		if (m_nCntState <= 0)
@@ -177,6 +175,8 @@ void CGame::SetState(STATE state)
 		case CGame::STATE_PAUSE:
 			break;
 		case CGame::STATE_GAMEOVER:
+			m_nCntState = 120;
+			CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(SCREEN_CENTER_POS, SCREEN_SIZE, BlackColor, nullptr, CScene::OBJTYPE_FRONT);
 			break;
 		case CGame::STATE_GAMECLEAR:
 			m_nCntState = 120;

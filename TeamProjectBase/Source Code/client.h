@@ -30,7 +30,7 @@ public:
 	static int main(void);				// メイン処理
 	static HRESULT InitClient(void);	// 初期化
 	static void UninitClient(void);		// 強制終了
-	static void ErrorReport(int err);	// エラーレポート
+	static void ErrorReport(void);	// エラーレポート
 
 	static bool &GetAccepting(void) { return m_bConnecting; }
 	static void SetAccepting(bool bConnect) { m_bConnecting = bConnect; }

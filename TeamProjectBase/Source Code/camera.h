@@ -30,7 +30,6 @@ public:
 	CCamera();
 	~CCamera();
 	void Init();															//初期化
-	void Uninit();															//終了
 	void Update();															//更新
 	void SetCamera();														//カメラ設定
 

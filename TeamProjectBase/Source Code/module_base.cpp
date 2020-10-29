@@ -13,7 +13,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "camera.h"
-
+#include "Bomb.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -70,6 +70,13 @@ void CModule_Base::Module_Clear()
 	{
 		m_pLamp->SetLampState(CModule_Parts_Lamp::LAMP_STATE::GREEN);
 	}
+
+	//ボムのポインタが開放されていないか
+	if (!m_pBomb.expired())
+	{
+		//クリアチェック
+		m_pBomb.lock()->ModuleClearCheck();
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -81,6 +88,13 @@ void CModule_Base::Module_Failed()
 	if (m_pLamp)
 	{
 		m_pLamp->SetLampState(CModule_Parts_Lamp::LAMP_STATE::RED);
+	}
+
+	//ボムのポインタが開放されていないか
+	if (!m_pBomb.expired())
+	{
+		//モジュールミスった
+		m_pBomb.lock()->ModuleMiss();
 	}
 }
 

@@ -38,7 +38,6 @@ public:
 	CFade();
 	~CFade();
 	void Init();									//フェードの初期化処理
-	void Uninit();									//フェードの終了処理
 	void Update();									//フェードの更新処理
 	void Draw();									//フェードの描画処理
 	static std::unique_ptr<CFade> Create();			//生成処理

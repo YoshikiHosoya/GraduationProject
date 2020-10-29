@@ -187,13 +187,7 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-//終了処理
-//------------------------------------------------------------------------------
-void CRenderer::Uninit()
-{
 
-}
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
@@ -295,7 +289,7 @@ void CRenderer::Draw()
 		if (m_bDispDebugProcInfo)
 		{
 			//デバッグテキストの表示
-			CDebugProc::Draw();
+			m_pDebugProc->Draw();
 		}
 
 		//ImGuiの情報表示する時
@@ -314,7 +308,7 @@ void CRenderer::Draw()
 		}
 
 		//debugproc用の文字列開放
-		CDebugProc::ResetStr();
+		m_pDebugProc->ResetStr();
 
 		//ワイヤーフレーム描画の時は元に戻す
 		CHossoLibrary::CheckWireMode();

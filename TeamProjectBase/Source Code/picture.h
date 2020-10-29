@@ -47,7 +47,6 @@ public:
 	inline           CPicture() :CScene(){}																	// コンストラクタ
 	inline           ~CPicture();																			// デストラクタ
 	HRESULT          Init();																				// 初期化
-	void             Uninit();																				// 終了
 	void             Update();																				// 更新
 	void             Draw();																				// 描画
 	inline void      ShowDebugInfo() {};																	// デバッグ情報表記

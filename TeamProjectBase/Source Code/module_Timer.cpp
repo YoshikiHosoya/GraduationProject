@@ -23,8 +23,9 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define TIMER_OFFSET_POS			(D3DXVECTOR3(0.0f,-8.0f,-2.0f))
-#define MISSCOUNTER_OFFSET_POS		(D3DXVECTOR3(-5.0f,22.0f,-33.0f))
+#define MISSCOUNTER_OFFSET_POS		(D3DXVECTOR3(-5.0f,22.0f,-32.0f))
 #define MISSCOUNTER_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
+#define MISSCOUNTER_INTERVAL		(D3DXVECTOR3(13.0f,0.0f,0.0f))
 
 
 //------------------------------------------------------------------------------
@@ -61,9 +62,10 @@ HRESULT CModule_Timer::Init()
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
-		m_pMissCounter.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(MISSCOUNTER_OFFSET_POS + D3DXVECTOR3(nCnt * 12.0f,0.0f,0.0f), MISSCOUNTER_SIZE, RedColor, nullptr, OBJTYPE_MODULE_PARTS_SYMBOL));
+		m_pMissCounter.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(MISSCOUNTER_OFFSET_POS + D3DXVECTOR3(nCnt * MISSCOUNTER_INTERVAL.x,0.0f,0.0f), MISSCOUNTER_SIZE, RedColor, nullptr, OBJTYPE_MODULE_PARTS_SYMBOL));
 		m_pMissCounter[m_pMissCounter.size() - 1]->SetParentMtxPtr(GetMtxWorldPtr());
 		m_pMissCounter[m_pMissCounter.size() - 1]->SetLighting(false);
+		m_pMissCounter[m_pMissCounter.size() - 1]->SetDisp(false);
 
 	}
 
@@ -71,13 +73,7 @@ HRESULT CModule_Timer::Init()
 	CSceneX::Init();
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-//終了処理
-//------------------------------------------------------------------------------
-void CModule_Timer::Uninit()
-{
-	CSceneX::Uninit();
-}
+
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
@@ -93,6 +89,30 @@ void CModule_Timer::Update()
 void CModule_Timer::Draw()
 {
 	CSceneX::Draw();
+}
+
+//------------------------------------------------------------------------------
+//ミスのカウントアップ
+//------------------------------------------------------------------------------
+bool CModule_Timer::MissCountUp()
+{
+	m_nMissCount++;
+
+	//上限まで行ったときはreturn
+	if (CHossoLibrary::RangeLimit_Equal(m_nMissCount,0,2))
+	{
+		return true;
+	}
+	else
+	{
+		//ミスした分
+		for (int nCnt = 0; nCnt < m_nMissCount; nCnt++)
+		{
+			//表示する
+			m_pMissCounter[nCnt]->SetDisp(true);
+		}
+	}
+	return false;
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記

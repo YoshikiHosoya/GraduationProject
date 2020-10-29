@@ -46,7 +46,6 @@ public:
 	};
 
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	//‰Šú‰»
-	void Uninit(void);								//I—¹
 	void Update(void);								//XV
 
 	bool GetTrigger(XINPUT_KEY Button,size_t Frame);

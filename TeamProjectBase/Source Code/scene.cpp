@@ -55,26 +55,6 @@ void CScene::ReleaseAll()
 {
 	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 	{
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
-		{
-			//nullcheck
-			if (m_UniqueSceneList[nCntObjType][nCntElement])
-			{
-				//終了
-				m_UniqueSceneList[nCntObjType][nCntElement]->Uninit();
-			}
-		}
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[nCntObjType].size(); nCntElement++)
-		{
-			//nullcheck
-			if (m_SharedSceneList[nCntObjType][nCntElement])
-			{
-				//終了
-				m_SharedSceneList[nCntObjType][nCntElement]->Uninit();
-			}
-		}
 		//全要素削除
 		m_UniqueSceneList[nCntObjType].clear();
 		m_SharedSceneList[nCntObjType].clear();
@@ -122,36 +102,11 @@ void CScene::UpdateAll()
 		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
 
-			//要素数分繰り返す
-			for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
-			{
-				//nullcheck
-				if (m_UniqueSceneList[nCntObjType][nCntElement])
-				{
-					//フラグ経ってるか確認
-					if (m_UniqueSceneList[nCntObjType][nCntElement]->m_bDeadFlag)
-					{
-						//要素の削除
-						m_UniqueSceneList[nCntObjType][nCntElement]->Uninit();
-						m_UniqueSceneList[nCntObjType].erase(m_UniqueSceneList[nCntObjType].begin() + nCntElement);
-					}
-				}
-			}
-			//要素数分繰り返す
-			for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[nCntObjType].size(); nCntElement++)
-			{
-				//nullcheck
-				if (m_SharedSceneList[nCntObjType][nCntElement])
-				{
-					//フラグ経ってるか確認
-					if (m_SharedSceneList[nCntObjType][nCntElement]->m_bDeadFlag)
-					{
-						//要素の削除
-						m_SharedSceneList[nCntObjType][nCntElement]->Uninit();
-						m_SharedSceneList[nCntObjType].erase(m_SharedSceneList[nCntObjType].begin() + nCntElement);
-					}
-				}
-			}
+			std::remove_if(m_UniqueSceneList[nCntObjType].begin(), m_UniqueSceneList[nCntObjType].end(),
+				[](U_ptr<CScene> &ptr) {return ptr->GetDeleteFlag(); });
+
+			std::remove_if(m_SharedSceneList[nCntObjType].begin(), m_SharedSceneList[nCntObjType].end(),
+				[](S_ptr<CScene> ptr) {return ptr->GetDeleteFlag(); });
 		}
 	}
 	//パーティクルの頂点IDリセット
@@ -262,26 +217,6 @@ void CScene::ShowDebugInfoAll()
 //----------------------------------------------------------------------------
 void CScene::ReleaseSpecificObject(OBJTYPE objtype)
 {
-	//要素数分繰り返す
-	for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[objtype].size(); nCntElement++)
-	{
-		//nullcheck
-		if (m_UniqueSceneList[objtype][nCntElement])
-		{
-			//更新処理
-			m_UniqueSceneList[objtype][nCntElement]->Uninit();
-		}
-	}
-	//要素数分繰り返す
-	for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[objtype].size(); nCntElement++)
-	{
-		//nullcheck
-		if (m_SharedSceneList[objtype][nCntElement])
-		{
-			//更新処理
-			m_SharedSceneList[objtype][nCntElement]->Uninit();
-		}
-	}
 	//全要素削除
 	m_UniqueSceneList[objtype].clear();
 	m_SharedSceneList[objtype].clear();
