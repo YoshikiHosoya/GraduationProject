@@ -17,8 +17,8 @@
 // ê√ìIÉÅÉìÉoïœêîÇÃèâä˙âª
 //-------------------------------------------------------------------------------------------------------------
 CPictureUI::CREATEINFO CPictureUI::m_aCreateInfo[CPictureUI::TYPE_MAX] = {
-	{ D3DXVECTOR3(650.0f,150.0f,0.0f),D3DXVECTOR3(120.0f,120.0f,0.0f),D3DXCOLOR(1.0f,1.0f,1.0f,0.5f),nullptr,CScene::OBJTYPE_UI },
-	{ D3DXVECTOR3(650.0f,360.0f,0.0f),D3DXVECTOR3(120.0f,120.0f,0.0f),D3DXCOLOR(1.0f,1.0f,1.0f,0.5f),nullptr,CScene::OBJTYPE_UI },
+	{ D3DXVECTOR3(1200.0f,150.0f,0.0f),D3DXVECTOR3(120.0f,120.0f,0.0f),D3DXCOLOR(1.0f,1.0f,1.0f,0.5f),nullptr,CScene::OBJTYPE_UI },
+	{ D3DXVECTOR3(1200.0f,360.0f,0.0f),D3DXVECTOR3(120.0f,120.0f,0.0f),D3DXCOLOR(1.0f,1.0f,1.0f,0.5f),nullptr,CScene::OBJTYPE_UI },
 };
 
 //-------------------------------------------------------------------------------------------------------------
