@@ -298,9 +298,12 @@ void CHossoLibrary::CalcShadowMatrix(D3DXMATRIX & rShadowMtx, D3DXVECTOR3 const 
 	D3DXMatrixShadow(&rShadowMtx, &ShadowLightVec, &planeField);
 }
 
-D3DXVECTOR3 CHossoLibrary::CalcMtxToVector3(D3DXMATRIX * pMtx)
+//------------------------------------------------------------------------------
+//マトリックスから座標上表をreturnする
+//------------------------------------------------------------------------------
+D3DXVECTOR3 CHossoLibrary::CalcMtxToVector3(D3DXMATRIX const & rMtx)
 {
-	return D3DXVECTOR3(pMtx->_41, pMtx->_42, pMtx->_43);
+	return D3DXVECTOR3(rMtx._41, rMtx._42, rMtx._43);
 }
 
 //------------------------------------------------------------------------------

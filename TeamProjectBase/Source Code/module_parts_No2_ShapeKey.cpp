@@ -23,7 +23,7 @@
 //------------------------------------------------------------------------------
 //É}ÉNÉç
 //------------------------------------------------------------------------------
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-7.0f))
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
 #define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
 #define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 

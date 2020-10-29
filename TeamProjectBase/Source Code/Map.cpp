@@ -12,7 +12,6 @@
 #include "renderer.h"
 #include "manager.h"
 #include "meshfield.h"
-#include "meshsphere.h"
 #include "sound.h"
 //------------------------------------------------------------------------------
 //É}ÉNÉç

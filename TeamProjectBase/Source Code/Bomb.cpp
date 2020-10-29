@@ -67,6 +67,31 @@ void CBomb::Update()
 {
 	CSceneX::Update();
 
+	//////std::cout << typeid(m_pModuleList[0].get());
+	//std::cout << "m_pModuleList[0]" << "Name >> " << typeid(m_pModuleList[0]).name() << NEWLINE;
+	//std::cout << "m_pModuleList[0]" << "RawName >> " << typeid(m_pModuleList[0]).raw_name() << NEWLINE;
+
+	//std::cout << "m_pModuleList[0].get()" << "Name >> " <<typeid(m_pModuleList[0].get()).name() << NEWLINE;
+	//std::cout << "m_pModuleList[0].get()" << "RawName > " << typeid(m_pModuleList[0].get()).raw_name() << NEWLINE;
+
+	//std::cout << "*m_pModuleList[0]" << "Name >> " << typeid(*m_pModuleList[0]).name() << NEWLINE;
+	//std::cout << "*m_pModuleList[0]" << "RawName >> " << typeid(*m_pModuleList[0]).raw_name() << NEWLINE;
+
+	//std::cout << "*m_pModuleList[0].get()" << "Name >> " << typeid(*m_pModuleList[0].get()).name() << NEWLINE;
+	//std::cout << "*m_pModuleList[0].get()" << "RawName >> " << typeid(*m_pModuleList[0].get()).raw_name() << NEWLINE;
+
+	//std::cout << NEWLINE;
+
+	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
+		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });
+
+	if (itr != m_pModuleList.end())
+	{
+		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダウンキャスト
+
+		//pTimer->
+	}
+
 	ModuleClearCheck();
 }
 //------------------------------------------------------------------------------
@@ -172,10 +197,10 @@ void CBomb::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //生成関数
 //------------------------------------------------------------------------------
-std::shared_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
+S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
 {
 	//メモリ確保
-	std::shared_ptr<CBomb> pBomb = std::make_shared<CBomb>();
+	S_ptr<CBomb> pBomb = std::make_shared<CBomb>();
 
 	//初期化
 	pBomb->Init();
@@ -204,7 +229,7 @@ void CBomb::ModuleClearCheck()
 {
 	//クリアフラグの個数がモジュール数以上になった時
 	if (std::count_if(m_pModuleList.begin(), m_pModuleList.end(),
-		[](std::shared_ptr<CModule_Base> pModule) {return pModule->GetModuleClearFlag(); }) >= m_nModuleNum)
+		[](S_ptr<CModule_Base> pModule) {return pModule->GetModuleClearFlag(); }) >= m_nModuleNum)
 	{
 		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
 	}
@@ -222,6 +247,11 @@ void CBomb::CreateModule(int const nModuleNum)
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
 	//CreateModule_Random(m_nModuleNum);
+
+	for (auto &ptr : m_pModuleList)
+	{
+		//ptr->SetBombPtr(std::make_shared<CBomb>(this));
+	}
 
 //Debug用
 #ifdef _DEBUG

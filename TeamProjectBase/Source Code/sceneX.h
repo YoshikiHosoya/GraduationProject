@@ -41,11 +41,11 @@ public:
 	static int GetNumSceneX() { return m_nNumSceneX; };												//数取得
 
 
-	void BindModelInfo(std::shared_ptr<CModelInfo> pSceneXInfo) { m_SceneXInfo = pSceneXInfo; };	//モデルセット
+	void BindModelInfo(S_ptr<CModelInfo> pSceneXInfo) { m_SceneXInfo = pSceneXInfo; };	//モデルセット
 
 private:
 	static int m_nNumSceneX;									//総数カウント
-	std::shared_ptr<CModelInfo>	m_SceneXInfo;					//モデル情報
+	S_ptr<CModelInfo>	m_SceneXInfo;					//モデル情報
 	bool m_bSelecting;											//選択されている
 };
 #endif

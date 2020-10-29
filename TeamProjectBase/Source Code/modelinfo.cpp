@@ -10,10 +10,10 @@
 //-----------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //-----------------------------------------------------------------------------
-std::vector<std::shared_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
+Vec<S_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 
 //テクスチャ名の設定
-std::vector<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
+Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//爆弾関係
 	{ "data/MODEL/BombBox/bombbox.x" ,					MODEL_BOMBBOX },									//爆弾
@@ -106,7 +106,7 @@ void CModelInfo::ModelUnload()
 //-----------------------------------------------------------------------------
 //モデル取得
 //----------------------------------------------------------------------------
-std::shared_ptr<CModelInfo> CModelInfo::GetModelInfo(CModelInfo::MODEL_TYPE modeltype)
+S_ptr<CModelInfo> CModelInfo::GetModelInfo(CModelInfo::MODEL_TYPE modeltype)
 {
 	//サイズ分繰り返す
 	for (size_t nCnt = 0; nCnt < m_apModelList.size(); nCnt++)

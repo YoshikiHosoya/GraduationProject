@@ -15,6 +15,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Parts_Lamp;
+class CBomb;
 
 class CModule_Base : public CSceneX
 {
@@ -43,6 +44,7 @@ public:
 
 	void SetCanModuleSelect(bool bSelect) { m_bCanSelect = bSelect; };					//モジュールを選択できるか
 	void SetModuleType(MODULE_TYPE module) { m_ModuleType = module; };					//モジュールのタイプ設定
+	void SetBombPtr(std::weak_ptr<CBomb> pBombPtr) { m_pBomb = pBombPtr; };				//ボムのポインタ設定
 
 	CModule_Parts_Lamp *GetLampPtr() { return m_pLamp.get(); };							//ランプのポインタ取得
 	MODULE_TYPE GetModuleType() { return m_ModuleType; };								//モジュールの種類
@@ -57,10 +59,10 @@ public:
 	//モジュールの初期配置用の関数
 	//呼び出し時にクラス型を教えてあげる必要がある
 	//例) CModule_Base::Create<CModule_Timer>(...)
-	template <class Module> static std::shared_ptr<Module> Create_Module(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, D3DXMATRIX * const pBomb)
+	template <class Module> static S_ptr<Module> Create_Module(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, D3DXMATRIX * const pBomb)
 	{
 		//メモリ確保
-		std::shared_ptr<Module> pPtr = std::make_shared<Module>();
+		S_ptr<Module> pPtr = std::make_shared<Module>();
 
 		//初期化
 		pPtr->Init();
@@ -77,7 +79,8 @@ public:
 		return pPtr;
 	}
 private:
-	std::shared_ptr<CModule_Parts_Lamp> m_pLamp;				//ランプのポインタ
+	std::weak_ptr<CBomb> m_pBomb;								//爆弾のポインタ
+	S_ptr<CModule_Parts_Lamp> m_pLamp;							//ランプのポインタ
 	MODULE_TYPE m_ModuleType;									//モジュールの種類
 	bool	m_bModuleClearFlag;									//モジュールのクリアフラグ
 	bool	m_bCanSelect;										//選択できるモジュールか

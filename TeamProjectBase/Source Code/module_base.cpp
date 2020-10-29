@@ -54,7 +54,7 @@ void CModule_Base::CreateLamp()
 void CModule_Base::CameraApproach()
 {
 	//ƒJƒƒ‰‚ð‹ß‚Ã‚¯‚é
-	CManager::GetRenderer()->GetCamera()->ApproachCamera(GetPos());
+	CManager::GetRenderer()->GetCamera()->ApproachCamera(CHossoLibrary::CalcMtxToVector3(*GetMtxWorldPtr()));
 }
 
 //------------------------------------------------------------------------------

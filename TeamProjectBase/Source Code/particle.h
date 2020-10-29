@@ -88,9 +88,9 @@ private:
 	D3DXVECTOR3 *m_pPosOriginPtr;									//原点座標のポインタ 追従する時はこれを使う
 
 	//CCollision *m_pCollision;										//コリジョンのポインタ
-	std::unique_ptr<CParticleParam> m_pParticleParam;				//パーティクルの現在のパラメータのポインタ
+	U_ptr<CParticleParam> m_pParticleParam;				//パーティクルの現在のパラメータのポインタ
 
-	std::vector<std::unique_ptr<COneParticle>> m_pParticleList;		//パーティクルの構造体のリスト
+	Vec<U_ptr<COneParticle>> m_pParticleList;		//パーティクルの構造体のリスト
 	bool m_bDeleteFlag;												//消去フラグ
 
 	void SetParticle(D3DXVECTOR3 &pos, D3DXVECTOR3 const &rot, CParticleParam *pParam);				//パーティクル設定

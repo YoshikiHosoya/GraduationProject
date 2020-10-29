@@ -10,7 +10,7 @@
 //-----------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //-----------------------------------------------------------------------------
-std::vector<LPDIRECT3DTEXTURE9> CTexture::m_apTextureList = {};
+Vec<LPDIRECT3DTEXTURE9> CTexture::m_apTextureList = {};
 
 //テクスチャ名の設定
 FILENAME_LIST CTexture::m_aTexFileName =

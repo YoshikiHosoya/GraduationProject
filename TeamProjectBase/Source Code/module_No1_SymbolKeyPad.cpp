@@ -172,8 +172,8 @@ void CModule_No1_SymbolKeyPad::Operation()
 void CModule_No1_SymbolKeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 {
 	//シンボルのナンバーのリスト
-	std::vector<int> nAllSymbolPatternList(24);
-	std::vector<int> nSymbolNumList = {};
+	Vec<int> nAllSymbolPatternList(24);
+	Vec<int> nSymbolNumList = {};
 
 	//初期化
 	for (int nCnt = 0; nCnt < (int)nAllSymbolPatternList.size(); nCnt++)
@@ -246,7 +246,7 @@ void CModule_No1_SymbolKeyPad::CheckClear()
 {
 	//クリアに必要なキー数に達したかどうか
 	if (std::count_if(m_pKeyPadList.begin(), m_pKeyPadList.end(),
-		[](std::shared_ptr<CModule_Parts_No1_SymbolKey> &vec) {return (vec->GetClearFlag()); }) >= KEYPAD_NEED_CLEAR_KEY_NUM)
+		[](S_ptr<CModule_Parts_No1_SymbolKey> &vec) {return (vec->GetClearFlag()); }) >= KEYPAD_NEED_CLEAR_KEY_NUM)
 	{
 		//モジュールクリア
 		CModule_Base::Module_Clear();

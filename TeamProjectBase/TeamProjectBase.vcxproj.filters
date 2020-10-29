@@ -117,13 +117,7 @@
     <ClCompile Include="Source Code\scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\meshsphere.cpp">
-      <Filter>Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\meshfield.cpp">
-      <Filter>Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\meshcylinder.cpp">
       <Filter>Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\mesh.cpp">
@@ -149,9 +143,6 @@
     </ClCompile>
     <ClCompile Include="Source Code\texture.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\meshcircle.cpp">
-      <Filter>Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Map.cpp">
       <Filter>ソース ファイル</Filter>
@@ -237,6 +228,9 @@
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\PaintingPen.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\camera.h">
@@ -314,12 +308,6 @@
     <ClInclude Include="Source Code\meshfield.h">
       <Filter>Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\meshsphere.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\meshcylinder.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\multinumber.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -337,9 +325,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\Debug\debugproc.h">
       <Filter>Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\meshcircle.h">
-      <Filter>Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\texture.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -436,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h">
       <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PaintingPen.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
