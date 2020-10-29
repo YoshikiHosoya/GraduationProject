@@ -305,7 +305,7 @@ void CPicture::InitTextureColor(void)
 	// データの先頭を代入
 	pData = (D3DXCOLOR*)LockRect.pBits;
 	// データの設定
-	for (int nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
+	for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
 	{
 		*pData = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		pData++;

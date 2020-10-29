@@ -198,6 +198,7 @@
     <ClCompile Include="Source Code\ParticleManager.cpp" />
     <ClCompile Include="Source Code\ParticleParamater.cpp" />
     <ClCompile Include="Source Code\picture.cpp" />
+    <ClCompile Include="Source Code\pictureUI.cpp" />
     <ClCompile Include="Source Code\polygon2D.cpp" />
     <ClCompile Include="Source Code\renderer.cpp" />
     <ClCompile Include="Source Code\result.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Source Code\ParticleManager.h" />
     <ClInclude Include="Source Code\ParticleParamater.h" />
     <ClInclude Include="Source Code\picture.h" />
+    <ClInclude Include="Source Code\pictureUI.h" />
     <ClInclude Include="Source Code\polygon2D.h" />
     <ClInclude Include="Source Code\renderer.h" />
     <ClInclude Include="Source Code\Resource\resource.h" />
