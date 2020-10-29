@@ -26,7 +26,6 @@ public:
 	virtual ~CModule_Parts_No2_ShapeKey();
 
 	virtual HRESULT Init()			override;			//初期化
-	virtual void Uninit()			override;			//終了
 	virtual void Update()			override;			//更新
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記

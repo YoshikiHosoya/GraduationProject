@@ -27,7 +27,6 @@ public:
 	CLight();
 	~CLight();
 	void Init();								//初期化
-	void Uninit();								//終了
 	void Update();								//更新
 	void ShowLightInfo();						//imgui ライト情報表示
 

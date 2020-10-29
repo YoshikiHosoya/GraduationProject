@@ -38,7 +38,6 @@ public:
 	~CMouse();
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
 	void Update(void);
-	void Uninit(void);
 
 	/* ƒCƒ“ƒ‰ƒCƒ“ŠÖ” */
 	// ‰Ÿ‚µ‚Ä‚¢‚é‚Æ‚«

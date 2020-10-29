@@ -30,12 +30,13 @@ public:
 		PLACE_RIGHT,	//右
 		PLACE_MAX,		//
 	};
+	CDebugProc();
+	~CDebugProc();
 
 	HRESULT Init(HWND hWnd);							//初期化
-	void Uninit();										//終了
 	static void Print(PLACE place ,char* fmt, ...);		//デバッグ情報格納
-	static void Draw(void);								//描画
-	static void ResetStr();								//配列初期化
+	void Draw(void);								//描画
+	void ResetStr();								//配列初期化
 
 private:
 	static LPD3DXFONT m_pFont;							//フォントへのポインタ

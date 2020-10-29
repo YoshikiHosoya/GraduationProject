@@ -24,10 +24,12 @@ public:
 	virtual ~CModule_Timer();
 
 	virtual HRESULT Init()			override;							//初期化
-	virtual void Uninit()			override;							//終了
 	virtual void Update()			override;							//更新
 	virtual void Draw()				override;							//描画
 	virtual void ShowDebugInfo()	override;							//デバッグ情報表記
+
+	bool MissCountUp();										//ミスカウンターカウントアップ
+
 private:
 	U_ptr<CTimer> m_pTimer;									//タイマーのポインタ
 	Vec<S_ptr<CScene3D>> m_pMissCounter;				//ミスカウンターのポインタ

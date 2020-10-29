@@ -53,19 +53,15 @@ HRESULT CBomb::Init()
 	CSceneX::Init();
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-//終了処理
-//------------------------------------------------------------------------------
-void CBomb::Uninit()
-{
-	CSceneX::Uninit();
-}
+
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
 void CBomb::Update()
 {
 	CSceneX::Update();
+
+	CBomb::Operator();
 
 	//////std::cout << typeid(m_pModuleList[0].get());
 	//std::cout << "m_pModuleList[0]" << "Name >> " << typeid(m_pModuleList[0]).name() << NEWLINE;
@@ -81,18 +77,6 @@ void CBomb::Update()
 	//std::cout << "*m_pModuleList[0].get()" << "RawName >> " << typeid(*m_pModuleList[0].get()).raw_name() << NEWLINE;
 
 	//std::cout << NEWLINE;
-
-	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
-		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });
-
-	if (itr != m_pModuleList.end())
-	{
-		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダウンキャスト
-
-		//pTimer->
-	}
-
-	ModuleClearCheck();
 }
 //------------------------------------------------------------------------------
 //描画処理
@@ -109,6 +93,42 @@ void CBomb::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
+#endif //DEBUG
+}
+
+//------------------------------------------------------------------------------
+//生成関数
+//------------------------------------------------------------------------------
+S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
+{
+	//メモリ確保
+	S_ptr<CBomb> pBomb = std::make_shared<CBomb>();
+
+	//初期化
+	pBomb->Init();
+
+	//座標とサイズ設定
+	pBomb->SetPos(pos);
+	pBomb->SetRot(rot);
+
+	//モデル情報設定
+	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBBOX));
+
+	//モジュール生成
+	pBomb->CreateModule(nModuleNum);
+
+	//Scene側で管理
+	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
+	pBomb->AddSharedList(pBomb);
+
+	return pBomb;
+}
+
+//------------------------------------------------------------------------------
+//操作する
+//------------------------------------------------------------------------------
+void CBomb::Operator()
+{
 	//選択番号
 	//1F前の選択番号
 	int m_SelectNumOld = m_nSelectModuleNum;
@@ -191,35 +211,7 @@ void CBomb::ShowDebugInfo()
 		break;
 	}
 
-#endif //DEBUG
-}
 
-//------------------------------------------------------------------------------
-//生成関数
-//------------------------------------------------------------------------------
-S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
-{
-	//メモリ確保
-	S_ptr<CBomb> pBomb = std::make_shared<CBomb>();
-
-	//初期化
-	pBomb->Init();
-
-	//座標とサイズ設定
-	pBomb->SetPos(pos);
-	pBomb->SetRot(rot);
-
-	//モデル情報設定
-	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBBOX));
-
-	//モジュール生成
-	pBomb->CreateModule(nModuleNum);
-
-	//Scene側で管理
-	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
-	pBomb->AddSharedList(pBomb);
-
-	return pBomb;
 }
 
 //------------------------------------------------------------------------------
@@ -236,6 +228,31 @@ void CBomb::ModuleClearCheck()
 }
 
 //------------------------------------------------------------------------------
+//モジュールミスる
+//------------------------------------------------------------------------------
+void CBomb::ModuleMiss()
+{
+	//タイマーのクラスのイテレータ取得
+	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
+		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });
+
+	//イテレータが入ったかチェック
+	if (itr != m_pModuleList.end())
+	{
+		//タイマー型に変換
+		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダウンキャスト
+
+		//ミスカウントアップ
+		//全部ミスしたとき
+		if (pTimer->MissCountUp())
+		{
+			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------
 //モジュール生成
 //------------------------------------------------------------------------------
 void CBomb::CreateModule(int const nModuleNum)
@@ -248,15 +265,52 @@ void CBomb::CreateModule(int const nModuleNum)
 
 	//CreateModule_Random(m_nModuleNum);
 
-	for (auto &ptr : m_pModuleList)
-	{
-		//ptr->SetBombPtr(std::make_shared<CBomb>(this));
-	}
 
 //Debug用
 #ifdef _DEBUG
 	CreateModuleDebug();
 #endif //_DEBUG
+
+
+
+
+
+	//1番目
+	CBomb::CreateModuleOne<CModule_Timer>();
+	//2番目
+	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	//3番目
+	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
+	//4番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//5番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//6番目
+	CBomb::CreateModuleOne<CModule_None>();
+
+	//7番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//8番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//9番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//10番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//11番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//12番目
+	CBomb::CreateModuleOne<CModule_None>();
+
+
+
+
+
+	//生成したリスト全てに
+	for (auto &ptr : m_pModuleList)
+	{
+		//ボムのポインタ設定
+		ptr->SetBombPtr(shared_from_this());
+	}
 
 	//最初の選択番号設定
 	for (size_t nCnt = 0; nCnt < m_pModuleList.size(); nCnt++)
