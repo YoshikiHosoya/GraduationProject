@@ -43,6 +43,10 @@ public:
 	~CPictureUI();				// デストラクタ
 
 	static std::shared_ptr<CPictureUI>Create(void);	// 生成
+	
+	static void Load(void);		// 読み込み
+	static void Unload(void) {}	// 開放
+
 
 	HRESULT Init();				//初期化
 	inline void Uninit() {}		//終了
@@ -50,10 +54,13 @@ public:
 	void Draw();				//描画
 	void ShowDebugInfo();		//デバッグ情報表記
 
+	int GetPressedType(void) { return m_PressedType; }
+
 private:
+	bool Collision(CScene2D *pScene2D,int& nCntType);
 	static CREATEINFO m_aCreateInfo[TYPE_MAX];
-	std::shared_ptr<CScene2D> *m_pScene2D[TYPE_MAX];		// シーン2D
-
-
+	std::shared_ptr<CScene2D> m_pScene2D[TYPE_MAX];		// シーン2D
+	bool m_bIsOn[TYPE_MAX];
+	TYPE m_PressedType;
 };
 #endif

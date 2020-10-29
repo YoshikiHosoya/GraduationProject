@@ -44,6 +44,11 @@ public:
 		TEX_UI_TITLE,							//UI タイトル
 		TEX_UI_RESULT,							//UI リザルト
 
+		TEX_UI_BRUSHCURSOR,						// ブラシカーソル
+		TEX_UI_ERASERCURSOR,					// 消しゴムカーソル
+		TEX_UI_BRUSHBUTTON,						// ブラシ
+		TEX_UI_ERASERBUTTON,					// 消しゴム
+
 		TEX_MAX									//MAX
 	};
 

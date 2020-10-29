@@ -21,7 +21,7 @@ class CPaintingPen
 public:
 	typedef enum
 	{
-		MODE_NONE,										// 無し
+		MODE_NONE = - 1,										// 無し
 		MODE_BRUSH,										// ブラシ
 		MODE_ERASER,									// 消しゴム
 		MODE_MAX										// 最大
@@ -36,8 +36,6 @@ public:
 
 	void PaintCol(D3DXCOLOR *pCol);						// 色を塗る
 
-	inline void Set(MODE mode) { m_mode = mode; }		// 設定
-
 	void RayCalculation(CMouse *pMouse);				// レイの算出
 	void PosCalculation(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPlaneNor);// 位置を算出
 
@@ -46,6 +44,7 @@ public:
 	// 設定関数
 	void SetCapsule(void);
 	inline void SetPosOld(void) { m_posOld = m_pos; }
+	inline void SetMode(MODE mode) { m_mode = mode; }
 	// 取得関数
 	inline FLOAT2 *GetPos(void) { return &m_pos; }				// 位置の取得
 	inline FLOAT2 *GetPosOld(void) { return &m_posOld; }		// 前回位置の取得

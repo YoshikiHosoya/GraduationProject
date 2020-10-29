@@ -17,6 +17,7 @@
 // クラス定義
 //-------------------------------------------------------------------------------------------------------------
 class CPaintingPen;
+class CPictureUI;
 class CPicture : public CScene
 {
 public:
@@ -44,7 +45,7 @@ public:
 
 	/* メンバ関数 */
 	inline           CPicture() :CScene(){}																	// コンストラクタ
-	inline           ~CPicture() {}																			// デストラクタ
+	inline           ~CPicture();																			// デストラクタ
 	HRESULT          Init();																				// 初期化
 	void             Uninit();																				// 終了
 	void             Update();																				// 更新
@@ -88,21 +89,22 @@ private:
 	static void      TexterReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);// テクスチャ情報の1行から情報を読み取る
 
 	/* メンバ変数 */
-	static INTEGER2          m_nNumPixelBlock;			// ピクセル数
-	static FLOAT2            m_size;					// 大きさ
-	static D3DXVECTOR3       m_PlaneNor;				// 平面の法線
-	static D3DXVECTOR2       m_PixelSize;				// ピクセルサイズ
-	static UINT              m_nNumDataMax;				// 最大データ数
-	static CPaintingPen*     m_pPen;					// ペンのポインタ
-	static D3DXVECTOR2       m_PixelSizehalf;			// ピクセルサイズの半分
-	static D3DXVECTOR2*      m_pPixelPos;				// ピクセル位置のポインタ
-	static UINT              m_nNumMakeFile;			// ファイルを作った回数
-	LPDIRECT3DVERTEXBUFFER9  m_pVtexBuff;				// 頂点バッファのポインタ
-	LPDIRECT3DTEXTURE9       m_pTexture;				// テクスチャポインタ
-	UBITS_4                  m_Flags;					// フラグ
-	TRANSFORM                m_trans;					// トランス情報
-	MODE                     m_mode;					// モード
-	CString                  m_FileName;				// ファイル名
+	static INTEGER2             m_nNumPixelBlock;			// ピクセル数
+	static FLOAT2               m_size;					// 大きさ
+	static D3DXVECTOR3          m_PlaneNor;				// 平面の法線
+	static D3DXVECTOR2          m_PixelSize;				// ピクセルサイズ
+	static UINT                 m_nNumDataMax;				// 最大データ数
+	static CPaintingPen*        m_pPen;					// ペンのポインタ
+	static D3DXVECTOR2          m_PixelSizehalf;			// ピクセルサイズの半分
+	static D3DXVECTOR2*         m_pPixelPos;				// ピクセル位置のポインタ
+	static UINT                 m_nNumMakeFile;			// ファイルを作った回数
+	static std::shared_ptr<CPictureUI> m_pUi;						// UI
+	LPDIRECT3DVERTEXBUFFER9     m_pVtexBuff;				// 頂点バッファのポインタ
+	LPDIRECT3DTEXTURE9          m_pTexture;				// テクスチャポインタ
+	UBITS_4                     m_Flags;					// フラグ
+	TRANSFORM                   m_trans;					// トランス情報
+	MODE                        m_mode;					// モード
+	CString                     m_FileName;				// ファイル名
 };
 
 
