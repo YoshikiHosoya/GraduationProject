@@ -50,8 +50,10 @@ int CClient::main(void)
 	server.sin_addr.S_un.S_addr = inet_addr(IPADDRESS_SERVER);
 
 	// サーバに接続
-	connect(m_socket, (struct sockaddr *)&server, sizeof(server));
-	
+	if (connect(m_socket, (struct sockaddr *)&server, sizeof(server)) == 0)
+		// 要素の初期化
+		m_bConnecting = true;
+
 	while (1)
 	{
 		// 接続しない
@@ -87,9 +89,6 @@ int CClient::main(void)
 HRESULT CClient::InitClient(void)
 {
 	WSADATA wsaData;	// winsockのデータ
-
-	// 要素の初期化
-	m_bConnecting = true;
 
 	// サーバ・クライアント共通で開始時のみ、必ず行う
 	int err = WSAStartup(MAKEWORD(VERSION_WINSOCK, 0), &wsaData);
