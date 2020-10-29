@@ -246,7 +246,7 @@ void CBomb::ModuleMiss()
 		//‘S•”ƒ~ƒX‚µ‚½‚Æ‚«
 		if (pTimer->MissCountUp())
 		{
-			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
+			//CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
 		}
 	}
 }
