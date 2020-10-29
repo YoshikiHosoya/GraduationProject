@@ -30,6 +30,52 @@
 #endif
 
 //------------------------------------------------------------------------------
+// コンストラクタ
+//------------------------------------------------------------------------------
+CSound::CSound()
+{
+
+}
+
+//------------------------------------------------------------------------------
+// デストラクタ
+//------------------------------------------------------------------------------
+CSound::~CSound()
+{
+	// 一時停止
+	for (int nCntSound = 0; nCntSound < LABEL_MAX; nCntSound++)
+	{
+		if (m_apSourceVoice[nCntSound])
+		{
+			// 一時停止
+			m_apSourceVoice[nCntSound]->Stop(0);
+
+			// ソースボイスの破棄
+			m_apSourceVoice[nCntSound]->DestroyVoice();
+			m_apSourceVoice[nCntSound] = NULL;
+
+			// オーディオデータの開放
+			free(m_apDataAudio[nCntSound]);
+			m_apDataAudio[nCntSound] = NULL;
+		}
+	}
+
+	// マスターボイスの破棄
+	m_pMasteringVoice->DestroyVoice();
+	m_pMasteringVoice = NULL;
+
+	// XAudio2オブジェクトの開放
+	if (m_pXAudio2)
+	{
+		m_pXAudio2->Release();
+		m_pXAudio2 = NULL;
+	}
+
+	// COMライブラリの終了処理
+	CoUninitialize();
+}
+
+//------------------------------------------------------------------------------
 // 初期化処理
 //------------------------------------------------------------------------------
 HRESULT CSound::Init(HWND hWnd)
@@ -179,44 +225,7 @@ HRESULT CSound::Init(HWND hWnd)
 
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-// 終了処理
-//------------------------------------------------------------------------------
-void CSound::Uninit(void)
-{
-	// 一時停止
-	for (int nCntSound = 0; nCntSound < LABEL_MAX; nCntSound++)
-	{
-		if (m_apSourceVoice[nCntSound])
-		{
-			// 一時停止
-			m_apSourceVoice[nCntSound]->Stop(0);
 
-			// ソースボイスの破棄
-			m_apSourceVoice[nCntSound]->DestroyVoice();
-			m_apSourceVoice[nCntSound] = NULL;
-
-			// オーディオデータの開放
-			free(m_apDataAudio[nCntSound]);
-			m_apDataAudio[nCntSound] = NULL;
-		}
-	}
-
-	// マスターボイスの破棄
-	m_pMasteringVoice->DestroyVoice();
-	m_pMasteringVoice = NULL;
-
-	// XAudio2オブジェクトの開放
-	if (m_pXAudio2)
-	{
-		m_pXAudio2->Release();
-		m_pXAudio2 = NULL;
-	}
-
-	// COMライブラリの終了処理
-	CoUninitialize();
-
-}
 //------------------------------------------------------------------------------
 // 再生
 //------------------------------------------------------------------------------

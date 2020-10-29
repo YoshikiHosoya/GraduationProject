@@ -23,7 +23,6 @@ public:
 	virtual ~CInput();	//コンストラクタ
 
 	virtual HRESULT Init(HINSTANCE hInstance, HWND hWnd);	//初期化
-	virtual void Uninit();									//終了
 	virtual void Update() = 0;								//更新
 	LPDIRECTINPUT8 GetInput() { return m_pInput; };			//インプットデバイスの取得
 

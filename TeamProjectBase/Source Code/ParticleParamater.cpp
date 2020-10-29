@@ -29,7 +29,7 @@ FILENAME_LIST CParticleParam::m_aFileNameList =
 //	{ "data/Load/Effect/Creator/Default.txt" },
 //};
 
-//------------------------------------------------------------------------------
+//---------------------------------------------------------------------------8---
 //マクロ
 //------------------------------------------------------------------------------
 
@@ -93,10 +93,10 @@ HRESULT CParticleParam::LoadParticleDefaultParam()
 {
 	//ファイルポイント
 	FILE *pFile;
-	char cReadText[128];	//文字として読み取り用k
-	char cHeadText[128];	//比較する用
-	char cDie[128];			//不要な文字
-	int n_BoolValue;		//boolに変換するようの格納
+	char cReadText[128] = {};	//文字として読み取り用k
+	char cHeadText[128] = {};	//比較する用
+	char cDie[128] = {};		//不要な文字
+	int n_BoolValue = 0;		//boolに変換するようの格納
 	HRESULT hResult = S_OK;
 
 	CParticleParam *pParam;

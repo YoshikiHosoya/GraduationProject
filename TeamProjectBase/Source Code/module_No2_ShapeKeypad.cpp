@@ -93,13 +93,7 @@ HRESULT CModule_No2_ShapeKeyPad::Init()
 
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-//I—¹ˆ—
-//------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::Uninit()
-{
-	CSceneX::Uninit();
-}
+
 //------------------------------------------------------------------------------
 //XVˆ—
 //------------------------------------------------------------------------------
@@ -141,10 +135,10 @@ void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "CntState >> [%d]\n", m_nQuestionChangeCnt);
 
 
-	ImGui::DragFloat3("pos1", m_pKeyPadList[0]->GetPos(),0.05f);
-	ImGui::DragFloat3("pos2", m_pKeyPadList[1]->GetPos(), 0.05f);
-	ImGui::DragFloat3("pos3", m_pKeyPadList[2]->GetPos(), 0.05f);
-	ImGui::DragFloat3("pos4", m_pKeyPadList[3]->GetPos(), 0.05f);
+	//ImGui::DragFloat3("pos1", m_pKeyPadList[0]->GetPos(),0.05f);
+	//ImGui::DragFloat3("pos2", m_pKeyPadList[1]->GetPos(), 0.05f);
+	//ImGui::DragFloat3("pos3", m_pKeyPadList[2]->GetPos(), 0.05f);
+	//ImGui::DragFloat3("pos4", m_pKeyPadList[3]->GetPos(), 0.05f);
 
 #endif //DEBUG
 }

@@ -25,7 +25,6 @@ public:
 	CKeyboard();
 	~CKeyboard();
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd);	//初期化
-	void Uninit();									//終了
 	void Update();									//更新
 	bool GetPress(int nKey);						//プレス処理
 	bool GetTrigger(int nKey);						//トリガー処理

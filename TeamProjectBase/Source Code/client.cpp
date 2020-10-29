@@ -50,7 +50,7 @@ int CClient::main(void)
 
 	// ƒT[ƒo‚ÉÚ‘±
 	connect(m_socket, (struct sockaddr *)&server, sizeof(server));
-	
+
 	while (1)
 	{
 		// Ú‘±‚µ‚È‚¢

@@ -45,9 +45,9 @@ void CChatText::Init(void)
 		0,						// ミップマップレベルの数
 		FALSE,					// 文字の斜体化
 		SHIFTJIS_CHARSET,		// フォントの文字セット
-		OUT_DEFAULT_PRECIS, 
-		DEFAULT_QUALITY, 
-		DEFAULT_PITCH, 
+		OUT_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH,
 		CHARACTER_FONTNAME,		// 文字のフォント名
 		&m_pFont);				// 格納先
 
@@ -115,7 +115,7 @@ void CChatText::Draw(void)
 	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	// テキスト描画
-	m_pFont->DrawText(NULL, 
+	m_pFont->DrawText(NULL,
 		&m_cSendText[0],
 		-1,
 		&rect,
@@ -376,7 +376,7 @@ void CChatText::SendChatText(void)
 		if (nCnt == MAX_KEEPTEXT - 1)
 			strcpy(m_cKeepText[nCnt], "");
 		// 末尾以外は、一つ先の文字列を格納
-		else 
+		else
 			strcpy(m_cKeepText[nCnt + 1], m_cKeepText[nCnt]);
 	}
 

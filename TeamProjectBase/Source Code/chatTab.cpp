@@ -53,7 +53,33 @@ CChatTab::CChatTab()
 //=============================================================================
 CChatTab::~CChatTab()
 {
+	if (m_pPolyBack)
+	{
+		delete m_pPolyBack;
+		m_pPolyBack = nullptr;
+	}
 
+	if (m_pPolyTab)
+	{
+		delete m_pPolyTab;
+		m_pPolyTab = nullptr;
+	}
+
+	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
+	{
+		if (m_pBoxBack[nCnt])
+		{
+			delete m_pBoxBack[nCnt];
+			m_pBoxBack[nCnt] = nullptr;
+		}
+	}
+
+	// テキストの終了
+	if (m_pChatText)
+	{
+		delete m_pChatText;
+		m_pChatText = nullptr;
+	}
 }
 
 //=============================================================================
@@ -199,43 +225,6 @@ HRESULT CChatTab::Init(void)
 	return S_OK;
 }
 
-//=============================================================================
-// 終了
-//=============================================================================
-void CChatTab::Uninit(void)
-{
-	if (m_pPolyBack)
-	{
-		m_pPolyBack->Uninit();
-		delete m_pPolyBack;
-		m_pPolyBack = nullptr;
-	}
-
-	if (m_pPolyTab)
-	{
-		m_pPolyTab->Uninit();
-		delete m_pPolyTab;
-		m_pPolyTab = nullptr;
-	}
-
-	for (int nCnt = 0; nCnt < (int)m_pBoxBack.size(); nCnt++)
-	{
-		if (m_pBoxBack[nCnt])
-		{
-			m_pBoxBack[nCnt]->Uninit();
-			delete m_pBoxBack[nCnt];
-			m_pBoxBack[nCnt] = nullptr;
-		}
-	}
-
-	// テキストの終了
-	if (m_pChatText)
-	{
-		m_pChatText->Uninit();
-		delete m_pChatText;
-		m_pChatText = nullptr;
-	}
-}
 
 //=============================================================================
 // 更新

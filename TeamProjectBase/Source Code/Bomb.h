@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 class CModule_Base;
 
-class CBomb : public CSceneX
+class CBomb : public CSceneX , public std::enable_shared_from_this<CBomb>
 {
 public:
 
@@ -30,19 +30,20 @@ public:
 	virtual ~CBomb();
 
 	virtual HRESULT Init()			override;			//初期化
-	virtual void Uninit()			override;			//終了
 	virtual void Update()			override;			//更新
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
 	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
+	void Operator();							//操作
+	void ModuleClearCheck();
+	void ModuleMiss();							//モジュールミスった
 
 private:
 	int m_nModuleNum;																	//モジュール数
 	int m_nSelectModuleNum;																//選択しているモジュール数
 	Vec<S_ptr<CModule_Base>> m_pModuleList;												//モジュールのリスト
 
-	void ModuleClearCheck();
 
 	void CreateModule(int const nModuleNum);											//モジュール生成
 	void CreateModule_Random(int const nModuleNum);

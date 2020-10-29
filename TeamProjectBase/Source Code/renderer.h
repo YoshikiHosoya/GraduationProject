@@ -47,7 +47,6 @@ public:
 	~CRenderer();			//デストラクタ
 
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);		//初期化
-	void Uninit();													//終了
 	void Update();													//更新
 	void Draw();													//描画
 	void SetRendererCommand(RENDERER_COMMAND Command);				//レンダラー設定　ショートカット用

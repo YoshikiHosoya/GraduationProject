@@ -50,13 +50,7 @@ HRESULT CMultiNumber::Init()
 	//初期化
 	return S_OK;
 }
-//------------------------------------------------------------------------------
-//終了処理
-//------------------------------------------------------------------------------
-void CMultiNumber::Uninit()
-{
 
-}
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
@@ -117,11 +111,11 @@ void CMultiNumber::Update()
 //------------------------------------------------------------------------------
 void CMultiNumber::Draw()
 {
-	//描画しない時
-	if (!GetDisp())
-	{
-		return;
-	}
+	////描画しない時
+	//if (!GetDisp())
+	//{
+	//	return;
+	//}
 
 	//ワールドマトリックス計算
 	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), OneVector3);
@@ -257,7 +251,7 @@ void CMultiNumber::SetMultiNumber(int nValue)
 	for (size_t nCnt = 0; nCnt < m_pNumberList.size(); nCnt++)
 	{
 		//最大桁数 - 現在の桁数がカウントより小さい場合はtrue
-		m_pNumberList[nCnt]->SetDisp(nCnt >= m_pNumberList.size() - nDigits ? true : false);
+		//m_pNumberList[nCnt]->SetDisp(nCnt >= m_pNumberList.size() - nDigits ? true : false);
 	}
 }
 

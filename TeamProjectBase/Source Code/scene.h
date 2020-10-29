@@ -48,7 +48,6 @@ public:
 	//純粋仮想関数　オーバーライド用
 	virtual ~CScene();
 	virtual HRESULT Init() = 0;														//初期化
-	virtual void Uninit() = 0;														//終了
 	virtual void Update() = 0;														//更新
 	virtual void Draw() = 0;														//描画
 	virtual void ShowDebugInfo() = 0;												//デバッグ情報表記
@@ -67,6 +66,8 @@ public:
 
 	void Release()								{ m_bDeadFlag = true; };			//メモリ開放
 	void SetObjType(OBJTYPE objtype)			{ m_objtype = objtype; };			//オブジェクトタイプ設定関数
+
+	bool GetDeleteFlag()						{ return m_bDeadFlag; };			//死亡フラグ取得
 
 	static void SetStop(bool bStop)				{ m_bStop = bStop; };				//ストップ処理
 	static void Set1FAction()					{ m_b1FAction = true; };			//１Fだけ進める処理
