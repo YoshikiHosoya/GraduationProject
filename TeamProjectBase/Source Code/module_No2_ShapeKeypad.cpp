@@ -27,7 +27,7 @@
 //------------------------------------------------------------------------------
 #define KEYPAD_NUM						(4)									//パッドの総数
 #define KEYPAD_INTERVAL					(D3DXVECTOR3(25.0f,0.0f,0.0f))		//パッドの間隔
-#define KEYPAD_OFFSET					(D3DXVECTOR3(1.0f,-15.0f,-20.0f))	//パッドのオフセット座標
+#define KEYPAD_OFFSET					(D3DXVECTOR3(1.0f,-15.0f,-25.0f))	//パッドのオフセット座標
 #define DISPLAY_SHAPE_OFFSET			(D3DXVECTOR3(-18.0f,18.0f,-25.0f))	//ディスプレイの記号のオフセット間隔
 #define DISPLAY_SHAPE_SIZE				(D3DXVECTOR3(20.0f,20.0f,0.0f))		//ディスプレイの記号のサイズ
 #define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(29.0f,7.0f,-26.0f))	//進捗度ランプのオフセット
@@ -35,6 +35,7 @@
 #define PROGRESS_LAMP_SIZE				(D3DXVECTOR3(7.0f,10.0f,0.0f))		//進捗度ランプの大きさ
 #define PROGRESS_LAMP_NUM				(4)
 
+#define QUESTION_CHANGE_TIME			(40)								//問題変更時にかかる時間
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -48,6 +49,7 @@ CModule_No2_ShapeKeyPad::CModule_No2_ShapeKeyPad()
 	m_nSelectNum = PLACE::LEFT_TO_1ST;
 	m_NowQuestion = QUESTION::Q_1;
 	m_DisplayShape = SHAPE::CIRCLE;
+	m_state = STATE::NORMAL;
 	m_nQuestionChangeCnt = 0;
 
 	//配列の大きさ設定
@@ -105,14 +107,14 @@ void CModule_No2_ShapeKeyPad::Update()
 {
 	CSceneX::Update();
 
+	//ステート更新
+	UpdateState();
+
 	//nullcheck
 	if (m_pDisplayShape)
 	{
 		m_pDisplayShape->Update();
 	}
-
-
-
 
 }
 //------------------------------------------------------------------------------
@@ -134,10 +136,15 @@ void CModule_No2_ShapeKeyPad::Draw()
 void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 {
 #ifdef _DEBUG
-	ImGui::DragFloat3("pos1", m_pProgressLamp[0]->GetPos(),0.05f);
-	ImGui::DragFloat3("pos2", m_pProgressLamp[1]->GetPos(), 0.05f);
-	ImGui::DragFloat3("pos3", m_pProgressLamp[2]->GetPos(), 0.05f);
-	ImGui::DragFloat3("pos4", m_pProgressLamp[3]->GetPos(), 0.05f);
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "State >> [%d]\n", m_state);
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "CntState >> [%d]\n", m_nQuestionChangeCnt);
+
+
+	ImGui::DragFloat3("pos1", m_pKeyPadList[0]->GetPos(),0.05f);
+	ImGui::DragFloat3("pos2", m_pKeyPadList[1]->GetPos(), 0.05f);
+	ImGui::DragFloat3("pos3", m_pKeyPadList[2]->GetPos(), 0.05f);
+	ImGui::DragFloat3("pos4", m_pKeyPadList[3]->GetPos(), 0.05f);
 
 #endif //DEBUG
 }
@@ -147,6 +154,20 @@ void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 void CModule_No2_ShapeKeyPad::Operation()
 {
 	int nSelectNumOld = m_nSelectNum;
+
+	if (m_state != STATE::NORMAL)
+	{
+		for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
+		{
+			//nullcheck
+			if (m_pKeyPadList[nCnt].get())
+			{
+				m_pKeyPadList[nCnt]->SetSelect(false);
+			}
+		}
+		//return
+		return;
+	}
 
 	//入力が無かった時はbreak
 	CHossoLibrary::Selecting((int&)m_nSelectNum, nSelectNumOld, 4, 1);
@@ -217,6 +238,65 @@ void CModule_No2_ShapeKeyPad::Operation()
 }
 
 //------------------------------------------------------------------------------
+//ステート更新
+//------------------------------------------------------------------------------
+void CModule_No2_ShapeKeyPad::UpdateState()
+{
+
+	switch (m_state)
+	{
+	case STATE::NORMAL:
+
+		break;
+
+	case STATE::DISAPPEAR:
+		m_nQuestionChangeCnt--;
+
+		for (int nCnt = 0; nCnt < (int)m_pKeyPadList.size(); nCnt++)
+		{
+			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
+			{
+				m_pKeyPadList[nCnt]->GetPos().z += 1.0f;
+				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z,-10.0f );
+			}
+		}
+
+		if (m_nQuestionChangeCnt <= 0)
+		{
+			SetState(STATE::APPEAR);
+
+			//図形シャッフル
+			ShapeShuffle();
+
+			//次の問題設定
+			SetNextPushKey();
+		}
+
+		break;
+
+	case STATE::APPEAR:
+
+		m_nQuestionChangeCnt--;
+
+		for (int nCnt = 0; nCnt < (int)m_pKeyPadList.size(); nCnt++)
+		{
+			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
+			{
+				m_pKeyPadList[nCnt]->GetPos().z -= 1.0f;
+				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z, -10.0f);
+			}
+		}
+
+		if (m_nQuestionChangeCnt <= 0)
+		{
+			SetState(STATE::NORMAL);
+		}
+		break;
+	}
+
+}
+
+//------------------------------------------------------------------------------
 //問題クリア
 //------------------------------------------------------------------------------
 void CModule_No2_ShapeKeyPad::QuestionClear()
@@ -227,7 +307,6 @@ void CModule_No2_ShapeKeyPad::QuestionClear()
 
 	//緑に点灯
 	m_pProgressLamp[(int)m_NowQuestion]->SetColor(GreenColor);
-
 
 	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
 	{
@@ -246,12 +325,8 @@ void CModule_No2_ShapeKeyPad::QuestionClear()
 		return;
 	}
 
-	//図形シャッフル
-	ShapeShuffle();
-
-	//次の問題設定
-	SetNextPushKey();
-
+	//ステート切り替え
+	SetState(STATE::DISAPPEAR);
 }
 
 //------------------------------------------------------------------------------
@@ -324,7 +399,7 @@ void CModule_No2_ShapeKeyPad::CheckClear()
 void CModule_No2_ShapeKeyPad::ShapeShuffle()
 {
 	//番号が入ってる配列
-	std::vector<SHAPE> nShapeList = { SHAPE::CIRCLE,SHAPE::CROSS ,SHAPE::TRIANGLE ,SHAPE::SQUARE };
+	Vec<SHAPE> nShapeList = { SHAPE::CIRCLE,SHAPE::CROSS ,SHAPE::TRIANGLE ,SHAPE::SQUARE };
 
 	//シャッフル
 	CHossoLibrary::Vec_Shuffle(nShapeList);
@@ -454,7 +529,7 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
 {
 	//入力されたshapeと同じキー検索
 	auto itr = std::find_if(m_pKeyPadList.begin(), m_pKeyPadList.end(),
-		[shape](std::shared_ptr<CModule_Parts_No2_ShapeKey> pPtr) {return (SHAPE)pPtr->GetShape() == shape; });
+		[shape](S_ptr<CModule_Parts_No2_ShapeKey> pPtr) {return (SHAPE)pPtr->GetShape() == shape; });
 
 	//nullcheck
 	if (itr != m_pKeyPadList.end())
@@ -469,5 +544,39 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
 //------------------------------------------------------------------------------
 void CModule_No2_ShapeKeyPad::SetNextPushKey_FromPlace(PLACE place)
 {
-	m_pKeyPadList[place]->SetClearFlag(true);
+	//nullcheck
+	if (m_pKeyPadList[place])
+	{
+		//クリアフラグ設定
+		m_pKeyPadList[place]->SetClearFlag(true);
+	}
+}
+
+
+//------------------------------------------------------------------------------
+//ステート設定
+//------------------------------------------------------------------------------
+void CModule_No2_ShapeKeyPad::SetState(STATE state)
+{
+
+	m_state = state;
+
+	switch (m_state)
+	{
+	case STATE::NORMAL:
+
+		break;
+
+	case STATE::DISAPPEAR:
+		m_nQuestionChangeCnt = QUESTION_CHANGE_TIME;
+		break;
+
+	case STATE::APPEAR:
+		m_nQuestionChangeCnt = QUESTION_CHANGE_TIME;
+		break;
+
+	default:
+		break;
+	}
+
 }

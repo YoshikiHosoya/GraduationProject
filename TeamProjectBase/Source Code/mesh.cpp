@@ -15,7 +15,6 @@
 #include "keyboard.h"
 #include "camera.h"
 #include "meshfield.h"
-#include "meshsphere.h"
 
 //------------------------------------------------------------------------------
 //É}ÉNÉç

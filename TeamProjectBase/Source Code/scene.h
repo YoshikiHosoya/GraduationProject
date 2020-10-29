@@ -91,8 +91,8 @@ public:
 protected:
 
 private:
-	static std::vector<std::unique_ptr<CScene>> m_UniqueSceneList[OBJTYPE_MAX];		//ユニークポインタ　独占すべきポインタ
-	static std::vector<std::shared_ptr<CScene>> m_SharedSceneList[OBJTYPE_MAX];		//シェアポインタ	共有される事があると思われるポインタ
+	static Vec<U_ptr<CScene>> m_UniqueSceneList[OBJTYPE_MAX];		//ユニークポインタ　独占すべきポインタ
+	static Vec<S_ptr<CScene>> m_SharedSceneList[OBJTYPE_MAX];		//シェアポインタ	共有される事があると思われるポインタ
 	static int m_nNumAll;					//オブジェクト総数
 	static int m_nCntStop;					//ストップのカウント
 	static bool m_bStop;					//画面ストップするかどうか
@@ -103,8 +103,8 @@ private:
 	OBJTYPE	m_objtype;						//タイプ
 
 #ifdef _DEBUG
-	static std::vector<int> m_fUpdateTimeList;
-	static std::vector<int> m_fDrawTimeList;
+	static Vec<int> m_fUpdateTimeList;
+	static Vec<int> m_fDrawTimeList;
 #endif //_DEBUG
 };
 

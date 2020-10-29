@@ -35,12 +35,12 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	static std::shared_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
+	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
 
 private:
 	int m_nModuleNum;																	//モジュール数
 	int m_nSelectModuleNum;																//選択しているモジュール数
-	std::vector<std::shared_ptr<CModule_Base>> m_pModuleList;							//モジュールのリスト
+	Vec<S_ptr<CModule_Base>> m_pModuleList;												//モジュールのリスト
 
 	void ModuleClearCheck();
 

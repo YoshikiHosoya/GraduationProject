@@ -45,8 +45,8 @@ public:
 protected:
 
 private:
-	std::unique_ptr<CScene3D> m_pLight;			//ライト
-	std::shared_ptr<CScene3D> m_pSymbol;		//シンボル
+	U_ptr<CScene3D> m_pLight;			//ライト
+	S_ptr<CScene3D> m_pSymbol;		//シンボル
 
 	KEYPAD_STATE m_KeyPadState;					//ライトの状態
 	int m_nCntLampCnt;							//ライト用のカウント

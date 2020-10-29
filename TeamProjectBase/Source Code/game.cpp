@@ -55,7 +55,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(STATE::STATE_READY);
+	SetState(STATE::STATE_NORMAL);
 
 	//パーティクルのマネージャ
 	CParticleManager::Create();
@@ -75,7 +75,7 @@ HRESULT CGame::Init(HWND hWnd)
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
-	
+
 	return S_OK;
 }
 
@@ -149,7 +149,6 @@ void CGame::UpdateState()
 		break;
 	}
 }
-
 
 //------------------------------------------------------------------------------
 //ゲームステートセット

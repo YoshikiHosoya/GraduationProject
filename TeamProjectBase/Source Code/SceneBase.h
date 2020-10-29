@@ -66,12 +66,12 @@ public:
 	//2D3D両方可能
 	//SharedPtrを利用して共用管理するポインタ
 	template<class T>
-	static std::shared_ptr<T> ScenePolygonCreateShared
+	static S_ptr<T> ScenePolygonCreateShared
 	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
 		LPDIRECT3DTEXTURE9 const tex, CScene::OBJTYPE const objtype)
 	{
 		//メモリ確保
-		std::shared_ptr<T> ptr = std::make_shared<T>();
+		S_ptr<T> ptr = std::make_shared<T>();
 
 		//情報設定
 		ptr->SetPos(pos);
@@ -94,12 +94,12 @@ public:
 	//2D3D両方可能
 	//UniquePtrで呼び出した側が管理
 	template<class T>
-	static std::unique_ptr<T> ScenePolygonCreateSelfManagement
+	static U_ptr<T> ScenePolygonCreateSelfManagement
 	(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & size, D3DXCOLOR const & col,
 		LPDIRECT3DTEXTURE9 const tex)
 	{
 		//メモリ確保
-		std::unique_ptr<T> ptr = std::make_unique<T>();
+		U_ptr<T> ptr = std::make_unique<T>();
 
 		//情報設定
 		ptr->SetPos(pos);
@@ -124,7 +124,7 @@ public:
 		LPDIRECT3DTEXTURE9 const tex, CScene::OBJTYPE const objtype)
 	{
 		//メモリ確保
-		std::unique_ptr<T> ptr = std::make_unique<T>();
+		U_ptr<T> ptr = std::make_unique<T>();
 
 		//情報設定
 		ptr->SetPos(pos);

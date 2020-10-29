@@ -14,8 +14,8 @@
 //------------------------------------------------------------------------------
 //静的変数の初期化
 //------------------------------------------------------------------------------
-std::vector<std::unique_ptr<CScene>> CScene::m_UniqueSceneList[CScene::OBJTYPE_MAX] = {};
-std::vector<std::shared_ptr<CScene>> CScene::m_SharedSceneList[CScene::OBJTYPE_MAX] = {};
+Vec<U_ptr<CScene>> CScene::m_UniqueSceneList[CScene::OBJTYPE_MAX] = {};
+Vec<S_ptr<CScene>> CScene::m_SharedSceneList[CScene::OBJTYPE_MAX] = {};
 
 bool CScene::m_bStop = false;
 bool CScene::m_b1FAction = false;
@@ -24,8 +24,8 @@ int CScene::m_nNumAll = 0;
 
 #ifdef _DEBUG
 
-std::vector<int> CScene::m_fUpdateTimeList(CScene::OBJTYPE_MAX);
-std::vector<int> CScene::m_fDrawTimeList(CScene::OBJTYPE_MAX);
+Vec<int> CScene::m_fUpdateTimeList(CScene::OBJTYPE_MAX);
+Vec<int> CScene::m_fDrawTimeList(CScene::OBJTYPE_MAX);
 #endif //_DEBUG
 
 //------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void CScene::ReleaseAll()
 			//nullcheck
 			if (m_UniqueSceneList[nCntObjType][nCntElement])
 			{
-				//更新処理
+				//終了
 				m_UniqueSceneList[nCntObjType][nCntElement]->Uninit();
 			}
 		}
@@ -71,7 +71,7 @@ void CScene::ReleaseAll()
 			//nullcheck
 			if (m_SharedSceneList[nCntObjType][nCntElement])
 			{
-				//更新処理
+				//終了
 				m_SharedSceneList[nCntObjType][nCntElement]->Uninit();
 			}
 		}
@@ -95,26 +95,20 @@ void CScene::UpdateAll()
 	{
 		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
-			//要素数分繰り返す
-			for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
+			//Shared_ptrの配列の要素分繰り返す
+			for (auto &ptr : m_UniqueSceneList[nCntObjType])
 			{
-				//nullcheck
-				if (m_UniqueSceneList[nCntObjType][nCntElement])
-				{
-					//更新処理
-					m_UniqueSceneList[nCntObjType][nCntElement]->Update();
-				}
+				//更新
+				ptr->Update();
 			}
-			//要素数分繰り返す
-			for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[nCntObjType].size(); nCntElement++)
+
+			//Shared_ptrの配列の要素分繰り返す
+			for (auto &ptr : m_SharedSceneList[nCntObjType])
 			{
-				//nullcheck
-				if (m_SharedSceneList[nCntObjType][nCntElement])
-				{
-					//更新処理
-					m_SharedSceneList[nCntObjType][nCntElement]->Update();
-				}
+				//更新
+				ptr->Update();
 			}
+
 #ifdef _DEBUG
 			//配列の値を書き換え
 			//現在の時間 - 前回の更新が終わった時間
@@ -123,11 +117,11 @@ void CScene::UpdateAll()
 			//更新の時間を保存
 			nBeforeUpdateTime = timeGetTime();
 #endif	//_DEBUG
-
 		}
 
 		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
+
 			//要素数分繰り返す
 			for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
 			{
@@ -176,27 +170,21 @@ void CScene::DrawAll()
 	int nBeforeUpdateTime = timeGetTime();
 #endif	//_DEBUG
 
+	//オブジェタイプ分繰り返す
 	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 	{
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
+		//Shared_ptrの配列の要素分繰り返す
+		for (auto &ptr : m_UniqueSceneList[nCntObjType])
 		{
-			//nullcheck
-			if (m_UniqueSceneList[nCntObjType][nCntElement])
-			{
-				//描画処理
-				m_UniqueSceneList[nCntObjType][nCntElement]->Draw();
-			}
+			//描画処理
+			ptr->Draw();
 		}
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[nCntObjType].size(); nCntElement++)
+
+		//Shared_ptrの配列の要素分繰り返す
+		for (auto &ptr : m_SharedSceneList[nCntObjType])
 		{
-			//nullcheck
-			if (m_SharedSceneList[nCntObjType][nCntElement])
-			{
-				//描画処理
-				m_SharedSceneList[nCntObjType][nCntElement]->Draw();
-			}
+			//描画処理
+			ptr->Draw();
 		}
 
 #ifdef _DEBUG
@@ -218,53 +206,51 @@ void CScene::ShowDebugInfoAll()
 #ifdef _DEBUG
 
 	//グラフ用の配列
-	std::vector<float> OutputDataList(OBJTYPE_MAX);
+	Vec<float> OutputDataList(OBJTYPE_MAX);
 
 	//更新と描画にかかったフレーム
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "FPS_IntervalCount >> %d\n", GetFPSInterval());
 
-	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
+	if(ImGui::TreeNode("Graph"))
 	{
-		//リストに追加
-		OutputDataList[nCntObjType] = (m_fUpdateTimeList[nCntObjType]) / (float)GetFPSInterval();
-	}
-
-	//更新のグラフ生成
-	ImGui::PlotHistogram("Update!", OutputDataList.data(), OutputDataList.size(), 0, NULL, 0.0f, 1.0f, ImVec2(0, 100));
-
-	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
-	{
-		//リストに追加
-		OutputDataList[nCntObjType] = (m_fDrawTimeList[nCntObjType]) / (float)GetFPSInterval();
-	}
-
-	//描画に関するグラフ
-	ImGui::PlotHistogram("Renderer", OutputDataList.data(), OutputDataList.size(), 0, NULL, 0.0f, 1.0f, ImVec2(0, 100));
-
-	//配列クリア
-	OutputDataList.clear();
-
-	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
-	{
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_UniqueSceneList[nCntObjType].size(); nCntElement++)
+		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
-			//nullcheck
-			if (m_UniqueSceneList[nCntObjType][nCntElement])
-			{
-				//デバッグ情報表記
-				m_UniqueSceneList[nCntObjType][nCntElement]->ShowDebugInfo();
-			}
+			//リストに追加
+			OutputDataList[nCntObjType] = (m_fUpdateTimeList[nCntObjType]) / (float)GetFPSInterval();
 		}
-		//要素数分繰り返す
-		for (size_t nCntElement = 0; nCntElement < m_SharedSceneList[nCntObjType].size(); nCntElement++)
+		//更新のグラフ生成
+		ImGui::PlotHistogram("Update!", OutputDataList.data(), OutputDataList.size(), 0, NULL, 0.0f, 1.0f, ImVec2(0, 100));
+
+		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
-			//nullcheck
-			if (m_SharedSceneList[nCntObjType][nCntElement])
-			{
-				//デバッグ表記
-				m_SharedSceneList[nCntObjType][nCntElement]->ShowDebugInfo();
-			}
+			//リストに追加
+			OutputDataList[nCntObjType] = (m_fDrawTimeList[nCntObjType]) / (float)GetFPSInterval();
+		}
+
+		//描画に関するグラフ
+		ImGui::PlotHistogram("Renderer", OutputDataList.data(), OutputDataList.size(), 0, NULL, 0.0f, 1.0f, ImVec2(0, 100));
+
+		//配列クリア
+		OutputDataList.clear();
+
+		//ツリーノード終了
+		ImGui::TreePop();
+	}
+
+	for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
+	{
+		//Shared_ptrの配列の要素分繰り返す
+		for (auto &ptr : m_UniqueSceneList[nCntObjType])
+		{
+			//デバッグ情報表記
+			ptr->ShowDebugInfo();
+		}
+
+		//Shared_ptrの配列の要素分繰り返す
+		for (auto &ptr : m_SharedSceneList[nCntObjType])
+		{
+			//デバッグ情報表記
+			ptr->ShowDebugInfo();
 		}
 	}
 

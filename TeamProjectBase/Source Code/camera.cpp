@@ -17,10 +17,10 @@
 #define CAMERA_MOVE_SPEED			(10.0f)			//カメラ移動速度
 #define CAMERA_HORIZON_ROTATION		(0.05f)			//カメラの横回転
 #define CAMERA_VERTICAL_ROTATION	(0.02f)			//カメラの縦回転
-#define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,50.0f,0.0f))
+#define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,80.0f,0.0f))
 
 
-#define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
+#define DEFAULT_DISTANCE			(400.0f)		//カメラの距離
 #define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.13f,0.0f,0.0f))
 
 #define CAMERA_LENGTH_NEAR			(10.0f)			//カメラの見える距離（近）

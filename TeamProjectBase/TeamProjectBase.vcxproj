@@ -178,10 +178,7 @@
     <ClCompile Include="Source Code\manager.cpp" />
     <ClCompile Include="Source Code\Map.cpp" />
     <ClCompile Include="Source Code\mesh.cpp" />
-    <ClCompile Include="Source Code\meshcircle.cpp" />
-    <ClCompile Include="Source Code\meshcylinder.cpp" />
     <ClCompile Include="Source Code\meshfield.cpp" />
-    <ClCompile Include="Source Code\meshsphere.cpp" />
     <ClCompile Include="Source Code\modelinfo.cpp" />
     <ClCompile Include="Source Code\module_base.cpp" />
     <ClCompile Include="Source Code\module_Button.cpp" />
@@ -246,10 +243,7 @@
     <ClInclude Include="Source Code\manager.h" />
     <ClInclude Include="Source Code\Map.h" />
     <ClInclude Include="Source Code\mesh.h" />
-    <ClInclude Include="Source Code\meshcircle.h" />
-    <ClInclude Include="Source Code\meshcylinder.h" />
     <ClInclude Include="Source Code\meshfield.h" />
-    <ClInclude Include="Source Code\meshsphere.h" />
     <ClInclude Include="Source Code\modelinfo.h" />
     <ClInclude Include="Source Code\module_Button.h" />
     <ClInclude Include="Source Code\module_No1_SymbolKeyPad.h" />

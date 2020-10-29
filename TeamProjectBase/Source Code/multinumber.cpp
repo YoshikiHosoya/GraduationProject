@@ -162,10 +162,10 @@ void CMultiNumber::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //ê∂ê¨èàóù
 //------------------------------------------------------------------------------
-std::shared_ptr<CMultiNumber> CMultiNumber::Create(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & onesize, int const nValue, int const nDigits, NUMBER_TYPE const type, CScene::OBJTYPE const objtype)
+S_ptr<CMultiNumber> CMultiNumber::Create(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & onesize, int const nValue, int const nDigits, NUMBER_TYPE const type, CScene::OBJTYPE const objtype)
 {
 	//ÉÅÉÇÉäämï€
-	std::shared_ptr<CMultiNumber> pMultiNumber(new CMultiNumber);
+	S_ptr<CMultiNumber> pMultiNumber(new CMultiNumber);
 
 	//nullcheck
 	if (pMultiNumber)

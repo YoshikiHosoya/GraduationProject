@@ -38,9 +38,8 @@ public:
 	static int GetTimer() { return m_nTimer; };									//タイマー取得
 	void SetStop(bool bStop) { m_bStop = bStop; };								//タイマーストップ
 private:
-	std::vector<std::shared_ptr<CMultiNumber>> m_pMultiNumber;					//ナンバーのポインタ
+	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;					//ナンバーのポインタ
 	static LPDIRECT3DTEXTURE9 m_pTexture;										//テクスチャのポインタ
-
 	static int m_nTimer;														//タイマー 秒で管理
 	int m_nCntFlame;															//カウント フレーム
 	bool m_bStop;																//ストップ

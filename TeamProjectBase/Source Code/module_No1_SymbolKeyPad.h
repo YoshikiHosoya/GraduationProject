@@ -42,7 +42,7 @@ public:
 	void CreateKeyPad(ANSWER_PATTERN answer);			//キーパッド生成
 	void CheckClear();									//クリアしたか確認
 private:
-	std::vector<std::shared_ptr<CModule_Parts_No1_SymbolKey>> m_pKeyPadList;				//キーパッドのポインタの配列
+	Vec<S_ptr<CModule_Parts_No1_SymbolKey>> m_pKeyPadList;				//キーパッドのポインタの配列
 	ANSWER_PATTERN m_Answer;													//答えのパターン
 	int m_nNextSymbolNum;														//次のシンボル番号
 };

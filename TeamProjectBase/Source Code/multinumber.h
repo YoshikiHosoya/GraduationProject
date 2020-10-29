@@ -51,7 +51,7 @@ public:
 	void SetSize(D3DXVECTOR3 const &size)		override;				//サイズ設定
 	void SetColor(D3DXCOLOR const &col)			override;				//色設定
 
-	static std::shared_ptr<CMultiNumber> Create(D3DXVECTOR3 const &pos, D3DXVECTOR3 const &onesize,
+	static S_ptr<CMultiNumber> Create(D3DXVECTOR3 const &pos, D3DXVECTOR3 const &onesize,
 		int const nValue, int const  nDigits, NUMBER_TYPE const type, CScene::OBJTYPE const objtype);	//生成処理
 
 	//Set関数
@@ -61,7 +61,7 @@ public:
 	const NUMBER_EFFECT GetNumberType() { return m_NumberEffect; };			//種類取得
 
 private:
-	std::vector<std::unique_ptr<CSceneBase>> m_pNumberList;					//ナンバーのポインタのリスト
+	Vec<U_ptr<CSceneBase>> m_pNumberList;					//ナンバーのポインタのリスト
 	NUMBER_EFFECT m_NumberEffect;											//種類
 	int m_nValue;															//値
 	int m_nCnt;																//点滅カウント

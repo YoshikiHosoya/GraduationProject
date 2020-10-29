@@ -51,7 +51,7 @@ public:
 	static void ModelLoad(HWND hwnd);			//モデル生成
 	static void ModelUnload();					//モデル生成
 
-	static std::shared_ptr<CModelInfo> GetModelInfo(CModelInfo::MODEL_TYPE modeltype);			//モデル情報取得
+	static S_ptr<CModelInfo> GetModelInfo(CModelInfo::MODEL_TYPE modeltype);			//モデル情報取得
 
 	//Get関数
 	std::string GetName()		{ return m_aName; };					//モデル名
@@ -61,8 +61,8 @@ public:
 	MODEL_TYPE GetModelType()	{ return m_modeltype; };				//モデルタイプ
 
 private:
-	static std::vector<std::shared_ptr<CModelInfo>> m_apModelList;		//モデルへのポインタのリスト
-	static std::vector<MODELNAME> m_aModelFileNameList;					//モデルのファイル名
+	static Vec<S_ptr<CModelInfo>> m_apModelList;				//モデルへのポインタのリスト
+	static Vec<MODELNAME> m_aModelFileNameList;					//モデルのファイル名
 
 	MODEL_TYPE		m_modeltype;		//モデルの種類
 	std::string		m_aName;			//モデル名

@@ -117,7 +117,7 @@ public:
 
 	static void CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot, D3DXVECTOR3 const &rScale);		//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);						//シャドーマトリックスの計算
-	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX *pMtx);																		//マトリックスをVector3に変換
+	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX const & rMtx);																		//マトリックスをVector3に変換
 
 	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);													//モデルの最大頂点と最少頂点を設定
 	static void SetBillboard(D3DXMATRIX *pMtx);																					//ビルボード設定

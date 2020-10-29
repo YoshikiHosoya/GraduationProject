@@ -68,8 +68,8 @@ private:
 	STATE m_State;											//ゲームステート
 	GAZE m_Gaze;											//視線
 	int m_nCntState;										//ステートのカウンタ
-	std::shared_ptr<CBomb>	m_pBomb;						//ボムのポインタ
-	std::shared_ptr<CChatBase> m_pChatBase;					// チャットのポインタ
+	S_ptr<CBomb>	m_pBomb;						//ボムのポインタ
+	S_ptr<CChatBase> m_pChatBase;					// チャットのポインタ
 };
 
 #endif

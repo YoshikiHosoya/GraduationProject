@@ -48,7 +48,12 @@
 #define FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					// 2Ｄポリゴン頂点フォーマット( 頂点座標[2D] / 頂点カラー / テクスチャ座標)
 #define	FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)		// 3Ｄポリゴン頂点フォーマット( 頂点座標[3D] / 法線 / 頂点カラー / テクスチャ座標)
 
-
+//------------------------------------------------------------------------------
+//エイリアス宣言
+//------------------------------------------------------------------------------
+template <class T> 	using Vec = std::vector<T>;				//vector型
+template <class T> 	using U_ptr = std::unique_ptr<T>;		//Unique_ptr
+template <class T> 	using S_ptr = std::shared_ptr<T>;		//Shared_ptr
 
 //------------------------------------------------------------------------------
 //構造体

@@ -31,11 +31,10 @@ public:
 
 	void SetClearFlag(bool bClearFlag)		{ m_bClearFlag = bClearFlag; };		//クリアフラグ設定
 
-
 	bool GetClearFlag() { return m_bClearFlag; };								//クリアフラグ取得
 
 	//Create関数
-	template<class Module> static std::shared_ptr<Module> Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr);
+	template<class Module> static S_ptr<Module> Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr);
 
 private:
 	bool m_bClearFlag;
@@ -47,10 +46,10 @@ private:
 //呼び出し時にクラス型を教えてあげる必要がある
 //例) CModule_Base::Create<CModule_Timer>(...)
 template<class Module>
-inline std::shared_ptr<Module> static CModule_Parts_Base::Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr)
+inline S_ptr<Module> static CModule_Parts_Base::Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr)
 {
 	//メモリ確保
-	std::shared_ptr<Module> pPtr = std::make_shared<Module>();
+	S_ptr<Module> pPtr = std::make_shared<Module>();
 
 	//初期化
 	pPtr->Init();

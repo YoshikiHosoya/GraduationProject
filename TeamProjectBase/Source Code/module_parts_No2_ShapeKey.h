@@ -37,7 +37,7 @@ public:
 protected:
 
 private:
-	std::shared_ptr<CScene3D> m_pShape;			//シンボル
+	S_ptr<CScene3D> m_pShape;			//シンボル
 	CModule_No2_ShapeKeyPad::SHAPE m_Shape;							//シンボルの番号
 };
 #endif
