@@ -33,7 +33,7 @@ std::unique_ptr<CMouse> CManager::m_pMouse			= nullptr;
 std::unique_ptr<CPad_XInput> CManager::m_pXInput	= nullptr;
 std::unique_ptr<CBaseMode> CManager::m_pBaseMode	= nullptr;
 
-CManager::MODE CManager::m_mode = CManager::MODE_GAME;
+CManager::MODE CManager::m_mode = CManager::MODE_TITLE;
 HWND CManager::m_hWnd = nullptr;
 int CManager::m_nNumChangeMode = 0;
 //------------------------------------------------------------------------------

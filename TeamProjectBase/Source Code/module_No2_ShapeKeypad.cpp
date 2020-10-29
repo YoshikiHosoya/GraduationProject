@@ -131,8 +131,8 @@ void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "State >> [%d]\n", m_state);
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "CntState >> [%d]\n", m_nQuestionChangeCnt);
+	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "State >> [%d]\n", m_state);
+	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "CntState >> [%d]\n", m_nQuestionChangeCnt);
 
 
 	//ImGui::DragFloat3("pos1", m_pKeyPadList[0]->GetPos(),0.05f);
@@ -213,6 +213,10 @@ void CModule_No2_ShapeKeyPad::Operation()
 			}
 		}
 	}
+
+
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------Module_No_2----------------\n");
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "Flag >> ");
 
@@ -508,7 +512,7 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey()
 			break;
 
 		case CModule_No2_ShapeKeyPad::SHAPE::SQUARE:
-			SetNextPushKey_FromShape(SHAPE::CIRCLE);
+			SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
 			break;
 		}
 		break;

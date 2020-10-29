@@ -61,7 +61,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(STATE::STATE_NORMAL);
+	SetState(STATE::STATE_READY);
 
 	//パーティクルのマネージャ
 	CParticleManager::Create();

@@ -93,6 +93,11 @@ void CBomb::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------操作方法----------------\n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[↑][↓][←][→] カーソル移動 \n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Enter] 決定ボタン \n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[BackSpace] 戻るボタン \n");
+
 #endif //DEBUG
 }
 
@@ -275,31 +280,31 @@ void CBomb::CreateModule(int const nModuleNum)
 
 
 
-	//1番目
-	CBomb::CreateModuleOne<CModule_Timer>();
-	//2番目
-	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
-	//3番目
-	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
-	//4番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//5番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//6番目
-	CBomb::CreateModuleOne<CModule_None>();
+	////1番目
+	//CBomb::CreateModuleOne<CModule_Timer>();
+	////2番目
+	//CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	////3番目
+	//CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
+	////4番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////5番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////6番目
+	//CBomb::CreateModuleOne<CModule_None>();
 
-	//7番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//8番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//9番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//10番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//11番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//12番目
-	CBomb::CreateModuleOne<CModule_None>();
+	////7番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////8番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////9番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////10番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////11番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////12番目
+	//CBomb::CreateModuleOne<CModule_None>();
 
 
 
