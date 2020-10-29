@@ -2480,7 +2480,7 @@ CString::release(void)
 	if (this->m_string != NULL)
 	{
 		// •¶Žš—ñ‚Ì”jŠü
-		delete[this->m_nStringLength]this->m_string;
+		delete[]this->m_string;
 		// ‰Šú‰»
 		this->Init();
 	}

@@ -17,24 +17,22 @@
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
 //-------------------------------------------------------------------------------------------------------------
-#define PICTURE_FILENAME  "data/TEXT/PictureInfo.txt"
-
-//-------------------------------------------------------------------------------------------------------------
-// マクロ関数
-//-------------------------------------------------------------------------------------------------------------
-#define Paint(col) Mybfunc_bit_set(col,0)
-#define Clear(col) Mybfunc_bit_clear(col,0)
+#define PICTURE_FILENAME		"data/TEXT/PictureInfo.txt"
+#define PICTURE_WRITINGPASS		"data/TEXT/"
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-INTEGER2      CPicture::m_nNumPolyBlock   = MYLIB_INT2_UNSET;							// ポリゴン数(ずらす大きさの設定後2倍にする)
+INTEGER2      CPicture::m_nNumPixelBlock  = MYLIB_INT2_UNSET;							// ピクセル数
 FLOAT2        CPicture::m_size            = MYLIB_2DVECTOR_ZERO;						// 大きさ
 D3DXVECTOR3   CPicture::m_PlaneNor        = D3DXVECTOR3(0.0f, 0.0f, 1.0f);				// 平面の法線
 D3DXVECTOR2   CPicture::m_PixelSize       = MYLIB_VEC2_UNSET;							// ピクセルサイズ
 UINT          CPicture::m_nNumDataMax     = MYLIB_INT_UNSET;							// 最大データ数最大データ数
 CPaintingPen* CPicture::m_pPen            = nullptr;									// ペンのポインタ
 D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;							// ピクセルサイズの半分
+D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;									// ピクセル位置のポインタ
+UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;							// ファイルを作った回数
+
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
 //-------------------------------------------------------------------------------------------------------------
@@ -50,37 +48,48 @@ HRESULT CPicture::Load(void)
 		return E_FAIL;
 	}
 	// どちらもゼロの時
-	if (m_nNumPolyBlock.OneIsZero() == true)
+	if (m_nNumPixelBlock.OneIsZero() == true)
 	{
 #ifdef _DEBUG
 		std::cout << "<<<<<<CPictureのどちらかのポリゴン数が0でした。>>>>>>\n";
 #endif // _DEBUG
 		return E_FAIL;
 	}
+	// 静的メンバの初期化
+	InitStaticMember();
 
-	m_PixelSize = m_size / m_nNumPolyBlock;
-	m_PixelSizehalf = m_PixelSize* MYLIB_HALF_SIZE;
-	m_nNumDataMax = m_nNumPolyBlock.nY * m_nNumPolyBlock.nX;
-
-	// ペンの生成
-	m_pPen = CPaintingPen::Create();
+	Writing();
 	return S_OK;
 }
 
 //-------------------------------------------------------------------------------------------------------------
-// 静的メンバ変数の初期化
+// 静的メンバの初期化
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::InitStaticMember(void)
 {
-	m_nNumPolyBlock = MYLIB_INT2_UNSET;		// ポリゴン数(ずらす大きさの設定後2倍にする)
-	m_size          = MYLIB_2DVECTOR_ZERO;	// 大きさ
+	m_PixelSize = m_size / m_nNumPixelBlock;
+	m_PixelSizehalf = m_PixelSize * MYLIB_HALF_SIZE;
+	m_nNumDataMax = m_nNumPixelBlock.nY * m_nNumPixelBlock.nX;
+	m_nNumMakeFile = MYLIB_INT_UNSET;
+	// ピクセル位置の開放
+	ReleasePixelPos();
+	// ピクセル位置の生成
+	CreatePixelPos();
+	// ペンの開放
+	ReleasePen();
+	// ペンの生成
+	m_pPen = CPaintingPen::Create();
+}
 
-	if (m_pPen)
-	{
-		m_pPen->Uninit();
-		delete m_pPen;
-		m_pPen = nullptr;
-	}
+//-------------------------------------------------------------------------------------------------------------
+// 静的メンバ変数の終了
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::UninitStaticMember(void)
+{
+	// ペンの開放
+	ReleasePen();
+	// ピクセル位置の開放
+	ReleasePixelPos();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -145,6 +154,9 @@ void CPicture::Uninit()
 		m_pVtexBuff->Release();
 		m_pVtexBuff = nullptr;
 	}
+
+	// ファイル名の開放処理
+	m_FileName.release();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -189,10 +201,16 @@ void CPicture::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot)
+std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot, CONST MODE mode, CONST_STRING FileName)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CPicture> pPicture = std::make_shared<CPicture>();
+	if (FileName != NULL)
+	{
+		pPicture->SetFileName(FileName);
+	}
+	// モードの設定
+	pPicture->SetMode(mode);
 	// 位置の設定
 	pPicture->SetPos(pos);
 	// 向きの設定
@@ -211,7 +229,7 @@ std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVEC
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 {
-	if (FAILED(pDevice->CreateTexture(m_nNumPolyBlock.nX, m_nNumPolyBlock.nY, 1, 0, D3DFMT_A32B32G32R32F,
+	if (FAILED(pDevice->CreateTexture(m_nNumPixelBlock.nX, m_nNumPixelBlock.nY, 1, 0, D3DFMT_A32B32G32R32F,
 		D3DPOOL_MANAGED, &m_pTexture, NULL)))
 	{
 		throw E_FAIL;
@@ -287,13 +305,10 @@ void CPicture::InitTextureColor(void)
 	// データの先頭を代入
 	pData = (D3DXCOLOR*)LockRect.pBits;
 	// データの設定
-	for (int nY = 0; nY < m_nNumPolyBlock.nY; nY++)
+	for (int nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
 	{
-		for (int nX = 0; nX < m_nNumPolyBlock.nX; nX++)
-		{
-			*pData = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			pData++;
-		}
+		*pData = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pData++;
 	}
 	// テクスチャのアンロック
 	m_pTexture->UnlockRect(0);
@@ -311,11 +326,63 @@ void CPicture::ReadFromLine(CONST_STRING Line)
 
 	if (sscanf(Line, "NumPolygon = %d %d", &NumPoly.nX , &NumPoly.nY) == 2)
 	{
-		m_nNumPolyBlock = NumPoly;
+		m_nNumPixelBlock = NumPoly;
 	}
 	else if (sscanf(Line, "Size = %f %f",&size.x, &size.y) == 2)
 	{
 		m_size = size;
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ピクセル位置の生成
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::CreatePixelPos(void)
+{
+	// 最大データ数が0以下の時
+	if (m_nNumDataMax <= MYLIB_INT_UNSET)
+	{// nullを設定
+		m_pPixelPos = nullptr;
+	}
+
+	// ピクセル位置の生成
+	m_pPixelPos = new D3DXVECTOR2[m_nNumDataMax];
+
+	// ポインタ渡し
+	D3DXVECTOR2* pPixelPos = m_pPixelPos;
+
+	// 位置の設定
+	for (int nY = 0; nY < m_nNumPixelBlock.nY; nY++) {
+		for (int nX = 0; nX < m_nNumPixelBlock.nX; nX++) {
+			pPixelPos->x = nX * m_PixelSize.x + m_PixelSizehalf.x;
+			pPixelPos->y = nY * m_PixelSize.y + m_PixelSizehalf.y;
+			pPixelPos++;
+		}
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ピクセル位置の開放
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::ReleasePixelPos(void)
+{
+	if (m_pPixelPos)
+	{
+		delete m_pPixelPos;
+		m_pPixelPos = nullptr;
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ペンの開放
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::ReleasePen(void)
+{
+	if (m_pPen)
+	{
+		m_pPen->Uninit();
+		delete m_pPen;
+		m_pPen = nullptr;
 	}
 }
 
@@ -329,30 +396,81 @@ void CPicture::PaintProc(void)
 	{// 取得失敗
 		return;
 	}
+
 	// カプセルの設定
 	m_pPen->SetCapsule();
-	// カプセル情報の取得
-	CAPSULE_2D *pCap = m_pPen->GetCapsule();
+	CAPSULE_2D *pCap = m_pPen->GetCapsule();					// カプセル情報の取得
+
 	// ロックした情報
 	D3DLOCKED_RECT LockRect;
-	D3DXVECTOR2 PixelPos;
 	// ロック
 	m_pTexture->LockRect(0, &LockRect, NULL, 0);
-	// カラーデータの取得(最後尾)
-	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits + m_nNumDataMax - 1;
-	for (int nY = m_nNumPolyBlock.nY - 1; nY >= 0; nY--)
+
+	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの取得(最後尾)
+	D3DXVECTOR2 *pPixelPos = m_pPixelPos;						// ピクセル位置の取得
+
+	const float fRadius = pCap->fRadius * pCap->fRadius;		// 比較用の半径を算出
+	const float fSegLeng = pCap->Segment.vec.Length();			// カプセルの線分の長さを取得
+
+	// 線分の長さが許容以下の時
+	if (fSegLeng <= MYLIB_OX_EPSILON)
 	{
-		for (int nX = m_nNumPolyBlock.nX - 1; nX >= 0; nX--)
+		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
 		{
-			PixelPos.x = nX * m_PixelSize.x + m_PixelSizehalf.x;
-			PixelPos.y = nY * m_PixelSize.y + m_PixelSizehalf.y;
-			if (CMylibrary::calCapsuleSphere2D(*pCap, PixelPos))
-			{
-				pData->r = pData->g = pData->b = 0.0f;
+			// 位置の差分を算出
+			D3DXVECTOR2 DiffPos = pCap->Segment.pos - *pPixelPos;
+			// 距離を比較
+			if (DiffPos.x * DiffPos.x + DiffPos.y * DiffPos.y <= fRadius)
+			{// ペンで色を塗る
+				m_pPen->PaintCol(pData);
 			}
-			pData--;
+			// ポインタを進める
+			pPixelPos++;
+			pData++;
 		}
 	}
+	else
+	{
+		// 線分の終端を取得
+		CONST FLOAT2 SegEndPoint = pCap->Segment.GetEndPoint();
+
+		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
+		{
+			// 鋭角じゃない時
+			if (CMylibrary::IsSharpAngle(*pPixelPos, pCap->Segment.pos, SegEndPoint) == false)
+			{// 位置の差分を算出
+				D3DXVECTOR2 DiffPos = pCap->Segment.pos - *pPixelPos;
+				// 距離を比較
+				if (DiffPos.x * DiffPos.x + DiffPos.y * DiffPos.y <= fRadius)
+				{// ペンで色を塗る
+					m_pPen->PaintCol(pData);
+				}
+			}
+			// 鋭角じゃない時
+			else if (CMylibrary::IsSharpAngle(*pPixelPos, SegEndPoint, pCap->Segment.pos) == false)
+			{// 位置の差分を算出
+				D3DXVECTOR2 DiffPos = SegEndPoint - *pPixelPos;
+				// 距離を比較
+				if (DiffPos.x * DiffPos.x + DiffPos.y * DiffPos.y <= fRadius)
+				{// ペンで色を塗る
+					m_pPen->PaintCol(pData);
+				}
+			}
+			else
+			{// 直線と点の長さを計算
+				float fLegth = pCap->Segment.vec.Cross(*pPixelPos - pCap->Segment.pos) / fSegLeng;
+				// 距離を比較
+				if (fLegth <= pCap->fRadius && fLegth >= -pCap->fRadius)
+				{// ペンで色を塗る
+					m_pPen->PaintCol(pData);
+				}
+			}
+			// ポインタを進める
+			pPixelPos++;
+			pData++;
+		}
+	}
+	
 	// アンロック
 	m_pTexture->UnlockRect(0);
 }
@@ -381,4 +499,39 @@ bool CPicture::GetMousePosOnPicture(void)
 		return false;
 	}
 	return true;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 書き込み
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::Writing(void)
+{
+	// 変数宣言
+	char *pPass = "12345";
+	char *pName = "6789";
+	CString filename;
+	filename = pPass;
+	filename += pName;
+	//filename.Synthesize("%s%s=%d.txt", pPass, pName, m_nNumMakeFile);
+	FILE *pFile = fopen(filename.Get(), "w");
+	if (pFile == NULL)
+	{
+		return;
+	}
+	fclose(pFile);
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 読み込み
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::Reading(CString & file)
+{
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// テクスチャ情報の1行から情報を読み取る
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::TexterReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData)
+{
 }
