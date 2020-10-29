@@ -32,6 +32,10 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
 	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト
 
+	{ "data/TEXTURE/UI/Paint/Pen.png" },						// ブラシカーソル
+	{ "data/TEXTURE/UI/Paint/Eraser.png" },						// 消しゴムカーソル
+	{ "data/TEXTURE/UI/Paint/Pen_Button.png" },					// ブラシ
+	{ "data/TEXTURE/UI/Paint/Eraser_Button.png" },				// 消しゴム
 };
 
 //テクスチャ名の設定

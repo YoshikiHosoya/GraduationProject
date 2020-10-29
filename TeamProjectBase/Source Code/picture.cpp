@@ -13,6 +13,7 @@
 #include "mouse.h"
 #include "camera.h"
 #include "PaintingPen.h"
+#include "pictureUI.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -32,6 +33,7 @@ CPaintingPen* CPicture::m_pPen            = nullptr;									// ペンのポインタ
 D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;							// ピクセルサイズの半分
 D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;									// ピクセル位置のポインタ
 UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;							// ファイルを作った回数
+std::shared_ptr<CPictureUI> CPicture::m_pUi;						// UI
 
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
@@ -57,8 +59,6 @@ HRESULT CPicture::Load(void)
 	}
 	// 静的メンバの初期化
 	InitStaticMember();
-
-	Writing();
 	return S_OK;
 }
 
@@ -79,6 +79,10 @@ void CPicture::InitStaticMember(void)
 	ReleasePen();
 	// ペンの生成
 	m_pPen = CPaintingPen::Create();
+	// UIの読み込み
+	CPictureUI::Load();
+	// UIの生成
+	m_pUi = CPictureUI::Create();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -120,7 +124,7 @@ void CPicture::MatrixCal(void)
 //-------------------------------------------------------------------------------------------------------------
 // デストラクタ
 //-------------------------------------------------------------------------------------------------------------
-CPicture::~CPicture()
+inline CPicture::~CPicture()
 {
 	// 頂点バッファの取得
 	if (m_pVtexBuff != nullptr)
@@ -156,6 +160,7 @@ HRESULT CPicture::Init()
 		std::cout << "例外が発生しました。\n";
 		return rh;
 	}
+
 	return S_OK;
 }
 
@@ -164,9 +169,9 @@ HRESULT CPicture::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Update()
 {
+	m_pPen->SetMode((CPaintingPen::MODE)m_pUi->GetPressedType());
 	// 絵を描く
 	PaintProc();
-
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -470,7 +475,7 @@ void CPicture::PaintProc(void)
 			pData++;
 		}
 	}
-
+	
 	// アンロック
 	m_pTexture->UnlockRect(0);
 }

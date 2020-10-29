@@ -57,7 +57,7 @@ void CScene2D::Update()
 	VERTEX_2D *pVtx;
 
 	//nullcheck
-	if (GetVtxBuff())
+	if (!GetVtxBuff())
 	{
 		return;
 	}
