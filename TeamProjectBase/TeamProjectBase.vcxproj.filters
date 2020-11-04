@@ -243,6 +243,9 @@
     <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\connectMode.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\camera.h">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\module_parts_No4_ColButton.h">
       <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\connectMode.h">
+      <Filter>Mode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
