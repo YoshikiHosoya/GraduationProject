@@ -37,9 +37,6 @@
     <Filter Include="Bomb">
       <UniqueIdentifier>{d868d8f1-1da5-4067-b633-a823476e0bc2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Library">
-      <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Bomb\module">
       <UniqueIdentifier>{f6824bca-1635-4150-a870-10378bc0252c}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="Chat">
       <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +233,15 @@
     </ClCompile>
     <ClCompile Include="Source Code\pictureUI.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No4_4ColButton.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No3_LampAndWire.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp">
+      <Filter>Bomb\module_parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +439,15 @@
     </ClInclude>
     <ClInclude Include="Source Code\pictureUI.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No4_4ColButton.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No3_LampAndWire.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No4_ColButton.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

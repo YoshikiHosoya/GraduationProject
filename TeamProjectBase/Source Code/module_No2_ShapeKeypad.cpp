@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールの図形のキーパッド処理  [module_ShapeKeypad.cpp]
+//モジュールの図形のキーパッド処理  [module_No2_ShapeKeypad.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 #include "scene3D.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
-//------------------------------------------------------------------------------sss
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -140,6 +140,26 @@ void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 	//ImGui::DragFloat3("pos3", m_pKeyPadList[2]->GetPos(), 0.05f);
 	//ImGui::DragFloat3("pos4", m_pKeyPadList[3]->GetPos(), 0.05f);
 
+	//選択されているとき
+	if (GetSelect())
+	{
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------Module_No_2----------------\n");
+
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, "Flag >> ");
+
+		for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
+		{
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d] ", m_pKeyPadList[nCnt]->GetClearFlag());
+		}
+
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, NEWLINE);
+
+		for (size_t nCnt = 0; nCnt < m_Memories.size(); nCnt++)
+		{
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "Memories >> Place[%d] Shape[%d]\n", m_Memories[nCnt].place, m_Memories[nCnt].shape);
+		}
+	}
+
 #endif //DEBUG
 }
 //------------------------------------------------------------------------------
@@ -212,25 +232,6 @@ void CModule_No2_ShapeKeyPad::Operation()
 				CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
 			}
 		}
-	}
-
-
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------Module_No_2----------------\n");
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "Flag >> ");
-
-	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
-	{
-		CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d] ", m_pKeyPadList[nCnt]->GetClearFlag());
-
-	}
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, NEWLINE);
-
-	for (size_t nCnt = 0; nCnt < m_Memories.size(); nCnt++)
-	{
-		CDebugProc::Print(CDebugProc::PLACE_LEFT, "Memories >> Place[%d] Shape[%d]\n", m_Memories[nCnt].place, m_Memories[nCnt].shape);
 	}
 
 }

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No2_ShapeKey.cpp]
+//モジュールのランプとワイヤーのやつの処理  [Module_No3_LampAndWire.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,14 +8,8 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No2_ShapeKey.h"
-#include "renderer.h"
-#include "manager.h"
+#include "module_No3_LampAndWire.h"
 #include "modelinfo.h"
-#include "particle.h"
-#include "timer.h"
-#include "scene3D.h"
-#include "keyboard.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -23,79 +17,56 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
-#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
-#define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
+CModule_No3_LampAndWire::CModule_No3_LampAndWire()
 {
-	m_pShape.reset();
-	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
+
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
+CModule_No3_LampAndWire::~CModule_No3_LampAndWire()
 {
-	m_pShape.reset();
+
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No2_ShapeKey::Init()
+HRESULT CModule_No3_LampAndWire::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NONE));
 
-	//文字の生成
-	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,
-		CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
-
-	//親マトリックス設定
-	m_pShape->SetParentMtxPtr(GetMtxWorldPtr());
+	//モジュール選択不可
+	CModule_Base::SetCanModuleSelect(false);
 
 	CSceneX::Init();
-
 	return S_OK;
 }
 
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Update()
+void CModule_No3_LampAndWire::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Draw()
+void CModule_No3_LampAndWire::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
+void CModule_No3_LampAndWire::ShowDebugInfo()
 {
 #ifdef _DEBUG
-
 #endif //DEBUG
-}
-
-//------------------------------------------------------------------------------
-//シンボルの設定
-//------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
-{
-	// Shape設定
-	m_Shape = shape;
-
-	//UV設定
-	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
-							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
 }

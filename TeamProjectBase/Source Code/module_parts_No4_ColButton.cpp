@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No2_ShapeKey.cpp]
+//モジュールパーツの色のボタン  [module_parts_No4_ColButton.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No2_ShapeKey.h"
+#include "module_parts_No4_ColButton.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -30,33 +30,25 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
+CModule_Parts_No4_ColButton::CModule_Parts_No4_ColButton()
 {
-	m_pShape.reset();
-	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
+
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
+CModule_Parts_No4_ColButton::~CModule_Parts_No4_ColButton()
 {
-	m_pShape.reset();
+
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No2_ShapeKey::Init()
+HRESULT CModule_Parts_No4_ColButton::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
-
-	//文字の生成
-	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,
-		CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
-
-	//親マトリックス設定
-	m_pShape->SetParentMtxPtr(GetMtxWorldPtr());
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO4_BUTTON));
 
 	CSceneX::Init();
 
@@ -66,21 +58,21 @@ HRESULT CModule_Parts_No2_ShapeKey::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Update()
+void CModule_Parts_No4_ColButton::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Draw()
+void CModule_Parts_No4_ColButton::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
+void CModule_Parts_No4_ColButton::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -88,14 +80,9 @@ void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
 }
 
 //------------------------------------------------------------------------------
-//シンボルの設定
+//ボタンの色設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
+void CModule_Parts_No4_ColButton::SetButtonCol(BUTTON_COL col)
 {
-	// Shape設定
-	m_Shape = shape;
 
-	//UV設定
-	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
-							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
 }

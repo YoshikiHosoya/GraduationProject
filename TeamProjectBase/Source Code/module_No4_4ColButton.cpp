@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No2_ShapeKey.cpp]
+//モジュールの図形のキーパッド処理  [module_ShapeKeypad.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,14 +8,12 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No2_ShapeKey.h"
+#include "module_No4_4ColButton.h"
+#include "module_parts_No4_ColButton.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
-#include "particle.h"
 #include "timer.h"
-#include "scene3D.h"
-#include "keyboard.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -23,40 +21,39 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
-#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
-#define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
+#define COL_BUTTON_NUM			(4)
+#define COL_BUTTON_OFFSET		(D3DXVECTOR3(0.0f,0.0f,-25.0f))
 
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
+CModule_No4_4ColButton::CModule_No4_4ColButton()
 {
-	m_pShape.reset();
-	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
+	m_pColButtonList.clear();
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
+CModule_No4_4ColButton::~CModule_No4_4ColButton()
 {
-	m_pShape.reset();
+	m_pColButtonList.clear();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No2_ShapeKey::Init()
+HRESULT CModule_No4_4ColButton::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
 
-	//文字の生成
-	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,
-		CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
+	while (m_pColButtonList.size() < COL_BUTTON_NUM)
+	{
+		m_pColButtonList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No4_ColButton>(COL_BUTTON_OFFSET, GetMtxWorldPtr()));
+	}
 
-	//親マトリックス設定
-	m_pShape->SetParentMtxPtr(GetMtxWorldPtr());
+	//ランプ生成
+	CModule_Base::CreateLamp();
 
 	CSceneX::Init();
 
@@ -66,36 +63,34 @@ HRESULT CModule_Parts_No2_ShapeKey::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Update()
+void CModule_No4_4ColButton::Update()
 {
 	CSceneX::Update();
+
+
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Draw()
+void CModule_No4_4ColButton::Draw()
 {
 	CSceneX::Draw();
+
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
+void CModule_No4_4ColButton::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
 #endif //DEBUG
 }
-
 //------------------------------------------------------------------------------
-//シンボルの設定
+//キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
+void CModule_No4_4ColButton::Operation()
 {
-	// Shape設定
-	m_Shape = shape;
 
-	//UV設定
-	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
-							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
 }
+

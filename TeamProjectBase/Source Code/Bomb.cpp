@@ -19,6 +19,7 @@
 #include "module_Button.h"
 #include "module_No1_SymbolKeyPad.h"
 #include "module_No2_ShapeKeypad.h"
+#include "module_No4_4ColButton.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -215,8 +216,6 @@ void CBomb::Operator()
 	default:
 		break;
 	}
-
-
 }
 
 //------------------------------------------------------------------------------
@@ -358,10 +357,17 @@ void CBomb::CreateModule_Random(int const nModuleNum)
 			//	break;
 
 				//キーパッド
-		case CModule_Base::MODULE_TYPE::KEYPAD:
+		case CModule_Base::MODULE_TYPE::NO1_SYMBOL:
 			if (nCntModule < m_nModuleNum)
 			{
 				CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+				m_nModuleNum++;
+			}
+			break;
+		case CModule_Base::MODULE_TYPE::NO2_SHAPE:
+			if (nCntModule < m_nModuleNum)
+			{
+				CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
 				m_nModuleNum++;
 			}
 			break;
@@ -387,7 +393,7 @@ void CBomb::CreateModuleDebug()
 	//3番目
 	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
 	//4番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//5番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//6番目
