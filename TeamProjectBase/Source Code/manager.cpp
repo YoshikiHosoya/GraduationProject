@@ -24,6 +24,7 @@
 #include "mouse.h"
 #include "Debug/Debug_EffectViewer.h"
 #include "camera.h"
+#include "client.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -40,6 +41,14 @@ HWND CManager::m_hWnd = nullptr;
 int CManager::m_nNumChangeMode = 0;
 
 CManager::RAY CManager::m_ray;
+
+//------------------------------------------------------------------------------
+//デストラクタ
+//------------------------------------------------------------------------------
+CManager::~CManager()
+{
+	CClient::UninitClient();
+}
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
@@ -104,6 +113,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//ベースの素材生成
 	CBaseMode::BaseLoad(hWnd);
+
+	std::thread t1(CClient::ConnectServer);
+	t1.detach();
+
 
 	//モード設定
 	SetMode(m_mode);

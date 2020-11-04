@@ -28,11 +28,10 @@ SOCKET CClient::m_socket = NULL;
 // ===================================================================
 // メイン関数
 // ===================================================================
-int CClient::main(void)
+int CClient::ConnectServer(void)
 {
 	struct sockaddr_in server;
-	char buf[256];					// テキストを格納する変数
-	size_t bufSize = sizeof(buf);	// サイズを格納する変数
+	int err = 0;
 
 	// winsockの初期化
 	if (InitClient() == E_FAIL)
@@ -49,10 +48,38 @@ int CClient::main(void)
 	server.sin_port = htons(PORT_SERVER);
 	server.sin_addr.S_un.S_addr = inet_addr(IPADDRESS_SERVER);
 
-	// サーバに接続
-	if (connect(m_socket, (struct sockaddr *)&server, sizeof(server)) == 0)
-		// 要素の初期化
+	while (!m_bConnecting)
+	{
+		// 接続
+		err = connect(m_socket, (struct sockaddr *)&server, sizeof(server));
+
+		// エラー発生
+		if (err == -1)
+		{
+#ifdef _DEBUG
+			printf("接続中…\n");
+#endif 
+			// 再接続
+			continue;
+		}
+
+		// 接続完了
+#ifdef _DEBUG
+		printf("接続完了\n");
+#endif
 		m_bConnecting = true;
+	}
+
+	return 0;
+}
+
+// ===================================================================
+// 受信待ち処理
+// ===================================================================
+void CClient::WaitRecieve(void)
+{
+	char buf[256];					// テキストを格納する変数
+	size_t bufSize = sizeof(buf);	// サイズを格納する変数
 
 	while (1)
 	{
@@ -66,21 +93,23 @@ int CClient::main(void)
 		// 接続待ち
 		if (recv(m_socket, buf, bufSize, 0) == -1)
 		{
+#ifdef _DEBUG
 			// エラーレポート
 			ErrorReport();
+#endif
 			continue;
 		}
 
 		// 文字列を格納
 		int nLen = strlen(buf);
+#ifdef _DEBUG
 		// 受信したデータを表示
 		if (nLen > 0)
 			printf("%d, %s\n", nLen, buf);
+#endif
 	}
 	// winsock2の終了処理
 	WSACleanup();
-
-	return 0;
 }
 
 // ===================================================================
@@ -100,8 +129,11 @@ HRESULT CClient::InitClient(void)
 		return S_OK;
 	}
 
+#ifdef _DEBUG
 	// エラーメッセージ
 	ErrorReport();
+#endif
+
 	// winsock2の終了処理
 	WSACleanup();
 	// 失敗
@@ -120,6 +152,20 @@ void CClient::UninitClient(void)
 	WSACleanup();
 }
 
+// ===================================================================
+// テキストの送信
+// ===================================================================
+void CClient::Send(char * cSendText)
+{
+	// 送信用の変数に格納
+	strcpy(m_cSendText, cSendText);
+	// テキスト送信
+	send(m_socket, m_cSendText, strlen(m_cSendText), 0);
+	// 送信後は中身をなくす
+	strcpy(m_cSendText, "");
+}
+
+#ifdef _DEBUG
 // ===================================================================
 // エラーメッセージ
 // ===================================================================
@@ -185,22 +231,63 @@ void CClient::ErrorReport(void)
 	case EWOULDBLOCK:
 		printf("socketは、非ブロック・モードになっているため、データの読み取りはできません。\n");
 		printf("または、SO_RCVTIMEOタイムアウト値に達したためデータは使用できませんでした。");
+		break;
+	case WSAEINTR:
+		printf("ブロッキングWindows Sockets 1.1呼び出しが WSACancelBlockingCall を通じてキャンセルされました。\n");
+		break;
+	case WSAEACCES:
+		printf("setsockeoptオプションSO_BROADCASTが有効でないため、ダイアグラムソケットのブロードキャストへの\n");
+		printf("接続試行が失敗しました。\n");
+		break;
+	case WSAEINVAL:
+		printf("パラメータsはリスニングソケットです。\n");
+		break;
+	case WSAEWOULDBLOCK:
+		printf("そのソケットは非ブロッキングとしてマークされており、接続が直ちに完了しませんでした。\n");
+		break;
+	case WSAEALREADY:
+		printf("非ブロッキングconnect呼び出しがして入れたソケットで実行中です。\n");
+		break;
+	case WSAENOTSOCK:
+		printf("sパラメータで指定されたディスクリプタはソケットではありません。\n");
+		break;
+	case WSAEAFNOSUPPORT:
+		printf("指定されたファミリのアドレスをこのソケットで使用することはできません。\n");
+		break;
+	case WSAEADDRINUSE:
+		printf("ソケットのローカルアドレスが既に使用されており、ソケットがアドレスを再利用可能となるように\n");
+		printf("SO_REUSEADDRソケットオプションがつけられていません。\n");
+		printf("このエラーは通常bind関数を実行している際に発生しますが、bindが部分的なワイルドカードアドレス(ADDR_ANY)を\n");
+		printf("指定し、かつ、特定のアドレスがこの関数の時点でコミットされる必要がある場合にこの関数まで先延ばしされる\n");
+		printf("可能性があります。\n");
+		break;
+	case WSAEADDRNOTAVAIL:
+		printf("リモートアドレスが有効ではありません。\n");
+		break;
+	case WSAENETDOWN:
+		printf("ネットワークサブシステムが失敗しました。\n");
+		break;
+	case WSAENETUNREACH:
+		printf("現時点でこのホストからネットワークに到達することができません。\n");
+		break;
+	case WSAENOBUFS:
+		printf("利用可能なバッファ空間がありません。ソケットを接続できません。\n");
+		break;
+	case WSAEISCONN:
+		printf("指定されたソケットは既に接続されています(コネクション指向のソケットのみ)。\n");
+		break;
+	case WSAETIMEDOUT:
+		printf("接続試行は接続が確立することなくタイムアウトしました。\n");
+		break;
+	case WSAECONNREFUSED:
+		printf("接続の試行が強く拒否されました。\n");
+		break;
+	case WSAEHOSTUNREACH:
+		printf("到達不能なホストに対してソケット操作が試行されました。\n");
+		break;
+	case WSANOTINITIALISED:
+		printf("この関数を呼び出す前にWSAStartup関数の呼び出しが成功していなければなりません。\n");
+		break;
 	}
-
-	// キー入力待ち
-	printf("終了します。Enterキーを入力してください。\n");
-	getchar();
 }
-
-// ===================================================================
-// テキストの送信
-// ===================================================================
-void CClient::Send(char * cSendText)
-{
-	// 送信用の変数に格納
-	strcpy(m_cSendText, cSendText);
-	// テキスト送信
-	send(m_socket, m_cSendText, strlen(m_cSendText), 0);
-	// 送信後は中身をなくす
-	strcpy(m_cSendText, "");
-}
+#endif
