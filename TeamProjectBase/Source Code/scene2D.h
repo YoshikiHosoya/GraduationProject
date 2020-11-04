@@ -28,7 +28,7 @@ public:
 	virtual void ShowDebugInfo()										override;						//デバッグ情報表記
 	void SetAnimation(D3DXVECTOR2 const UV, D3DXVECTOR2 const size)		override;						//テクスチャUV座標設定
 	void SetSize(D3DXVECTOR3 const &size)								override;						//サイズ設定
-	HRESULT MakeVertex()													override;						//頂点バッファ作成
+	HRESULT MakeVertex()												override;						//頂点バッファ作成
 
 	static int GetNumScene2D()	{ return m_nNumScene2D; };		//2Dの総数取得
 

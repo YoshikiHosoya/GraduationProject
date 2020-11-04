@@ -6,6 +6,5 @@
 [Picture][Parameter]
 NumPolygon = 128 128
 Size = 300 300
-TextureFile = data/TEXTURE/BMP/BaseBMP.bmp
-
+WriteToFile = data/SAVEDATA/PictureTextures/PicTex.txt
 

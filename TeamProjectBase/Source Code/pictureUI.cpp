@@ -119,10 +119,11 @@ void CPictureUI::ShowDebugInfo()
 //-------------------------------------------------------------------------------------------------------------
 bool CPictureUI::Collision(CScene2D *pScene2D, int& nCntType)
 {
-	CMouse *pMouse = CManager::GetMouse();
-	D3DXVECTOR2 MousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
-	D3DXVECTOR3 &pos = pScene2D->GetPos();
-	D3DXVECTOR3 &size = pScene2D->GetSize() * 0.5f;
+	// •Ï”éŒ¾
+	CMouse *     pMouse   = CManager::GetMouse();
+	D3DXVECTOR2  MousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
+	D3DXVECTOR3 &pos      = pScene2D->GetPos();
+	D3DXVECTOR3 &size     = pScene2D->GetSize() * 0.5f;
 
 	if (pos.x + size.x >= MousePos.x && MousePos.x >= pos.x - size.x  &&
 		pos.y + size.y >= MousePos.y && MousePos.y >= pos.y - size.y)
