@@ -10,6 +10,7 @@
 //インクルード
 //------------------------------------------------------------------------------
 #include "main.h"
+#include "Mylibrary.h"
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -44,6 +45,13 @@ public:
 		MODE_END							//ゲーム終了
 	};
 
+	typedef struct
+	{
+		FLOAT3 NearPos;		// 近い位置
+		FLOAT3 FarPos;		// 遠い位置
+		VEC3 vec;			// レイのベクトル
+	} RAY;
+
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);					//初期化
 	void Uninit();																//終了
 	void Update();																//更新
@@ -58,6 +66,7 @@ public:
 	static CKeyboard *GetKeyboard()		{ return m_pKeyboard.get(); };			//キーボード取得
 	static CMouse *GetMouse()			{ return m_pMouse.get(); };				//マウス取得
 	static CPad_XInput *GetXInput()		{ return m_pXInput.get(); };			//XInputの取得
+	static RAY *GetRay()				{ return &m_ray; }						// レイの取得
 
 	static CBaseMode *GetBaseMode();											//ベースのモード取得
 	static CGame *GetGame();													//ゲーム取得 簡単に呼び出せるように
@@ -74,6 +83,8 @@ private:
 	static HWND m_hWnd;		//ウィンドウハンドル
 
 	static int m_nNumChangeMode;	//モード変えた回数
+
+	static RAY m_ray;				// レイの情報
 };
 
 #endif

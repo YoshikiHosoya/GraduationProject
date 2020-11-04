@@ -23,6 +23,8 @@
 #include "TestMode.h"
 #include "mouse.h"
 #include "Debug/Debug_EffectViewer.h"
+#include "camera.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -36,6 +38,8 @@ std::unique_ptr<CBaseMode> CManager::m_pBaseMode	= nullptr;
 CManager::MODE CManager::m_mode = CManager::MODE_TITLE;
 HWND CManager::m_hWnd = nullptr;
 int CManager::m_nNumChangeMode = 0;
+
+CManager::RAY CManager::m_ray;
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
@@ -173,6 +177,19 @@ void CManager::Update()
 
 	//スティックの情報更新
 	CHossoLibrary::ResetStickInfo();
+
+	// マウス位置の取得
+	INTEGER2 MousePos(m_pMouse->GetMousePoint().x, m_pMouse->GetMousePoint().y);
+	// スクリーン座標を取得する
+	CMylibrary::CalScreenRay(
+		&m_ray.vec,
+		&m_ray.NearPos,
+		&m_ray.FarPos,
+		&MousePos,
+		&INTEGER2(SCREEN_WIDTH, SCREEN_HEIGHT),
+		(MATRIX*)m_pRenderer->GetCamera()->GetMtxView(),
+		(MATRIX*)m_pRenderer->GetCamera()->GetMtxProjection());
+
 
 	if (m_pBaseMode)
 	{	//モード

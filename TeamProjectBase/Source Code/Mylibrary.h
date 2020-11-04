@@ -742,6 +742,7 @@ typedef struct FLOAT3 : public D3DXVECTOR3
 	FLOAT3(float x, float y, float z) : D3DXVECTOR3(x, y, z) {}																// コンストラクタ
 	FLOAT3(CONST FLOAT3& rhs) : D3DXVECTOR3(rhs) {}																			// コンストラクタ
 	FLOAT3(CONST D3DXVECTOR3& rhs) : D3DXVECTOR3(rhs) {}																	// コンストラクタ
+	FLOAT3(CONST D3DXVECTOR3* rhs) : D3DXVECTOR3(*rhs) {}																	// コンストラクタ
 	~FLOAT3() {}																											// デストラクタ
 
 	inline FLOAT3        operator +(const FLOAT3 &rhs) const;																// 四則演算子+
@@ -768,6 +769,7 @@ typedef struct VEC3 : public FLOAT3
 	VEC3() {}												// コンストラクタ
 	VEC3(float x, float y, float z) : FLOAT3(x, y, z) {}	// コンストラクタ
 	VEC3(const FLOAT3 &rhs) : FLOAT3(rhs) {}				// コンストラクタ
+	VEC3(const D3DXVECTOR3 *rhs) : FLOAT3(rhs) {}				// コンストラクタ
 	~VEC3() {}												// デストラクタ
 	inline VEC3& operator =(const FLOAT3 &rhs);				// 代入演算子
 	inline bool  IsVertical(const VEC3 &rhs) const;			// 垂直関係にある？
@@ -1243,15 +1245,20 @@ public:
 		else {
 			// 文字列の長さを加算
 			this->m_nStringLength += strlen(string);
-			// 
+			// 保存用文字列の生成
 			STRING str = new char[this->m_nStringLength];
+			// 文字列をコピーする
 			strcpy(str, this->m_string);
+			// 文字列を合成する
 			strcat(str, string);
+			// 既存の文字列を破棄
 			delete[]this->m_string;
 			this->m_string = nullptr;
-
+			// 新しく生成する
 			this->m_string = new char[this->m_nStringLength];
+			// 保存していた文字列をコピー
 			strcpy(this->m_string, str);
+			// 文字列の破棄
 			delete[]str;
 			str = nullptr;
 		}
