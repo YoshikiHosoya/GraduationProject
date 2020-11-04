@@ -52,6 +52,9 @@ public:
 		VEC3 vec;			// レイのベクトル
 	} RAY;
 
+	CManager() {};	// コンストラクタ
+	~CManager();	// デストラクタ
+
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);					//初期化
 	void Uninit();																//終了
 	void Update();																//更新
