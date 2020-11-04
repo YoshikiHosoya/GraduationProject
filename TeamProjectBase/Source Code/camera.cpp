@@ -167,6 +167,11 @@ void CCamera::ShowCameraInfo()
 
 		ImGui::Text("ViewVec %.2f %.2f %.2f", m_mtxView._31, m_mtxView._32, m_mtxView._33);
 	}
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------カメラ----------------\n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[W] [A] [S] [D] [Q] [E] カメラ移動 \n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[左クリック] カメラ回転 \n");
+
 #endif //DEBUG
 }
 

@@ -153,6 +153,8 @@ void CModule_No1_SymbolKeyPad::Operation()
 		}
 	}
 
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------Module_No_1----------------\n");
+
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "KeyPad >> [%d] [%d] [%d]\n", m_pKeyPadList[0]->GetSymbolNum(), m_pKeyPadList[1]->GetSymbolNum(), m_pKeyPadList[2]->GetSymbolNum());
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "KeyPad >> [%d] [%d] [%d]\n", m_pKeyPadList[3]->GetSymbolNum(), m_pKeyPadList[4]->GetSymbolNum(), m_pKeyPadList[5]->GetSymbolNum());
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "KeyPad >> [%d] [%d] [%d]\n", m_pKeyPadList[6]->GetSymbolNum(), m_pKeyPadList[7]->GetSymbolNum(), m_pKeyPadList[8]->GetSymbolNum());
