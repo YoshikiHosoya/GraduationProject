@@ -31,12 +31,8 @@ void CPaintingPen::Init(void)
 	CCamera *pCamera = CManager::GetRenderer()->GetCamera();
 	m_pMtxView = pCamera->GetMtxView();
 	m_pMtxProj = pCamera->GetMtxProjection();
-	m_ScreenPos = INTEGER2(SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_bPaint    = false;
 	m_mode      = MODE_BRUSH;
-	m_NearPos   = MYLIB_VEC3_UNSET;
-	m_FarPos    = MYLIB_VEC3_UNSET;
-	m_Ray       = MYLIB_VEC3_UNSET;
 	m_pos       = MYLIB_VEC2_UNSET;
 	m_posOld    = MYLIB_VEC2_UNSET;
 	m_Capsule = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
@@ -49,14 +45,11 @@ void CPaintingPen::Uninit(void)
 {
 	m_pMtxView = nullptr;
 	m_pMtxProj = nullptr;
-	m_bPaint = false;
-	m_mode = MODE_BRUSH;
-	m_NearPos = MYLIB_VEC3_UNSET;
-	m_FarPos = MYLIB_VEC3_UNSET;
-	m_Ray = MYLIB_VEC3_UNSET;
-	m_pos = MYLIB_VEC2_UNSET;
-	m_posOld = MYLIB_VEC2_UNSET;
-	m_Capsule = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
+	m_bPaint   = false;
+	m_mode     = MODE_BRUSH;
+	m_pos      = MYLIB_VEC2_UNSET;
+	m_posOld   = MYLIB_VEC2_UNSET;
+	m_Capsule  = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -64,6 +57,19 @@ void CPaintingPen::Uninit(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::Update(void)
 {
+	CMouse *pMouse = CManager::GetMouse();
+
+	if (pMouse->GetTrigger(1))
+	{
+		if (m_mode != MODE_BRUSH)
+		{
+			m_mode = MODE_BRUSH;
+		}
+		else
+		{
+			m_mode = MODE_ERASER;
+		}
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -80,24 +86,14 @@ void CPaintingPen::PaintCol(D3DXCOLOR * pCol)
 }
 
 //-------------------------------------------------------------------------------------------------------------
-// レイの算出
-//-------------------------------------------------------------------------------------------------------------
-void CPaintingPen::RayCalculation(CMouse *pMouse)
-{
-	// マウス位置の取得
-	INTEGER2 MousePos(pMouse->GetMousePoint().x, pMouse->GetMousePoint().y);
-	// スクリーン座標を取得する
-	CMylibrary::CalScreenRay(&m_Ray, &m_NearPos, &m_FarPos, &MousePos, &m_ScreenPos, (MATRIX*)m_pMtxView, (MATRIX*)m_pMtxProj);
-}
-
-//-------------------------------------------------------------------------------------------------------------
 // 絵上の位置の取得
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::PosCalculation(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPlaneNor)
 {
+	CManager::RAY *pRay = CManager::GetRay();
 	D3DXVECTOR3 CrossPos;
 	// 平面との交差位置を計算
-	CMylibrary::CalIntersectionPointToPlaneAndLine(&CrossPos, pPos, pPlaneNor, &m_NearPos, &m_Ray);
+	CMylibrary::CalIntersectionPointToPlaneAndLine(&CrossPos, pPos, pPlaneNor, &pRay->NearPos, &pRay->vec);
 	m_pos.x = CrossPos.x;
 	m_pos.y = CrossPos.y;
 }
@@ -118,7 +114,7 @@ CPaintingPen * CPaintingPen::Create(void)
 void CPaintingPen::SetCapsule(void)
 {
 	m_Capsule.Segment.pos = m_pos;
-	m_Capsule.Segment.vec = (m_posOld - m_pos);
+	m_Capsule.Segment.vec = m_posOld - m_pos;
 }
 
 //-------------------------------------------------------------------------------------------------------------

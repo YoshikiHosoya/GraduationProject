@@ -13,27 +13,27 @@
 #include "mouse.h"
 #include "camera.h"
 #include "PaintingPen.h"
-#include "pictureUI.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
 //-------------------------------------------------------------------------------------------------------------
 #define PICTURE_FILENAME		"data/TEXT/PictureInfo.txt"
-#define PICTURE_WRITINGPASS		"data/TEXT/"
+#define PICTURE_WRITINGPASS		"data/SAVEDATA/PictureTextures/"
+#define PICTURE_WRITINGNAME		"PicTex.txt"
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-INTEGER2      CPicture::m_nNumPixelBlock  = MYLIB_INT2_UNSET;							// ピクセル数
-FLOAT2        CPicture::m_size            = MYLIB_2DVECTOR_ZERO;						// 大きさ
-D3DXVECTOR3   CPicture::m_PlaneNor        = D3DXVECTOR3(0.0f, 0.0f, 1.0f);				// 平面の法線
-D3DXVECTOR2   CPicture::m_PixelSize       = MYLIB_VEC2_UNSET;							// ピクセルサイズ
-UINT          CPicture::m_nNumDataMax     = MYLIB_INT_UNSET;							// 最大データ数最大データ数
-CPaintingPen* CPicture::m_pPen            = nullptr;									// ペンのポインタ
-D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;							// ピクセルサイズの半分
-D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;									// ピクセル位置のポインタ
-UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;							// ファイルを作った回数
-std::shared_ptr<CPictureUI> CPicture::m_pUi;						// UI
+INTEGER2      CPicture::m_nNumPixelBlock  = MYLIB_INT2_UNSET;						// ピクセル数
+FLOAT2        CPicture::m_size            = MYLIB_2DVECTOR_ZERO;					// 大きさ
+D3DXVECTOR3   CPicture::m_PlaneNor        = D3DXVECTOR3(0.0f, 0.0f, -1.0f);			// 平面の法線
+D3DXVECTOR2   CPicture::m_PixelSize       = MYLIB_VEC2_UNSET;						// ピクセルサイズ
+UINT          CPicture::m_nNumDataMax     = MYLIB_INT_UNSET;						// 最大データ数最大データ数
+CPaintingPen* CPicture::m_pPen            = nullptr;								// ペンのポインタ
+D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;						// ピクセルサイズの半分
+D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;								// ピクセル位置のポインタ
+UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;						// ファイルを作った回数
+CString       CPicture::m_WriteToFile;												// 書き込み先のァイル名
 
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
@@ -79,10 +79,6 @@ void CPicture::InitStaticMember(void)
 	ReleasePen();
 	// ペンの生成
 	m_pPen = CPaintingPen::Create();
-	// UIの読み込み
-	CPictureUI::Load();
-	// UIの生成
-	m_pUi = CPictureUI::Create();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -126,15 +122,13 @@ void CPicture::MatrixCal(void)
 //-------------------------------------------------------------------------------------------------------------
 inline CPicture::~CPicture()
 {
+	this->Writing();
 	// 頂点バッファの取得
 	if (m_pVtexBuff != nullptr)
 	{
 		m_pVtexBuff->Release();
 		m_pVtexBuff = nullptr;
 	}
-
-	// ファイル名の開放処理
-	m_FileName.release();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -169,7 +163,8 @@ HRESULT CPicture::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Update()
 {
-	m_pPen->SetMode((CPaintingPen::MODE)m_pUi->GetPressedType());
+	// ペンの更新
+	m_pPen->Update();
 	// 絵を描く
 	PaintProc();
 }
@@ -179,41 +174,41 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
-	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
-	//デバイス取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	if (Mybfunc_bit_comp(m_Flags.cValue, CPicture::FLAG_DISP))
+	{
+		//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
 
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_trans.mtxWorld);
+		//デバイス取得
+		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	//頂点バッファをデバイスのデータストリームにバインド
-	pDevice->SetStreamSource(0, m_pVtexBuff, 0, sizeof(VERTEX_3D));
+		// ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &m_trans.mtxWorld);
 
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
+		//頂点バッファをデバイスのデータストリームにバインド
+		pDevice->SetStreamSource(0, m_pVtexBuff, 0, sizeof(VERTEX_3D));
 
-	//テクスチャの設定
-	pDevice->SetTexture(0, m_pTexture);
+		//頂点フォーマットの設定
+		pDevice->SetFVF(FVF_VERTEX_3D);
 
-	// ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//プリミティブの種類
-		0,					//開始するインデックス(頂点)
-		2);					//ポリゴンの枚数
+		//テクスチャの設定
+		pDevice->SetTexture(0, m_pTexture);
 
-	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
+		// ポリゴンの描画
+		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//プリミティブの種類
+			0,					//開始するインデックス(頂点)
+			2);					//ポリゴンの枚数
+		//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot, CONST MODE mode, CONST_STRING FileName)
+std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot, CONST MODE mode)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CPicture> pPicture = std::make_shared<CPicture>();
-	if (FileName != NULL)
-	{
-		pPicture->SetFileName(FileName);
-	}
+
 	// モードの設定
 	pPicture->SetMode(mode);
 	// 位置の設定
@@ -240,7 +235,9 @@ void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 		throw E_FAIL;
 	}
 	// テクスチャカラーの初期化
-	InitTextureColor();
+	//InitTextureColor();
+
+	Reading(m_WriteToFile);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -328,14 +325,20 @@ void CPicture::ReadFromLine(CONST_STRING Line)
 	INTEGER2    NumPoly = MYLIB_INT2_UNSET;
 	D3DXVECTOR2 size    = MYLIB_2DVECTOR_ZERO;
 	char aFileName[MYLIB_STRINGSIZE] = { '\0' };
-
+	// ポリゴン数
 	if (sscanf(Line, "NumPolygon = %d %d", &NumPoly.nX , &NumPoly.nY) == 2)
 	{
 		m_nNumPixelBlock = NumPoly;
 	}
+	// ポリゴンサイズ
 	else if (sscanf(Line, "Size = %f %f",&size.x, &size.y) == 2)
 	{
 		m_size = size;
+	}
+	// 書き込み先のファイル
+	else if (sscanf(Line, "WriteToFile = %s", aFileName) == 1)
+	{
+		m_WriteToFile = aFileName;
 	}
 }
 
@@ -410,18 +413,26 @@ void CPicture::PaintProc(void)
 	D3DLOCKED_RECT LockRect;
 	// ロック
 	m_pTexture->LockRect(0, &LockRect, NULL, 0);
+	// カラーデータの取得
+	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;
 
-	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの取得(最後尾)
 	D3DXVECTOR2 *pPixelPos = m_pPixelPos;						// ピクセル位置の取得
 
 	const float fRadius = pCap->fRadius * pCap->fRadius;		// 比較用の半径を算出
 	const float fSegLeng = pCap->Segment.vec.Length();			// カプセルの線分の長さを取得
 
+	int nPenMode = m_pPen->GetMode();							// モードの取得
+
 	// 線分の長さが許容以下の時
 	if (fSegLeng <= MYLIB_OX_EPSILON)
 	{
-		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
+		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pPixelPos++, pData++)
 		{
+			// (白の時 == 1、黒の時 == 0) == モード(ブラシ == 0、消しゴム == 1)の時
+			if ((pData->r > 0.5f) == nPenMode)
+			{// 処理をスキップする
+				continue;
+			}
 			// 位置の差分を算出
 			D3DXVECTOR2 DiffPos = pCap->Segment.pos - *pPixelPos;
 			// 距離を比較
@@ -429,9 +440,6 @@ void CPicture::PaintProc(void)
 			{// ペンで色を塗る
 				m_pPen->PaintCol(pData);
 			}
-			// ポインタを進める
-			pPixelPos++;
-			pData++;
 		}
 	}
 	else
@@ -439,8 +447,13 @@ void CPicture::PaintProc(void)
 		// 線分の終端を取得
 		CONST FLOAT2 SegEndPoint = pCap->Segment.GetEndPoint();
 
-		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++)
+		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pPixelPos++, pData++)
 		{
+			// (白の時 == 1、黒の時 == 0) == モード(ブラシ == 0、消しゴム == 1)の時
+			if ((pData->r > 0.5f) == nPenMode)
+			{// 処理をスキップする
+				continue;
+			}
 			// 鋭角じゃない時
 			if (CMylibrary::IsSharpAngle(*pPixelPos, pCap->Segment.pos, SegEndPoint) == false)
 			{// 位置の差分を算出
@@ -470,9 +483,6 @@ void CPicture::PaintProc(void)
 					m_pPen->PaintCol(pData);
 				}
 			}
-			// ポインタを進める
-			pPixelPos++;
-			pData++;
 		}
 	}
 	
@@ -489,21 +499,14 @@ bool CPicture::GetMousePosOnPicture(void)
 	m_pPen->SetPosOld();
 	// マウスの取得
 	CMouse  *pMouse = CManager::GetMouse();
-	// レイの算出
-	m_pPen->RayCalculation(pMouse);
 	// 位置の算出
 	m_pPen->PosCalculation(&m_trans.pos, &m_PlaneNor);
 	// 交点の取得
 	D3DXVECTOR2 *pCrossPos = m_pPen->GetPos();
 	// 絵上の位置の取得
 	*pCrossPos = { pCrossPos->x - m_trans.pos.x,m_trans.pos.y - pCrossPos->y };
-
-	// マウスの左クリックが押されていない時
-	if (pMouse->GetPress(0) == false)
-	{
-		return false;
-	}
-	return true;
+	// マウスの左クリックが押されている時
+	return pMouse->GetPress(0);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -511,20 +514,36 @@ bool CPicture::GetMousePosOnPicture(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Writing(void)
 {
-	// 変数宣言
-	char *pPass = "12345";
-	char *pName = "6789";
-	CString filename;
-	filename = pPass;
-	filename += pName;
-	//filename.Synthesize("%s%s=%d.txt", pPass, pName, m_nNumMakeFile);
-	FILE *pFile = fopen(filename.Get(), "w");
+	// ファイルを開く
+	FILE *pFile = fopen(m_WriteToFile.Get(), "w");
+	// nullチェック
 	if (pFile == NULL)
-	{
+	{// 開けなかったとき
 		return;
 	}
-	fclose(pFile);
 
+	// ロックした情報
+	D3DLOCKED_RECT LockRect;
+
+	// ロック
+	m_pTexture->LockRect(0, &LockRect, NULL, 0);
+
+	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの取得
+
+	// 最大数の書き込み
+	fprintf(pFile, "max = %d\n", m_nNumDataMax);
+
+	// カラーフラグの書き込み
+	for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pData++)
+	{
+		fprintf(pFile, "%d%s", (pData->r > 0.5f) ? 1 : 0, ((nCntPixel % 128) == 127) ? "\n" : "");
+	}
+
+	// アンロック
+	m_pTexture->UnlockRect(0);
+
+	// ファイルを閉じる
+	fclose(pFile);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -532,11 +551,61 @@ void CPicture::Writing(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Reading(CString & file)
 {
+	// データ格納
+	MyVector<bool> bData;
+	// ファイル読み込み
+	if (CLoadFile::ReadLineByLineFromFile(file.Get(), TexterReadFromLine, &bData) != CLoadFile::LR_SUCCESS)
+	{
+		std::cout << "読み込み失敗しました。\n";
+	}
+
+	// ロックした情報
+	D3DLOCKED_RECT LockRect;
+	// ロック
+	m_pTexture->LockRect(0, &LockRect, NULL, 0);
+
+	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの取得
+	// 読み込みサイズの取得
+	UINT nReadSize = bData.size();
+	// 最大数ループ
+	for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pData++)
+	{
+		// 読み込みサイズよりカウントが大きいとき
+		if (nReadSize <= nCntPixel)
+		{// ループを抜ける
+			break;
+		}
+		// データフラグが立っている時、白にする。それ以外の時、黒にする。
+		*pData = (bData[nCntPixel] == true) ? D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f) : D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	// アンロック
+	m_pTexture->UnlockRect(0);
+	// クリア
+	bData.clear();
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // テクスチャ情報の1行から情報を読み取る
 //-------------------------------------------------------------------------------------------------------------
-void CPicture::TexterReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData)
+void CPicture::TexterReadFromLine(CONST_STRING cnpLine, void*pOut)
 {
+	// 変数宣言
+	char aData[129]       = {};							// 文字列データ
+	int nData             = MYLIB_INT_UNSET;			// INT型データ
+	MyVector<bool> *pData = (MyVector<bool> *)pOut;		// キャストデータを取得
+
+	// データ最大数
+	if (sscanf(cnpLine, "max = %d", &nData) == 1)
+	{// 内容量を変更
+		pData->reserve(nData);
+	}
+	// フラグ情報を文字列として取得
+	else if (sscanf(cnpLine, "%s",&aData[0]) == 1)
+	{
+		for (int nCnt = 0; nCnt < 128; nCnt++)
+		{// 後ろに追加していく
+			pData->push_back(aData[nCnt] == '1');
+		}
+	}
 }
