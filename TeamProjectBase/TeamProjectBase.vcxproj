@@ -161,6 +161,7 @@
     <ClCompile Include="Source Code\chatTab.cpp" />
     <ClCompile Include="Source Code\chatText.cpp" />
     <ClCompile Include="Source Code\client.cpp" />
+    <ClCompile Include="Source Code\connectMode.cpp" />
     <ClCompile Include="Source Code\Debug\debugproc.cpp" />
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp" />
     <ClCompile Include="Source Code\fade.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Source Code\chatTab.h" />
     <ClInclude Include="Source Code\chatText.h" />
     <ClInclude Include="Source Code\client.h" />
+    <ClInclude Include="Source Code\connectMode.h" />
     <ClInclude Include="Source Code\Debug\debugproc.h" />
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h" />
     <ClInclude Include="Source Code\fade.h" />
