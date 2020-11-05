@@ -85,7 +85,7 @@ CChatTab::~CChatTab()
 //=============================================================================
 // テキストボックスの追加
 //=============================================================================
-void CChatTab::AddTextBox(char * cText)
+int CChatTab::AddTextBox(char * cText)
 {
 	// テキストボックスの背景を生成
 	m_pBoxBack.push_back(CPolygon2D::Create());
@@ -97,6 +97,9 @@ void CChatTab::AddTextBox(char * cText)
 	m_pBoxBack[nNumBox]->SetSize(D3DXVECTOR3(SIZE_X_TEXTBOX, 150.0f, 0.0f));
 	m_pBoxBack[nNumBox]->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
 	m_pBoxBack[nNumBox]->SetCol(D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.0f));
+
+	// ボックスの番号を返す
+	return nNumBox;
 }
 
 //=============================================================================

@@ -56,10 +56,11 @@ public:
 
 	static CChatTab * Create(void);	// 生成
 
-	static D3DXVECTOR2 &GetTabPos(void) { return m_TabPos; }		// タブ座標の取得
-	static TABSTATE &GetTabState(void)	{ return m_tabState; }		// タブの状態の取得
-	static void SetTabPos(D3DXVECTOR2 &pos) { m_TabPos = pos; }		// タブ座標の設定
-	static void AddTextBox(char* cText);							// テキストボックス追加
+	static D3DXVECTOR2 &GetTabPos(void)			{ return m_TabPos; }			// タブ座標の取得
+	static TABSTATE &GetTabState(void)			{ return m_tabState; }			// タブの状態の取得
+	static CPolygon2D *GetBoxBack(int nIndex)	{ return m_pBoxBack[nIndex]; }	// テキストの背景ポリゴン取得
+	static void SetTabPos(D3DXVECTOR2 &pos)		{ m_TabPos = pos; }				// タブ座標の設定
+	static int AddTextBox(char* cText);											// テキストボックス追加
 
 private:
 	void ClickTab(void);	// タブクリック

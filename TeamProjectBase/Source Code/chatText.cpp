@@ -17,20 +17,27 @@
 //==========================================================================================================================================================
 #define CHARACTER_HEIGHT		(18)				// 文字の高さ
 #define CHARACTER_WIDTH			(0)					// 文字の幅
-#define CHARACTER_LINE_WEIGHT	(1)					// 文字の太さ
+#define CHARACTER_LINE_WEIGHT	(10)					// 文字の太さ
 #define CHARACTER_FONTNAME		("ＭＳ ゴシック")	// 文字のフォント名
 #define TIME_PRESSKEY			(40)				// キーの長押し時間
+
+#define MAXCHAR_ONELINE			(30)				// 一行に収まる最大の文字数
+
+#define DIFPOS_X_SENDTEXT		(15.0f)				// 送信用テキストの座標の差分
+#define DIFPOS_Y_SENDTEXT		(63.0f)				// 送信用テキストの座標の差分
+#define DIFPOS_X_MAXCHAR		(190.0f)			// 文字数表示用テキストの座標の差分
+#define DIFPOS_Y_MAXCHAR		(23.0f)				// 文字数表示用テキストの座標の差分
 
 //==========================================================================================================================================================
 // 静的メンバ変数
 //==========================================================================================================================================================
-LPD3DXFONT		CChatText::m_pFont						= NULL;
-char			CChatText::m_aStr[MAX_CHARACTER]		= {};
-std::string		CChatText::m_cSendText					= {};
-D3DXCOLOR		CChatText::m_textColor					= WhiteColor;
-char			CChatText::m_cKeepText[MAX_KEEPTEXT][SIZE_CHATTEXT] = {};
-int				CChatText::m_nCntPress = 0;
-int			CChatText::m_nPressKey = 0;
+LPD3DXFONT			CChatText::m_pFont						= NULL;
+char				CChatText::m_aStr[MAX_CHARACTER]		= {};
+std::string			CChatText::m_cSendText					= {};
+D3DXCOLOR			CChatText::m_textColor					= WhiteColor;
+CChatText::CHATTEXT	CChatText::m_keepText[MAX_KEEPTEXT] = {};
+int					CChatText::m_nCntPress = 0;
+int					CChatText::m_nPressKey = 0;
 
 //==========================================================================================================================================================
 // 初期化
@@ -43,7 +50,7 @@ void CChatText::Init(void)
 		CHARACTER_WIDTH,		// 文字の幅
 		CHARACTER_LINE_WEIGHT,	// 文字の太さ
 		0,						// ミップマップレベルの数
-		FALSE,					// 文字の斜体化
+		TRUE,					// 文字の斜体化
 		SHIFTJIS_CHARSET,		// フォントの文字セット
 		OUT_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
@@ -57,7 +64,8 @@ void CChatText::Init(void)
 	// 文字列の初期化
 	for (int nCnt = 0; nCnt < MAX_KEEPTEXT; nCnt++)
 	{
-		strcpy(m_cKeepText[nCnt], "");
+		m_keepText[nCnt].nIndex = -1;
+		strcpy(m_keepText[nCnt].cText, "");
 	}
 }
 
@@ -74,58 +82,17 @@ void CChatText::Uninit(void)
 }
 
 //==========================================================================================================================================================
-// 表示
-//==========================================================================================================================================================
-void CChatText::Print(char* fmt, ...)
-{
-	va_list args;
-
-	// これまでのすべての文字数を計算
-	int nStrLength = (int)strlen(m_aStr);
-	// 追加で表示する文字数を計算
-	int nFmtLehgth = (int)strlen(fmt);
-	int nCnt;
-	char *pFmt;
-
-	// 文字数が最大を超えた時
-	if (nStrLength + nFmtLehgth > MAX_CHARACTER)
-	{
-		std::cout << "文字数越え" << std::endl;
-		return;
-	}
-
-	// fmtの初期化
-	va_start(args, fmt);
-
-	for (pFmt = (char *)fmt, nCnt = 0; *pFmt != '\0'; pFmt++, nCnt++)
-	{
-		// fmtの型・文字数を決定する
-		vsprintf(&m_aStr[nStrLength], fmt, args);
-	}
-
-	// argsを使えない状態にする
-	va_end(args);
-}
-
-//==========================================================================================================================================================
 // 描画
 //==========================================================================================================================================================
 void CChatText::Draw(void)
 {
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-
-	// テキスト描画
-	m_pFont->DrawText(NULL,
-		&m_cSendText[0],
-		-1,
-		&rect,
-		DT_LEFT,
-		m_textColor);
+	// メッセージ描画
+	DrawWriteMessage();
+	// 残り文字数描画
+	DrawLeftChar();
 
 	// 連続して文字数計算をしないよう\0を置く
 	//m_cSendText[0] = '\0';
-
-	CDebugProc::Print(CDebugProc::PLACE_RIGHT, (char*)m_cSendText.c_str());
 }
 
 //==========================================================================================================================================================
@@ -179,6 +146,11 @@ void CChatText::InputText(void)
 //==========================================================================================================================================================
 void CChatText::SetChatKeyInfo(int nKeyID)
 {
+	// 文字数を超えていたら、処理しない
+	if ((int)m_cSendText.size() >= SIZE_CHATTEXT)
+		return;
+
+	// 文字を追加
 	switch (nKeyID)
 	{
 	case DIK_1:				m_cSendText.push_back('1'); break;
@@ -253,6 +225,11 @@ void CChatText::SetChatKeyInfo(int nKeyID)
 //==========================================================================================================================================================
 void CChatText::SetChatShiftKeyInfo(int nKeyID)
 {
+	// 文字数を超えていたら、処理しない
+	if ((int)m_cSendText.size() >= SIZE_CHATTEXT)
+		return;
+
+	// 文字を追加
 	switch (nKeyID)
 	{
 	case DIK_1:				m_cSendText.push_back('!'); break;
@@ -369,25 +346,96 @@ void CChatText::SendChatText(void)
 	for (int nCnt = MAX_KEEPTEXT - 1; nCnt > -1; nCnt--)
 	{
 		// 文字が格納されているなら、処理しない
-		if (strlen(m_cKeepText[nCnt]) > 0)
+		if (strlen(m_keepText[nCnt].cText) > 0)
 			continue;
 
 		// 末尾は消す
 		if (nCnt == MAX_KEEPTEXT - 1)
-			strcpy(m_cKeepText[nCnt], "");
+		{
+			strcpy(m_keepText[nCnt].cText, "");
+			m_keepText[nCnt].nIndex = -1;
+		}
 		// 末尾以外は、一つ先の文字列を格納
 		else
-			strcpy(m_cKeepText[nCnt + 1], m_cKeepText[nCnt]);
+		{
+			strcpy(m_keepText[nCnt + 1].cText, m_keepText[nCnt].cText);
+			m_keepText[nCnt + 1] = m_keepText[nCnt];
+		}
 	}
 
 	// 先頭の文字列を上書き
-	strcpy(m_cKeepText[0], m_cSendText.c_str());
+	strcpy(m_keepText[0].cText, m_cSendText.c_str());
 	// 送信
 	std::thread t2(CClient::Send, (char*)m_cSendText.c_str());
 	t2.detach();
 
 	// チャットタブに保存
-	CChatTab::AddTextBox((char*)m_cSendText.c_str());
+	m_keepText[0].nIndex = CChatTab::AddTextBox((char*)m_cSendText.c_str());
 	// 文字列を破棄
 	m_cSendText.clear();
+}
+
+//==========================================================================================================================================================
+// 記入中のメッセージの描画
+//==========================================================================================================================================================
+void CChatText::DrawWriteMessage(void)
+{
+	// タブの座標を取得し、描画範囲を設定
+	D3DXVECTOR2 TabPos = CChatTab::GetTabPos();
+	RECT rect = { (LONG)(TabPos.x + DIFPOS_X_SENDTEXT),
+				(LONG)(TabPos.y - DIFPOS_Y_SENDTEXT),
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT };
+
+	// 行数を格納
+	int nLine = (int)m_cSendText.size() / MAXCHAR_ONELINE + 1;
+
+	char *cWriteText = new char[MAXCHAR_ONELINE];
+
+	// 行数分だけ繰り返す
+	for (int nCnt = 0; nCnt < nLine; nCnt++)
+	{
+		strcpy(cWriteText, "");
+
+		// 文章を30文字毎に切り分ける
+		std::string str = m_cSendText.substr(nCnt * MAXCHAR_ONELINE, MAXCHAR_ONELINE);
+		strcpy(cWriteText, str.c_str());
+
+		// 改行
+		if (nCnt != 0)
+			rect.top += CHARACTER_HEIGHT;
+
+		// テキスト描画
+		m_pFont->DrawText(NULL,
+			&cWriteText[0],
+			-1,
+			&rect,
+			DT_LEFT,
+			WhiteColor);
+	}
+}
+
+//==========================================================================================================================================================
+// 残り文字数の描画
+//==========================================================================================================================================================
+void CChatText::DrawLeftChar(void)
+{
+	// タブの座標を取得し、描画範囲を設定
+	D3DXVECTOR2 TabPos	= CChatTab::GetTabPos();
+	RECT rect = { (LONG)(TabPos.x + DIFPOS_X_MAXCHAR),
+				(LONG)(TabPos.y - DIFPOS_Y_MAXCHAR),
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT };
+
+	// 残り文字数の決定
+	char cMaxChar[32];
+	sprintf(cMaxChar, "Left %d/%d", SIZE_CHATTEXT - (int)m_cSendText.size(), SIZE_CHATTEXT);
+
+	// テキスト描画
+	m_pFont->DrawText(NULL,
+		&cMaxChar[0],
+		-1,
+		&rect,
+		DT_LEFT,
+		WhiteColor);
 }
