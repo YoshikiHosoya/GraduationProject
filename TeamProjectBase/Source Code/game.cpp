@@ -49,8 +49,6 @@ CGame::~CGame()
 
 	// ピクチャの静的メンバの終了
 	CPicture::UninitStaticMember();
-
-	CClient::UninitClient();
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -75,9 +73,6 @@ HRESULT CGame::Init(HWND hWnd)
 	// ピクチャの生成
 	CPicture::Load();
 	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
-
-	std::thread t1(CClient::main);
-	t1.detach();
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
