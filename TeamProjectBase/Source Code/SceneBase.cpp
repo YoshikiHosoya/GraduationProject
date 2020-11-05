@@ -41,3 +41,20 @@ CSceneBase::~CSceneBase()
 		m_pVtxBuff = nullptr;
 	}
 }
+
+//-----------------------------------------------------------------------------
+//マトリックスの計算　親のマトリックスの合成も含む
+//-----------------------------------------------------------------------------
+void CSceneBase::CalcMtx_IncludeParentMtx()
+{
+	//マトリックス計算
+	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), GetScale());
+
+	//nullcheck
+	if (GetParentMtxPtr())
+	{
+		//親のマトリックスを掛け合わせる
+		*GetMtxWorldPtr() *= *GetParentMtxPtr();
+	}
+
+}

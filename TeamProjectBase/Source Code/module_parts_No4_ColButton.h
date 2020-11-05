@@ -11,20 +11,13 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "module_parts_base.h"
+#include "module_No4_4ColButton.h"
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Parts_No4_ColButton : public CModule_Parts_Base
 {
 public:
-
-	enum class BUTTON_COL
-	{
-		RED = 0,
-		GREEN,
-		BLUE,
-		YELLOW
-	};
 
 	CModule_Parts_No4_ColButton();
 	virtual ~CModule_Parts_No4_ColButton();
@@ -34,11 +27,18 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetButtonCol(BUTTON_COL col);
+	void SetButtonCol(CModule_No4_4ColButton::BUTTON button);
+	void SetButtonLighting(bool bLight);
+
+	CModule_No4_4ColButton::BUTTON GetButton()				{ return m_Button; };
+	bool GetButtonLighting()								{ return m_bLight; };
 
 protected:
 
 private:
-	BUTTON_COL m_buttoncol;
+	CModule_No4_4ColButton::BUTTON m_Button;	//ボタン
+	D3DXCOLOR m_ButtonCol;						//ボタンの色
+	bool m_bLight;								//ライトが点灯しているかどうか
+	int m_nCntLight;							//ライトの点灯のカウント
 };
 #endif

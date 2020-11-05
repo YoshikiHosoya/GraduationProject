@@ -37,10 +37,10 @@ public:
 	void DrawMesh_SetMaterial(D3DXCOLOR col, bool bAllCol, Vec<int> const&ChangeColMatNum = {});	//引数の色に応じたマテリアルで描画
 
 	void SetSelect(bool Select) { m_bSelecting = Select; };
-	void SetDissuseCol(D3DXCOLOR const &col) { m_Diffuse = col; m_bSetMatDiffuse = true; };
+	void SetEmissive(bool bEmissive) { m_bEmissive = bEmissive; };
 
 	bool GetSelect() { return m_bSelecting; };
-	bool GetMatDiffuse() { return m_bSetMatDiffuse; };
+	bool GetEmissive() { return m_bEmissive; };
 
 	static int GetNumSceneX() { return m_nNumSceneX; };												//数取得
 
@@ -52,7 +52,6 @@ private:
 	S_ptr<CModelInfo>	m_SceneXInfo;							//モデル情報
 	bool m_bSelecting;											//選択されている
 
-	bool m_bSetMatDiffuse;										//マテリアルのDiffuseを自分で入力
-	D3DXCOLOR m_Diffuse;										//自分で入力する時のDiffuse色
+	bool m_bEmissive;											//自発光がＯＮかどうか
 };
 #endif

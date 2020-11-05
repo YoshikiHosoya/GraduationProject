@@ -393,9 +393,9 @@ void CBomb::CreateModuleDebug()
 	//3”Ô–Ú
 	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
 	//4”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
-	//5”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
+	//5”Ô–Ú
+	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//6”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
 
