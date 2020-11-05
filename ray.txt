@@ -1,0 +1,10 @@
+		//	逆行列の取得
+		D3DXMatrixInverse(&invmat, NULL, pMap->GetModel(nCnt)->GetMatrix());
+		//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
+		D3DXVec3TransformCoord(&posOrigin, &posOrigin, &invmat);
+		//	レイ終点情報を変換
+		D3DXVec3TransformCoord(&posEndPoint, &posEndPoint, &invmat);
+		//	レイ方向情報を変換
+		D3DXVec3Normalize(&direction, &(posEndPoint - posOrigin));
+		//Rayを飛ばす
+		D3DXIntersect(pMap->GetMesh(nCnt), &posOrigin, &direction, &bHitFlag, &dwHitIndex, &fHitU, &fHitV, &fLandDistance, NULL, NULL);
