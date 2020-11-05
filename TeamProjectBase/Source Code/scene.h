@@ -29,6 +29,8 @@ public:
 		OBJTYPE_BACK,						//後ろ
 		OBJTYPE_MESHFIELD,					//メッシュ
 		OBJTYPE_MAPOBJECT,					//マップに配置されるオブジェクト
+		OBJTYPE_PICTURE,					// ピクチャ
+		OBJTYPE_PICTURE_SYMBOL,				// ピクチャ3Dポリゴン
 		OBJTYPE_BOMB,						//爆弾
 		OBJTYPE_MODULE,						//モジュール
 		OBJTYPE_MODULE_PARTS,				//モジュールのパーツ

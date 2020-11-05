@@ -1,105 +1,84 @@
 //*************************************************************************************************************
 //
-// タブレット処理 [tablet.cpp]
+// タブレットボタンの基底処理 [TabletButton_Base.cpp]
 // Author:IKUTO SEKINE
 //
 //*************************************************************************************************************
 //-------------------------------------------------------------------------------------------------------------
 // インクルードファイル
 //-------------------------------------------------------------------------------------------------------------
-#include "tablet.h"
-#include "modelinfo.h"
 #include "TabletButton.h"
-#include "manager.h"
-#include "renderer.h"
-#include "camera.h"
+#include "modelinfo.h"
+#include "scene3D.h"
+#include "texture.h"
 
 //-------------------------------------------------------------------------------------------------------------
-// マクロ関数定義
+// 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-#define TabletButtonSetPos(cnt) D3DXVECTOR3(100.0f, 0.0f - 30.0f *cnt, -8.0f)
+LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX] = {};
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
 //-------------------------------------------------------------------------------------------------------------
-CTablet::CTablet()
+CTabletButton::CTabletButton()
 {
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // デストラクタ
 //-------------------------------------------------------------------------------------------------------------
-CTablet::~CTablet()
+CTabletButton::~CTabletButton()
 {
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 読み込み
+//-------------------------------------------------------------------------------------------------------------
+void CTabletButton::Load(void)
+{
+	m_aTexture[TYPE_PEN] = CTexture::GetTexture(CTexture::TEX_UI_BRUSHCURSOR);
+	m_aTexture[TYPE_ERASER] = CTexture::GetTexture(CTexture::TEX_UI_ERASERCURSOR);
+	m_aTexture[TYPE_SEND] = CTexture::GetTexture(CTexture::TEX_UI_SENDBUTTON);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 開放
+//-------------------------------------------------------------------------------------------------------------
+void CTabletButton::Unload(void)
+{
+	for (int nCntTex = 0; nCntTex < TYPE_MAX; nCntTex++)
+	{
+		m_aTexture[nCntTex] = nullptr;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // 初期化
 //-------------------------------------------------------------------------------------------------------------
-HRESULT CTablet::Init()
+HRESULT CTabletButton::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TABLET));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TABLET_BUTTON));
 	CSceneX::Init();
-
-	// 容量を変更
-	m_Button.reserve(CTabletButton::TYPE_MAX);
-	// タイプ数分ループ
-	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
-	{// 新しい要素を末尾に追加
-		m_Button.push_back();
-		// 末尾に生成
-		m_Button.back() =
-			CTabletButton::Create(
-				this->GetMtxWorldPtr(),
-				TabletButtonSetPos(nCntTtpe),
-				(CTabletButton::TYPE)nCntTtpe);
-	}
-
-	return E_NOTIMPL;
+	
+	// 3D画像の生成
+	m_pImage = CScene3D::ScenePolygonCreateShared<CScene3D>(D3DXVECTOR3(0.0f, 0.0f, -4.8f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), MYLIB_D3DXCOR_SET,
+		m_aTexture[m_Type], CScene::OBJTYPE_PICTURE_SYMBOL);
+	m_pImage->SetParentMtxPtr(this->GetMtxWorldPtr());
+	return S_OK;
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // 更新
 //-------------------------------------------------------------------------------------------------------------
-void CTablet::Update()
+void CTabletButton::Update()
 {
-	D3DXVECTOR3* pRayDir = &CManager::GetRay()->vec;
-	BOOL bHit = 0;
-	int nHitTypr = -1;
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "レイの向き[%f][%f][%f]\n", pRayDir->x, pRayDir->y, pRayDir->z);
-
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 CameraPos = CManager::GetRenderer()->GetCamera()->GetCameraPosV();
-
-	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
-	{
-		CTabletButton* pButton = m_Button[nCntTtpe].get();
-		CModelInfo * pModelInfo = pButton->GetModelInfo();
-		LPD3DXMESH pMesh = pModelInfo->GetMesh();
-
-		pos.x = CameraPos.x - pButton->GetMtxWorldPtr()->_41;
-		pos.y = CameraPos.y - pButton->GetMtxWorldPtr()->_42;
-		pos.z = CameraPos.z -pButton->GetMtxWorldPtr()->_43;
-
-		D3DXIntersect(pMesh, &pos, pRayDir, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
-
-		if (bHit == 1)
-		{
-			nHitTypr = nCntTtpe;
-		}
-	}
-	if (nHitTypr != -1)
-	{
-		CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d]当たった\n", nHitTypr);
-	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // 描画
 //-------------------------------------------------------------------------------------------------------------
-void CTablet::Draw()
+void CTabletButton::Draw()
 {
 	CSceneX::Draw();
 }
@@ -107,15 +86,18 @@ void CTablet::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CTablet> CTablet::Create(CONST D3DXVECTOR3 & pos)
+std::shared_ptr<CTabletButton> CTabletButton::Create(D3DXMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos, TYPE type)
 {
-	// スマートポインタの生成
-	std::shared_ptr<CTablet> pTablet = std::make_shared<CTablet>();
-	pTablet->SetPos(pos);
-	pTablet->Init();
+	std::shared_ptr<CTabletButton> pTabletButton_Base = std::make_shared<CTabletButton>();
+	pTabletButton_Base->SetParentMtxPtr(pMtxParent);
+	pTabletButton_Base->SetPos(pos);
+	pTabletButton_Base->SetType(type);
+	pTabletButton_Base->Init();
 
-	//Sceneで管理
-	pTablet->SetObjType(OBJTYPE_PICTURE);
-	pTablet->AddSharedList(pTablet);
-	return pTablet;
+	//Sceneにポインタを渡す
+	pTabletButton_Base->SetObjType(OBJTYPE_PICTURE);
+	pTabletButton_Base->AddSharedList(pTabletButton_Base);
+
+	return pTabletButton_Base;
 }
+

@@ -31,6 +31,10 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/ButtonModule/button2.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
 	{ "data/MODEL/test/module_No4_Button.x" ,			MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 
+	// タブレット
+	{ "data/MODEL/Tablet/Tablet.x" ,                   MODEL_TABLET },										// タブレット
+	{ "data/MODEL/Tablet/TabletButton.x" ,             MODEL_TABLET_BUTTON },								// タブレットボタン
+
 };
 
 //-----------------------------------------------------------------------------

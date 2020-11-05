@@ -22,6 +22,9 @@
 #include "chatBase.h"
 #include "light.h"
 #include "client.h"
+#include "tablet.h"
+#include "TabletButton.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -47,6 +50,9 @@ CGame::~CGame()
 {
 	m_pBomb.reset();
 
+	// タブレットボタンの開放
+	CTabletButton::Unload();
+
 	// ピクチャの静的メンバの終了
 	CPicture::UninitStaticMember();
 }
@@ -70,9 +76,13 @@ HRESULT CGame::Init(HWND hWnd)
 	//マップ生成
 	CMap::Create();
 
+	// タブレットボタンの読み込み
+	CTabletButton::Load();
+	// タブレットの生成
+	std::shared_ptr<CTablet> pTab = CTablet::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f));
 	// ピクチャの生成
 	CPicture::Load();
-	CPicture::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f), ZeroVector3);
+	CPicture::Create(pTab->GetMtxWorldPtr(), D3DXVECTOR3(-101.5f, 90.0f, -4.3f));
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
