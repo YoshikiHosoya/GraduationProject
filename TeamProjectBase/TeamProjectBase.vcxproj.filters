@@ -55,6 +55,9 @@
     <Filter Include="Chat">
       <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Picture">
+      <UniqueIdentifier>{969aa955-2626-42bb-9ece-1f30cd168d9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source Code\camera.cpp">
@@ -198,9 +201,6 @@
     <ClCompile Include="Source Code\module_none.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\picture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\client.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -228,11 +228,20 @@
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\PaintingPen.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source Code\tablet.cpp">
+      <Filter>Picture</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\pictureUI.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\picture.cpp">
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\PaintingPen.cpp">
+      <Filter>Picture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\TabletButton.cpp">
+      <Filter>Picture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,9 +404,6 @@
     <ClInclude Include="Source Code\module_none.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\picture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\client.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -425,11 +431,20 @@
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h">
       <Filter>Bomb\module_parts</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\PaintingPen.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source Code\tablet.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\picture.h">
+      <Filter>Picture</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\pictureUI.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PaintingPen.h">
+      <Filter>Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\TabletButton.h">
+      <Filter>Picture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

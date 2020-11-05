@@ -38,7 +38,11 @@ public:
 		//モジュールパーツ 300番台
 		MODEL_MODULEPARTS_CLEARLAMP = 300,			//オブジェクト　クリアランプ
 		MODEL_MODULEPARTS_NO1_KEYPAD,				//オブジェクト　1番目のモジュールのパーツ
-		MODEL_MODULEPARTS_NO2_KEYPAD				//オブジェクト　2番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO2_KEYPAD,				//オブジェクト　2番目のモジュールのパーツ
+
+		// タブレット 400番台
+		MODEL_TABLET = 400,							// タブレット
+		MODEL_TABLET_BUTTON,						// タブレットのボタン
 	};
 
 

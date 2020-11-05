@@ -48,6 +48,7 @@ public:
 		TEX_UI_ERASERCURSOR,					// 消しゴムカーソル
 		TEX_UI_BRUSHBUTTON,						// ブラシ
 		TEX_UI_ERASERBUTTON,					// 消しゴム
+		TEX_UI_SENDBUTTON,						// 送信
 
 		TEX_MAX									//MAX
 	};

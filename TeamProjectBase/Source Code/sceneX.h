@@ -42,6 +42,8 @@ public:
 
 	void BindModelInfo(S_ptr<CModelInfo> pSceneXInfo) { m_SceneXInfo = pSceneXInfo; };	//モデルセット
 
+	CModelInfo* GetModelInfo(void) { return m_SceneXInfo.get(); }
+
 private:
 	static int m_nNumSceneX;									//総数カウント
 	S_ptr<CModelInfo>	m_SceneXInfo;					//モデル情報

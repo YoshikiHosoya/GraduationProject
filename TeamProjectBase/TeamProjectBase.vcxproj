@@ -208,6 +208,8 @@
     <ClCompile Include="Source Code\SceneBase.cpp" />
     <ClCompile Include="Source Code\sceneX.cpp" />
     <ClCompile Include="Source Code\sound.cpp" />
+    <ClCompile Include="Source Code\tablet.cpp" />
+    <ClCompile Include="Source Code\TabletButton.cpp" />
     <ClCompile Include="Source Code\TestMode.cpp" />
     <ClCompile Include="Source Code\TexAnimationBase.cpp" />
     <ClCompile Include="Source Code\texture.cpp" />
@@ -275,6 +277,8 @@
     <ClInclude Include="Source Code\SceneBase.h" />
     <ClInclude Include="Source Code\sceneX.h" />
     <ClInclude Include="Source Code\sound.h" />
+    <ClInclude Include="Source Code\tablet.h" />
+    <ClInclude Include="Source Code\TabletButton.h" />
     <ClInclude Include="Source Code\TestMode.h" />
     <ClInclude Include="Source Code\TexAnimationBase.h" />
     <ClInclude Include="Source Code\texture.h" />

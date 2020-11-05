@@ -115,6 +115,9 @@ void CPicture::MatrixCal(void)
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTrans, m_trans.pos.x, m_trans.pos.y, m_trans.pos.z);
 	D3DXMatrixMultiply(&m_trans.mtxWorld, &m_trans.mtxWorld, &mtxTrans);
+
+	// 親マトリックスのの反映
+	m_trans.mtxWorld *= *m_pMtxParent;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -123,6 +126,7 @@ void CPicture::MatrixCal(void)
 inline CPicture::~CPicture()
 {
 	this->Writing();
+	this->m_pMtxParent = nullptr;
 	// 頂点バッファの取得
 	if (m_pVtexBuff != nullptr)
 	{
@@ -181,6 +185,9 @@ void CPicture::Draw()
 		//デバイス取得
 		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
+		// マトリックスの計算
+		MatrixCal();
+
 		// ワールドマトリックスの設定
 		pDevice->SetTransform(D3DTS_WORLD, &m_trans.mtxWorld);
 
@@ -204,22 +211,21 @@ void CPicture::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CPicture> CPicture::Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot, CONST MODE mode)
+std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos, CONST MODE mode)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CPicture> pPicture = std::make_shared<CPicture>();
-
+	// 親マトリックスの設定
+	pPicture->SetParent(pMtxParent);
 	// モードの設定
 	pPicture->SetMode(mode);
 	// 位置の設定
 	pPicture->SetPos(pos);
-	// 向きの設定
-	pPicture->SetRot(rot);
 	// 初期化
 	pPicture->Init();
 
 	//Sceneで管理
-	pPicture->SetObjType(OBJTYPE_MESHFIELD);
+	pPicture->SetObjType(OBJTYPE_PICTURE);
 	pPicture->AddSharedList(pPicture);
 	return pPicture;
 }
@@ -504,7 +510,7 @@ bool CPicture::GetMousePosOnPicture(void)
 	// 交点の取得
 	D3DXVECTOR2 *pCrossPos = m_pPen->GetPos();
 	// 絵上の位置の取得
-	*pCrossPos = { pCrossPos->x - m_trans.pos.x,m_trans.pos.y - pCrossPos->y };
+	*pCrossPos = { pCrossPos->x - m_trans.mtxWorld._41,m_trans.mtxWorld._42 - pCrossPos->y };
 	// マウスの左クリックが押されている時
 	return pMouse->GetPress(0);
 }

@@ -65,6 +65,7 @@ public:
 	inline void             SetPos(CONST D3DXVECTOR3 &pos) { m_trans.pos = pos; }											// 位置の設定
 	inline void             SetRot(CONST D3DXVECTOR3 &rot) { m_trans.rot = rot; }											// 向きの設定
 	inline void             SetScal(CONST D3DXVECTOR3 &scal) { m_trans.scal = scal; }										// スケールの設定
+	inline void             SetParent(D3DMATRIX *pMtxParent) { m_pMtxParent = pMtxParent; }									// 親のマトリックス
 	inline void             SetFlag(const int nMask) { m_Flags.cValue = nMask; }											// フラグの設定
 	inline void             SetMode(MODE mode) {m_mode = mode; }															// モードの設定
 	inline void             BuildFlag(const int nFlagIndex) { Mybfunc_bit_set(m_Flags.cValue, nFlagIndex); }				// フラグを建てる
@@ -74,7 +75,7 @@ public:
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.cValue; }														// フラグの取得
 
 	// クリエイト関数
-	static std::shared_ptr<CPicture>Create(CONST D3DXVECTOR3 &pos, CONST D3DXVECTOR3 &rot , CONST MODE mode = MODE_EDIT);	// 生成
+	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos , CONST MODE mode = MODE_EDIT);	// 生成
 private:
 	/* 内部で使う関数 */
 	void                    MakeTexture(LPDIRECT3DDEVICE9 pDevice);															// テクスチャの作成
@@ -103,6 +104,7 @@ private:
 	UBITS_4                 m_Flags;																						// フラグ
 	TRANSFORM               m_trans;																						// トランス情報
 	MODE                    m_mode;																							// モード
+	D3DMATRIX*              m_pMtxParent;																					// 親のマトリックス
 };
 
 

@@ -36,6 +36,7 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Paint/Eraser.png" },						// 消しゴムカーソル
 	{ "data/TEXTURE/UI/Paint/Pen_Button.png" },					// ブラシ
 	{ "data/TEXTURE/UI/Paint/Eraser_Button.png" },				// 消しゴム
+	{ "data/TEXTURE/UI/Paint/send.png" },						// 送信
 };
 
 //テクスチャ名の設定
