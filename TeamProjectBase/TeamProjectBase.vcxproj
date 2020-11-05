@@ -161,6 +161,7 @@
     <ClCompile Include="Source Code\chatTab.cpp" />
     <ClCompile Include="Source Code\chatText.cpp" />
     <ClCompile Include="Source Code\client.cpp" />
+    <ClCompile Include="Source Code\connectMode.cpp" />
     <ClCompile Include="Source Code\Debug\debugproc.cpp" />
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp" />
     <ClCompile Include="Source Code\fade.cpp" />
@@ -184,10 +185,13 @@
     <ClCompile Include="Source Code\module_Button.cpp" />
     <ClCompile Include="Source Code\module_No1_SymbolKeyPad.cpp" />
     <ClCompile Include="Source Code\module_No2_ShapeKeypad.cpp" />
+    <ClCompile Include="Source Code\module_No3_LampAndWire.cpp" />
+    <ClCompile Include="Source Code\module_No4_4ColButton.cpp" />
     <ClCompile Include="Source Code\module_none.cpp" />
     <ClCompile Include="Source Code\module_parts_No1_SymbolKey.cpp" />
     <ClCompile Include="Source Code\module_parts_lamp.cpp" />
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp" />
+    <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp" />
     <ClCompile Include="Source Code\module_Timer.cpp" />
     <ClCompile Include="Source Code\mouse.cpp" />
     <ClCompile Include="Source Code\multinumber.cpp" />
@@ -224,6 +228,7 @@
     <ClInclude Include="Source Code\chatTab.h" />
     <ClInclude Include="Source Code\chatText.h" />
     <ClInclude Include="Source Code\client.h" />
+    <ClInclude Include="Source Code\connectMode.h" />
     <ClInclude Include="Source Code\Debug\debugproc.h" />
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h" />
     <ClInclude Include="Source Code\fade.h" />
@@ -250,12 +255,15 @@
     <ClInclude Include="Source Code\module_Button.h" />
     <ClInclude Include="Source Code\module_No1_SymbolKeyPad.h" />
     <ClInclude Include="Source Code\module_No2_ShapeKeypad.h" />
+    <ClInclude Include="Source Code\module_No3_LampAndWire.h" />
+    <ClInclude Include="Source Code\module_No4_4ColButton.h" />
     <ClInclude Include="Source Code\module_none.h" />
     <ClInclude Include="Source Code\module_parts_base.h" />
     <ClInclude Include="Source Code\module_base.h" />
     <ClInclude Include="Source Code\module_parts_No1_SymbolKey.h" />
     <ClInclude Include="Source Code\module_parts_lamp.h" />
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h" />
+    <ClInclude Include="Source Code\module_parts_No4_ColButton.h" />
     <ClInclude Include="Source Code\module_Timer.h" />
     <ClInclude Include="Source Code\mouse.h" />
     <ClInclude Include="Source Code\multinumber.h" />

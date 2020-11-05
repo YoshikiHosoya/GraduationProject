@@ -79,12 +79,15 @@ void CTablet::Update()
 		CModelInfo * pModelInfo = pButton->GetModelInfo();
 		LPD3DXMESH pMesh = pModelInfo->GetMesh();
 
+		pos.x = CameraPos.x - pButton->GetMtxWorldPtr()->_41;
+		pos.y = CameraPos.y - pButton->GetMtxWorldPtr()->_42;
+		pos.z = CameraPos.z -pButton->GetMtxWorldPtr()->_43;
+
 		D3DXIntersect(pMesh, &pos, pRayDir, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
 
 		if (bHit == 1)
 		{
 			nHitTypr = nCntTtpe;
-			break;
 		}
 	}
 	if (nHitTypr != -1)

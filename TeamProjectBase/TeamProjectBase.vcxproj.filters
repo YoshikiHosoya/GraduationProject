@@ -37,9 +37,12 @@
     <Filter Include="Bomb">
       <UniqueIdentifier>{d868d8f1-1da5-4067-b633-a823476e0bc2}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="Library">
       <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
     </Filter>
+=======
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     <Filter Include="Bomb\module">
       <UniqueIdentifier>{f6824bca-1635-4150-a870-10378bc0252c}</UniqueIdentifier>
     </Filter>
@@ -55,8 +58,13 @@
     <Filter Include="Chat">
       <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="Picture">
       <UniqueIdentifier>{969aa955-2626-42bb-9ece-1f30cd168d9e}</UniqueIdentifier>
+=======
+    <Filter Include="Library">
+      <UniqueIdentifier>{a99253e1-0e44-4d6f-9e50-9e813d0bd461}</UniqueIdentifier>
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +209,12 @@
     <ClCompile Include="Source Code\module_none.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Source Code\picture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     <ClCompile Include="Source Code\client.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -228,6 +242,7 @@
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Source Code\tablet.cpp">
       <Filter>Picture</Filter>
     </ClCompile>
@@ -242,6 +257,25 @@
     </ClCompile>
     <ClCompile Include="Source Code\TabletButton.cpp">
       <Filter>Picture</Filter>
+=======
+    <ClCompile Include="Source Code\PaintingPen.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\pictureUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No4_4ColButton.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No3_LampAndWire.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\connectMode.cpp">
+      <Filter>Mode</Filter>
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,6 +438,12 @@
     <ClInclude Include="Source Code\module_none.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Source Code\picture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     <ClInclude Include="Source Code\client.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -431,6 +471,7 @@
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h">
       <Filter>Bomb\module_parts</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Source Code\tablet.h">
       <Filter>Picture</Filter>
     </ClInclude>
@@ -445,6 +486,25 @@
     </ClInclude>
     <ClInclude Include="Source Code\TabletButton.h">
       <Filter>Picture</Filter>
+=======
+    <ClInclude Include="Source Code\PaintingPen.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\pictureUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No4_4ColButton.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No3_LampAndWire.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No4_ColButton.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\connectMode.h">
+      <Filter>Mode</Filter>
+>>>>>>> ae3077704ee96ad0399a49a69f2854ec0417b020
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

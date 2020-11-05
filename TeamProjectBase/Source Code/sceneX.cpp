@@ -34,6 +34,7 @@ CSceneX::CSceneX()
 	//初期化
 	m_SceneXInfo = nullptr;
 	m_bSelecting = false;
+	m_bEmissive = false;
 
 	//総数加算
 	m_nNumSceneX++;
@@ -71,25 +72,16 @@ void CSceneX::Update()
 //------------------------------------------------------------------------------
 void CSceneX::Draw()
 {
-	//選択されているとき
-	if (m_bSelecting)
-	{
-		//ハードエッジ描画
-		DrawHardEdgeStencil();
-	}
+	//ハードエッジ描画
+	//選択されているモデルのみ
+	DrawHardEdgeStencil();
 
-	//マトリックス計算
-	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(),GetScale());
-
-	//nullcheck
-	if (GetParentMtxPtr())
-	{
-		//親のマトリックスを掛け合わせる
-		*GetMtxWorldPtr() *= *GetParentMtxPtr();
-	}
+	//ワールドマトリックスの計算
+	CalcMtx_IncludeParentMtx();
 
 	//メッシュ描画
 	DrawMesh();
+
 }
 
 //------------------------------------------------------------------------------
@@ -121,6 +113,7 @@ void CSceneX::DrawMesh()
 		//描画用のマテリアル取得
 		DrawMat = pMat[nCntMat].MatD3D;
 
+		//a値が0のときはreturn
 		if (DrawMat.Diffuse.a <= 0)
 		{
 			continue;
@@ -154,46 +147,6 @@ void CSceneX::DrawStencil()
 	}
 }
 
-//------------------------------------------------------------------------------
-//入力された色に応じたマテリアルで描画
-//------------------------------------------------------------------------------
-void CSceneX::DrawMesh_SetMaterial(D3DXCOLOR col)
-{
-	//デバイス取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
-	D3DMATERIAL9		MatDef;		//デフォルトのマテリアル
-	D3DMATERIAL9		MatInput;	//入力された色で生成されたマテリアル
-
-	// 現在のマテリアルを取得
-	pDevice->GetMaterial(&MatDef);
-
-	//初期化
-	MatInput = MatDef;
-
-	//色の設定
-	MatInput.Diffuse = col;
-	MatInput.Emissive = col;
-
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, GetMtxWorldPtr());
-
-	for (int nCntMat = 0; nCntMat < (int)m_SceneXInfo->GetMatNum(); nCntMat++)
-	{
-		//ステンシル設定
-		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCR);
-
-		// マテリアルの設定
-		pDevice->SetMaterial(&MatInput);
-
-		// 描画
-		m_SceneXInfo->GetMesh()->DrawSubset(nCntMat);
-	}
-
-	// マテリアルをデフォルトに戻す
-	pDevice->SetMaterial(&MatDef);
-
-}
 //------------------------------------------------------------------------------
 //影のマトリックス描画
 //------------------------------------------------------------------------------
@@ -251,6 +204,11 @@ void CSceneX::DrawShadow()
 //------------------------------------------------------------------------------
 void CSceneX::DrawHardEdgeStencil()
 {
+	//選択されていない時はreturn
+	if (!m_bSelecting)
+	{
+		return;
+	}
 	//デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -268,6 +226,7 @@ void CSceneX::DrawHardEdgeStencil()
 	//Zwrite元に戻す
 	CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_ZTEST_DEFAULT);
 
+
 	//マトリックス計算
 	CHossoLibrary::CalcMatrix(GetMtxWorldPtr(), GetPos(), GetRot(), HARDEDGE_SCALE);
 
@@ -278,22 +237,100 @@ void CSceneX::DrawHardEdgeStencil()
 		*GetMtxWorldPtr() *= *GetParentMtxPtr();
 	}
 
-	//ステンシル有効　0のところにのみ描画可能
-	pDevice->SetRenderState(D3DRS_STENCILREF, 0);					//ステンシルの条件の値
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);		//ステンシルの条件 ==
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシル･バッファ有効
+	////ステンシル有効　0のところにのみ描画可能
+	//pDevice->SetRenderState(D3DRS_STENCILREF, 0);					//ステンシルの条件の値
+	//pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_EQUAL);		//ステンシルの条件 ==
+	//pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシル･バッファ有効
 
 	//ライティングOFF
 	//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_LIGHTING_OFF);
 
-	//メッシュ描画
-	CSceneX::DrawMesh_SetMaterial(STENCIL_COLOR);
+	//ハードエッジ用の描画
+	CSceneX::SetEmissive(true);
+	CSceneX::DrawMesh_SetMaterial(STENCIL_COLOR, true);
+	CSceneX::SetEmissive(false);
 
 	//ライティングを基に戻す
 	CHossoLibrary::CheckLighting();
 
 	// ステンシル･バッファ無効
 	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+
+}
+//------------------------------------------------------------------------------
+//入力された色に応じたマテリアルで描画
+//------------------------------------------------------------------------------
+void CSceneX::DrawMesh_SetMaterial(D3DXCOLOR col, bool bAllCol, Vec<int> const&ChangeColMatNum)
+{
+	//デバイス取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	D3DMATERIAL9		MatDef;		//デフォルトのマテリアル
+	D3DMATERIAL9		MatInput;	//入力された色で生成されたマテリアル
+	D3DMATERIAL9		MatModel;	//モデルの待ていある
+
+	D3DXMATERIAL		*pMat = (D3DXMATERIAL*)m_SceneXInfo->GetMatBuff()->GetBufferPointer();
+
+
+	// 現在のマテリアルを取得
+	pDevice->GetMaterial(&MatDef);
+
+	//現在のマテリアルで初期化
+	MatInput = MatDef;
+
+	//色の設定
+	MatInput.Diffuse = col;
+
+	//自発光がＯＮの時
+	if (m_bEmissive)
+	{
+		MatInput.Emissive = col;
+	}
+
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, GetMtxWorldPtr());
+
+	for (int nCntMat = 0; nCntMat < (int)m_SceneXInfo->GetMatNum(); nCntMat++)
+	{
+		//ステンシル設定
+		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCR);
+
+		//全部色を変える時
+		if (bAllCol == true)
+		{
+			// マテリアルの設定
+			pDevice->SetMaterial(&MatInput);
+		}
+		//一部のマテリアルの色を変える時
+		else
+		{
+			//配列の番号とカウントが同じ数値の時
+			auto itr = std::find_if(ChangeColMatNum.begin(), ChangeColMatNum.end(),
+				[nCntMat](int const &nValue) {return nCntMat == nValue; });
+
+			//イテレータが取得できた場合
+			if (itr != ChangeColMatNum.end())
+			{
+				//マテリアル設定
+				pDevice->SetMaterial(&MatInput);
+			}
+			else
+			{
+				//描画用のマテリアル取得
+				MatModel = pMat[nCntMat].MatD3D;
+
+				//マテリアル設定
+				pDevice->SetMaterial(&MatModel);
+			}
+		}
+
+		// 描画
+		m_SceneXInfo->GetMesh()->DrawSubset(nCntMat);
+	}
+
+	// マテリアルをデフォルトに戻す
+	pDevice->SetMaterial(&MatDef);
 
 
 }

@@ -101,10 +101,11 @@ void CScene::UpdateAll()
 
 		for (int nCntObjType = 0; nCntObjType < OBJTYPE_MAX; nCntObjType++)
 		{
-
+			//フラグが立っているモノを削除
 			std::remove_if(m_UniqueSceneList[nCntObjType].begin(), m_UniqueSceneList[nCntObjType].end(),
 				[](U_ptr<CScene> &ptr) {return ptr->GetDeleteFlag(); });
 
+			//フラグが立っているモノを削除
 			std::remove_if(m_SharedSceneList[nCntObjType].begin(), m_SharedSceneList[nCntObjType].end(),
 				[](S_ptr<CScene> ptr) {return ptr->GetDeleteFlag(); });
 		}
