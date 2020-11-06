@@ -25,7 +25,7 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX] = {};
+LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX] = {};	// テクスチャ情報
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -75,6 +75,7 @@ HRESULT CTabletButton::Init()
 	m_pImage = CScene3D::ScenePolygonCreateShared<CScene3D>(D3DXVECTOR3(0.0f, 0.0f, -4.8f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), MYLIB_D3DXCOR_SET,
 		m_aTexture[m_Type], CScene::OBJTYPE_PICTURE_SYMBOL);
 	m_pImage->SetParentMtxPtr(this->GetMtxWorldPtr());
+
 	m_bPress = false;
 	m_bChange = false;
 	m_bInPress = false;
@@ -86,14 +87,13 @@ HRESULT CTabletButton::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CTabletButton::Update()
 {
-	// マウスの取得a
-	CMouse *pMouse = CManager::GetMouse();
-	// ペンの取得
-	CPaintingPen *pPen = CPicture::GetPaintPen();
+	// 変数宣言
+	CMouse *      pMouse = CManager::GetMouse();	// マウスの取得
+	CPaintingPen *pPen   = CPicture::GetPaintPen();	// ペンの取得
+
 	// フラグが立っている時かつマウスが押されていない時
 	if (m_bPress && !pMouse->GetPress(0) && m_bChange)
 	{
-		m_bPress = false;
 		// タイプ分岐処理
 		switch (m_Type)
 		{
@@ -102,22 +102,29 @@ void CTabletButton::Update()
 			MLB_CASE(TYPE_SEND);											// 送信
 			MLB_CASEEND;													// ケース終了
 		}
+		// 押されたフラグを消す
+		m_bPress = false;
 	}
 
+	// タイプとモードが一致していた時
 	if (pPen->GetMode() == m_Type)
 	{
 		// 位置の取得
 		D3DXVECTOR3 *pos = GetPosPtr();
-		// z値を変更
+		// Z値を変更
 		pos->z = TABLETBUTTON_PRESS_POS_Z;
 	}
 	else
 	{
 		// 位置の取得
 		D3DXVECTOR3 *pos = GetPosPtr();
-		// z値を変更
+		// Z値を変更
 		pos->z = (m_bPress == true) ? TABLETBUTTON_PRESS_POS_Z : TABLETBUTTON_NOTPRESS_POS_Z;
 	}
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "\n押されたフラグ       == [%d]\n", (m_bPress) ? TRUE : FALSE);
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "変更フラグ           == [%d]\n", (m_bChange) ? TRUE : FALSE);
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "内側で押されたフラグ == [%d]\n", (m_bInPress) ? TRUE : FALSE);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -131,28 +138,29 @@ void CTabletButton::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // モードの設定
 //-------------------------------------------------------------------------------------------------------------
-void CTabletButton::SetMode(void)
+void CTabletButton::FlagProcToChangeMode(void)
 {
-	// マウスの取得
-	CMouse *pMouse = CManager::GetMouse();
+	// 変数宣言
+	CMouse *pMouse = CManager::GetMouse();// マウスの取得
 
 	// マウスが押されていない時
 	if (!pMouse->GetPress(0))
-	{
+	{// 変更フラグを立てる
 		SetToSetChangeFlag();
-		m_bInPress = false;
+		// 内部で押されたフラグを消す
+		SetToOffInPressFlag();
 	}
 	else
 	{
-		m_bInPress = true;
-	}
-	// 押されているフラグが立っている時又はマウスが押されていない時
-	if (m_bPress || !pMouse->GetPress(0) || !m_bChange)
-	{
-		// 処理を抜ける
-		return;
 	}
 
+	// 押されているフラグが立っている時又はマウスが押されていない時
+	if (m_bPress || !pMouse->GetPress(0) || !m_bChange)
+	{// 処理を抜ける
+		return;
+	}
+	// 内部で押されたフラグを立てる
+	SetToSetInPressFlag();
 	// フラグを立てる
 	m_bPress = true;
 }
@@ -160,13 +168,21 @@ void CTabletButton::SetMode(void)
 //-------------------------------------------------------------------------------------------------------------
 // 変更フラグの設定
 //-------------------------------------------------------------------------------------------------------------
-void CTabletButton::SetChangeFlag(void)
+void CTabletButton::SetChangeFlagProc(void)
 {
+	// マウスが押されている時かつ内部で押されたフラグが立っていない時
 	if(CManager::GetMouse()->GetPress(0) && !m_bInPress)
-	{
+	{// 変更フラグを消す
 		SetToOffChangeFlag();
 		return;
 	}
+	if (!CManager::GetMouse()->GetPress(0))
+	{
+		// 内部で押されたフラグを消す
+		SetToOffInPressFlag();
+	}
+
+	// 変更フラグを立てる
 	SetToSetChangeFlag();
 }
 

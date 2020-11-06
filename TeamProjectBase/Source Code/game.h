@@ -21,6 +21,7 @@
 class CBomb;
 class CChatBase;
 class CPicture;
+class CTablet;
 class CGame : public CBaseMode
 {
 public:
@@ -62,15 +63,17 @@ public:
 	GAZE GetGaze() { return m_Gaze; };						//現在の視線取得
 	CBomb *GetBombPtr() { return m_pBomb.get(); };			//ボムのポインタ取得
 	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
+	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
 protected:
 
 private:
-	STATE m_State;											//ゲームステート
-	GAZE m_Gaze;											//視線
-	int m_nCntState;										//ステートのカウンタ
-	S_ptr<CBomb>	m_pBomb;						//ボムのポインタ
-	S_ptr<CChatBase> m_pChatBase;					// チャットのポインタ
-	S_ptr<CPicture> m_pPicture;						// ピクチャポインタ
+	STATE            m_State;								//ゲームステート
+	GAZE             m_Gaze;								//視線
+	int              m_nCntState;							//ステートのカウンタ
+	S_ptr<CBomb>     m_pBomb;								//ボムのポインタ
+	S_ptr<CChatBase> m_pChatBase;							// チャットのポインタ
+	S_ptr<CPicture>  m_pPicture;							// ピクチャポインタ
+	S_ptr<CTablet>   m_pTablet;								// タブレットポインタ
 };
 
 #endif
