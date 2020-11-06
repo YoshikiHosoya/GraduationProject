@@ -50,6 +50,7 @@ private:
 
 #ifdef _DEBUG
 	void CreateModuleDebug();
+	static bool m_bCanExplosion;
 #endif
 
 	//------------------------------------------------------------------------------
