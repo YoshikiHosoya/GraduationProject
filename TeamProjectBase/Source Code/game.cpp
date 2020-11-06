@@ -82,7 +82,7 @@ HRESULT CGame::Init(HWND hWnd)
 	std::shared_ptr<CTablet> pTab = CTablet::Create(D3DXVECTOR3(300.0f, 300.0f, 0.0f));
 	// ピクチャの生成
 	CPicture::Load();
-	CPicture::Create(pTab->GetMtxWorldPtr(), D3DXVECTOR3(-101.5f, 90.0f, -4.3f));
+	m_pPicture = CPicture::Create(pTab->GetMtxWorldPtr(), D3DXVECTOR3(-101.5f, 90.0f, -4.3f));
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
