@@ -22,7 +22,7 @@
 // ===================================================================
 #define MAX_CHARACTER		(2048)	// 文字の最大数
 #define MAX_KEEPTEXT		(20)	// 保持できるテキストの最大数
-#define SIZE_CHATTEXT		(256)	// チャットテキストの最大サイズ
+#define SIZE_CHATTEXT		(64)	// チャットテキストの最大サイズ
 
 // ===================================================================
 // クラス定義
@@ -33,12 +33,19 @@ class CKeyboard;
 class CChatText
 {
 public:
+	typedef struct
+	{	// 保持するテキストの内容
+		int nIndex;					// 背景ポリゴンの番号
+		char cText[SIZE_CHATTEXT];	// 文字列
+		RECT rect;					// 描画範囲
+		int nLine;					// 行数
+	} CHATTEXT;
+
 	CChatText() {};		// コンストラクタ
 	~CChatText() {};	// デストラクタ
 
 	void Init(void);					// 初期化
 	void Uninit(void);					// 終了
-	static void Print(char* fmt, ...);	// 表示
 	static void Draw(void);				// 描画
 	void ShowDebugInfo() {};			//デバッグ情報表記
 
@@ -52,12 +59,14 @@ public:
 	static void SendChatText(void);
 
 private:
-	static LPD3DXFONT	m_pFont;				// フォント情報格納用
-	static char			m_aStr[MAX_CHARACTER];	// テキストの格納用配列
-	static char			m_cKeepText[MAX_KEEPTEXT][SIZE_CHATTEXT];	// 保持できるテキスト
-	static std::string	m_cSendText;			// 送るための文字列
-	static D3DXCOLOR	m_textColor;			// テキストのカラー
-	static int			m_nCntPress;			// 長押しのカウンタ
+	static void DrawWriteMessage(void);				// 記入中のメッセージの描画
+	static void DrawLeftChar(void);					// 残り文字数の描画
+	static LPD3DXFONT	m_pFont;					// フォント情報格納用
+	static char			m_aStr[MAX_CHARACTER];		// テキストの格納用配列
+	static CHATTEXT		m_keepText[MAX_KEEPTEXT];	// 保持できるテキスト
+	static std::string	m_cSendText;				// 送るための文字列
+	static D3DXCOLOR	m_textColor;				// テキストのカラー
+	static int			m_nCntPress;				// 長押しのカウンタ
 	static int			m_nPressKey;
 };
 
