@@ -13,6 +13,8 @@
 #include "mouse.h"
 #include "camera.h"
 #include "PaintingPen.h"
+#include "game.h"
+#include "tablet.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -149,7 +151,7 @@ HRESULT CPicture::Init()
 
 	try
 	{	// テクスチャの作成
-		MakeTexture(pDevice);
+		MakeTexture(pDevice, m_WriteToFile.Get(), &m_pTexture);
 		// 頂点情報の作成
 		MakeVertex(pDevice);
 	}
@@ -233,6 +235,21 @@ std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent, CONST D3DXVECT
 //-------------------------------------------------------------------------------------------------------------
 // テクスチャの作成
 //-------------------------------------------------------------------------------------------------------------
+HRESULT CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile, LPDIRECT3DTEXTURE9 *ppTexture)
+{
+	if (FAILED(pDevice->CreateTexture(m_nNumPixelBlock.nX, m_nNumPixelBlock.nY, 1, 0, D3DFMT_A32B32G32R32F,
+		D3DPOOL_MANAGED, ppTexture, NULL)))
+	{
+		throw E_FAIL;
+	}
+
+	Reading(*ppTexture, m_WriteToFile);
+	return E_NOTIMPL;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// テクスチャの作成
+//-------------------------------------------------------------------------------------------------------------
 void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 {
 	if (FAILED(pDevice->CreateTexture(m_nNumPixelBlock.nX, m_nNumPixelBlock.nY, 1, 0, D3DFMT_A32B32G32R32F,
@@ -243,7 +260,7 @@ void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 	// テクスチャカラーの初期化
 	//InitTextureColor();
 
-	Reading(m_WriteToFile);
+	Reading(m_pTexture, m_WriteToFile);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -411,6 +428,12 @@ void CPicture::PaintProc(void)
 		return;
 	}
 
+	// タブレットのボタンを押しているか
+	if (CManager::GetGame()->GetTablet()->ItIsPressingButtons() == true)
+	{// 押している
+		return;
+	}
+
 	// カプセルの設定
 	m_pPen->SetCapsule();
 	CAPSULE_2D *pCap = m_pPen->GetCapsule();					// カプセル情報の取得
@@ -555,7 +578,7 @@ void CPicture::Writing(void)
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
 //-------------------------------------------------------------------------------------------------------------
-void CPicture::Reading(CString & file)
+void CPicture::Reading(LPDIRECT3DTEXTURE9 pTexture,CString & file)
 {
 	// データ格納
 	MyVector<bool> bData;
@@ -568,7 +591,7 @@ void CPicture::Reading(CString & file)
 	// ロックした情報
 	D3DLOCKED_RECT LockRect;
 	// ロック
-	m_pTexture->LockRect(0, &LockRect, NULL, 0);
+	pTexture->LockRect(0, &LockRect, NULL, 0);
 
 	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの取得
 	// 読み込みサイズの取得
@@ -586,7 +609,7 @@ void CPicture::Reading(CString & file)
 	}
 
 	// アンロック
-	m_pTexture->UnlockRect(0);
+	pTexture->UnlockRect(0);
 	// クリア
 	bData.clear();
 }

@@ -28,6 +28,8 @@ public:
 	void                Draw();													// 描画
 	inline void         ShowDebugInfo() {};										// デバッグ情報表記
 
+	bool                ItIsPressingButtons(void);								// ボタンを押しているか
+
 	// 生成
 	static std::shared_ptr<CTablet> Create(CONST D3DXVECTOR3 &pos);					// 生成
 private:

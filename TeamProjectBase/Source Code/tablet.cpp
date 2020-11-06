@@ -74,8 +74,8 @@ void CTablet::Update()
 	D3DXVECTOR3    InvForePos;									// 算出した遠い位置
 	CTabletButton* pButton;										// ボタン情報
 	LPD3DXMESH     pMesh;										// メッシュ情報
-	int nCntTtpe;
-	for (nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+
+	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
 	{
 		// ボタン情報の取得
 		pButton = m_Button[nCntTtpe].get();
@@ -93,17 +93,18 @@ void CTablet::Update()
 		D3DXVec3Normalize(&ray, &(InvForePos - InvNirePos));
 		//Rayを飛ばす
 		D3DXIntersect(pMesh, &InvNirePos, &ray, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
+
 		// HITしている時
 		if (bHit == 1)
-		{
-			// モードの設定
-			pButton->SetMode();
+		{// モードを変更するためのフラグ処理
+			pButton->FlagProcToChangeMode();
 			CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d]当たったものが存在しました。\n", nCntTtpe);
 		}
 		else
-		{
+		{// 押されたフラグを消す設定
 			pButton->SetToOffPressFlag();
-			pButton->SetChangeFlag();
+			// 変更フラグの設定処理
+			pButton->SetChangeFlagProc();
 		}
 	}
 }
@@ -114,6 +115,28 @@ void CTablet::Update()
 void CTablet::Draw()
 {
 	CSceneX::Draw();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ボタンを押しているか
+//-------------------------------------------------------------------------------------------------------------
+bool CTablet::ItIsPressingButtons(void)
+{
+	// 変数宣言
+	CTabletButton* pButton;	// ボタン情報
+
+	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+	{
+		// ボタン情報の取得
+		pButton = m_Button[nCntTtpe].get();
+		// 押されたフラグを取得
+		if (pButton->GetChangeFlag() ||
+			pButton->GetInPressFlag())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //-------------------------------------------------------------------------------------------------------------
