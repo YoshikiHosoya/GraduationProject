@@ -38,8 +38,17 @@ public:
 	void                Draw();													// 描画
 	inline void         ShowDebugInfo() {};										// デバッグ情報表記
 
+	void SetMode(void);															// モードの設定
+
+	void SetChangeFlag(void);													// 変更フラグの設定
+
 	// 設定関数
 	inline void SetType(TYPE type) { m_Type = type; }							// タイプの設定
+	inline void SetToOffPressFlag(void) { if (m_bPress)m_bPress = false; }		// 押されたフラグを消す設定
+	inline void SetToSetPressFlag(void) { if (!m_bPress)m_bPress = true; }		// 押されたフラグを立てる設定
+	inline void SetToOffChangeFlag(void) { if (m_bChange)m_bChange = false; }	// 変更フラグを消す設定
+	inline void SetToSetChangeFlag(void) { if (!m_bChange)m_bChange = true; }	// 変更フラグを立てる設定
+
 
 	// 取得関数
 	inline TYPE &GetType(void) { return m_Type; }								// タイプの取得
@@ -51,6 +60,10 @@ private:
 
 	std::shared_ptr<CScene3D> m_pImage;
 	TYPE m_Type;
+	bool m_bPress;
+	bool m_bChange;
+	bool m_bInPress;
+
 };
 
 #endif

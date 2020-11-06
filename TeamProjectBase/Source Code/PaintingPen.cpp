@@ -57,19 +57,19 @@ void CPaintingPen::Uninit(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::Update(void)
 {
-	CMouse *pMouse = CManager::GetMouse();
+	//CMouse *pMouse = CManager::GetMouse();
 
-	if (pMouse->GetTrigger(1))
-	{
-		if (m_mode != MODE_BRUSH)
-		{
-			m_mode = MODE_BRUSH;
-		}
-		else
-		{
-			m_mode = MODE_ERASER;
-		}
-	}
+	//if (pMouse->GetTrigger(1))
+	//{
+	//	if (m_mode != MODE_BRUSH)
+	//	{
+	//		m_mode = MODE_BRUSH;
+	//	}
+	//	else
+	//	{
+	//		m_mode = MODE_ERASER;
+	//	}
+	//}
 }
 
 //-------------------------------------------------------------------------------------------------------------

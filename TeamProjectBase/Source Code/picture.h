@@ -73,7 +73,7 @@ public:
 
 	// 取得関数
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.cValue; }														// フラグの取得
-
+	inline static CPaintingPen* GetPaintPen(void) { return m_pPen; }														// ペンの取得
 	// クリエイト関数
 	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos , CONST MODE mode = MODE_EDIT);	// 生成
 private:

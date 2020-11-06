@@ -20,7 +20,7 @@
 //------------------------------------------------------------------------------
 class CBomb;
 class CChatBase;
-
+class CPicture;
 class CGame : public CBaseMode
 {
 public:
@@ -61,6 +61,7 @@ public:
 	STATE GetState() { return m_State; };					//ゲームの状態取得
 	GAZE GetGaze() { return m_Gaze; };						//現在の視線取得
 	CBomb *GetBombPtr() { return m_pBomb.get(); };			//ボムのポインタ取得
+	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
 protected:
 
 private:
@@ -69,6 +70,7 @@ private:
 	int m_nCntState;										//ステートのカウンタ
 	S_ptr<CBomb>	m_pBomb;						//ボムのポインタ
 	S_ptr<CChatBase> m_pChatBase;					// チャットのポインタ
+	S_ptr<CPicture> m_pPicture;						// ピクチャポインタ
 };
 
 #endif
