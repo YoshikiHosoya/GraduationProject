@@ -23,7 +23,7 @@
 #define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
 #define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
 #define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
-#define LIGHT_FLASH_TIME					(30)
+#define LIGHT_FLASH_TIME					(20)
 #define LIGHT_ADD_COLOR						(D3DXCOLOR(0.2f,0.2f,0.2f,1.0f))
 
 //------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ void CModule_Parts_No4_ColButton::Update()
 		if (m_nCntLight-- <= 0)
 		{
 			//ƒ‰ƒCƒgOFF
-			SetLighting(false);
+			SetButtonLighting(false);
 		}
 	}
 }

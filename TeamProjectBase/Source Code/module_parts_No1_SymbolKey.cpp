@@ -23,9 +23,9 @@
 //------------------------------------------------------------------------------
 //ƒ}ƒNƒ
 //------------------------------------------------------------------------------
-#define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,1.0f,-5.0f))
+#define KEYPAD_LIGHT_OFFSET					(D3DXVECTOR3(0.0f,1.0f,-5.5f))
 #define KEYPAD_LIGHTPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-7.0f))
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,-2.0f,-6.0f))
 #define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
 #define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 
@@ -166,6 +166,8 @@ void CModule_Parts_No1_SymbolKey::SetKeypadState(KEYPAD_STATE keypadstate)
 		break;
 	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::CLEAR:
 		m_pLight->SetColor(GreenColor);
+		SetPos(GetPos() + D3DXVECTOR3(0.0f, 0.0f, 5.0f));
+		CSceneX::CalcMtx_IncludeParentMtx();
 		SetClearFlag(true);
 		break;
 

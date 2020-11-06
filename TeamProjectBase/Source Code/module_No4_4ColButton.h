@@ -35,7 +35,9 @@ public:
 		LIGHTING,			//点灯
 		INTERVAL,			//次のボタン点滅までのインターバル
 		PLAYER_INPUT,		//プレイヤー入力中
-		END					//終了
+		RESET_INTERVAL,		//次の周回へのインターバル
+		END,
+
 	};
 
 
@@ -50,22 +52,26 @@ public:
 
 	void SetButtonState(STATE state);
 
+
 	void NextButtonSet();
+	void PlayerInputReset();
+
+
+	void ButtonPushSuccess();
+	bool CheckModuleClear();
 
 
 private:
 	Vec<S_ptr<CModule_Parts_No4_ColButton>> m_pColButtonList;
-	BUTTON m_nNowSelectButton;					//現在の洗濯番号
-	STATE m_buttonState;						//ボタンのステート
-	Vec<BUTTON> m_QuestionButtonList;			//答えのパターン
+	BUTTON m_nNowSelectButton;										//現在の洗濯番号
+	STATE m_buttonState;											//ボタンのステート
+	Vec<BUTTON> m_QuestionButtonList;								//答えのパターン
 
-	int m_nNowFlashNumber;						//現在の点灯してるバターン
-	int m_nClearNum;							//クリアした数
-	int m_nButtonLightingCnt;					//ボタンのライト点滅用のカウント
+	int m_nNowFlashNumber;											//現在の点灯してるバターン
+	int m_nClearNum;												//クリアした数
+	int m_nButtonLightingCnt;										//ボタンのライト点滅用のカウント
 
-	bool m_bPlayerInput;						//プレイヤーからの入力があったかどうか
-	int m_nPlayerInputCnt;						//プレイヤーの入力からのカウント
-
+	int m_nPlayerPushNum;											//プレイヤーの入力した回数
 
 
 
