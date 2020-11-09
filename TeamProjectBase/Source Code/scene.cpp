@@ -226,7 +226,7 @@ void CScene::ReleaseSpecificObject(OBJTYPE objtype)
 //----------------------------------------------------------------------------
 //ƒV[ƒ“î•ñæ“¾ ”z—ñ‚²‚Æ“n‚·
 //----------------------------------------------------------------------------
-void CScene::GetSceneList(OBJTYPE objtype, std::vector<std::shared_ptr<CScene>> &SceneList)
+void CScene::GetSceneList(OBJTYPE objtype, Vec<S_ptr<CScene>> &SceneList)
 {
 	SceneList = m_SharedSceneList[objtype];
 }

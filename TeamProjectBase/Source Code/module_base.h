@@ -28,7 +28,8 @@ public:
 		BUTTON,
 		NO1_SYMBOL,
 		NO2_SHAPE,
-		NO3_WIRE,
+		//NO3_WIRE,
+		NO4_4COLBUTTON,
 		MAX,
 
 	};

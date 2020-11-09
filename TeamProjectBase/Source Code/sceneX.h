@@ -28,6 +28,7 @@ public:
 	virtual void Update();						//更新
 	virtual void Draw();						//描画
 	virtual void ShowDebugInfo();				//デバッグ情報表記
+	static S_ptr<CSceneX> CreateShared(D3DXVECTOR3 const &pos, D3DXVECTOR3 const &rot, D3DXMATRIX *pParentMtx,CScene::OBJTYPE objtype, int nModelType);
 
 	void DrawMesh();							//モデルのメッシュ描画
 	void DrawStencil();							//ステンシル用の描画処理　マテリアルの設定無し

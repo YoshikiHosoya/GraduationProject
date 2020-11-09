@@ -24,7 +24,7 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define COL_BUTTON_NUM									(4)										//ボタン数
-#define COL_BUTTON_OFFSET								(D3DXVECTOR3(0.0f,0.0f,-25.0f))			//ボタンのオフセット座標
+#define COL_BUTTON_OFFSET								(D3DXVECTOR3(-10.0f,0.0f,-14.5f))			//ボタンのオフセット座標
 #define COL_BUTTON_LIGHT_FLASH_INTERVAL					(45)									//ボタンの点灯の感覚
 #define COL_BUTTON_LIGHT_LOOP_INTERVAL					(180)									//ボタンのループ間隔
 
@@ -59,7 +59,7 @@ CModule_No4_4ColButton::~CModule_No4_4ColButton()
 HRESULT CModule_No4_4ColButton::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO4));
 
 	int nCnt = 0;
 
@@ -77,7 +77,7 @@ HRESULT CModule_No4_4ColButton::Init()
 		m_pColButtonList[nCnt]->SetButtonCol((BUTTON)nCnt);
 
 		//答えのパターン生成
-		m_QuestionButtonList.emplace_back((BUTTON)nCnt);
+		m_QuestionButtonList.emplace_back((BUTTON)CHossoLibrary::RandomRangeUnsigned(0, 3));
 
 		nCnt++;
 	}

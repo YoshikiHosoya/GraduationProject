@@ -34,6 +34,8 @@ public:
 		MODEL_MODULE_TIMER,							//オブジェクト　タイマー
 		MODEL_MODULE_NO1,							//オブジェクト　1番目のモジュール
 		MODEL_MODULE_NO2,							//オブジェクト　2番目のモジュール
+		MODEL_MODULE_NO3,							//オブジェクト　2番目のモジュール
+		MODEL_MODULE_NO4,							//オブジェクト　2番目のモジュール
 
 		//モジュールパーツ 300番台
 		MODEL_MODULEPARTS_CLEARLAMP = 300,			//オブジェクト　クリアランプ

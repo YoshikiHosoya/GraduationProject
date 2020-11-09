@@ -16,24 +16,26 @@ Vec<S_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//爆弾関係
-	{ "data/MODEL/BombBox/bombbox.x" ,					MODEL_BOMBBOX },									//爆弾
+	{ "data/MODEL/BombBox/bombbox.x" ,							MODEL_BOMBBOX },									//爆弾
 
 	//モジュール
-	{ "data/MODEL/test/test_module.x" ,					MODEL_MODULE_DEFAULT },								//モジュール
-	{ "data/MODEL/test/test_module_none.x" ,			MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
-	{ "data/MODEL/BombTimer/BombTimer.x" ,				MODEL_MODULE_TIMER },								//タイマー
-	{ "data/MODEL/ButtonParts/ButtonParts.x" ,			MODEL_MODULE_NO1 },									//キーパッド
-	{ "data/MODEL/ButtonModule/Module3.x" ,				MODEL_MODULE_NO2 },									//キーパッド
+	{ "data/MODEL/test/test_module.x" ,							MODEL_MODULE_DEFAULT },								//モジュール
+	{ "data/MODEL/test/test_module_none.x" ,					MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
+	{ "data/MODEL/BombTimer/BombTimer.x" ,						MODEL_MODULE_TIMER },								//タイマー
+	{ "data/MODEL/Module0/ModuleNumber0.x" ,					MODEL_MODULE_NO1 },									//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1.x" ,					MODEL_MODULE_NO2 },									//キーパッド
+	{ "data/MODEL/Module3/ModuleNumber3.x" ,					MODEL_MODULE_NO3 },									//キーパッド
+	{ "data/MODEL/Module4/ModuleNumber4.x" ,					MODEL_MODULE_NO4 },									//キーパッド
 
 	//モジュールのパーツ
-	{ "data/MODEL/Lamp/Lamp.x" ,						MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
-	{ "data/MODEL/ButtonParts/button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
-	{ "data/MODEL/ButtonModule/button2.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
-	{ "data/MODEL/test/module_No4_Button.x" ,			MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
+	{ "data/MODEL/Lamp/Lamp.x" ,								MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
+	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 
 	// タブレット
-	{ "data/MODEL/Tablet/Tablet.x" ,                   MODEL_TABLET },										// タブレット
-	{ "data/MODEL/Tablet/TabletButton.x" ,             MODEL_TABLET_BUTTON },								// タブレットボタン
+	{ "data/MODEL/Tablet/Tablet.x" ,							  MODEL_TABLET },										// タブレット
+	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_TABLET_BUTTON },								// タブレットボタン
 
 };
 
@@ -81,6 +83,7 @@ void CModelInfo::ModelLoad(HWND hwnd)
 		//debug
 		std::cout << "Model Load - " << nCnt << m_aModelFileNameList[nCnt].modelname.data() << NEWLINE;
 
+		//メモリ確保
 		m_apModelList.emplace_back(std::make_shared<CModelInfo>());
 		m_apModelList[nCnt]->m_modeltype = m_aModelFileNameList[nCnt].modeltype;
 
@@ -113,18 +116,16 @@ void CModelInfo::ModelUnload()
 //----------------------------------------------------------------------------
 S_ptr<CModelInfo> CModelInfo::GetModelInfo(CModelInfo::MODEL_TYPE modeltype)
 {
-	//サイズ分繰り返す
-	for (size_t nCnt = 0; nCnt < m_apModelList.size(); nCnt++)
+	//モデルタイプと一致するやつのイテレータ取得
+	auto itr = std::find_if(m_apModelList.begin(), m_apModelList.end(),
+		[modeltype](S_ptr<CModelInfo>const &pModel) { return pModel->GetModelType() == modeltype; });
+
+	//イテレータ取得できたかチェック
+	if (itr != m_apModelList.end())
 	{
-		//nullcheck
-		if (m_apModelList[nCnt])
-		{
-			//モデルタイプが一致しているかどうか
-			if (m_apModelList[nCnt]->GetModelType() == modeltype)
-			{
-				return m_apModelList[nCnt];
-			}
-		}
+		//return
+		return *itr;
 	}
+
 	return nullptr;
 }

@@ -136,6 +136,7 @@ public:
 
 	static bool ImGui_Combobox(std::vector<std::string> aItemNameList, std::string aTitle, int & nValue);		//ImGuiのコンボボックス
 
+	static int RandomRangeUnsigned(int nMin, int nMax);							//ランダムに値を返す関数　int型　符号なし
 	static float Random_PI();													//-3.14から3.14までのランダムで返す
 	static float Random(float fInputValue);										//入力された値の+-ランダムな値で返す
 	static D3DXVECTOR3 RandomVector3(float Max);								//ランダムなvector3型で値を返す

@@ -11,15 +11,18 @@
 #include "Bomb.h"
 #include "renderer.h"
 #include "manager.h"
+#include "camera.h"
 #include "keyboard.h"
 #include "game.h"
 #include "modelinfo.h"
+#include "Bomb_Exterior.h"
 #include "module_none.h"
 #include "module_timer.h"
 #include "module_Button.h"
 #include "module_No1_SymbolKeyPad.h"
 #include "module_No2_ShapeKeypad.h"
 #include "module_No4_4ColButton.h"
+
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -41,6 +44,8 @@ CBomb::CBomb()
 	m_nModuleNum = 0;
 	m_nSelectModuleNum = 0;
 	m_pModuleList = {};
+	m_pBombExterior.reset();
+	m_bCameraDir = true;
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +53,8 @@ CBomb::CBomb()
 //------------------------------------------------------------------------------
 CBomb::~CBomb()
 {
-
+	m_pModuleList = {};
+	m_pBombExterior.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -65,6 +71,24 @@ HRESULT CBomb::Init()
 void CBomb::Update()
 {
 	CSceneX::Update();
+
+	const D3DXVECTOR3 &CameraRot = CManager::GetRenderer()->GetCamera()->GetCameraRot();
+
+	fabsf(CameraRot.y) >= D3DX_PI * 0.5f ?
+		m_bCameraDir = true :
+		m_bCameraDir = false;
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "bCamera >> %d\n", m_bCameraDir);
+
+	int nMin = 6 * (m_bCameraDir);
+	int nMax = nMin + 5;
+
+	//裏表切り替わった時
+	if (CHossoLibrary::RangeLimit_Equal(m_nSelectModuleNum, nMin, nMax))
+	{
+		SearchHeadCanSelectNum(nMin);
+		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+	}
 
 	CBomb::Operator();
 
@@ -133,6 +157,9 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 	//モジュール生成
 	pBomb->CreateModule(nModuleNum);
 
+	//ボムの外装生成
+	pBomb->m_pBombExterior = CBomb_Exterior::CreateBombExterior(pBomb->GetMtxWorldPtr());
+
 	//Scene側で管理
 	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
 	pBomb->AddSharedList(pBomb);
@@ -145,10 +172,6 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 //------------------------------------------------------------------------------
 void CBomb::Operator()
 {
-	//選択番号
-	//1F前の選択番号
-	int m_SelectNumOld = m_nSelectModuleNum;
-
 	//配列が空だったらreturn
 	if (m_pModuleList.empty())
 	{
@@ -164,24 +187,9 @@ void CBomb::Operator()
 		break;
 
 	case CGame::GAZE_BOMB:
-		while (1)
-		{
-			//モジュール選択処理
-			//入力が無かった時はbreak
-			if (!CHossoLibrary::Selecting(m_nSelectModuleNum, m_SelectNumOld, 3, 4))
-			{
-				break;
-			}
 
-			//nullcheck
-			if (m_pModuleList[m_nSelectModuleNum].get())
-			{
-				if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
-				{
-					break;
-				}
-			}
-		}
+		//モジュール選択
+		ModuleSelect();
 
 		for (int nCnt = 0; nCnt < (int)m_pModuleList.size(); nCnt++)
 		{
@@ -250,8 +258,6 @@ void CBomb::ModuleMiss()
 	if (!m_bCanExplosion) return;
 #endif // _DEBUG
 
-
-
 	//タイマーのクラスのイテレータ取得
 	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
 		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });
@@ -266,6 +272,7 @@ void CBomb::ModuleMiss()
 		//全部ミスしたとき
 		if (pTimer->MissCountUp())
 		{
+			//ゲームオーバー
 			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
 		}
 	}
@@ -283,17 +290,13 @@ void CBomb::CreateModule(int const nModuleNum)
 	//もしモジュールを表示できる範囲外の時は収める
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
-	//CreateModule_Random(m_nModuleNum);
+	CreateModule_Random();
 
 
 //Debug用
 #ifdef _DEBUG
-	CreateModuleDebug();
+	//CreateModuleDebug();
 #endif //_DEBUG
-
-
-
-
 
 	////1番目
 	//CBomb::CreateModuleOne<CModule_Timer>();
@@ -322,9 +325,6 @@ void CBomb::CreateModule(int const nModuleNum)
 	//CBomb::CreateModuleOne<CModule_None>();
 
 
-
-
-
 	//生成したリスト全てに
 	for (auto &ptr : m_pModuleList)
 	{
@@ -332,39 +332,48 @@ void CBomb::CreateModule(int const nModuleNum)
 		ptr->SetBombPtr(shared_from_this());
 	}
 
-	//最初の選択番号設定
-	for (size_t nCnt = 0; nCnt < m_pModuleList.size(); nCnt++)
-	{
-		if (m_pModuleList[nCnt]->GetCanModuleSelect())
-		{
-			m_nSelectModuleNum = nCnt;
-			break;
-		}
-	}
+	SearchHeadCanSelectNum(0);
 }
 
 //------------------------------------------------------------------------------
 //モジュール生成　ランダム生成
 //------------------------------------------------------------------------------
-void CBomb::CreateModule_Random(int const nModuleNum)
+void CBomb::CreateModule_Random()
 {
+	//ローカルのリスト
+	Vec<CModule_Base::MODULE_TYPE> LocalList = {};
+
 	//タイマー生成
 	CBomb::CreateModuleOne<CModule_Timer>();
+\
+	//モジュールが入らない分はNONEのモジュールを入れておく
+	while ((int)LocalList.size() < MAX_MODULE_NUM - m_nModuleNum - 1)
+	{
+		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NONE);
+	}
+	//最大数になるまでモジュールを入れる
+	while (LocalList.size() < MAX_MODULE_NUM - 1)
+	{
+		//Buttonから4Buttonまでのランダム
+		LocalList.emplace_back((CModule_Base::MODULE_TYPE)CHossoLibrary::RandomRangeUnsigned((int)CModule_Base::MODULE_TYPE::NO1_SYMBOL, (int)CModule_Base::MODULE_TYPE::MAX));
+	}
+
+	//要素のシャッフル
+	CHossoLibrary::Vec_Shuffle(LocalList);
 
 	int nCntModule = 0;
 
 	//モジュール数分に達するまで
 	while ((int)m_pModuleList.size() < MAX_MODULE_NUM)
 	{
-		//モジュールタイプをランダムに
-		CModule_Base::MODULE_TYPE type = (CModule_Base::MODULE_TYPE)(rand() % (int)CModule_Base::MODULE_TYPE::MAX);
-
 		//モジュールタイプに応じて生成
-		switch (type)
+		switch (LocalList[nCntModule])
 		{
 			//モジュール無し
 		case CModule_Base::MODULE_TYPE::NONE:
 			CBomb::CreateModuleOne<CModule_None>();
+			nCntModule++;
+
 			break;
 
 			//	//ボタンモジュール
@@ -374,18 +383,240 @@ void CBomb::CreateModule_Random(int const nModuleNum)
 
 				//キーパッド
 		case CModule_Base::MODULE_TYPE::NO1_SYMBOL:
-			if (nCntModule < m_nModuleNum)
+			//if (nCntModule < nCntModule)
 			{
 				CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
-				m_nModuleNum++;
+				nCntModule++;
 			}
 			break;
 		case CModule_Base::MODULE_TYPE::NO2_SHAPE:
-			if (nCntModule < m_nModuleNum)
+			//if (nCntModule < nCntModule)
 			{
 				CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
-				m_nModuleNum++;
+				nCntModule++;
 			}
+			break;
+		case CModule_Base::MODULE_TYPE::NO4_4COLBUTTON:
+			//if (nCntModule < nCntModule)
+			{
+				CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+				nCntModule++;
+			}
+			break;
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//モジュール選択
+//------------------------------------------------------------------------------
+void CBomb::ModuleSelect()
+{
+	//選択番号
+	//1F前の選択番号
+	int m_SelectNumOld = m_nSelectModuleNum;
+
+
+	//キーボードのポインタ
+	CKeyboard *pKeyboard = CManager::GetKeyboard();
+
+	int nNumX = 3;
+	int nNumY = 2;
+
+	int nMin = (nNumX * nNumY) * m_bCameraDir;
+	int nMax = nMin + (nNumX * nNumY) - 1;
+
+	//モジュール選択処理
+	//入力が無かった時はbreak
+	//←→↑↓どれか入力されていた場合
+	if (pKeyboard->GetTrigger(DIK_LEFT) || pKeyboard->GetTrigger(DIK_RIGHT) ||
+		pKeyboard->GetTrigger(DIK_UP) || pKeyboard->GetTrigger(DIK_DOWN))
+	{
+		while (1)
+		{
+			//←
+			if (pKeyboard->GetTrigger(DIK_LEFT))
+			{
+				//選択番号--
+				m_nSelectModuleNum--;
+
+				//範囲内に抑える
+				if (CHossoLibrary::RangeLimit_Equal(m_nSelectModuleNum, nMin, nMax))
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//列が変わるとき
+				if (m_SelectNumOld / nNumX != m_nSelectModuleNum / nNumX)
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//選択できる時
+				if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+				{
+					//break
+					break;
+				}
+			}
+
+			//→
+			else if (pKeyboard->GetTrigger(DIK_RIGHT))
+			{
+				//選択番号++
+				m_nSelectModuleNum++;
+
+
+				//範囲内に抑える
+				if (CHossoLibrary::RangeLimit_Equal(m_nSelectModuleNum, nMin, nMax))
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//列が変わるとき
+				if (m_SelectNumOld / nNumX != m_nSelectModuleNum / nNumX)
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//選択できる時
+				if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+				{
+					//break
+					break;
+				}
+			}
+
+			//↑
+			else if (pKeyboard->GetTrigger(DIK_UP))
+			{
+				//選択番号 -= 横幅分
+				m_nSelectModuleNum -= nNumX;
+
+				//範囲内に抑える
+				if (CHossoLibrary::RangeLimit_Equal(m_nSelectModuleNum, nMin, nMax))
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//選択可能なモジュールだった時
+				if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+				{
+					//break
+					break;
+				}
+				else
+				{
+					//移動先の列の左端に戻る
+					int nValue = m_nSelectModuleNum / nNumX;
+					m_nSelectModuleNum = nValue * nNumX;
+
+					while (m_nSelectModuleNum <= nValue * nNumX + nNumX)
+					{
+						//選択可能な時
+						if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+						{
+							//抜ける
+							break;
+						}
+
+						//カウントアップ
+						m_nSelectModuleNum++;
+					}
+
+					//次の列に突入してしまった場合
+					if (nValue != m_nSelectModuleNum / nNumX)
+					{
+						//戻す
+						m_nSelectModuleNum = m_SelectNumOld;
+					}
+					break;
+				}
+			}
+
+			//↓
+			else if (pKeyboard->GetTrigger(DIK_DOWN))
+			{
+				//選択番号 += 横幅分
+				m_nSelectModuleNum += nNumX;
+
+				//範囲内に抑える
+				if (CHossoLibrary::RangeLimit_Equal(m_nSelectModuleNum, nMin, nMax))
+				{
+					//元の値に戻す
+					m_nSelectModuleNum = m_SelectNumOld;
+					break;
+				}
+
+				//選択可能なモジュールだった時
+				if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+				{
+					//break
+					break;
+				}
+
+				else
+				{
+					//移動先の列の左端に戻る
+					int nValue = m_nSelectModuleNum / nNumX;
+					m_nSelectModuleNum = nValue * nNumX;
+
+					while (m_nSelectModuleNum <= nValue * nNumX + nNumX)
+					{
+						//選択可能な時
+						if (m_pModuleList[m_nSelectModuleNum]->GetCanModuleSelect())
+						{
+							//抜ける
+							break;
+						}
+
+						//カウントアップ
+						m_nSelectModuleNum++;
+					}
+
+					//次の列に突入してしまった場合
+					if (nValue != m_nSelectModuleNum / nNumX)
+					{
+						//戻す
+						m_nSelectModuleNum = m_SelectNumOld;
+					}
+					break;
+				}
+
+			}
+
+
+
+
+
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//選択可能なモジュール検索
+//一番最初に生成したときと裏表切り替え時に使う
+//------------------------------------------------------------------------------
+void CBomb::SearchHeadCanSelectNum(int nStartNum)
+{
+	//最初の選択番号設定
+	for (int nCnt = nStartNum; nCnt < (int)m_pModuleList.size(); nCnt++)
+	{
+		//選択可能だった時
+		if (m_pModuleList[nCnt]->GetCanModuleSelect())
+		{
+			//現在の選択番号に設定
+			m_nSelectModuleNum = nCnt;
 			break;
 		}
 	}
@@ -399,7 +630,7 @@ void CBomb::CreateModule_Random(int const nModuleNum)
 void CBomb::CreateModuleDebug()
 {
 	//モジュール数をここで決める debug用
-	m_nModuleNum = 2;
+	m_nModuleNum = 3;
 
 
 	//1番目
@@ -418,14 +649,19 @@ void CBomb::CreateModuleDebug()
 	//7番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//8番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
 	//9番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//10番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
 	//11番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//12番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+
+	//モジュール数確認
+	m_nModuleNum = std::count_if(m_pModuleList.begin(), m_pModuleList.end(),
+		[](S_ptr<CModule_Base> const &ptr) {return ptr->GetCanModuleSelect(); });
+
 }
 #endif //_DEBUG

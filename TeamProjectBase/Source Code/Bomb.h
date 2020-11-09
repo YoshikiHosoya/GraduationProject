@@ -21,6 +21,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Base;
+class CBomb_Exterior;
 
 class CBomb : public CSceneX , public std::enable_shared_from_this<CBomb>
 {
@@ -36,18 +37,22 @@ public:
 
 	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
 	void Operator();							//操作
-	void ModuleClearCheck();
+	void ModuleClearCheck();					//クリアしたかチェック
 	void ModuleMiss();							//モジュールミスった
 
 private:
 	int m_nModuleNum;																	//モジュール数
 	int m_nSelectModuleNum;																//選択しているモジュール数
+	bool m_bCameraDir;																	//カメラが正面向いているか
 	Vec<S_ptr<CModule_Base>> m_pModuleList;												//モジュールのリスト
+	U_ptr<CBomb_Exterior> m_pBombExterior;												//爆弾の外装のポインタ
+
 
 
 	void CreateModule(int const nModuleNum);											//モジュール生成
-	void CreateModule_Random(int const nModuleNum);
-
+	void CreateModule_Random();															//モジュール生成　ランダム配置
+	void ModuleSelect();																//モジュールの洗濯処理
+	void SearchHeadCanSelectNum(int nStartNum);													//一番最初の選択可能番号検索
 #ifdef _DEBUG
 	void CreateModuleDebug();
 	static bool m_bCanExplosion;

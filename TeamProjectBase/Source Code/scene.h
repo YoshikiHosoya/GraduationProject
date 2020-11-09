@@ -32,6 +32,7 @@ public:
 		OBJTYPE_PICTURE,					// ピクチャ
 		OBJTYPE_PICTURE_SYMBOL,				// ピクチャ3Dポリゴン
 		OBJTYPE_BOMB,						//爆弾
+		OBJTYPE_BOMB_EXTERIOR,				//爆弾の装飾品
 		OBJTYPE_MODULE,						//モジュール
 		OBJTYPE_MODULE_PARTS,				//モジュールのパーツ
 		OBJTYPE_MODULE_PARTS_SYMBOL,		//モジュールのパーツ上のポリゴン

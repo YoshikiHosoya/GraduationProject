@@ -77,7 +77,7 @@ HRESULT CModule_No2_ShapeKeyPad::Init()
 	//キーパッド生成
 	CreateKeyPad();
 
-	//ディスプレイの図英生成
+	//ディスプレイの図形生成
 	CreateDisplayShape();
 
 	//進捗度のランプ生成
@@ -528,7 +528,7 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
 {
 	//入力されたshapeと同じキー検索
 	auto itr = std::find_if(m_pKeyPadList.begin(), m_pKeyPadList.end(),
-		[shape](S_ptr<CModule_Parts_No2_ShapeKey> pPtr) {return (SHAPE)pPtr->GetShape() == shape; });
+		[shape](S_ptr<CModule_Parts_No2_ShapeKey> pPtr) {return pPtr->GetShape() == shape; });
 
 	//nullcheck
 	if (itr != m_pKeyPadList.end())

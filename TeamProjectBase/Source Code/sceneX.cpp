@@ -89,6 +89,12 @@ void CSceneX::Draw()
 //------------------------------------------------------------------------------
 void CSceneX::DrawMesh()
 {
+	//nullcehck
+	if (!m_SceneXInfo)
+	{
+		return;
+	}
+
 	//デバイス取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -139,6 +145,9 @@ void CSceneX::DrawStencil()
 
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, GetMtxWorldPtr());
+
+	//テクスチャの設定
+	pDevice->SetTexture(0, NULL);
 
 	for (int nCntMat = 0; nCntMat < (int)m_SceneXInfo->GetMatNum(); nCntMat++)
 	{
@@ -288,6 +297,9 @@ void CSceneX::DrawMesh_SetMaterial(D3DXCOLOR col, bool bAllCol, Vec<int> const&C
 		MatInput.Emissive = col;
 	}
 
+	//テクスチャの設定
+	pDevice->SetTexture(0, NULL);
+
 	// ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, GetMtxWorldPtr());
 
@@ -342,4 +354,26 @@ void CSceneX::ShowDebugInfo()
 #ifdef _DEBUG
 
 #endif //DEBUG
+}
+
+S_ptr<CSceneX> CSceneX::CreateShared(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & rot, D3DXMATRIX * pParentMtx, CScene::OBJTYPE objtype, int nModelType)
+{
+	//メモリ確保
+	S_ptr<CSceneX> pPtr = std::make_shared<CSceneX>();
+
+	//初期化
+	pPtr->Init();
+
+	//情報設定ｓ
+	pPtr->SetPos(pos);
+	pPtr->SetRot(rot);
+	pPtr->SetParentMtxPtr(pParentMtx);
+	pPtr->BindModelInfo(CModelInfo::GetModelInfo((CModelInfo::MODEL_TYPE)nModelType));
+
+
+	//Scene側で管理
+	pPtr->SetObjType(objtype);
+	pPtr->AddSharedList(pPtr);
+
+	return pPtr;
 }

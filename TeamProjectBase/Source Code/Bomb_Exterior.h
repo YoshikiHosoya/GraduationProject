@@ -21,10 +21,12 @@ class CBomb_Exterior
 public:
 	CBomb_Exterior();
 	virtual ~CBomb_Exterior();
-	U_ptr<CBomb_Exterior> CreateBombExterior(D3DMATRIX *pBombMtx);
+	static U_ptr<CBomb_Exterior> CreateBombExterior(D3DXMATRIX *pBombMtx);
+
+	Vec<S_ptr<CSceneX>> GetBatteryPtrList() { return m_pBatteryList; };
 
 private:
-	Vec<CSceneX> m_pBatteryList;
+	Vec<S_ptr<CSceneX>> m_pBatteryList;
 
 
 };

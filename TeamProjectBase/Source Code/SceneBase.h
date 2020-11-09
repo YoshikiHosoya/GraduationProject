@@ -59,7 +59,7 @@ public:
 	D3DXMATRIX *GetMtxWorldPtr()								{ return &m_mtxWorld; };					//ワールドマトリックス
 	D3DXMATRIX *GetParentMtxPtr()								{ return m_pParentMtx; };					//親のマトリックス
 
-	void CalcMtx_IncludeParentMtx();
+	void CalcMtx_IncludeParentMtx();																		//マトリックス計算　親のマトリックスも含めて
 
 
 	//テンプレート関数

@@ -9,6 +9,7 @@
 //インクルード
 //------------------------------------------------------------------------------
 #include "Bomb_Exterior.h"
+#include "modelinfo.h"
 #include "scene3D.h"
 #include "sceneX.h"
 
@@ -19,7 +20,8 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define EXTERIOR_OFFSET (D3DXVECTOR3(800.0f,400.0f,0.0f))
+#define EXTERIOR_OFFSET (D3DXVECTOR3(200.0f,100.0f,0.0f))
+//#define EXTERIOR_OFFSET (D3DXVECTOR3(200.0f,100.0f,0.0f))
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
@@ -39,12 +41,22 @@ CBomb_Exterior::~CBomb_Exterior()
 //------------------------------------------------------------------------------
 //爆弾の外装生成
 //------------------------------------------------------------------------------
-U_ptr<CBomb_Exterior> CBomb_Exterior::CreateBombExterior(D3DMATRIX * pBombMtx)
+U_ptr<CBomb_Exterior> CBomb_Exterior::CreateBombExterior(D3DXMATRIX * pBombMtx)
 {
+	//メモリ確保
 	U_ptr<CBomb_Exterior> pPtr = std::make_unique<CBomb_Exterior>();
 
-	//m_pBatteryList.emplace_back()
+	//nullcheck
+	if (pPtr)
+	{
+		//バッテリー生成
+		pPtr->m_pBatteryList.emplace_back(CSceneX::CreateShared(D3DXVECTOR3(EXTERIOR_OFFSET.x, EXTERIOR_OFFSET.y, EXTERIOR_OFFSET.z), ZeroVector3,
+																pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_MODULE_NONE));
 
+		//return
+		return std::move(pPtr);
+	}
 
-	return std::move(pPtr);
+	//return
+	return nullptr;
 }
