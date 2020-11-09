@@ -12,6 +12,8 @@
 #include "main.h"
 #include "manager.h"
 #include "mylibrary.h"
+#include "chatTab.h"
+
 //------------------------------------------------------------------------------
 //マクロ定義
 //------------------------------------------------------------------------------
@@ -218,8 +220,37 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
 
+	static int nWheelFraction = 0;	// 回転量の端数
+	DWORD fwKeys;	// キー情報
+	int zDelta;	// 回転量
+	int nNotch;	// ノッチ数
+
 	switch (uMsg)
 	{
+	case WM_MOUSEWHEEL:		// マウスホイールの回転取得
+		fwKeys = GET_KEYSTATE_WPARAM(wParam);	// 同時に押されているキー情報
+		zDelta = GET_WHEEL_DELTA_WPARAM(wParam);	// 回転量
+		// 前回の端数を追加
+		zDelta += nWheelFraction;
+
+		// ノッチ数を求める
+		nNotch = zDelta / WHEEL_DELTA;
+
+		// 端数を保存する
+		nWheelFraction = zDelta % WHEEL_DELTA;
+
+		if (nNotch > 0)
+		{
+			// ↑に回転（チルト）した
+			CChatTab::ScrollUp();
+		}
+		else if (nNotch < 0)
+		{
+			// ↓に回転（チルト）した
+			CChatTab::ScrollDown();
+		}
+		break;
+
 	case WM_DESTROY:	 //ウィンドウ破棄メッセージ
 		//WM_QUIT メッセージを返す
 		PostQuitMessage(0);

@@ -47,6 +47,7 @@ public:
 	static void SetAccepting(bool bConnect)			{ m_bConnecting = bConnect; }	// 接続の設定
 	static void SetClientState(CLIENTSTATE state)	{ m_state = state; }			// 状態の設定
 	static void Send(char* cSendText);												// 文章の送信
+	static void SendTexture(char* cSendText);										// テクスチャの送信
 
 private:
 	static CLIENTSTATE m_state;			// クライアントの状態
