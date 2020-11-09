@@ -16,7 +16,7 @@
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
 //-------------------------------------------------------------------------------------------------------------
-#define PAINTINGPEN_SIZE 3.0f						// 初期のペンの太さ
+#define PAINTINGPEN_SIZE 1.5f						// 初期のペンの太さ
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
@@ -35,7 +35,7 @@ void CPaintingPen::Init(void)
 	m_mode      = MODE_BRUSH;
 	m_pos       = MYLIB_VEC2_UNSET;
 	m_posOld    = MYLIB_VEC2_UNSET;
-	m_Capsule = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
+	m_Capsule   = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -57,19 +57,6 @@ void CPaintingPen::Uninit(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::Update(void)
 {
-	CMouse *pMouse = CManager::GetMouse();
-
-	if (pMouse->GetTrigger(1))
-	{
-		if (m_mode != MODE_BRUSH)
-		{
-			m_mode = MODE_BRUSH;
-		}
-		else
-		{
-			m_mode = MODE_ERASER;
-		}
-	}
 }
 
 //-------------------------------------------------------------------------------------------------------------

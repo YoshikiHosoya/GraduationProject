@@ -17,7 +17,7 @@
 //-------------------------------------------------------------------------------------------------------------
 // マクロ関数定義
 //-------------------------------------------------------------------------------------------------------------
-#define TabletButtonSetPos(cnt) D3DXVECTOR3(100.0f, 0.0f - 30.0f *cnt, -8.0f)
+#define TabletButtonSetPos(cnt) D3DXVECTOR3(100.0f, 0.0f - 30.0f * cnt, -8.0f)
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -64,35 +64,48 @@ HRESULT CTablet::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CTablet::Update()
 {
-	D3DXVECTOR3* pRayDir = &CManager::GetRay()->vec;
-	BOOL bHit = 0;
-	int nHitTypr = -1;
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "レイの向き[%f][%f][%f]\n", pRayDir->x, pRayDir->y, pRayDir->z);
-
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 CameraPos = CManager::GetRenderer()->GetCamera()->GetCameraPosV();
+	// 変数宣言
+	D3DXVECTOR3*   pNearPos   = &CManager::GetRay()->NearPos;	// レイの近い位置
+	D3DXVECTOR3*   pFarPos    = &CManager::GetRay()->FarPos;	// レイの遠い位置
+	BOOL           bHit       = 0;								// ヒットフラグ
+	D3DXMATRIX     invmat;										// 算出した逆行列
+	D3DXVECTOR3    ray;											// レイ
+	D3DXVECTOR3    InvNirePos;									// 算出した近い位置
+	D3DXVECTOR3    InvForePos;									// 算出した遠い位置
+	CTabletButton* pButton;										// ボタン情報
+	LPD3DXMESH     pMesh;										// メッシュ情報
 
 	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
 	{
-		CTabletButton* pButton = m_Button[nCntTtpe].get();
-		CModelInfo * pModelInfo = pButton->GetModelInfo();
-		LPD3DXMESH pMesh = pModelInfo->GetMesh();
+		// ボタン情報の取得
+		pButton = m_Button[nCntTtpe].get();
+		// メッシュ情報の取得
+		pMesh = pButton->GetModelInfo()->GetMesh();
 
-		pos.x = CameraPos.x - pButton->GetMtxWorldPtr()->_41;
-		pos.y = CameraPos.y - pButton->GetMtxWorldPtr()->_42;
-		pos.z = CameraPos.z -pButton->GetMtxWorldPtr()->_43;
+		/* 対処いう物からみたレイに変換する */
+		//	逆行列の取得
+		D3DXMatrixInverse(&invmat, NULL, pButton->GetMtxWorldPtr());
+		//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
+		D3DXVec3TransformCoord(&InvNirePos, pNearPos, &invmat);
+		//	レイ終点情報を変換
+		D3DXVec3TransformCoord(&InvForePos, pFarPos, &invmat);
+		//	レイ方向情報を変換
+		D3DXVec3Normalize(&ray, &(InvForePos - InvNirePos));
+		//Rayを飛ばす
+		D3DXIntersect(pMesh, &InvNirePos, &ray, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
 
-		D3DXIntersect(pMesh, &pos, pRayDir, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
-
+		// HITしている時
 		if (bHit == 1)
-		{
-			nHitTypr = nCntTtpe;
+		{// モードを変更するためのフラグ処理
+			pButton->FlagProcToChangeMode();
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d]当たったものが存在しました。\n", nCntTtpe);
 		}
-	}
-	if (nHitTypr != -1)
-	{
-		CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d]当たった\n", nHitTypr);
+		else
+		{// 押されたフラグを消す設定
+			pButton->SetToOffPressFlag();
+			// 変更フラグの設定処理
+			pButton->SetChangeFlagProc();
+		}
 	}
 }
 
@@ -102,6 +115,28 @@ void CTablet::Update()
 void CTablet::Draw()
 {
 	CSceneX::Draw();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ボタンを押しているか
+//-------------------------------------------------------------------------------------------------------------
+bool CTablet::ItIsPressingButtons(void)
+{
+	// 変数宣言
+	CTabletButton* pButton;	// ボタン情報
+
+	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+	{
+		// ボタン情報の取得
+		pButton = m_Button[nCntTtpe].get();
+		// 押されたフラグを取得
+		if (pButton->GetChangeFlag() ||
+			pButton->GetInPressFlag())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //-------------------------------------------------------------------------------------------------------------

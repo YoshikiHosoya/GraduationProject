@@ -58,7 +58,7 @@ public:
 
 	void                    MatrixCal(void);																				// マトリックスの計算
 	void                    Writing(void);																					// 書き込み処理
-	void                    Reading(CString& file);																			// 読み込み
+	static void             Reading(LPDIRECT3DTEXTURE9 pTexture,CString& file);																			// 読み込み
 	static void             TexterReadFromLine(CONST_STRING cnpLine, void*pOut);											// テクスチャ情報の1行から情報を読み取る
 
 	// 設定関数
@@ -73,9 +73,10 @@ public:
 
 	// 取得関数
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.cValue; }														// フラグの取得
-
+	inline static CPaintingPen* GetPaintPen(void) { return m_pPen; }														// ペンの取得
 	// クリエイト関数
-	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos , CONST MODE mode = MODE_EDIT);	// 生成
+	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos , CONST MODE mode = MODE_EDIT);		// 生成
+	static HRESULT          MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile , LPDIRECT3DTEXTURE9 *ppTexture);// テクスチャの作成
 private:
 	/* 内部で使う関数 */
 	void                    MakeTexture(LPDIRECT3DDEVICE9 pDevice);															// テクスチャの作成

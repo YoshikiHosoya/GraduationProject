@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="Source Code\basemode.cpp" />
     <ClCompile Include="Source Code\Bomb.cpp" />
+    <ClCompile Include="Source Code\Bomb_Exterior.cpp" />
     <ClCompile Include="Source Code\camera.cpp" />
     <ClCompile Include="Source Code\chatBase.cpp" />
     <ClCompile Include="Source Code\chatTab.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Source Code\module_parts_lamp.cpp" />
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp" />
     <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp" />
+    <ClCompile Include="Source Code\module_parts_ProgressLamp.cpp" />
     <ClCompile Include="Source Code\module_Timer.cpp" />
     <ClCompile Include="Source Code\mouse.cpp" />
     <ClCompile Include="Source Code\multinumber.cpp" />
@@ -223,6 +225,7 @@
   <ItemGroup>
     <ClInclude Include="Source Code\basemode.h" />
     <ClInclude Include="Source Code\Bomb.h" />
+    <ClInclude Include="Source Code\Bomb_Exterior.h" />
     <ClInclude Include="Source Code\camera.h" />
     <ClInclude Include="Source Code\chatBase.h" />
     <ClInclude Include="Source Code\chatTab.h" />
@@ -264,6 +267,7 @@
     <ClInclude Include="Source Code\module_parts_lamp.h" />
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h" />
     <ClInclude Include="Source Code\module_parts_No4_ColButton.h" />
+    <ClInclude Include="Source Code\module_parts_ProgressLamp.h" />
     <ClInclude Include="Source Code\module_Timer.h" />
     <ClInclude Include="Source Code\mouse.h" />
     <ClInclude Include="Source Code\multinumber.h" />

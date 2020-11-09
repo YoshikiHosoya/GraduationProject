@@ -24,6 +24,10 @@
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
+#ifdef _DEBUG
+bool CBomb::m_bCanExplosion = true;
+#endif // _DEBUG
+
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -98,6 +102,12 @@ void CBomb::ShowDebugInfo()
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[↑][↓][←][→] カーソル移動 \n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[Enter] 決定ボタン \n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[BackSpace] 戻るボタン \n");
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[F7] 爆発するかどうか設定 >> [%d] \n",m_bCanExplosion);
+
+	if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
+	{
+		m_bCanExplosion ^= 1;
+	}
 
 #endif //DEBUG
 }
@@ -236,6 +246,12 @@ void CBomb::ModuleClearCheck()
 //------------------------------------------------------------------------------
 void CBomb::ModuleMiss()
 {
+#ifdef _DEBUG
+	if (!m_bCanExplosion) return;
+#endif // _DEBUG
+
+
+
 	//タイマーのクラスのイテレータ取得
 	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
 		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });

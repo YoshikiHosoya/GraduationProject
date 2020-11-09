@@ -135,8 +135,13 @@ void CModule_No1_SymbolKeyPad::Operation()
 	{
 		if (m_pKeyPadList[nSelectNum].get())
 		{
+			//クリア状態のボタンには何もできない
+			if (m_pKeyPadList[nSelectNum]->GetKeyPadState() == CModule_Parts_No1_SymbolKey::KEYPAD_STATE::CLEAR)
+			{
+
+			}
 			//次のシンボルと同じシンボルだった時
-			if (m_nNextSymbolNum == m_pKeyPadList[nSelectNum]->GetSymbolNum())
+			else if (m_nNextSymbolNum == m_pKeyPadList[nSelectNum]->GetSymbolNum())
 			{
 				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_No1_SymbolKey::KEYPAD_STATE::CLEAR);
 				m_nNextSymbolNum++;

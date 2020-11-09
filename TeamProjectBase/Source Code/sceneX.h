@@ -42,7 +42,7 @@ public:
 	bool GetSelect() { return m_bSelecting; };
 	bool GetEmissive() { return m_bEmissive; };
 
-	static int GetNumSceneX() { return m_nNumSceneX; };												//数取得
+	static int GetNumSceneX() { return m_nNumSceneX; };			//数取得
 
 
 	void BindModelInfo(S_ptr<CModelInfo> pSceneXInfo) { m_SceneXInfo = pSceneXInfo; };	//モデルセット
