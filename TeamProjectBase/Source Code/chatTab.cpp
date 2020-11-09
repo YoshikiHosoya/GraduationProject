@@ -20,41 +20,46 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define POS_OPENTAB			(D3DXVECTOR2(980.0f, 720.0f))	// 開いたタブの座標
-#define POS_CLOSETAB		(D3DXVECTOR2(1280.0f, 720.0f))	// 閉じたタブの座標
-#define DIFPOS_X_TEXTBOX	(10.0f)
-#define DIFPOS_Y_TEXTBOX	(100.0f)
-#define DIFPOS_X_KEEPTEXT	(5.0f)
-#define DIFPOS_Y_KEEPTEXT	(40.0f)
-#define TIME_PRESSKEY			(40)				// キーの長押し時間
-
-#define SIZE_TABBACK	(D3DXVECTOR3(300.0f, 720.0f, 0.0f))	// タブ背景のサイズ
-#define SIZE_TABBUTTON	(D3DXVECTOR3(40.0f, 100.0f, 0.0f))	// タブ開閉ボタンのサイズ
-#define SIZE_X_TEXTBOX	(280.0f)
-#define SIZE_Y_TEXTBOX	(100.0f)
-
-#define DIFPOS_X_SENDTEXT		(15.0f)				// 送信用テキストの座標の差分
-#define DIFPOS_Y_SENDTEXT		(63.0f)				// 送信用テキストの座標の差分
-#define DIFPOS_X_MAXCHAR		(190.0f)			// 文字数表示用テキストの座標の差分
-#define DIFPOS_Y_MAXCHAR		(23.0f)				// 文字数表示用テキストの座標の差分
-
-#define TIME_TABMOVE	(10)	// タブ開閉の時間
-
-#define MAX_KEEPTEXT		(5)	// 保持できるテキストの最大数
+#define MAX_KEEPTEXT		(20)	// 保持できるテキストの最大数
 #define SIZE_CHATTEXT		(64)	// チャットテキストの最大サイズ
 
+#define POS_OPENTAB				(D3DXVECTOR2(980.0f, 720.0f))	// 開いたタブの座標
+#define POS_CLOSETAB			(D3DXVECTOR2(1280.0f, 720.0f))	// 閉じたタブの座標
+
+#define SIZE_TABBACK			(D3DXVECTOR3(300.0f, 720.0f, 0.0f))	// タブ背景のサイズ
+#define SIZE_TABTITLE			(D3DXVECTOR3(300.0f, 100.0f, 0.0f))	// タブタイトルのサイズ
+#define SIZE_TABWRITEWINDOW		(D3DXVECTOR3(300.0f, 100.0f, 0.0f))	// タブ書き込みウィンドウのサイズ
+#define SIZE_TABBUTTON			(D3DXVECTOR3(40.0f, 100.0f, 0.0f))	// タブ開閉ボタンのサイズ
+#define SIZE_X_TEXTBOX			(280.0f)	// テキストボックスのサイズ
+#define SIZE_Y_TEXTBOX			(100.0f)	// テキストボックスのサイズ
+
+#define DIFPOS_X_TEXTBOX		(10.0f)		// テキストボックスの座標の差分
+#define DIFPOS_Y_TEXTBOX		(100.0f)	// テキストボックスの座標の差分
+#define DIFPOS_Y_TEXTBOX_UNDER	(85.0f)		// テキストボックスの座標の差分
+#define DIFPOS_X_KEEPTEXT		(5.0f)		// 保持するテキストの座標の差分
+#define DIFPOS_Y_KEEPTEXT		(40.0f)		// 保持するテキストの座標の差分
+#define DIFPOS_X_SENDTEXT		(15.0f)		// 送信用テキストの座標の差分
+#define DIFPOS_Y_SENDTEXT		(63.0f)		// 送信用テキストの座標の差分
+#define DIFPOS_X_MAXCHAR		(190.0f)	// 文字数表示用テキストの座標の差分
+#define DIFPOS_Y_MAXCHAR		(23.0f)		// 文字数表示用テキストの座標の差分
+
+#define TIME_TABMOVE			(10)		// タブ開閉の時間
+#define TIME_PRESSKEY			(40)		// キーの長押し時間
+
 #define COLOR_TABCLICK	(D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f))	// タブクリック時のカラー
+
+#define MOVE_SCROLL_TAB	(30.0f)	// マウススクロールによる座標移動
 
 //=============================================================================
 // 静的メンバ変数の初期化
 //=============================================================================
 D3DXVECTOR2			CChatTab::m_TabPos		= ZeroVector2;
+float				CChatTab::m_fScrollPosY = 0.0f;
 CChatTab::TABSTATE	CChatTab::m_tabState	= CChatTab::TABSTATE_CLOSED;
-CChatText			* CChatTab::m_pChatText = nullptr;
 int					CChatTab::m_nCntPress = 0;
 int					CChatTab::m_nPressKey = 0;
-CChatText	*CChatTab::m_SendText = nullptr;
-CChatText	*CChatTab::m_leftText = nullptr;
+CChatText			*CChatTab::m_SendText = nullptr;
+CChatText			*CChatTab::m_leftText = nullptr;
 std::vector<CChatTab::CHATKEEP>	CChatTab::m_chatKeep = {};	// 保持できるテキスト
 
 //=============================================================================
@@ -70,16 +75,13 @@ CChatTab::CChatTab()
 //=============================================================================
 CChatTab::~CChatTab()
 {
-	if (m_pPolyBack)
+	for (int nCnt = 0; nCnt < POLY_MAX; nCnt++)
 	{
-		delete m_pPolyBack;
-		m_pPolyBack = nullptr;
-	}
-
-	if (m_pPolyTab)
-	{
-		delete m_pPolyTab;
-		m_pPolyTab = nullptr;
+		if (m_pChatPoly[nCnt])
+		{
+			delete m_pChatPoly[nCnt];
+			m_pChatPoly[nCnt] = nullptr;
+		}
 	}
 
 	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
@@ -95,54 +97,6 @@ CChatTab::~CChatTab()
 			m_chatKeep[nCnt].pKeepText = nullptr;
 		}
 	}
-
-	// テキストの終了
-	if (m_pChatText)
-	{
-		delete m_pChatText;
-		m_pChatText = nullptr;
-	}
-}
-
-//=============================================================================
-// テキストボックスの追加
-//=============================================================================
-int CChatTab::AddTextBox(int nIndex)
-{
-	//CHATKEEP chat;
-	//// テキストボックスの背景を生成
-	//m_ChatKeep.push_back(chat);
-
-	//// 番号を取得
-	//int nNumBox = (int)m_ChatKeep.size() - 1;
-	//// ポリゴン生成
-	//m_ChatKeep[nNumBox].pPolyBack = CPolygon2D::Create();
-	//// 初期設定
-	//m_ChatKeep[nNumBox].pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX, 0.0f));
-	//m_ChatKeep[nNumBox].pPolyBack->SetSize(D3DXVECTOR3(SIZE_X_TEXTBOX, SIZE_Y_TEXTBOX, 0.0f));
-	//m_ChatKeep[nNumBox].pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
-	//m_ChatKeep[nNumBox].pPolyBack->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	//m_ChatKeep[nNumBox].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_00));
-	//m_ChatKeep[nNumBox].nIndex = nIndex;
-
-	//D3DXVECTOR3 pos = m_ChatKeep[nNumBox].pPolyBack->GetPos();
-
-	//CChatText::SetKeepRectBegin(nIndex, D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
-	//CChatText::SetKeepColor(nIndex, BlackColor);
-	//
-	//int nCntKeep = nNumBox;
-	//while (nCntKeep >= 0)
-	//{
-	//	D3DXVECTOR3 posLast = m_ChatKeep[nCntKeep].pPolyBack->GetPos();
-	//	nCntKeep--;
-	//	m_ChatKeep[nCntKeep].pPolyBack->SetPos(D3DXVECTOR3(posLast.x, posLast.y + DIFPOS_Y_TEXTBOX, 0.0f));
-	//	CChatText::SetKeepRectBegin(nIndex, D3DXVECTOR2(posLast.x + DIFPOS_X_KEEPTEXT, posLast.y + DIFPOS_Y_KEEPTEXT));
-	//}
-
-	//// ボックスの番号を返す
-	//return nNumBox;
-
-	return 0;
 }
 
 //=============================================================================
@@ -165,7 +119,7 @@ void CChatTab::ClickTab(void)
 		break;
 	}
 	// カラー更新
-	m_pPolyTab->SetCol(COLOR_TABCLICK);
+	m_pChatPoly[POLY_TAB]->SetCol(COLOR_TABCLICK);
 }
 
 //=============================================================================
@@ -190,7 +144,7 @@ void CChatTab::SlideTab(void)
 
 	// カラー更新
 	if (m_nCntState == TIME_TABMOVE - 1)
-		m_pPolyTab->SetCol(WhiteColor);
+		m_pChatPoly[POLY_TAB]->SetCol(WhiteColor);
 
 	// カウンタを加算
 	m_nCntState++;
@@ -204,11 +158,11 @@ void CChatTab::SlideTab(void)
 		{
 		case TABSTATE_OPENNING:
 			m_tabState = TABSTATE_OPENED;
-			m_pPolyTab->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABCLOSE));
+			m_pChatPoly[POLY_TAB]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABCLOSE));
 			break;
 		case TABSTATE_CLOSING:
 			m_tabState = TABSTATE_CLOSED;
-			m_pPolyTab->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
+			m_pChatPoly[POLY_TAB]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
 			break;
 		}
 		// 処理の終了
@@ -217,17 +171,13 @@ void CChatTab::SlideTab(void)
 
 	// 移動値を加算し、座標更新
 	m_TabPos += m_moveDest;
-	m_pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
-	m_pPolyTab->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_BACK]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_TAB]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_TITLE]->SetPos(D3DXVECTOR3(m_TabPos.x, 0.0f, 0.0f));
+	m_pChatPoly[POLY_WRITEWINDOW]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
 
 	m_SendText->SetKeepRectBegin(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_SENDTEXT, m_TabPos.y - DIFPOS_Y_SENDTEXT));
 	m_leftText->SetKeepRectBegin(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_MAXCHAR, m_TabPos.y - DIFPOS_Y_MAXCHAR));
-	for (int nKeep = 0; nKeep < (int)m_chatKeep.size(); nKeep++)
-	{
-		m_chatKeep[nKeep].pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX, 0.0f));
-		D3DXVECTOR3 BackPos = m_chatKeep[nKeep].pPolyBack->GetPos();
-		m_chatKeep[nKeep].pKeepText->SetKeepRectBegin(D3DXVECTOR2(BackPos.x + DIFPOS_X_KEEPTEXT, BackPos.y + DIFPOS_Y_KEEPTEXT));
-	}
 }
 
 //=============================================================================
@@ -255,33 +205,44 @@ HRESULT CChatTab::Init(void)
 {
 	// 要素の初期化
 	m_TabPos = POS_CLOSETAB;
+	m_fScrollPosY = 0.0f;
 	m_moveDest = ZeroVector2;
 	m_tabState = TABSTATE_CLOSED;
 	m_nCntState = 0;
 
 	// 背景の生成
-	m_pPolyBack = CPolygon2D::Create();
-	m_pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
-	m_pPolyBack->SetSize(SIZE_TABBACK);
-	m_pPolyBack->SetPosStart(CPolygon2D::POSSTART_BOTTOM_LEFT);
-	m_pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BACK));
+	m_pChatPoly[POLY_BACK] = CPolygon2D::Create();
+	m_pChatPoly[POLY_BACK]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_BACK]->SetSize(SIZE_TABBACK);
+	m_pChatPoly[POLY_BACK]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_LEFT);
+	m_pChatPoly[POLY_BACK]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BACK));
+
+	m_pChatPoly[POLY_TITLE] = CPolygon2D::Create();
+	m_pChatPoly[POLY_TITLE]->SetPos(D3DXVECTOR3(m_TabPos.x, 0.0f, 0.0f));
+	m_pChatPoly[POLY_TITLE]->SetSize(SIZE_TABTITLE);
+	m_pChatPoly[POLY_TITLE]->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+	m_pChatPoly[POLY_TITLE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TITLE));
+
+	m_pChatPoly[POLY_WRITEWINDOW] = CPolygon2D::Create();
+	m_pChatPoly[POLY_WRITEWINDOW]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_WRITEWINDOW]->SetSize(SIZE_TABWRITEWINDOW);
+	m_pChatPoly[POLY_WRITEWINDOW]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_LEFT);
+	m_pChatPoly[POLY_WRITEWINDOW]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_WRITEWINDOW));
 
 	// 開閉タブの生成
-	m_pPolyTab = CPolygon2D::Create();
-	m_pPolyTab->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
-	m_pPolyTab->SetSize(SIZE_TABBUTTON);
-	m_pPolyTab->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
-	m_pPolyTab->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
+	m_pChatPoly[POLY_TAB] = CPolygon2D::Create();
+	m_pChatPoly[POLY_TAB]->SetPos(D3DXVECTOR3(m_TabPos.x, m_TabPos.y, 0.0f));
+	m_pChatPoly[POLY_TAB]->SetSize(SIZE_TABBUTTON);
+	m_pChatPoly[POLY_TAB]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
+	m_pChatPoly[POLY_TAB]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
 	
+	// 送信用テキストの生成
 	m_SendText = CChatText::Create();
 	m_SendText->SetKeepRectBegin(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_SENDTEXT, m_TabPos.y - DIFPOS_Y_SENDTEXT));
 
+	// 残り文字数テキストの生成
 	m_leftText = CChatText::Create();
 	m_leftText->SetKeepRectBegin(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_MAXCHAR, m_TabPos.y - DIFPOS_Y_MAXCHAR));
-
-	// チャットテキストの生成
-	m_pChatText = new CChatText;
-	m_pChatText->Init();
 
 	m_nCntPress = 0;
 
@@ -302,18 +263,27 @@ void CChatTab::Update(void)
 		SlideTab();
 
 	// 左クリックかF5でタブの開閉処理
-	if ((pMouse->GetTrigger(0) && m_pPolyTab->ReturnHit(mousePos)) ||
+	if ((pMouse->GetTrigger(0) && m_pChatPoly[POLY_TAB]->ReturnHit(mousePos)) ||
 		pKey->GetTrigger(DIK_F5))
 		ClickTab();
 
-	if (m_pPolyBack)
-		m_pPolyBack->Update();
-
-	if (m_pPolyTab)
-		m_pPolyTab->Update();
+	// タブポリゴンの更新
+	for (int nCnt = 0; nCnt < POLY_MAX; nCnt++)
+	{
+		if (m_pChatPoly[nCnt])
+			m_pChatPoly[nCnt]->Update();
+	}
 	
 	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
 	{
+		D3DXVECTOR3 pos = D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX,
+										DIFPOS_Y_TEXTBOX * ((int)m_chatKeep.size() - nCnt) + m_fScrollPosY,
+										0.0f);
+
+		m_chatKeep[nCnt].pPolyBack->SetPos(pos);
+		pos = m_chatKeep[nCnt].pPolyBack->GetPos();
+		m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+
 		if (m_chatKeep[nCnt].pPolyBack)
 			m_chatKeep[nCnt].pPolyBack->Update();
 	}
@@ -323,6 +293,7 @@ void CChatTab::Update(void)
 	if (m_tabState == TABSTATE_OPENED)
 		InputText();
 
+	// 残り時数を決定
 	char cText[32];
 	sprintf(cText, "Left %d/%d", SIZE_CHATTEXT - (int)m_SendText->GetChatText().size(), SIZE_CHATTEXT);
 	m_leftText->SetChatText(cText);
@@ -333,11 +304,11 @@ void CChatTab::Update(void)
 //=============================================================================
 void CChatTab::Draw(void)
 {
-	if (m_pPolyBack)
-		m_pPolyBack->Draw();
+	if (m_pChatPoly[POLY_TAB])
+		m_pChatPoly[POLY_TAB]->Draw();
 
-	if (m_pPolyTab)
-		m_pPolyTab->Draw();
+	if (m_pChatPoly[POLY_BACK])
+		m_pChatPoly[POLY_BACK]->Draw();
 
 	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
 	{
@@ -347,13 +318,17 @@ void CChatTab::Draw(void)
 			m_chatKeep[nCnt].pKeepText->Draw();
 	}
 
+	if (m_pChatPoly[POLY_TITLE])
+		m_pChatPoly[POLY_TITLE]->Draw();
+
+	if (m_pChatPoly[POLY_WRITEWINDOW])
+		m_pChatPoly[POLY_WRITEWINDOW]->Draw();
+
 	if (m_SendText)
 		m_SendText->Draw();
 	if (m_leftText)
 		m_leftText->Draw();
-	//CChatText::Draw();
 }
-
 
 //==========================================================================================================================================================
 // キーボード入力
@@ -453,6 +428,36 @@ void CChatTab::SendChatText(void)
 }
 
 //==========================================================================================================================================================
+// マウススクロールによる座標上昇
+//==========================================================================================================================================================
+void CChatTab::ScrollUp(void)
+{
+	// ゲーム中のみ
+	if (CManager::GetMode() != CManager::MODE_GAME && m_tabState != TABSTATE_OPENED)
+		return;
+	// 上昇
+	m_fScrollPosY += MOVE_SCROLL_TAB;
+
+	if (m_fScrollPosY > -DIFPOS_Y_TEXTBOX_UNDER + (int)m_chatKeep.size() * SIZE_Y_TEXTBOX)
+		m_fScrollPosY = -DIFPOS_Y_TEXTBOX_UNDER + (int)m_chatKeep.size() * SIZE_Y_TEXTBOX;
+}
+
+//==========================================================================================================================================================
+// マウススクロールによる座標下降
+//==========================================================================================================================================================
+void CChatTab::ScrollDown(void)
+{
+	// ゲーム中のみ
+	if (CManager::GetMode() != CManager::MODE_GAME && m_tabState != TABSTATE_OPENED)
+		return;
+	// 下降
+	m_fScrollPosY -= MOVE_SCROLL_TAB;
+
+	if (m_fScrollPosY < DIFPOS_Y_TEXTBOX + (int)m_chatKeep.size() * -SIZE_Y_TEXTBOX)
+		m_fScrollPosY = DIFPOS_Y_TEXTBOX + (int)m_chatKeep.size() * -SIZE_Y_TEXTBOX;
+}
+
+//==========================================================================================================================================================
 // チャットキープの生成
 //==========================================================================================================================================================
 void CChatTab::CreateKeep(TEXTOWNER owner)
@@ -482,6 +487,14 @@ void CChatTab::CreateKeep(TEXTOWNER owner)
 	m_chatKeep[nNumber].pKeepText->SetChatText(KeepText);
 	m_chatKeep[nNumber].pKeepText->SetKeepColor(BlackColor);
 	m_chatKeep[nNumber].pKeepText->SetKeepRectBegin(D3DXVECTOR2(BackPos.x + DIFPOS_X_KEEPTEXT, BackPos.y + DIFPOS_Y_KEEPTEXT));
+
+	for (int nCnt = nNumber - 1; nCnt > -1; nCnt--)
+	{
+		D3DXVECTOR3 pos = m_chatKeep[nCnt + 1].pPolyBack->GetPos();
+		m_chatKeep[nCnt].pPolyBack->SetPos(D3DXVECTOR3(pos.x, pos.y + SIZE_Y_TEXTBOX, 0.0f));
+		pos = m_chatKeep[nCnt].pPolyBack->GetPos();
+		m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+	}
 
 	// 記入した文字列をリセット
 	m_SendText->GetChatText().clear();

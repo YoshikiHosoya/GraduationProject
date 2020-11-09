@@ -37,6 +37,8 @@ public:
 		TEX_MATERIAL_FIELD004,					//マテリアル
 
 		TEX_CHAT_BACK,							// チャットタブの背景
+		TEX_CHAT_TITLE,							// チャットタブのタイトル
+		TEX_CHAT_WRITEWINDOW,					// チャットタブの書き込みウィンドウ
 		TEX_CHAT_TABOPEN,						// チャットタブ (開く)
 		TEX_CHAT_TABCLOSE,						// チャットタブ (閉じる)
 		TEX_CHAT_BOX_00,						// チャットボックス00

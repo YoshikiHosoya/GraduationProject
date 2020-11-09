@@ -24,7 +24,9 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/field004.jpg" },					//マテリアル
 
-	{ "data/TEXTURE/CHAT/chatFrame.png" },						// チャットタブの背景
+	{ "data/TEXTURE/CHAT/chatTab_back.png" },					// チャットタブの背景
+	{ "data/TEXTURE/CHAT/chatTab_title.png" },					// チャットタブのタイトル
+	{ "data/TEXTURE/CHAT/chatTab_writeWindow.png" },			// チャットタブの書き込みウィンドウ
 	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
 	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
 	{ "data/TEXTURE/CHAT/chatBox00.png" },						// チャットボックス00
