@@ -39,6 +39,8 @@ public:
 		TEX_CHAT_BACK,							// チャットタブの背景
 		TEX_CHAT_TABOPEN,						// チャットタブ (開く)
 		TEX_CHAT_TABCLOSE,						// チャットタブ (閉じる)
+		TEX_CHAT_BOX_00,						// チャットボックス00
+		TEX_CHAT_BOX_01,						// チャットボックス01
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル

@@ -157,6 +157,9 @@ void CClient::UninitClient(void)
 // ===================================================================
 void CClient::Send(char * cSendText)
 {
+#ifdef _DEBUG
+	printf("送信 > %s\n", cSendText);
+#endif
 	// 送信用の変数に格納
 	strcpy(m_cSendText, cSendText);
 	// テキスト送信

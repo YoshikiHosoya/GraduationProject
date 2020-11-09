@@ -7,6 +7,7 @@
 #include "chatBase.h"
 #include "chatTab.h"
 #include "scene.h"
+#include "chatText.h"
 #include "ImGui/imgui.h"			// Imguiの実装に必要
 #include "ImGui/imgui_impl_dx9.h"	// Imguiの実装に必要
 #include "ImGui/imgui_impl_win32.h"	// Imguiの実装に必要
@@ -24,6 +25,7 @@
 //=============================================================================
 CChatBase::CChatBase()
 {
+	CChatText::LoadFont();
 }
 
 //=============================================================================
@@ -31,6 +33,8 @@ CChatBase::CChatBase()
 //=============================================================================
 CChatBase::~CChatBase()
 {
+	CChatText::UnloadFont();
+
 	if (m_pTab)
 	{
 		delete m_pTab;

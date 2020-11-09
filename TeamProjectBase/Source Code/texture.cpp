@@ -27,6 +27,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CHAT/chatFrame.png" },						// チャットタブの背景
 	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
 	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
+	{ "data/TEXTURE/CHAT/chatBox00.png" },						// チャットボックス00
+	{ "data/TEXTURE/CHAT/chatBox01.png" },						// チャットボックス01
 
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル

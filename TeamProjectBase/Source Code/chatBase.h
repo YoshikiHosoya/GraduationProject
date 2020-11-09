@@ -27,6 +27,13 @@ class CChatTab;
 class CChatBase : public CScene
 {
 public:
+	typedef enum
+	{	// チャット所有者
+		OWNER_OWN,		// 自身
+		OWNER_GUEST,	// ゲスト
+		OWNER_MAX
+	} TEXTOWNER;
+
 	CChatBase();
 	~CChatBase();
 
