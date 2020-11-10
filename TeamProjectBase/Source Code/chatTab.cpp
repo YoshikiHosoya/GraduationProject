@@ -289,7 +289,6 @@ void CChatTab::Update(void)
 			m_chatKeep[nCnt].pPolyBack->Update();
 	}
 
-	//CChatText::Update();
 	// タブが開いているときのみ、文字を入力できる
 	if (m_tabState == TABSTATE_OPENED)
 		InputText();
@@ -420,12 +419,27 @@ void CChatTab::PressKey(int nKeyID, bool bShift)
 //==========================================================================================================================================================
 void CChatTab::SendChatText(void)
 {
+	char *KeepText = new char[SIZE_CHATTEXT];
+	strcpy(KeepText, m_SendText->GetChatText().c_str());
+
 	// 記入したテキストを送信
-	std::thread t2(CClient::Send, (char*)m_SendText->GetChatText().c_str());
+	std::thread t2(CClient::SendText, KeepText);
 	t2.detach();
 
+	// 記入した文字列をリセット
+	m_SendText->GetChatText().clear();
+
 	// チャットキープの生成
-	CreateKeep(OWNER_OWN);
+	CreateKeep(OWNER_OWN, KeepText);
+}
+
+//==========================================================================================================================================================
+// メッセージの送信
+//==========================================================================================================================================================
+void CChatTab::RecvChatText(char *cText)
+{
+	// チャットキープの生成
+	CreateKeep(OWNER_GUEST, cText);
 }
 
 //==========================================================================================================================================================
@@ -461,12 +475,8 @@ void CChatTab::ScrollDown(void)
 //==========================================================================================================================================================
 // チャットキープの生成
 //==========================================================================================================================================================
-void CChatTab::CreateKeep(TEXTOWNER owner)
+void CChatTab::CreateKeep(TEXTOWNER owner, char *cText)
 {
-	// 送信するテキストを複製
-	char *KeepText = new char[SIZE_CHATTEXT];
-	strcpy(KeepText, m_SendText->GetChatText().c_str());
-
 	// テキストを末尾に追加
 	CHATKEEP keep;
 	m_chatKeep.push_back(keep);
@@ -485,7 +495,6 @@ void CChatTab::CreateKeep(TEXTOWNER owner)
 	// 文字列の生成
 	D3DXVECTOR3 BackPos = m_chatKeep[nNumber].pPolyBack->GetPos();
 	m_chatKeep[nNumber].pKeepText = CChatText::Create();
-	m_chatKeep[nNumber].pKeepText->SetChatText(KeepText);
 	m_chatKeep[nNumber].pKeepText->SetKeepColor(BlackColor);
 	m_chatKeep[nNumber].pKeepText->SetKeepRectBegin(D3DXVECTOR2(BackPos.x + DIFPOS_X_KEEPTEXT, BackPos.y + DIFPOS_Y_KEEPTEXT));
 
@@ -497,8 +506,8 @@ void CChatTab::CreateKeep(TEXTOWNER owner)
 		m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
 	}
 
-	// 記入した文字列をリセット
-	m_SendText->GetChatText().clear();
+	// チャットに保存
+	m_chatKeep[nNumber].pKeepText->SetChatText(cText);
 
 	// 古いほうから削除
 	if (nNumber >= MAX_KEEPTEXT)

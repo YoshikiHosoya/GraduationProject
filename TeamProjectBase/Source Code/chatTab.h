@@ -80,7 +80,7 @@ public:
 	static void SetChatKeyInfo(int nKeyID);
 	static void SetChatShiftKeyInfo(int nKeyID);
 	static void SendChatText(void);
-	static void RecvChatText(void);
+	static void RecvChatText(char *cText);
 
 	static void ScrollUp(void);		// マウス座標の上昇
 	static void ScrollDown(void);	// マウス座標の下降
@@ -88,7 +88,7 @@ public:
 private:
 	void ClickTab(void);	// タブクリック
 	void SlideTab(void);	// タブスライド
-	static void CreateKeep(TEXTOWNER owner);	// チャットキープの生成
+	static void CreateKeep(TEXTOWNER owner, char *cText);	// チャットキープの生成
 
 	CPolygon2D *m_pChatPoly[POLY_MAX];			// チャット用画像のポリゴン
 

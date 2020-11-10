@@ -10,6 +10,7 @@
 // インクルードファイル
 // ===================================================================
 #include "client.h"
+#include "chatTab.h"
 
 // ===================================================================
 // マクロ定義
@@ -22,7 +23,6 @@
 // 静的メンバ変数の初期化
 // ===================================================================
 bool CClient::m_bConnecting = false;
-char CClient::m_cSendText[256] = {};
 SOCKET CClient::m_socket = NULL;
 
 // ===================================================================
@@ -100,13 +100,8 @@ void CClient::WaitRecieve(void)
 			continue;
 		}
 
-		// 文字列を格納
-		int nLen = strlen(buf);
-#ifdef _DEBUG
-		// 受信したデータを表示
-		if (nLen > 0)
-			printf("%d, %s\n", nLen, buf);
-#endif
+		// テキストの受信
+		RecvText(buf);
 	}
 	// winsock2の終了処理
 	WSACleanup();
@@ -155,17 +150,32 @@ void CClient::UninitClient(void)
 // ===================================================================
 // テキストの送信
 // ===================================================================
-void CClient::Send(char * cSendText)
+void CClient::SendText(char * cSendText)
 {
+	int nLen = strlen(cSendText);
 #ifdef _DEBUG
-	printf("送信 > %s\n", cSendText);
+	printf("送信 > %s [%d字]\n", cSendText, nLen);
 #endif
-	// 送信用の変数に格納
-	strcpy(m_cSendText, cSendText);
 	// テキスト送信
-	send(m_socket, m_cSendText, strlen(m_cSendText), 0);
-	// 送信後は中身をなくす
-	strcpy(m_cSendText, "");
+	if (send(m_socket, cSendText, nLen, 0) == -1)
+	{
+#ifdef _DEBUG
+		ErrorReport();
+#endif
+	}
+}
+
+// ===================================================================
+// テキストの受信
+// ===================================================================
+void CClient::RecvText(char * cRecvText)
+{
+	int nLen = strlen(cRecvText);
+#ifdef _DEBUG
+	printf("受信 > %s [%d字]\n", cRecvText, nLen);
+#endif
+	// チャットにテキストを追加
+	CChatTab::RecvChatText(cRecvText);
 }
 
 // ===================================================================
