@@ -36,13 +36,6 @@ public:
 		MASK_UPDATE = 0b0010,	// 更新
 		MASK_MAX = 0b0011,		// 最大
 	};
-	// モード
-	typedef enum
-	{
-		MODE_EDIT = 0,	// 編集
-		MODE_EXHI,		// 展示
-		MODE_MAX		// 最大数
-	} MODE;
 
 	/* メンバ関数 */
 	inline                  CPicture() :CScene(){}																			// コンストラクタ
@@ -66,16 +59,15 @@ public:
 	inline void             SetRot(CONST D3DXVECTOR3 &rot) { m_trans.rot = rot; }											// 向きの設定
 	inline void             SetScal(CONST D3DXVECTOR3 &scal) { m_trans.scal = scal; }										// スケールの設定
 	inline void             SetParent(D3DMATRIX *pMtxParent) { m_pMtxParent = pMtxParent; }									// 親のマトリックス
-	inline void             SetFlag(const int nMask) { m_Flags.cValue = nMask; }											// フラグの設定
-	inline void             SetMode(MODE mode) {m_mode = mode; }															// モードの設定
-	inline void             BuildFlag(const int nFlagIndex) { Mybfunc_bit_set(m_Flags.cValue, nFlagIndex); }				// フラグを建てる
-	inline void             BreakFlag(const int nFlagIndex) { Mybfunc_bit_clear(m_Flags.cValue, nFlagIndex); }				// フラグを壊す
+	inline void             SetFlag(const int nMask) { m_Flags.data = nMask; }												// フラグの設定
+	inline void             BuildFlag(const int nFlagIndex) { Mybfunc_bit_set(m_Flags.data, nFlagIndex); }					// フラグを建てる
+	inline void             BreakFlag(const int nFlagIndex) { Mybfunc_bit_clear(m_Flags.data, nFlagIndex); }				// フラグを壊す
 
 	// 取得関数
-	inline UVSHORT*         GetFlag(void) { return &m_Flags.cValue; }														// フラグの取得
+	inline UVSHORT*         GetFlag(void) { return &m_Flags.data; }															// フラグの取得
 	inline static CPaintingPen* GetPaintPen(void) { return m_pPen; }														// ペンの取得
 	// クリエイト関数
-	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos , CONST MODE mode = MODE_EDIT);		// 生成
+	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos);		// 生成
 	static HRESULT          MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile , LPDIRECT3DTEXTURE9 *ppTexture);// テクスチャの作成
 private:
 	/* 内部で使う関数 */
@@ -102,9 +94,8 @@ private:
 	static CString          m_WriteToFile;																					// 書き込み先のァイル名
 	LPDIRECT3DVERTEXBUFFER9 m_pVtexBuff;																					// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9      m_pTexture;																						// テクスチャポインタ
-	UBITS_4                 m_Flags;																						// フラグ
+	BITS4                   m_Flags;																						// フラグ
 	TRANSFORM               m_trans;																						// トランス情報
-	MODE                    m_mode;																							// モード
 	D3DMATRIX*              m_pMtxParent;																					// 親のマトリックス
 };
 

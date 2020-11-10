@@ -15,6 +15,7 @@
 #include "PaintingPen.h"
 #include "manager.h"
 #include "mouse.h"
+#include "game.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -88,9 +89,9 @@ HRESULT CTabletButton::Init()
 void CTabletButton::Update()
 {
 	// 変数宣言
-	CMouse *      pMouse = CManager::GetMouse();	// マウスの取得
-	CPaintingPen *pPen   = CPicture::GetPaintPen();	// ペンの取得
-
+	CMouse*       pMouse   = CManager::GetMouse();					// マウスの取得
+	CPaintingPen* pPen     = CPicture::GetPaintPen();				// ペンの取得
+	CPicture*     pPicture = CManager::GetGame()->GetPicture();		// ピクチャの取得
 	// フラグが立っている時かつマウスが押されていない時
 	if (m_bPress && !pMouse->GetPress(0) && m_bChange)
 	{
@@ -99,7 +100,7 @@ void CTabletButton::Update()
 		{
 			MLB_CASE(TYPE_PEN)   pPen->SetMode(CPaintingPen::MODE_BRUSH);	// ペン
 			MLB_CASE(TYPE_ERASER)pPen->SetMode(CPaintingPen::MODE_ERASER);	// 消しゴム
-			MLB_CASE(TYPE_SEND);											// 送信
+			MLB_CASE(TYPE_SEND)  pPicture->Writing();						// 送信
 			MLB_CASEEND;													// ケース終了
 		}
 		// 押されたフラグを消す

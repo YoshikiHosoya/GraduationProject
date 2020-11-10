@@ -223,6 +223,7 @@ void CManager::Draw()
 	{	//モード
 		m_pBaseMode->Draw();
 	}
+	m_pMouse->Draw();
 	if (m_pRenderer)
 	{
 		//レンダラー
