@@ -97,6 +97,7 @@ CChatTab::~CChatTab()
 			m_chatKeep[nCnt].pKeepText = nullptr;
 		}
 	}
+	m_chatKeep.clear();
 }
 
 //=============================================================================
@@ -433,7 +434,7 @@ void CChatTab::SendChatText(void)
 void CChatTab::ScrollUp(void)
 {
 	// ÉQÅ[ÉÄíÜÇÃÇ›
-	if (CManager::GetMode() != CManager::MODE_GAME && m_tabState != TABSTATE_OPENED)
+	if (CManager::GetMode() != CManager::MODE_GAME || m_tabState != TABSTATE_OPENED)
 		return;
 	// è„è∏
 	m_fScrollPosY += MOVE_SCROLL_TAB;
@@ -448,7 +449,7 @@ void CChatTab::ScrollUp(void)
 void CChatTab::ScrollDown(void)
 {
 	// ÉQÅ[ÉÄíÜÇÃÇ›
-	if (CManager::GetMode() != CManager::MODE_GAME && m_tabState != TABSTATE_OPENED)
+	if (CManager::GetMode() != CManager::MODE_GAME || m_tabState != TABSTATE_OPENED)
 		return;
 	// â∫ç~
 	m_fScrollPosY -= MOVE_SCROLL_TAB;
