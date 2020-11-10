@@ -46,13 +46,13 @@ public:
 	static CLIENTSTATE &GetClientState(void)		{ return m_state; }				// 状態の取得
 	static void SetAccepting(bool bConnect)			{ m_bConnecting = bConnect; }	// 接続の設定
 	static void SetClientState(CLIENTSTATE state)	{ m_state = state; }			// 状態の設定
-	static void Send(char* cSendText);												// 文章の送信
+	static void SendText(char* cSendText);												// 文章の送信
+	static void RecvText(char* cRecvText);												// 文章の受信
 	static void SendTexture(char* cSendText);										// テクスチャの送信
 
 private:
 	static CLIENTSTATE m_state;			// クライアントの状態
 	static bool m_bConnecting;			// クライアント受け入れのフラグ
-	static char m_cSendText[256];		// 送るテキスト
 	static SOCKET m_socket;				// 通信に使うソケット
 };
 
