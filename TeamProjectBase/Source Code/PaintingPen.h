@@ -42,8 +42,9 @@ public:
 
 	// 設定関数
 	void SetCapsule(void);											// カプセルの設定
+	void SetMode(MODE mode);										// モードの設定
+
 	inline void SetPosOld(void) { m_posOld = m_pos; }				// 前回位置の設定
-	inline void SetMode(MODE mode) { m_mode = mode; }				// モードの設定
 
 	// 取得関数
 	inline FLOAT2 *GetPos(void) { return &m_pos; }					// 位置の取得
@@ -53,6 +54,7 @@ public:
 
 private:
 	/* メンバ関数 */
+	static int ConvModeToCursorType(MODE& mode);					// ペンのモードからカーソルタイプに変換
 	void PaintBrush(D3DXCOLOR *pCol);								// ブラシで塗る
 	void PaintEraser(D3DXCOLOR *pCol);								// 消しゴムで塗る
 

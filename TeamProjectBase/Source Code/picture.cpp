@@ -110,16 +110,14 @@ void CPicture::MatrixCal(void)
 	m_trans.mtxWorld.m[1][1] = m_trans.scal.y;
 	m_trans.mtxWorld.m[2][2] = m_trans.scal.z;
 
-	// 回転を反映
+	// 回転マトリックスを作成
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_trans.rot.y, m_trans.rot.x, m_trans.rot.z);
-	D3DXMatrixMultiply(&m_trans.mtxWorld, &m_trans.mtxWorld, &mtxRot);
 
-	// 位置を反映
+	// 平行移動マトリックスを作成
 	D3DXMatrixTranslation(&mtxTrans, m_trans.pos.x, m_trans.pos.y, m_trans.pos.z);
-	D3DXMatrixMultiply(&m_trans.mtxWorld, &m_trans.mtxWorld, &mtxTrans);
 
-	// 親マトリックスのの反映
-	m_trans.mtxWorld *= *m_pMtxParent;
+	// マトリックス情報を合成
+	m_trans.mtxWorld *= mtxRot * mtxTrans * *m_pMtxParent;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -127,7 +125,6 @@ void CPicture::MatrixCal(void)
 //-------------------------------------------------------------------------------------------------------------
 inline CPicture::~CPicture()
 {
-	this->Writing();
 	this->m_pMtxParent = nullptr;
 	// 頂点バッファの取得
 	if (m_pVtexBuff != nullptr)
@@ -147,11 +144,10 @@ HRESULT CPicture::Init()
 
 	// 初期化
 	MatrixCal();
-	m_Flags.cValue = MASK_DISP;
-
+	m_Flags.data = MASK_DISP;
 	try
 	{	// テクスチャの作成
-		MakeTexture(pDevice, m_WriteToFile.Get(), &m_pTexture);
+		MakeTexture(pDevice);
 		// 頂点情報の作成
 		MakeVertex(pDevice);
 	}
@@ -180,10 +176,8 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
-	if (Mybfunc_bit_comp(m_Flags.cValue, CPicture::FLAG_DISP))
+	if (Mybfunc_bit_comp(m_Flags.data, CPicture::FLAG_DISP))
 	{
-		//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_ON);
-
 		//デバイス取得
 		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -204,23 +198,20 @@ void CPicture::Draw()
 
 		// ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,	//プリミティブの種類
-			0,					//開始するインデックス(頂点)
-			2);					//ポリゴンの枚数
-		//CManager::GetRenderer()->SetRendererCommand(CRenderer::RENDERER_COMMAND::RENDERER_WIRE_OFF);
+			0,										//開始するインデックス(頂点)
+			2);										//ポリゴンの枚数
 	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos, CONST MODE mode)
+std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CPicture> pPicture = std::make_shared<CPicture>();
 	// 親マトリックスの設定
 	pPicture->SetParent(pMtxParent);
-	// モードの設定
-	pPicture->SetMode(mode);
 	// 位置の設定
 	pPicture->SetPos(pos);
 	// 初期化
@@ -258,9 +249,9 @@ void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 		throw E_FAIL;
 	}
 	// テクスチャカラーの初期化
-	//InitTextureColor();
-
-	Reading(m_pTexture, m_WriteToFile);
+	InitTextureColor();
+	// 読み込み
+	//Reading(m_pTexture, m_WriteToFile);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -436,20 +427,17 @@ void CPicture::PaintProc(void)
 
 	// カプセルの設定
 	m_pPen->SetCapsule();
-	CAPSULE_2D *pCap = m_pPen->GetCapsule();					// カプセル情報の取得
 
 	// ロックした情報
 	D3DLOCKED_RECT LockRect;
-	// ロック
+	// テクスチャリソースの長方形をロックし、ロックした情報を取得
 	m_pTexture->LockRect(0, &LockRect, NULL, 0);
-	// カラーデータの取得
-	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;
-
+	
+	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの先頭を取得
+	CAPSULE_2D *pCap = m_pPen->GetCapsule();					// カプセル情報の取得
 	D3DXVECTOR2 *pPixelPos = m_pPixelPos;						// ピクセル位置の取得
-
 	const float fRadius = pCap->fRadius * pCap->fRadius;		// 比較用の半径を算出
 	const float fSegLeng = pCap->Segment.vec.Length();			// カプセルの線分の長さを取得
-
 	int nPenMode = m_pPen->GetMode();							// モードの取得
 
 	// 線分の長さが許容以下の時
@@ -529,11 +517,23 @@ bool CPicture::GetMousePosOnPicture(void)
 	// マウスの取得
 	CMouse  *pMouse = CManager::GetMouse();
 	// 位置の算出
-	m_pPen->PosCalculation(&m_trans.pos, &m_PlaneNor);
+	m_pPen->PosCalculation(&D3DXVECTOR3(m_trans.mtxWorld._41, m_trans.mtxWorld._42, m_trans.mtxWorld._43), &m_PlaneNor);
 	// 交点の取得
 	D3DXVECTOR2 *pCrossPos = m_pPen->GetPos();
 	// 絵上の位置の取得
 	*pCrossPos = { pCrossPos->x - m_trans.mtxWorld._41,m_trans.mtxWorld._42 - pCrossPos->y };
+	
+	// 絵の上にいるか比較する
+	if (0.0f > pCrossPos->x || pCrossPos->x > m_size.x ||
+		0.0f > pCrossPos->y || pCrossPos->y > m_size.y)
+	{
+		CManager::GetMouse()->SetDisp(false);
+	}
+	else
+	{
+		CManager::GetMouse()->SetDisp(true);
+	}
+
 	// マウスの左クリックが押されている時
 	return pMouse->GetPress(0);
 }
@@ -544,7 +544,7 @@ bool CPicture::GetMousePosOnPicture(void)
 void CPicture::Writing(void)
 {
 	// ファイルを開く
-	FILE *pFile = fopen(m_WriteToFile.Get(), "w");
+	FILE *pFile = fopen(m_WriteToFile.Get(), "wb");
 	// nullチェック
 	if (pFile == NULL)
 	{// 開けなかったとき
@@ -638,3 +638,5 @@ void CPicture::TexterReadFromLine(CONST_STRING cnpLine, void*pOut)
 		}
 	}
 }
+
+

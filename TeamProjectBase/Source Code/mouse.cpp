@@ -55,6 +55,13 @@ HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
 	// カーソルを表示
 	ShowCursor(TRUE);
 
+	m_hCursor[CUR_PEN] = LoadCursorFromFile("data/TEXTURE/CUR/pen.cur"); 
+	m_hCursor[CUR_ERASER] = LoadCursorFromFile("data/TEXTURE/CUR/eraser.cur");
+
+	m_type = CURTYPE::CUR_NONE;
+
+	m_bDisp = false;
+
 	return S_OK;
 }
 
@@ -64,26 +71,40 @@ HRESULT CMouse::Init(HINSTANCE hInstance, HWND hWnd)
 void CMouse::Update(void)
 {
 	// ボタンの初期化
-	m_mouse.mouseState.rgbButtons[0] = 0;
+	m_mouse.state.rgbButtons[0] = 0;
 
 	// マウスの座標を取得
 	GetCursorPos(&m_mouse.point);
 	ScreenToClient(m_hWnd, &m_mouse.point);
 
 	// 値の更新
-	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &m_mouse.mouseState)))
+	if (SUCCEEDED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &m_mouse.state)))
 	{
 		for (int nCntButton = 0; nCntButton < NUM_BUTTON_MAX; nCntButton++)
 		{
 			// 排他的論理和かどうか判断
-			m_aButtonStateTrigger[nCntButton] = (m_aButtonState[nCntButton] ^ m_mouse.mouseState.rgbButtons[nCntButton]) & m_mouse.mouseState.rgbButtons[nCntButton];
-			m_aButtonStateRelease[nCntButton] = (m_aButtonState[nCntButton] ^ m_mouse.mouseState.rgbButtons[nCntButton]) & m_aButtonState[nCntButton];
+			m_aButtonStateTrigger[nCntButton] = (m_aButtonState[nCntButton] ^ m_mouse.state.rgbButtons[nCntButton]) & m_mouse.state.rgbButtons[nCntButton];
+			m_aButtonStateRelease[nCntButton] = (m_aButtonState[nCntButton] ^ m_mouse.state.rgbButtons[nCntButton]) & m_aButtonState[nCntButton];
 			// キープレス情報保存
-			m_aButtonState[nCntButton] = m_mouse.mouseState.rgbButtons[nCntButton];
+			m_aButtonState[nCntButton] = m_mouse.state.rgbButtons[nCntButton];
 		}
 	}
 	else
 	{
  		m_pDevice->Acquire();
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 描画処理
+//-------------------------------------------------------------------------------------------------------------
+void CMouse::Draw(void)
+{
+	if (m_type == CURTYPE::CUR_NONE ||
+		m_bDisp == false)
+	{
+		return;
+	}
+	// カーソルハンドルの設定
+	SetCursor(m_hCursor[m_type]);
 }

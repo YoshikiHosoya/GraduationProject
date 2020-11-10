@@ -32,7 +32,7 @@ void CPaintingPen::Init(void)
 	m_pMtxView = pCamera->GetMtxView();
 	m_pMtxProj = pCamera->GetMtxProjection();
 	m_bPaint    = false;
-	m_mode      = MODE_BRUSH;
+	m_mode      = MODE_NONE;
 	m_pos       = MYLIB_VEC2_UNSET;
 	m_posOld    = MYLIB_VEC2_UNSET;
 	m_Capsule   = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
@@ -46,7 +46,7 @@ void CPaintingPen::Uninit(void)
 	m_pMtxView = nullptr;
 	m_pMtxProj = nullptr;
 	m_bPaint   = false;
-	m_mode     = MODE_BRUSH;
+	m_mode     = MODE_NONE;
 	m_pos      = MYLIB_VEC2_UNSET;
 	m_posOld   = MYLIB_VEC2_UNSET;
 	m_Capsule  = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
@@ -102,6 +102,32 @@ void CPaintingPen::SetCapsule(void)
 {
 	m_Capsule.Segment.pos = m_pos;
 	m_Capsule.Segment.vec = m_posOld - m_pos;
+	m_Capsule = m_pos;
+	m_Capsule = VEC2(m_posOld - m_pos);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// モードの設定
+//-------------------------------------------------------------------------------------------------------------
+void CPaintingPen::SetMode(MODE mode)
+{
+	// モードを代入
+	m_mode = mode;
+	// カーソルタイプを設定
+	CManager::GetMouse()->SetCursorType((CMouse::CURTYPE)CPaintingPen::ConvModeToCursorType(m_mode));
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ペンのモードからカーソルタイプに変換
+//-------------------------------------------------------------------------------------------------------------
+int CPaintingPen::ConvModeToCursorType(MODE& mode)
+{
+	switch (mode)
+	{
+		MLB_CASE(MODE_BRUSH)  return CMouse::CUR_PEN;
+		MLB_CASE(MODE_ERASER) return CMouse::CUR_ERASER;
+		MLB_DEFAULT           return CMouse::CUR_NONE;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
