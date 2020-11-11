@@ -152,6 +152,14 @@ void CClient::UninitClient(void)
 // ===================================================================
 void CClient::SendText(char * cSendText)
 {
+	if (!m_bConnecting)
+	{
+#ifdef _DEBUG
+		printf("サーバーに接続されていません\n");
+#endif
+		return;
+	}
+
 	int nLen = strlen(cSendText);
 #ifdef _DEBUG
 	printf("送信 > %s [%d字]\n", cSendText, nLen);
