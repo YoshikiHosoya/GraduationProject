@@ -40,7 +40,10 @@ void CChatText::Init(void)
 //==========================================================================================================================================================
 void CChatText::Uninit(void)
 {
-
+	if ((int)m_text.data() > 0)
+	{
+		m_text.clear();
+	}
 }
 
 //==========================================================================================================================================================
@@ -48,22 +51,7 @@ void CChatText::Uninit(void)
 //==========================================================================================================================================================
 void CChatText::Update(void)
 {
-	//if (CChatTab::GetTabState() == CChatTab::TABSTATE_OPENNING ||
-	//	CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSING)
-	//{
-	//	// タブの座標を取得
-	//	D3DXVECTOR2 TabPos = CChatTab::GetTabPos();
-	//	// 座標更新
-	//	m_leftText.rect =	{ (LONG)(TabPos.x + DIFPOS_X_MAXCHAR),
-	//						(LONG)(TabPos.y - DIFPOS_Y_MAXCHAR),
-	//						SCREEN_WIDTH,
-	//						SCREEN_HEIGHT };
-	//	// 座標更新
-	//	m_writeText.rect =	{ (LONG)(TabPos.x + DIFPOS_X_SENDTEXT),
-	//						(LONG)(TabPos.y - DIFPOS_Y_SENDTEXT),
-	//						SCREEN_WIDTH,
-	//						SCREEN_HEIGHT };
-	//}
+
 }
 
 //==========================================================================================================================================================
@@ -104,6 +92,8 @@ void CChatText::Draw(void)
 			DT_LEFT,
 			m_col);
 	}
+
+	delete[] cWriteText;
 }
 
 //==========================================================================================================================================================

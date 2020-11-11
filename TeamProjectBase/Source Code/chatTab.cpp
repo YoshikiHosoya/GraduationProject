@@ -84,6 +84,20 @@ CChatTab::~CChatTab()
 		}
 	}
 
+	if (m_SendText)
+	{
+		m_SendText->Uninit();
+		delete m_SendText;
+		m_SendText = nullptr;
+	}
+
+	if (m_leftText)
+	{
+		m_leftText->Uninit();
+		delete m_leftText;
+		m_leftText = nullptr;
+	}
+
 	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
 	{
 		if (m_chatKeep[nCnt].pPolyBack)
@@ -93,6 +107,7 @@ CChatTab::~CChatTab()
 		}
 		if (m_chatKeep[nCnt].pKeepText)
 		{
+			m_chatKeep[nCnt].pKeepText->Uninit();
 			delete m_chatKeep[nCnt].pKeepText;
 			m_chatKeep[nCnt].pKeepText = nullptr;
 		}
@@ -430,7 +445,9 @@ void CChatTab::SendChatText(void)
 	m_SendText->GetChatText().clear();
 
 	// チャットキープの生成
-	CreateKeep(OWNER_OWN, KeepText);
+	CreateKeep(CChatBase::OWNER_OWN, KeepText);
+
+	delete[] KeepText;
 }
 
 //==========================================================================================================================================================
@@ -439,7 +456,7 @@ void CChatTab::SendChatText(void)
 void CChatTab::RecvChatText(char *cText)
 {
 	// チャットキープの生成
-	CreateKeep(OWNER_GUEST, cText);
+	CreateKeep(CChatBase::OWNER_GUEST, cText);
 }
 
 //==========================================================================================================================================================
@@ -475,7 +492,7 @@ void CChatTab::ScrollDown(void)
 //==========================================================================================================================================================
 // チャットキープの生成
 //==========================================================================================================================================================
-void CChatTab::CreateKeep(TEXTOWNER owner, char *cText)
+void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 {
 	// テキストを末尾に追加
 	CHATKEEP keep;
@@ -488,7 +505,7 @@ void CChatTab::CreateKeep(TEXTOWNER owner, char *cText)
 	m_chatKeep[nNumber].pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX, 0.0f));
 	m_chatKeep[nNumber].pPolyBack->SetSize(D3DXVECTOR3(SIZE_X_TEXTBOX, SIZE_Y_TEXTBOX, 0.0f));
 	m_chatKeep[nNumber].pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
-	owner == OWNER_OWN ?
+	owner == CChatBase::OWNER_OWN ?
 		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_00)) :
 		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_01));
 

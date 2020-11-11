@@ -25,7 +25,7 @@
 class CPolygon2D;
 class CChatText;
 
-class CChatTab : public CChatBase
+class CChatTab
 {
 public:
 	typedef enum
@@ -88,7 +88,7 @@ public:
 private:
 	void ClickTab(void);	// タブクリック
 	void SlideTab(void);	// タブスライド
-	static void CreateKeep(TEXTOWNER owner, char *cText);	// チャットキープの生成
+	static void CreateKeep(CChatBase::TEXTOWNER owner, char *cText);	// チャットキープの生成
 
 	CPolygon2D *m_pChatPoly[POLY_MAX];			// チャット用画像のポリゴン
 
