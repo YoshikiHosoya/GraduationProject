@@ -219,18 +219,14 @@ void CModule_No4_4ColButton::Operation()
 		}
 	}
 
+
 	//nullcheck
 	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
 	{
-		for (size_t nCnt = 0; nCnt < m_pColButtonList.size(); nCnt++)
-		{
-			if (m_pColButtonList[nCnt].get())
-			{
-				//現在の選択番号と同じモノだけtrueにしておく
-				m_pColButtonList[nCnt]->SetSelect(false);
+		//選択解除
+		CModule_Base::SelectRelease<CModule_Parts_No4_ColButton>(m_pColButtonList);
 
-			}
-		}
+		//ゲームの視点変更
 		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
 	}
 }

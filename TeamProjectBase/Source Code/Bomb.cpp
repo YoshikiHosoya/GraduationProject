@@ -21,8 +21,8 @@
 #include "module_Button.h"
 #include "module_No1_SymbolKeyPad.h"
 #include "module_No2_ShapeKeypad.h"
+#include "module_No3_LampAndWire.h"
 #include "module_No4_4ColButton.h"
-
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -181,6 +181,7 @@ void CBomb::Operator()
 	//キーボードのポインタ
 	CKeyboard *pKeyboard = CManager::GetKeyboard();
 
+	//Gameの視点によって判定の相手を変える
 	switch (CManager::GetGame()->GetGaze())
 	{
 	case CGame::GAZE_DEFAULT:
@@ -215,17 +216,16 @@ void CBomb::Operator()
 		break;
 
 	case CGame::GAZE_MODULE:
-		for (int nCnt = 0; nCnt < 12; nCnt++)
+		for (auto & rPtr : m_pModuleList)
 		{
-			//nullcheck
-			if (m_pModuleList[nCnt].get())
-			{
-				m_pModuleList[nCnt]->SetSelect(false);
-			}
+			//選択解除
+			rPtr->SetSelect(false);
 		}
+
 		//nullcheck
 		if (m_pModuleList[m_nSelectModuleNum].get())
 		{
+			//現在選択されているモジュールを操作
 			m_pModuleList[m_nSelectModuleNum]->Operation();
 		}
 
@@ -278,7 +278,6 @@ void CBomb::ModuleMiss()
 	}
 }
 
-
 //------------------------------------------------------------------------------
 //モジュール生成
 //------------------------------------------------------------------------------
@@ -290,12 +289,12 @@ void CBomb::CreateModule(int const nModuleNum)
 	//もしモジュールを表示できる範囲外の時は収める
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
-	CreateModule_Random();
+	//CreateModule_Random();
 
 
 //Debug用
 #ifdef _DEBUG
-	//CreateModuleDebug();
+	CreateModuleDebug();
 #endif //_DEBUG
 
 	////1番目
@@ -640,7 +639,7 @@ void CBomb::CreateModuleDebug()
 	//3番目
 	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
 	//4番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No3_LampAndWire>();
 	//5番目
 	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//6番目

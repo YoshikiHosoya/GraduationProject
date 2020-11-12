@@ -42,6 +42,8 @@ public:
 		MODEL_MODULEPARTS_PROGRESSLAMP,				//進捗度ランプ
 		MODEL_MODULEPARTS_NO1_KEYPAD,				//1番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO2_KEYPAD,				//2番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO3_WIRE,				//2番目のモジュールのパーツ
+
 		MODEL_MODULEPARTS_NO4_BUTTON,				//4番目のモジュールのパーツ
 
 		// タブレット 400番台

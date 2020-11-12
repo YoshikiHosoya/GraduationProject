@@ -30,6 +30,7 @@
 #define BlueColor			(D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f))			//ê¬
 #define YellowColor			(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f))			//â©
 #define OrangeColor			(D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f))			//ûÚ
+#define MagentaColor		(D3DXCOLOR(1.0f, 0.5f, 0.0f, 1.0f))			//É}É[ÉìÉ_
 #define BlackColor			(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f))			//çï
 
 #define MAX_TEXT			(128)

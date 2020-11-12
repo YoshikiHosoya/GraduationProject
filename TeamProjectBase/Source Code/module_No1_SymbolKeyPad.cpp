@@ -157,19 +157,15 @@ void CModule_No1_SymbolKeyPad::Operation()
 		}
 	}
 
+
 	//nullcheck
 	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
 	{
-		for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
-		{
-			if (m_pKeyPadList[nCnt].get())
-			{
-				//現在の選択番号と同じモノだけtrueにしておく
-				m_pKeyPadList[nCnt]->SetSelect(false);
+		//選択解除
+		CModule_Base::SelectRelease<CModule_Parts_No1_SymbolKey>(m_pKeyPadList);
 
-				CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
-			}
-		}
+		//ゲームの視点変更
+		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
 	}
 }
 //------------------------------------------------------------------------------

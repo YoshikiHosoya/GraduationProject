@@ -53,7 +53,7 @@ public:
 	}
 
 private:
-	bool m_bClearFlag;
+	bool m_bClearFlag;				//クリアする為に使うフラグ
 };
 #endif
 

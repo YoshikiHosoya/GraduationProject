@@ -41,7 +41,7 @@ public:
 	virtual void Update() = 0;															//更新
 	virtual void Draw() = 0;															//描画
 	virtual void ShowDebugInfo() = 0;													//デバッグ情報表記
-	virtual void Operation() {};														//モジュールの操作
+	virtual void Operation();															//モジュールの操作
 	void CreateLamp();																	//ランプ生成
 	void CameraApproach();																//カメラを近づける
 
@@ -81,6 +81,26 @@ public:
 
 		return pPtr;
 	}
+
+
+	//テンプレート関数
+	//モジュールの選択状態を解除する関数
+	//例) CModule_Base::Create<CModule_Timer>(...)
+	template <class ModuleParts> static void SelectRelease(Vec<S_ptr<ModuleParts>> &rList)
+	{
+		//配列が空かどうかチェック
+		if (rList.empty())
+		{
+			return;
+		}
+
+		for (auto &rPtr : rList)
+		{
+			rPtr->SetSelect(false);
+
+		}
+	}
+
 private:
 	std::weak_ptr<CBomb> m_pBomb;								//爆弾のポインタ
 	S_ptr<CModule_Parts_Lamp> m_pLamp;							//ランプのポインタ
