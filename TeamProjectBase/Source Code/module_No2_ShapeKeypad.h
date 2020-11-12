@@ -15,6 +15,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Parts_No2_ShapeKey;
+class CModule_Parts_ProgressLamp;
 class CScene3D;
 
 class CModule_No2_ShapeKeyPad : public CModule_Base
@@ -97,16 +98,16 @@ public:
 
 private:
 	Vec<S_ptr<CModule_Parts_No2_ShapeKey>> m_pKeyPadList;				//キーパッドのポインタの配列
-	U_ptr<CScene3D> m_pDisplayShape;									//ディスプレイに映る図形のポリゴンのポインタ
 	Vec<MEMORIES> m_Memories;											//過去にどのボタン押したか記憶する
-	Vec<S_ptr<CScene3D>> m_pProgressLamp;								//進捗度のランプ
+	U_ptr<CScene3D> m_pDisplayShape;									//ディスプレイに映る図形のポリゴンのポインタ
+	S_ptr<CModule_Parts_ProgressLamp> m_pProgressLamp;					//進捗度ランプ
 
-	SHAPE m_DisplayShape;														//ディスプレイの図形
-	QUESTION m_NowQuestion;														//現在何問目か
-	PLACE m_nSelectNum;															//選択番号
-	STATE m_state;																//状態
+	SHAPE m_DisplayShape;													//ディスプレイの図形
+	QUESTION m_NowQuestion;													//現在何問目か
+	PLACE m_nSelectNum;														//選択番号
+	STATE m_state;															//状態
 
-	int m_nQuestionChangeCnt;													//問題切り替え中のカウント
+	int m_nQuestionChangeCnt;												//問題切り替え中のカウント
 
 };
 #endif

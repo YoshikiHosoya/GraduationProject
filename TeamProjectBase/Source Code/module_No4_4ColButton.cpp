@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 #include "module_No4_4ColButton.h"
 #include "module_parts_No4_ColButton.h"
+#include "module_parts_ProgressLamp.h"
 #include "renderer.h"
 #include "manager.h"
 #include "keyboard.h"
@@ -27,7 +28,7 @@
 #define COL_BUTTON_OFFSET								(D3DXVECTOR3(-10.0f,0.0f,-14.5f))			//ボタンのオフセット座標
 #define COL_BUTTON_LIGHT_FLASH_INTERVAL					(45)									//ボタンの点灯の感覚
 #define COL_BUTTON_LIGHT_LOOP_INTERVAL					(180)									//ボタンのループ間隔
-
+#define PROGRESSLAMP_OFFSET								(D3DXVECTOR3(35.0f,-10.0f,-15.0f))		//進捗度ランプのオフセット座標
 #define INPUT_GRACE										(180)									//プレイヤーがボタンを入力してからリセットされるまでの猶予
 
 
@@ -42,7 +43,7 @@ CModule_No4_4ColButton::CModule_No4_4ColButton()
 	m_nButtonLightingCnt = 0;
 	m_nNowFlashNumber = -1;
 	m_nClearNum = 0;
-
+	m_pProgressLamp.reset();
 	m_nPlayerPushNum = 0;
 }
 
@@ -52,6 +53,8 @@ CModule_No4_4ColButton::CModule_No4_4ColButton()
 CModule_No4_4ColButton::~CModule_No4_4ColButton()
 {
 	m_pColButtonList.clear();
+	m_pProgressLamp.reset();
+
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -87,7 +90,10 @@ HRESULT CModule_No4_4ColButton::Init()
 
 	//ランプ生成
 	CModule_Base::CreateLamp();
+	m_pProgressLamp = CModule_Parts_Base::Create_ModuleParts<CModule_Parts_ProgressLamp>(PROGRESSLAMP_OFFSET, GetMtxWorldPtr());
+	m_pProgressLamp->SetRot(D3DXVECTOR3(0.0f, 0.0f, -D3DX_PI * 0.5f));
 
+	//初期化
 	CSceneX::Init();
 
 	return S_OK;
@@ -339,6 +345,7 @@ void CModule_No4_4ColButton::ButtonPushSuccess()
 	if (m_nPlayerPushNum > m_nClearNum)
 	{
 		m_nClearNum++;
+		m_pProgressLamp->SetProgress(m_nClearNum);
 	}
 
 	if (!CheckModuleClear())

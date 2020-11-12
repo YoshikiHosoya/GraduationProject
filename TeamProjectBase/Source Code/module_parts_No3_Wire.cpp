@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールの進捗度のランプ  [module_parts_Progresslamp.cpp]
+//モジュールパーツのキーパッド  [module_parts_No2_ShapeKey.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,9 +8,14 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_ProgressLamp.h"
+#include "module_parts_No2_ShapeKey.h"
+#include "renderer.h"
+#include "manager.h"
 #include "modelinfo.h"
+#include "particle.h"
+#include "timer.h"
 #include "scene3D.h"
+#include "keyboard.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -18,60 +23,64 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(0.0f,0.0f,-2.0f))		//進捗度ランプの間隔
-#define PROGRESS_LAMP_INTERVAL			(D3DXVECTOR3(10.0f,0.0f,0.0f))		//進捗度ランプの間隔
-#define PROGRESS_LAMP_SIZE				(D3DXVECTOR3(7.0f,10.0f,0.0f))		//進捗度ランプの大きさ
-#define PROGRESS_LAMP_NUM				(4)
+#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
+#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
+#define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_ProgressLamp::CModule_Parts_ProgressLamp()
+CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
 {
-	m_nProgress = 0;
-	m_pProgressLamp.clear();
+	m_pShape.reset();
+	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_ProgressLamp::~CModule_Parts_ProgressLamp()
+CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
 {
-	m_pProgressLamp.clear();
+	m_pShape.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_ProgressLamp::Init()
+HRESULT CModule_Parts_No2_ShapeKey::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_PROGRESSLAMP));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
 
-	//ランプの生成
-	CreateProgressLamp();
+	//文字の生成
+	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,
+		CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
+
+	//親マトリックス設定
+	m_pShape->SetParentMtxPtr(GetMtxWorldPtr());
 
 	CSceneX::Init();
+
 	return S_OK;
 }
 
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_ProgressLamp::Update()
+void CModule_Parts_No2_ShapeKey::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_ProgressLamp::Draw()
+void CModule_Parts_No2_ShapeKey::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_ProgressLamp::ShowDebugInfo()
+void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -79,37 +88,14 @@ void CModule_Parts_ProgressLamp::ShowDebugInfo()
 }
 
 //------------------------------------------------------------------------------
-//進捗のランプ生成
+//シンボルの設定
 //------------------------------------------------------------------------------
-void CModule_Parts_ProgressLamp::CreateProgressLamp()
+void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
 {
-	//ランプ生成
-	for (size_t nCnt = 0; nCnt < PROGRESS_LAMP_NUM; nCnt++)
-	{
-		//ランプ生成
-		m_pProgressLamp.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>
-			(PROGRESS_LAMP_OFFSET + D3DXVECTOR3(((PROGRESS_LAMP_INTERVAL.x) * (PROGRESS_LAMP_NUM / 2)) - (PROGRESS_LAMP_INTERVAL.x * 0.5f) - (PROGRESS_LAMP_INTERVAL.x * nCnt), 0.0f, 0.0f),
-				PROGRESS_LAMP_SIZE,
-				BlackColor,
-				nullptr,
-				CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
+	// Shape設定
+	m_Shape = shape;
 
-		//親のマトリックス設定
-		m_pProgressLamp[m_pProgressLamp.size() - 1]->SetParentMtxPtr(GetMtxWorldPtr());
-		m_pProgressLamp[m_pProgressLamp.size() - 1]->SetLighting(false);
-	}
-}
-
-//------------------------------------------------------------------------------
-//進捗度設定
-//------------------------------------------------------------------------------
-void CModule_Parts_ProgressLamp::SetProgress(int nProgress)
-{
-	m_nProgress = nProgress;
-
-	for (int nCnt = 0; nCnt < m_nProgress; nCnt++)
-	{
-		m_pProgressLamp[nCnt]->SetColor(GreenColor);
-	}
-
+	//UV設定
+	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
+							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
 }

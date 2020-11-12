@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 #include "module_No2_ShapeKeypad.h"
 #include "module_parts_No2_ShapeKey.h"
+#include "module_parts_ProgressLamp.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -30,10 +31,7 @@
 #define KEYPAD_OFFSET					(D3DXVECTOR3(1.0f,-15.0f,-25.0f))	//パッドのオフセット座標
 #define DISPLAY_SHAPE_OFFSET			(D3DXVECTOR3(-18.0f,18.0f,-25.0f))	//ディスプレイの記号のオフセット間隔
 #define DISPLAY_SHAPE_SIZE				(D3DXVECTOR3(20.0f,20.0f,0.0f))		//ディスプレイの記号のサイズ
-#define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(29.0f,7.0f,-26.0f))	//進捗度ランプのオフセット
-#define PROGRESS_LAMP_INTERVAL			(D3DXVECTOR3(10.0f,0.0f,0.0f))		//進捗度ランプの間隔
-#define PROGRESS_LAMP_SIZE				(D3DXVECTOR3(7.0f,10.0f,0.0f))		//進捗度ランプの大きさ
-#define PROGRESS_LAMP_NUM				(4)
+#define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(29.0f,7.0f,-25.0f))	//進捗度ランプのオフセット
 
 #define QUESTION_CHANGE_TIME			(40)								//問題変更時にかかる時間
 
@@ -304,9 +302,6 @@ void CModule_No2_ShapeKeyPad::QuestionClear()
 	m_Memories[(int)m_NowQuestion].place = m_nSelectNum;
 	m_Memories[(int)m_NowQuestion].shape = m_pKeyPadList[m_nSelectNum]->GetShape();
 
-	//緑に点灯
-	m_pProgressLamp[(int)m_NowQuestion]->SetColor(GreenColor);
-
 	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
 	{
 		//フラグ初期化
@@ -318,11 +313,15 @@ void CModule_No2_ShapeKeyPad::QuestionClear()
 	nValue++;
 	m_NowQuestion = (QUESTION)nValue;
 
+	//進捗ランプの更新
+	m_pProgressLamp->SetProgress(nValue);
+
 	//問題全て終えていた場合
 	if (m_NowQuestion >= QUESTION::MAX)
 	{
 		return;
 	}
+
 
 	//ステート切り替え
 	SetState(STATE::DISAPPEAR);
@@ -359,25 +358,11 @@ void CModule_No2_ShapeKeyPad::CreateKeyPad()
 }
 
 //------------------------------------------------------------------------------
-//進捗のランプ生成
+//進捗度のランプ生成
 //------------------------------------------------------------------------------
 void CModule_No2_ShapeKeyPad::CreateProgressLamp()
 {
-	//全てのキーに割り当てる
-	for (size_t nCnt = 0; nCnt < KEYPAD_NUM; nCnt++)
-	{
-		//ランプ生成
-		m_pProgressLamp.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>
-			(PROGRESS_LAMP_OFFSET + D3DXVECTOR3(((PROGRESS_LAMP_INTERVAL.x) * (PROGRESS_LAMP_NUM / 2)) - (PROGRESS_LAMP_INTERVAL.x * 0.5f) - (PROGRESS_LAMP_INTERVAL.x * nCnt), 0.0f, 0.0f),
-				PROGRESS_LAMP_SIZE,
-				BlackColor,
-				nullptr,
-				CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
-
-		//親のマトリックス設定
-		m_pProgressLamp[m_pProgressLamp.size() - 1]->SetParentMtxPtr(GetMtxWorldPtr());
-		m_pProgressLamp[m_pProgressLamp.size() - 1]->SetLighting(false);
-	}
+	m_pProgressLamp = CModule_Parts_Base::Create_ModuleParts<CModule_Parts_ProgressLamp>(PROGRESS_LAMP_OFFSET, GetMtxWorldPtr());
 }
 
 //------------------------------------------------------------------------------

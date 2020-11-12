@@ -15,6 +15,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Parts_No4_ColButton;
+class CModule_Parts_ProgressLamp;
 
 class CModule_No4_4ColButton : public CModule_Base
 {
@@ -62,10 +63,11 @@ public:
 
 
 private:
-	Vec<S_ptr<CModule_Parts_No4_ColButton>> m_pColButtonList;
+	Vec<S_ptr<CModule_Parts_No4_ColButton>> m_pColButtonList;		//色ボタンのリスト
+	Vec<BUTTON> m_QuestionButtonList;								//答えのパターン
+	S_ptr<CModule_Parts_ProgressLamp> m_pProgressLamp;				//進捗度ランプ
 	BUTTON m_nNowSelectButton;										//現在の洗濯番号
 	STATE m_buttonState;											//ボタンのステート
-	Vec<BUTTON> m_QuestionButtonList;								//答えのパターン
 
 	int m_nNowFlashNumber;											//現在の点灯してるバターン
 	int m_nClearNum;												//クリアした数

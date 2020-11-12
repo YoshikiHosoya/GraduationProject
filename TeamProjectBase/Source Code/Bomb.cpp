@@ -28,7 +28,7 @@
 //Ã“Iƒƒ“ƒo•Ï”‚Ì‰Šú‰»
 //------------------------------------------------------------------------------
 #ifdef _DEBUG
-bool CBomb::m_bCanExplosion = true;
+bool CBomb::m_bCanExplosion = false;
 #endif // _DEBUG
 
 

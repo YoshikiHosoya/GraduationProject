@@ -33,33 +33,33 @@ public:
 	bool GetClearFlag() { return m_bClearFlag; };								//クリアフラグ取得
 
 	//Create関数
-	template<class Module> static S_ptr<Module> Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr);
+	template<class Module> static S_ptr<Module> Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr)
+	{
+		//メモリ確保
+		S_ptr<Module> pPtr = std::make_shared<Module>();
+
+		//初期化
+		pPtr->Init();
+
+		//座標とサイズ設定
+		pPtr->SetPos(pos);
+		pPtr->SetParentMtxPtr(pModuleMtxPtr);
+
+		//Scene側で管理
+		pPtr->SetObjType(CScene::OBJTYPE_MODULE_PARTS);
+		pPtr->AddSharedList(pPtr);
+
+		return pPtr;
+	}
 
 private:
 	bool m_bClearFlag;
 };
 #endif
 
-//テンプレート関数
-//モジュールの初期配置用の関数
-//呼び出し時にクラス型を教えてあげる必要がある
-//例) CModule_Base::Create<CModule_Timer>(...)
-template<class Module>
-inline S_ptr<Module> static CModule_Parts_Base::Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr)
-{
-	//メモリ確保
-	S_ptr<Module> pPtr = std::make_shared<Module>();
-
-	//初期化
-	pPtr->Init();
-
-	//座標とサイズ設定
-	pPtr->SetPos(pos);
-	pPtr->SetParentMtxPtr(pModuleMtxPtr);
-
-	//Scene側で管理
-	pPtr->SetObjType(CScene::OBJTYPE_MODULE_PARTS);
-	pPtr->AddSharedList(pPtr);
-
-	return pPtr;
-}
+////テンプレート関数
+////モジュールの初期配置用の関数
+////呼び出し時にクラス型を教えてあげる必要がある
+////例) CModule_Base::Create<CModule_Timer>(...)
+//template<class Module>
+//inline S_ptr<Module> static CModule_Parts_Base::Create_ModuleParts(D3DXVECTOR3 const pos, D3DXMATRIX * const pModuleMtxPtr)

@@ -29,6 +29,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 
 	//モジュールのパーツ
 	{ "data/MODEL/Lamp/Lamp.x" ,								MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
+	{ "data/MODEL/ProgressLamp/ProgressLamp.x" ,				MODEL_MODULEPARTS_PROGRESSLAMP },					//進捗度ランプ
+
 	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
 	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
 	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド

@@ -26,22 +26,23 @@ public:
 		MODEL_NONE = -1,
 
 		//爆弾関係 100番台
-		MODEL_BOMBBOX = 100,					//オブジェクト　ボム
+		MODEL_BOMBBOX = 100,						//ボム
 
 		//モジュール 200番台
-		MODEL_MODULE_DEFAULT = 200,					//オブジェクト　モジュール
-		MODEL_MODULE_NONE,							//オブジェクト　モジュール　何も入ってない
-		MODEL_MODULE_TIMER,							//オブジェクト　タイマー
-		MODEL_MODULE_NO1,							//オブジェクト　1番目のモジュール
-		MODEL_MODULE_NO2,							//オブジェクト　2番目のモジュール
-		MODEL_MODULE_NO3,							//オブジェクト　2番目のモジュール
-		MODEL_MODULE_NO4,							//オブジェクト　2番目のモジュール
+		MODEL_MODULE_DEFAULT = 200,					//モジュール
+		MODEL_MODULE_NONE,							//モジュール　何も入ってない
+		MODEL_MODULE_TIMER,							//タイマー
+		MODEL_MODULE_NO1,							//1番目のモジュール
+		MODEL_MODULE_NO2,							//2番目のモジュール
+		MODEL_MODULE_NO3,							//2番目のモジュール
+		MODEL_MODULE_NO4,							//2番目のモジュール
 
 		//モジュールパーツ 300番台
-		MODEL_MODULEPARTS_CLEARLAMP = 300,			//オブジェクト　クリアランプ
-		MODEL_MODULEPARTS_NO1_KEYPAD,				//オブジェクト　1番目のモジュールのパーツ
-		MODEL_MODULEPARTS_NO2_KEYPAD,				//オブジェクト　2番目のモジュールのパーツ
-		MODEL_MODULEPARTS_NO4_BUTTON,				//オブジェクト　4番目のモジュールのパーツ
+		MODEL_MODULEPARTS_CLEARLAMP = 300,			//クリアランプ
+		MODEL_MODULEPARTS_PROGRESSLAMP,				//進捗度ランプ
+		MODEL_MODULEPARTS_NO1_KEYPAD,				//1番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO2_KEYPAD,				//2番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO4_BUTTON,				//4番目のモジュールのパーツ
 
 		// タブレット 400番台
 		MODEL_TABLET = 400,							// タブレット
