@@ -192,6 +192,7 @@
     <ClCompile Include="Source Code\module_parts_No1_SymbolKey.cpp" />
     <ClCompile Include="Source Code\module_parts_lamp.cpp" />
     <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp" />
+    <ClCompile Include="Source Code\module_parts_No3_Wire.cpp" />
     <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp" />
     <ClCompile Include="Source Code\module_parts_ProgressLamp.cpp" />
     <ClCompile Include="Source Code\module_Timer.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Source Code\module_parts_No1_SymbolKey.h" />
     <ClInclude Include="Source Code\module_parts_lamp.h" />
     <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h" />
+    <ClInclude Include="Source Code\module_parts_No3_Wire.h" />
     <ClInclude Include="Source Code\module_parts_No4_ColButton.h" />
     <ClInclude Include="Source Code\module_parts_ProgressLamp.h" />
     <ClInclude Include="Source Code\module_Timer.h" />

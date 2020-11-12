@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No2_ShapeKey.h"
+#include "module_parts_No3_Wire.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
+CModule_Parts_No3_Wire::CModule_Parts_No3_Wire()
 {
 	m_pShape.reset();
 	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
@@ -39,14 +39,14 @@ CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
+CModule_Parts_No3_Wire::~CModule_Parts_No3_Wire()
 {
 	m_pShape.reset();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No2_ShapeKey::Init()
+HRESULT CModule_Parts_No3_Wire::Init()
 {
 	//モデル情報設定
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
@@ -66,21 +66,21 @@ HRESULT CModule_Parts_No2_ShapeKey::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Update()
+void CModule_Parts_No3_Wire::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Draw()
+void CModule_Parts_No3_Wire::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
+void CModule_Parts_No3_Wire::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -90,7 +90,7 @@ void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //シンボルの設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
+void CModule_Parts_No3_Wire::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
 {
 	// Shape設定
 	m_Shape = shape;

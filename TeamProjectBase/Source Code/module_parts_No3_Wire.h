@@ -18,12 +18,12 @@
 class CTimer;
 class CScene3D;
 
-class CModule_Parts_No2_ShapeKey : public CModule_Parts_Base
+class CModule_Parts_No3_Wire : public CModule_Parts_Base
 {
 public:
 
-	CModule_Parts_No2_ShapeKey();
-	virtual ~CModule_Parts_No2_ShapeKey();
+	CModule_Parts_No3_Wire();
+	virtual ~CModule_Parts_No3_Wire();
 
 	virtual HRESULT Init()			override;			//‰Šú‰»
 	virtual void Update()			override;			//XV

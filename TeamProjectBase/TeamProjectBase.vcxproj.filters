@@ -267,6 +267,9 @@
     <ClCompile Include="Source Code\Bomb_Exterior.cpp">
       <Filter>Bomb</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No3_Wire.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\camera.h">
@@ -496,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Bomb_Exterior.h">
       <Filter>Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No3_Wire.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
