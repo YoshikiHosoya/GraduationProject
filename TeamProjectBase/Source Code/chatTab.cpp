@@ -280,8 +280,15 @@ void CChatTab::Update(void)
 
 	// 左クリックかF5でタブの開閉処理
 	if ((pMouse->GetTrigger(0) && m_pChatPoly[POLY_TAB]->ReturnHit(mousePos)) ||
-		pKey->GetTrigger(DIK_F5))
+		CManager::GetKeyboard()->GetTrigger(DIK_F5))
 		ClickTab();
+
+	// マウスによるタブスクロール
+	CMouse::MOUSE_SCROLL scroll = CMouse::GetScroll();
+	if (scroll == CMouse::SCROLL_UP)
+		ScrollUp();
+	else if (scroll == CMouse::SCROLL_DOWN)
+		ScrollDown();
 
 	// タブポリゴンの更新
 	for (int nCnt = 0; nCnt < POLY_MAX; nCnt++)
@@ -290,6 +297,7 @@ void CChatTab::Update(void)
 			m_pChatPoly[nCnt]->Update();
 	}
 	
+	// チャット履歴の更新
 	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
 	{
 		D3DXVECTOR3 pos = D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX,
@@ -385,7 +393,7 @@ void CChatTab::InputText(void)
 		m_nPressKey = 0;
 	}
 
-	if (pKey->GetTrigger(DIK_RETURN) && m_SendText->GetChatText().size() > 0)
+	if ((pKey->GetTrigger(DIK_RETURN) || pKey->GetTrigger(DIK_NUMPADENTER)) && m_SendText->GetChatText().size() > 0)
 	{
 		SendChatText();
 	}
