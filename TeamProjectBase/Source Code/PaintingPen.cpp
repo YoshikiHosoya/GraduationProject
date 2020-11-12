@@ -29,13 +29,13 @@ void CPaintingPen::Init(void)
 {
 	// カメラの取得
 	CCamera *pCamera = CManager::GetRenderer()->GetCamera();
-	m_pMtxView = pCamera->GetMtxView();
-	m_pMtxProj = pCamera->GetMtxProjection();
-	m_bPaint    = false;
-	m_mode      = MODE_NONE;
-	m_pos       = MYLIB_VEC2_UNSET;
-	m_posOld    = MYLIB_VEC2_UNSET;
-	m_Capsule   = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
+	m_pMtxView       = pCamera->GetMtxView();
+	m_pMtxProj       = pCamera->GetMtxProjection();
+	m_bPaint         = false;
+	m_mode           = MODE_NONE;
+	m_pos            = MYLIB_VEC2_UNSET;
+	m_posOld         = MYLIB_VEC2_UNSET;
+	m_Capsule        = CAPSULE_2D(SEGMENT_2D(MYLIB_VEC2_UNSET, MYLIB_VEC2_UNSET), PAINTINGPEN_SIZE);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -64,11 +64,12 @@ void CPaintingPen::Update(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::PaintCol(D3DXCOLOR * pCol)
 {
+	// モード別処理
 	switch (m_mode)
 	{
 		MLB_CASE(MODE_BRUSH) PaintBrush(pCol);	// ブラシで塗る
 		MLB_CASE(MODE_ERASER)PaintEraser(pCol);	// 消しゴムで塗る
-		MLB_CASEEND;
+		MLB_CASEEND;							// ケース終了
 	}
 }
 
@@ -77,8 +78,9 @@ void CPaintingPen::PaintCol(D3DXCOLOR * pCol)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::PosCalculation(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPlaneNor)
 {
-	CManager::RAY *pRay = CManager::GetRay();
-	D3DXVECTOR3 CrossPos;
+	// 変数宣言
+	CManager::RAY *pRay = CManager::GetRay();	// レイ
+	D3DXVECTOR3    CrossPos;					// 交差位置
 	// 平面との交差位置を計算
 	CMylibrary::CalIntersectionPointToPlaneAndLine(&CrossPos, pPos, pPlaneNor, &pRay->NearPos, &pRay->vec);
 	m_pos.x = CrossPos.x;
@@ -100,10 +102,8 @@ CPaintingPen * CPaintingPen::Create(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPaintingPen::SetCapsule(void)
 {
-	m_Capsule.Segment.pos = m_pos;
-	m_Capsule.Segment.vec = m_posOld - m_pos;
-	m_Capsule = m_pos;
-	m_Capsule = VEC2(m_posOld - m_pos);
+	m_Capsule             = m_pos;						// 位置
+	m_Capsule             = VEC2(m_posOld - m_pos);		// ベクトル
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ int CPaintingPen::ConvModeToCursorType(MODE& mode)
 {
 	switch (mode)
 	{
-		MLB_CASE(MODE_BRUSH)  return CMouse::CUR_PEN;
-		MLB_CASE(MODE_ERASER) return CMouse::CUR_ERASER;
-		MLB_DEFAULT           return CMouse::CUR_NONE;
+		MLB_CASE(MODE_BRUSH)  return CMouse::CUR_PEN;		// ペンタイプ
+		MLB_CASE(MODE_ERASER) return CMouse::CUR_ERASER;	// 消しゴム
+		MLB_DEFAULT           return CMouse::CUR_NONE;		// 無し
 	}
 }
 
