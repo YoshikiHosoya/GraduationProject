@@ -128,16 +128,16 @@
 #define MYLIB_S8BYTES				(64)							// 文字列8バイト分
 #define MYLIB_S4BYTES				(32)							// 文字列4バイト分
 
-#define MYLIB_BRACKETS_L					"========================================================== \n"		// 区切りの括弧(大)
-#define MYLIB_BRACKETS_M					"---------------------------------------------------------- \n"		// 区切りの括弧(中)
-#define MYLIB_BRACKETS_S					"#*\n"																// 区切りの括弧(小)
+#define MYLIB_BRACKETS_L			"========================================================== \n"		// 区切りの括弧(大)
+#define MYLIB_BRACKETS_M			"---------------------------------------------------------- \n"		// 区切りの括弧(中)
+#define MYLIB_BRACKETS_S			"#*\n"																// 区切りの括弧(小)
 
 #define MYLIB_OX_EPSILON			0.000001f							// 誤差
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ関数
 //-------------------------------------------------------------------------------------------------------------
-# ifdef _DEBUG
+#ifdef _DEBUG
 #define Mybfunc_Debug_brackets_L		std::cout << MYLIB_BRACKETS_L						// 区切りの括弧(大)の出力
 #define Mybfunc_Debug_brackets_M		std::cout << MYLIB_BRACKETS_M						// 区切りの括弧(中)の出力
 #define Mybfunc_Debug_brackets_S		std::cout << MYLIB_BRACKETS_S						// 区切りの括弧(小)の出力
@@ -158,9 +158,9 @@
 #define Mybfunc_bit_comp(lhs,rhs)		(lhs & (1 << rhs))									// ビットを比較
 #define Mybfunc_array(data)				{ data }											// 配列の初期化
 /* マクロキーワード */
-#define MLB_CASE(t)						break;case (t):						// ケース 条件
-#define MLB_DEFAULT						break;default:						// Switch文 それ以外
-#define MLB_CASEEND						break;default:break;				// ケース 最後
+#define MLB_CASE(t)						break;case (t):										// ケース 条件
+#define MLB_DEFAULT						break;default:										// Switch文 それ以外
+#define MLB_CASEEND						break;default:break;								// ケース 最後
 
 //-------------------------------------------------------------------------------------------------------------
 // 列挙型定義
@@ -257,26 +257,22 @@ typedef struct _RANGE
 	inline _RANGE  operator + (void) const;							// 単項演算子 +
 	inline _RANGE  operator - (void) const;							// 単項演算子 -
 
-	inline _RANGE  operator + (CONST _RANGE& rhs) const;			// 算術演算子 +
-	inline _RANGE  operator + (CONST INTEGER2SOURCE& rhs) const;	// 算術演算子 +
-	inline _RANGE  operator + (CONST int rhs) const;				// 算術演算子 +
-
-	inline _RANGE  operator - (CONST _RANGE& rhs) const;			// 算術演算子 -
-	inline _RANGE  operator - (CONST INTEGER2SOURCE& rhs) const;	// 算術演算子 -
-	inline _RANGE  operator - (CONST int rhs) const;				// 算術演算子 -
-
-	inline _RANGE  operator * (CONST _RANGE& rhs) const;			// 算術演算子 *
-	inline _RANGE  operator * (CONST INTEGER2SOURCE& rhs) const;	// 算術演算子 *
-	inline _RANGE  operator * (CONST int rhs) const;				// 算術演算子 *
-
-	inline _RANGE  operator / (CONST _RANGE& rhs) const;			// 算術演算子 /
-	inline _RANGE  operator / (CONST INTEGER2SOURCE& rhs) const;	// 算術演算子 /
-	inline _RANGE  operator / (CONST int rhs) const;				// 算術演算子 /
+	inline _RANGE  operator + (CONST _RANGE& rhs) const;			// 四則演算子 +
+	inline _RANGE  operator + (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 +
+	inline _RANGE  operator + (CONST int rhs) const;				// 四則演算子 +
+	inline _RANGE  operator - (CONST _RANGE& rhs) const;			// 四則演算子 -
+	inline _RANGE  operator - (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 -
+	inline _RANGE  operator - (CONST int rhs) const;				// 四則演算子 -
+	inline _RANGE  operator * (CONST _RANGE& rhs) const;			// 四則演算子 *
+	inline _RANGE  operator * (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 *
+	inline _RANGE  operator * (CONST int rhs) const;				// 四則演算子 *
+	inline _RANGE  operator / (CONST _RANGE& rhs) const;			// 四則演算子 /
+	inline _RANGE  operator / (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 /
+	inline _RANGE  operator / (CONST int rhs) const;				// 四則演算子 /
 
 	inline bool    operator == (CONST _RANGE& rhs) const;			// 比較演算子 ==
 	inline bool    operator == (CONST INTEGER2SOURCE& rhs) const;	// 比較演算子 ==
 	inline bool    operator == (CONST int rhs) const;				// 比較演算子 ==
-
 	inline bool    operator != (CONST _RANGE& rhs) const;			// 比較演算子 !=
 	inline bool    operator != (CONST INTEGER2SOURCE& rhs) const;	// 比較演算子 !=
 	inline bool    operator != (CONST int rhs) const;				// 比較演算子 !=
@@ -284,15 +280,12 @@ typedef struct _RANGE
 	inline _RANGE& operator += (CONST _RANGE& rhs);					// 代入演算子 +=
 	inline _RANGE& operator += (CONST INTEGER2SOURCE& rhs);			// 代入演算子 +=
 	inline _RANGE& operator += (CONST int rhs);						// 代入演算子 +=
-
 	inline _RANGE& operator -= (CONST _RANGE& rhs);					// 代入演算子 -=
 	inline _RANGE& operator -= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 -=
 	inline _RANGE& operator -= (CONST int rhs);						// 代入演算子 -=
-
 	inline _RANGE& operator *= (CONST _RANGE& rhs);					// 代入演算子 *=
 	inline _RANGE& operator *= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 *=
 	inline _RANGE& operator *= (CONST int rhs);						// 代入演算子 *=
-
 	inline _RANGE& operator /= (CONST _RANGE& rhs);					// 代入演算子 /=
 	inline _RANGE& operator /= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 /=
 	inline _RANGE& operator /= (CONST int rhs);						// 代入演算子 /=
@@ -316,55 +309,48 @@ public:
 	INTEGER2(CONST _RANGE& rhs);									// コンストラクタ
 	INTEGER2(const int rhs);										// コンストラクタ
 
-	inline INTEGER2  operator + (void) const;
-	inline INTEGER2  operator - (void) const;
+	inline INTEGER2  operator + (void) const;						// 単項演算子+
+	inline INTEGER2  operator - (void) const;						// 単項演算子-
 
-	inline INTEGER2  operator + (CONST INTEGER2& rhs) const;
-	inline INTEGER2  operator + (CONST _RANGE& rhs) const;
-	inline INTEGER2  operator + (CONST int rhs) const;
+	inline INTEGER2  operator + (CONST INTEGER2& rhs) const;		// 四則演算子 +
+	inline INTEGER2  operator + (CONST _RANGE& rhs) const;			// 四則演算子 +
+	inline INTEGER2  operator + (CONST int rhs) const;				// 四則演算子 +
+	inline INTEGER2  operator - (CONST INTEGER2& rhs) const;		// 四則演算子 -
+	inline INTEGER2  operator - (CONST _RANGE& rhs) const;			// 四則演算子 -
+	inline INTEGER2  operator - (CONST int rhs) const;				// 四則演算子 -
+	inline INTEGER2  operator * (CONST INTEGER2& rhs) const;		// 四則演算子 *
+	inline INTEGER2  operator * (CONST _RANGE& rhs) const;			// 四則演算子 *
+	inline INTEGER2  operator * (CONST int rhs) const;				// 四則演算子 *
+	inline INTEGER2  operator / (CONST INTEGER2& rhs) const;		// 四則演算子 /
+	inline INTEGER2  operator / (CONST _RANGE& rhs) const;			// 四則演算子 /
+	inline INTEGER2  operator / (CONST int rhs) const;				// 四則演算子 /
 
-	inline INTEGER2  operator - (CONST INTEGER2& rhs) const;
-	inline INTEGER2  operator - (CONST _RANGE& rhs) const;
-	inline INTEGER2  operator - (CONST int rhs) const;
+	inline bool      operator == (CONST INTEGER2& rhs) const;		// 比較演算子 ==
+	inline bool      operator == (CONST _RANGE& rhs) const;			// 比較演算子 ==
+	inline bool      operator == (CONST int rhs) const;				// 比較演算子 ==
+	inline bool      operator != (CONST INTEGER2& rhs) const;		// 比較演算子 !=
+	inline bool      operator != (CONST _RANGE& rhs) const;			// 比較演算子 !=
+	inline bool      operator != (CONST int rhs) const;				// 比較演算子 !=
 
-	inline INTEGER2  operator * (CONST INTEGER2& rhs) const;
-	inline INTEGER2  operator * (CONST _RANGE& rhs) const;
-	inline INTEGER2  operator * (CONST int rhs) const;
+	inline INTEGER2& operator += (CONST INTEGER2& rhs);				// 代入演算子 +=
+	inline INTEGER2& operator += (CONST _RANGE& rhs);				// 代入演算子 +=
+	inline INTEGER2& operator += (CONST int rhs);					// 代入演算子 +=
+	inline INTEGER2& operator -= (CONST INTEGER2& rhs);				// 代入演算子 -=
+	inline INTEGER2& operator -= (CONST _RANGE& rhs);				// 代入演算子 -=
+	inline INTEGER2& operator -= (CONST int rhs);					// 代入演算子 -=
+	inline INTEGER2& operator *= (CONST INTEGER2& rhs);				// 代入演算子 *=
+	inline INTEGER2& operator *= (CONST _RANGE& rhs);				// 代入演算子 *=
+	inline INTEGER2& operator *= (CONST int rhs);					// 代入演算子 *=
+	inline INTEGER2& operator /= (CONST INTEGER2& rhs);				// 代入演算子 /=
+	inline INTEGER2& operator /= (CONST _RANGE& rhs);				// 代入演算子 /=
+	inline INTEGER2& operator /= (CONST int rhs);					// 代入演算子 /=
 
-	inline INTEGER2  operator / (CONST INTEGER2& rhs) const;
-	inline INTEGER2  operator / (CONST _RANGE& rhs) const;
-	inline INTEGER2  operator / (CONST int rhs) const;
+	inline int       operator[] (unsigned int nIdx) const;			// 配列添え字
+	inline int&      operator[] (unsigned int nIdx);				// 配列添え字
 
-	inline bool      operator == (CONST INTEGER2& rhs) const;
-	inline bool      operator == (CONST _RANGE& rhs) const;
-	inline bool      operator == (CONST int rhs) const;
-
-	inline bool      operator != (CONST INTEGER2& rhs) const;
-	inline bool      operator != (CONST _RANGE& rhs) const;
-	inline bool      operator != (CONST int rhs) const;
-
-	inline INTEGER2& operator += (CONST INTEGER2& rhs);
-	inline INTEGER2& operator += (CONST _RANGE& rhs);
-	inline INTEGER2& operator += (CONST int rhs);
-
-	inline INTEGER2& operator -= (CONST INTEGER2& rhs);
-	inline INTEGER2& operator -= (CONST _RANGE& rhs);
-	inline INTEGER2& operator -= (CONST int rhs);
-
-	inline INTEGER2& operator *= (CONST INTEGER2& rhs);
-	inline INTEGER2& operator *= (CONST _RANGE& rhs);
-	inline INTEGER2& operator *= (CONST int rhs);
-
-	inline INTEGER2& operator /= (CONST INTEGER2& rhs);
-	inline INTEGER2& operator /= (CONST _RANGE& rhs);
-	inline INTEGER2& operator /= (CONST int rhs);
-
-	inline int       operator[] (unsigned int nIdx) const;
-	inline int&      operator[] (unsigned int nIdx);
-
-	inline bool      IsZero(void) { return (nX == MYLIB_INT_UNSET && nY == MYLIB_INT_UNSET); }
-	inline bool      IsNotZero(void) { return (nX != MYLIB_INT_UNSET && nY != MYLIB_INT_UNSET); }
-	inline bool      OneIsZero(void) { return (nX == MYLIB_INT_UNSET || nY == MYLIB_INT_UNSET); }
+	inline bool      IsZero(void) { return (nX == MYLIB_INT_UNSET && nY == MYLIB_INT_UNSET); }		// ゼロ以外の時
+	inline bool      IsNotZero(void) { return (nX != MYLIB_INT_UNSET && nY != MYLIB_INT_UNSET); }	// ゼロの時
+	inline bool      OneIsZero(void) { return (nX == MYLIB_INT_UNSET || nY == MYLIB_INT_UNSET); }	// 片方がゼロの時
 
 }INTEGER2, *PINTEGER2;
 
@@ -372,45 +358,38 @@ public:
 typedef struct INTEGER3
 {
 public:
-	INTEGER3() {}
-	INTEGER3(int nX, int nY, int nZ);
-	INTEGER3(int nRhs);
+	INTEGER3() {}													// コンストラクタ
+	INTEGER3(int nX, int nY, int nZ);								// コンストラクタ
+	INTEGER3(int nRhs);												// コンストラクタ
 
-	inline INTEGER3 operator + (void) const;
-	inline INTEGER3 operator - (void) const;
+	inline INTEGER3  operator + (void) const;						// 単項演算子 +
+	inline INTEGER3  operator - (void) const;						// 単項演算子 -
 
-	inline INTEGER3 operator + (CONST INTEGER3& rhs) const;
-	inline INTEGER3 operator + (CONST int rhs) const;
+	inline INTEGER3  operator + (CONST INTEGER3& rhs) const;		// 四則演算子 +
+	inline INTEGER3  operator + (CONST int rhs) const;				// 四則演算子 +
+	inline INTEGER3  operator - (CONST INTEGER3& rhs) const;		// 四則演算子 -
+	inline INTEGER3  operator - (CONST int rhs) const;				// 四則演算子 -
+	inline INTEGER3  operator * (CONST INTEGER3& rhs) const;		// 四則演算子 *
+	inline INTEGER3  operator * (CONST int rhs) const;				// 四則演算子 *
+	inline INTEGER3  operator / (CONST INTEGER3& rhs) const;		// 四則演算子 /
+	inline INTEGER3  operator / (CONST int rhs) const;				// 四則演算子 /
 
-	inline INTEGER3 operator - (CONST INTEGER3& rhs) const;
-	inline INTEGER3 operator - (CONST int rhs) const;
+	inline bool      operator == (CONST INTEGER3& rhs) const;		// 比較演算子 ==
+	inline bool      operator == (CONST int rhs) const;				// 比較演算子 ==
+	inline bool      operator != (CONST INTEGER3& rhs) const;		// 比較演算子 !=
+	inline bool      operator != (CONST int rhs) const;				// 比較演算子 !=
 
-	inline INTEGER3 operator * (CONST INTEGER3& rhs) const;
-	inline INTEGER3 operator * (CONST int rhs) const;
+	inline INTEGER3& operator += (CONST INTEGER3& rhs);				// 代入演算子 +=
+	inline INTEGER3& operator += (CONST int rhs);					// 代入演算子 +=
+	inline INTEGER3& operator -= (CONST INTEGER3& rhs);				// 代入演算子 -=
+	inline INTEGER3& operator -= (CONST int rhs);					// 代入演算子 -=
+	inline INTEGER3& operator *= (CONST INTEGER3& rhs);				// 代入演算子 *=
+	inline INTEGER3& operator *= (CONST int rhs);					// 代入演算子 *=
+	inline INTEGER3& operator /= (CONST INTEGER3& rhs);				// 代入演算子 /=
+	inline INTEGER3& operator /= (CONST int rhs);					// 代入演算子 /=
 
-	inline INTEGER3 operator / (CONST INTEGER3& rhs) const;
-	inline INTEGER3 operator / (CONST int rhs) const;
-
-	inline bool operator == (CONST INTEGER3& rhs) const;
-	inline bool operator == (CONST int rhs) const;
-
-	inline bool operator != (CONST INTEGER3& rhs) const;
-	inline bool operator != (CONST int rhs) const;
-
-	inline INTEGER3& operator += (CONST INTEGER3& rhs);
-	inline INTEGER3& operator += (CONST int rhs);
-
-	inline INTEGER3& operator -= (CONST INTEGER3& rhs);
-	inline INTEGER3& operator -= (CONST int rhs);
-
-	inline INTEGER3& operator *= (CONST INTEGER3& rhs);
-	inline INTEGER3& operator *= (CONST int rhs);
-
-	inline INTEGER3& operator /= (CONST INTEGER3& rhs);
-	inline INTEGER3& operator /= (CONST int rhs);
-
-	inline int  operator[] (unsigned int nIdx) const;
-	inline int& operator[] (unsigned int nIdx);
+	inline int       operator[] (unsigned int nIdx) const;			// 配列添え字
+	inline int&      operator[] (unsigned int nIdx);				// 配列添え字
 
 	int x;		// X軸成分
 	int y;		// Y軸成分
@@ -421,45 +400,38 @@ public:
 typedef struct INTEGER4
 {
 public:
-	INTEGER4() {}
-	INTEGER4(int nX, int nY, int nZ, int nW);
-	INTEGER4(int nRhs);
+	INTEGER4() {}													// コンストラクタ
+	INTEGER4(int nX, int nY, int nZ, int nW);						// コンストラクタ
+	INTEGER4(int nRhs);												// コンストラクタ
 
-	inline INTEGER4 operator + (void) const;
-	inline INTEGER4 operator - (void) const;
+	inline INTEGER4  operator + (void) const;						// 単項演算子 +
+	inline INTEGER4  operator - (void) const;						// 単項演算子 -
 
-	inline INTEGER4 operator + (CONST INTEGER4& rhs) const;
-	inline INTEGER4 operator + (CONST int rhs) const;
+	inline INTEGER4  operator + (CONST INTEGER4& rhs) const;		// 四則演算子 +
+	inline INTEGER4  operator + (CONST int rhs) const;				// 四則演算子 +
+	inline INTEGER4  operator - (CONST INTEGER4& rhs) const;		// 四則演算子 -
+	inline INTEGER4  operator - (CONST int rhs) const;				// 四則演算子 -
+	inline INTEGER4  operator * (CONST INTEGER4& rhs) const;		// 四則演算子 *
+	inline INTEGER4  operator * (CONST int rhs) const;				// 四則演算子 *
+	inline INTEGER4  operator / (CONST INTEGER4& rhs) const;		// 四則演算子 /
+	inline INTEGER4  operator / (CONST int rhs) const;				// 四則演算子 /
 
-	inline INTEGER4 operator - (CONST INTEGER4& rhs) const;
-	inline INTEGER4 operator - (CONST int rhs) const;
+	inline bool      operator == (CONST INTEGER4& rhs) const;		// 比較演算子 ==
+	inline bool      operator == (CONST int rhs) const;				// 比較演算子 ==
+	inline bool      operator != (CONST INTEGER4& rhs) const;		// 比較演算子 !=
+	inline bool      operator != (CONST int rhs) const;				// 比較演算子 !=
 
-	inline INTEGER4 operator * (CONST INTEGER4& rhs) const;
-	inline INTEGER4 operator * (CONST int rhs) const;
+	inline INTEGER4& operator += (CONST INTEGER4& rhs);				// 代入演算子 +=
+	inline INTEGER4& operator += (CONST int rhs);					// 代入演算子 +=
+	inline INTEGER4& operator -= (CONST INTEGER4& rhs);				// 代入演算子 -=
+	inline INTEGER4& operator -= (CONST int rhs);					// 代入演算子 -=
+	inline INTEGER4& operator *= (CONST INTEGER4& rhs);				// 代入演算子 *=
+	inline INTEGER4& operator *= (CONST int rhs);					// 代入演算子 *=
+	inline INTEGER4& operator /= (CONST INTEGER4& rhs);				// 代入演算子 /=
+	inline INTEGER4& operator /= (CONST int rhs);					// 代入演算子 /=
 
-	inline INTEGER4 operator / (CONST INTEGER4& rhs) const;
-	inline INTEGER4 operator / (CONST int rhs) const;
-
-	inline bool operator == (CONST INTEGER4& rhs) const;
-	inline bool operator == (CONST int rhs) const;
-
-	inline bool operator != (CONST INTEGER4& rhs) const;
-	inline bool operator != (CONST int rhs) const;
-
-	inline INTEGER4& operator += (CONST INTEGER4& rhs);
-	inline INTEGER4& operator += (CONST int rhs);
-
-	inline INTEGER4& operator -= (CONST INTEGER4& rhs);
-	inline INTEGER4& operator -= (CONST int rhs);
-
-	inline INTEGER4& operator *= (CONST INTEGER4& rhs);
-	inline INTEGER4& operator *= (CONST int rhs);
-
-	inline INTEGER4& operator /= (CONST INTEGER4& rhs);
-	inline INTEGER4& operator /= (CONST int rhs);
-
-	inline int  operator[] (unsigned int nIdx) const;
-	inline int& operator[] (unsigned int nIdx);
+	inline int  operator[] (unsigned int nIdx) const;				// 配列添え字
+	inline int& operator[] (unsigned int nIdx);						// 配列添え字
 
 	int x;		// X軸成分
 	int y;		// Y軸成分
@@ -470,34 +442,34 @@ public:
 // 2成分のfloat
 typedef struct FLOAT2 : public D3DXVECTOR2
 {
-	FLOAT2() {}																												// コンストラクタ
-	FLOAT2(float x, float y) : D3DXVECTOR2(x, y) {}																			// コンストラクタ
-	FLOAT2(CONST FLOAT2& rhs) : D3DXVECTOR2(rhs) {}																			// コンストラクタ
-	FLOAT2(CONST D3DXVECTOR2& rhs) : D3DXVECTOR2(rhs) {}																	// コンストラクタ
-	~FLOAT2() {}																											// デストラクタ
+	FLOAT2() {}																									// コンストラクタ
+	FLOAT2(float x, float y) : D3DXVECTOR2(x, y) {}																// コンストラクタ
+	FLOAT2(CONST FLOAT2& rhs) : D3DXVECTOR2(rhs) {}																// コンストラクタ
+	FLOAT2(CONST D3DXVECTOR2& rhs) : D3DXVECTOR2(rhs) {}														// コンストラクタ
+	~FLOAT2() {}																								// デストラクタ
 
-	inline FLOAT2        operator +(const FLOAT2 &rhs) const;																// 四則演算子+
-	inline FLOAT2        operator -(const FLOAT2 &rhs) const;																// 四則演算子-
-	inline FLOAT2        operator -(void) const;																			// 四則演算子-
-	inline FLOAT2        operator *(const FLOAT2 &rhs) const;																// 四則演算子*
-	inline FLOAT2        operator /(const FLOAT2 &rhs) const;																// 四則演算子/
-	inline FLOAT2        operator *(float rhs) const;																		// 四則演算子*
-	inline FLOAT2        operator /(float rhs) const;																		// 四則演算子/
-	inline friend FLOAT2 operator *(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x * lhs, rhs.y * lhs); }				// 四則演算子*フレンド関数
-	inline friend FLOAT2 operator /(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x / lhs, rhs.y / lhs); }				// 四則演算子/フレンド関数
+	inline FLOAT2        operator -(void) const;																// 単項演算子 -
 
-	inline FLOAT2        operator +(const INTEGER2 &rhs) const;																// 四則演算子+
-	inline FLOAT2        operator -(const INTEGER2 &rhs) const;																// 四則演算子-
-	inline FLOAT2        operator *(const INTEGER2 &rhs) const;																// 四則演算子*
-	inline FLOAT2        operator /(const INTEGER2 &rhs) const;																// 四則演算子/
+	inline FLOAT2        operator +(const FLOAT2 &rhs) const;													// 四則演算子 +
+	inline FLOAT2        operator +(const INTEGER2 &rhs) const;													// 四則演算子 +
+	inline FLOAT2        operator -(const FLOAT2 &rhs) const;													// 四則演算子 -
+	inline FLOAT2        operator -(const INTEGER2 &rhs) const;													// 四則演算子 -
+	inline FLOAT2        operator *(const FLOAT2 &rhs) const;													// 四則演算子 *
+	inline FLOAT2        operator *(const INTEGER2 &rhs) const;													// 四則演算子 *
+	inline FLOAT2        operator *(float rhs) const;															// 四則演算子 *
+	inline FLOAT2        operator /(float rhs) const;															// 四則演算子 /
+	inline FLOAT2        operator /(const FLOAT2 &rhs) const;													// 四則演算子 /
+	inline FLOAT2        operator /(const INTEGER2 &rhs) const;													// 四則演算子 /
 
-	inline float         Dot(const FLOAT2 &rhs) const;																		// 内積
-	inline float         Cross(const FLOAT2 &rhs) const;																	// 外積
-	inline float         Length(void) const;																				// 長さ
-	inline float         LengthSq(void) const;																				// べき乗長さ
-	inline void          Norm(void);																						// 正規化
-	inline FLOAT2        GetNorm(void) const;																				// 正規化し取得
+	inline friend FLOAT2 operator *(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x * lhs, rhs.y * lhs); }	// 四則演算子 *フレンド関数
+	inline friend FLOAT2 operator /(float lhs, const FLOAT2 &rhs) { return FLOAT2(rhs.x / lhs, rhs.y / lhs); }	// 四則演算子 /フレンド関数
 
+	inline float         Dot(const FLOAT2 &rhs) const;															// 内積
+	inline float         Cross(const FLOAT2 &rhs) const;														// 外積
+	inline float         Length(void) const;																	// 長さ
+	inline float         LengthSq(void) const;																	// べき乗長さ
+	inline void          Norm(void);																			// 正規化
+	inline FLOAT2        GetNorm(void) const;																	// 正規化し取得
 }FLOAT2;
 
 // 2Dベクトル
@@ -507,6 +479,7 @@ typedef struct VEC2 : public FLOAT2
 	VEC2(float x, float y) : FLOAT2(x, y) {}				// コンストラクタ
 	VEC2(const FLOAT2 &rhs) : FLOAT2(rhs) {}				// コンストラクタ
 	~VEC2() {}												// デストラクタ
+
 	inline VEC2& operator =(const FLOAT2 &rhs);				// 代入演算子
 	inline bool  IsVertical(const VEC2 &rhs) const;			// 垂直関係にある？
 	inline bool  IsParallel(const VEC2 &rhs) const;			// 平行関係にある？
@@ -516,12 +489,14 @@ typedef struct VEC2 : public FLOAT2
 // 2D直線
 typedef struct LINE_2D
 {
-	FLOAT2 pos;															// 位置
-	VEC2 vec;															// 方向ベクトル
-	LINE_2D() : pos(0.0f, 0.0f), vec(1.0f, 0.0f) {}						// コンストラクタ
-	LINE_2D(const FLOAT2 &pos, const VEC2 &vec) : pos(pos), vec(vec) {}	// コンストラクタ
-	~LINE_2D() {}														// デストラクタ
-	inline FLOAT2 GetPoint(float fCoffi) const;							// 点上の座標を取得
+	LINE_2D() : pos(0.0f, 0.0f), vec(1.0f, 0.0f) {}								// コンストラクタ
+	LINE_2D(const FLOAT2 &pos, const VEC2 &vec) : pos(pos), vec(vec) {}			// コンストラクタ
+	~LINE_2D() {}																// デストラクタ
+
+	inline FLOAT2 GetPoint(float fCoffi) const;									// 点上の座標を取得
+
+	FLOAT2 pos;																	// 位置
+	VEC2   vec;																	// 方向ベクトル
 }LINE_2D;
 
 // 2D線分
@@ -531,63 +506,41 @@ typedef struct SEGMENT_2D : public LINE_2D
 	SEGMENT_2D(const FLOAT2 &p, const VEC2 &v) : LINE_2D(p, v) {}				// コンストラクタ
 	SEGMENT_2D(const FLOAT2 &p1, const FLOAT2 &p2) : LINE_2D(p1, p2 - p1) {}	// コンストラクタ
 	~SEGMENT_2D() {}															// デストラクタ
-	inline FLOAT2 GetEndPoint(void) const;										// 終点を取得
 
-	inline SEGMENT_2D& operator = (const FLOAT2 &rhs)
-	{
-		this->pos = rhs;
-		return *this;
-	}
+	inline FLOAT2      GetEndPoint(void) const;									// 終点を取得
 
-	inline SEGMENT_2D& operator = (const VEC2 &rhs)
-	{
-		this->vec = rhs;
-		return *this;
-	}
-
+	inline SEGMENT_2D& operator = (const FLOAT2 &rhs);							// 代入演算子
+	inline SEGMENT_2D& operator = (const VEC2 &rhs);							// 代入演算子
 }SEGMENT_2D;
 
 // 球
 typedef struct SPHERE_2D
 {
-	FLOAT2 Point;														// 中心点
-	float fRadius;														// 半径
-	SPHERE_2D() : Point(0.0f, 0.0f), fRadius(0.5f) {}				// コンストラクタ
-	SPHERE_2D(const FLOAT2 &p, float r) : Point(p), fRadius(r) {}			// コンストラクタ
-	~SPHERE_2D() {}														// デストラクタ
+	SPHERE_2D() : Point(0.0f, 0.0f), fRadius(0.5f) {}							// コンストラクタ
+	SPHERE_2D(const FLOAT2 &p, float r) : Point(p), fRadius(r) {}				// コンストラクタ
+	~SPHERE_2D() {}																// デストラクタ
+
+	FLOAT2 Point;																// 中心点
+	float  fRadius;																// 半径
 }SPHERE_2D;
 
 // 2Dカプセル
 typedef struct CAPSULE_2D
 {
-	SEGMENT_2D Segment;																			// 線分
-	float fRadius;																				// 半径
 	CAPSULE_2D() : fRadius(0.5f) {}																// コンストラクタ
 	CAPSULE_2D(const SEGMENT_2D &s, float r) : Segment(s), fRadius(r) {}						// コンストラクタ
 	CAPSULE_2D(const FLOAT2 &p1, const FLOAT2 &p2, float r) : Segment(p1, p2), fRadius(r) {}	// コンストラクタ
 	~CAPSULE_2D() {}																			// デストラクタ
 
-	inline void set(SEGMENT_2D &seg, float &fRadius);											// 設定
-	inline void set(CONST FLOAT2 &pos, CONST VEC2 &vec, float &fRadius);						// 設定
+	inline void        set(SEGMENT_2D &seg, float &fRadius);									// 設定
+	inline void        set(CONST FLOAT2 &pos, CONST VEC2 &vec, float &fRadius);					// 設定
 
-	inline CAPSULE_2D& operator = (const float &rhs)
-	{
-		this->fRadius = rhs;
-		return *this;
-	}
+	inline CAPSULE_2D& operator = (const float &rhs);											// 代入演算子
+	inline CAPSULE_2D& operator = (const FLOAT2 &rhs);											// 代入演算子
+	inline CAPSULE_2D& operator = (const VEC2 &rhs);											// 代入演算子
 
-	inline CAPSULE_2D& operator = (const FLOAT2 &rhs)
-	{
-		this->Segment.pos = rhs;
-		return *this;
-	}
-
-	inline CAPSULE_2D& operator = (const VEC2 &rhs)
-	{
-		this->Segment.vec = rhs;
-		return *this;
-	}
-
+	SEGMENT_2D Segment;																			// 線分
+	float      fRadius;																			// 半径
 }CAPSULE_2D;
 
 // 3成分float
@@ -604,9 +557,10 @@ typedef struct FLOAT3 : public D3DXVECTOR3
 	inline FLOAT3        operator -(const FLOAT3 &rhs) const;																// 四則演算子-
 	inline FLOAT3        operator -(void) const;																			// 四則演算子-
 	inline FLOAT3        operator *(const FLOAT3 &rhs) const;																// 四則演算子*
-	inline FLOAT3        operator /(const FLOAT3 &rhs) const;																// 四則演算子/
 	inline FLOAT3        operator *(float rhs) const;																		// 四則演算子*
+	inline FLOAT3        operator /(const FLOAT3 &rhs) const;																// 四則演算子/
 	inline FLOAT3        operator /(float rhs) const;																		// 四則演算子/
+
 	inline friend FLOAT3 operator *(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x * lhs, rhs.y * lhs, rhs.z * lhs); }	// 四則演算子*フレンド関数
 	inline friend FLOAT3 operator /(float lhs, const FLOAT3 &rhs) { return FLOAT3(rhs.x / lhs, rhs.y / lhs, rhs.z / lhs); }	// 四則演算子/フレンド関数
 
@@ -621,26 +575,29 @@ typedef struct FLOAT3 : public D3DXVECTOR3
 // ベクトル
 typedef struct VEC3 : public FLOAT3
 {
-	VEC3() {}												// コンストラクタ
-	VEC3(float x, float y, float z) : FLOAT3(x, y, z) {}	// コンストラクタ
-	VEC3(const FLOAT3 &rhs) : FLOAT3(rhs) {}				// コンストラクタ
-	VEC3(const D3DXVECTOR3 *rhs) : FLOAT3(rhs) {}				// コンストラクタ
-	~VEC3() {}												// デストラクタ
-	inline VEC3& operator =(const FLOAT3 &rhs);				// 代入演算子
-	inline bool  IsVertical(const VEC3 &rhs) const;			// 垂直関係にある？
-	inline bool  IsParallel(const VEC3 &rhs) const;			// 平行関係にある？
-	inline bool  IsSharpAngle(const VEC3 &rhs) const;		// 鋭角関係？
+	VEC3() {}															// コンストラクタ
+	VEC3(float x, float y, float z) : FLOAT3(x, y, z) {}				// コンストラクタ
+	VEC3(const FLOAT3 &rhs) : FLOAT3(rhs) {}							// コンストラクタ
+	VEC3(const D3DXVECTOR3 *rhs) : FLOAT3(rhs) {}						// コンストラクタ
+	~VEC3() {}															// デストラクタ
+
+	inline VEC3& operator =(const FLOAT3 &rhs);							// 代入演算子
+	inline bool  IsVertical(const VEC3 &rhs) const;						// 垂直関係にある？
+	inline bool  IsParallel(const VEC3 &rhs) const;						// 平行関係にある？
+	inline bool  IsSharpAngle(const VEC3 &rhs) const;					// 鋭角関係？
 }VEC3;
 
 // 直線
 typedef struct LINE
 {
-	FLOAT3 pos;															// 位置
-	VEC3 vec;															// 方向ベクトル
 	LINE() : pos(0.0f, 0.0f, 0.0f), vec(1.0f, 0.0f, 0.0f) {}			// コンストラクタ
 	LINE(const FLOAT3 &pos, const VEC3 &vec) : pos(pos), vec(vec) {}	// コンストラクタ
 	~LINE() {}															// デストラクタ
+
 	inline FLOAT3 GetPoint(float fCoffi) const;							// 点上の座標を取得
+
+	FLOAT3 pos;															// 位置
+	VEC3   vec;															// 方向ベクトル
 }LINE;
 
 // 線分
@@ -650,41 +607,45 @@ typedef struct SEGMENT : public LINE
 	SEGMENT(const FLOAT3 &p, const VEC3 &v) : LINE(p, v) {}				// コンストラクタ
 	SEGMENT(const FLOAT3 &p1, const FLOAT3 &p2) : LINE(p1, p2 - p1) {}	// コンストラクタ
 	~SEGMENT() {}														// デストラクタ
+
 	inline FLOAT3 GetEndPoint(void) const;								// 終点を取得
 }SEGMENT;
 
 // 球
 typedef struct SPHERE
 {
-	FLOAT3 Point;														// 中心点
-	float fRadius;														// 半径
 	SPHERE() : Point(0.0f, 0.0f, 0.0f), fRadius(0.5f) {}				// コンストラクタ
 	SPHERE(const FLOAT3 &p, float r) : Point(p), fRadius(r) {}			// コンストラクタ
 	~SPHERE() {}														// デストラクタ
+
+	FLOAT3 Point;			// 中心点
+	float  fRadius;			// 半径
 }SPHERE;
 
 // カプセル
 typedef struct CAPSULE
 {
-	SEGMENT Segment;																		// 線分
-	float fRadius;																			// 半径
 	CAPSULE() : fRadius(0.5f) {}															// コンストラクタ
 	CAPSULE(const SEGMENT &s, float r) : Segment(s), fRadius(r) {}							// コンストラクタ
 	CAPSULE(const FLOAT3 &p1, const FLOAT3 &p2, float r) : Segment(p1, p2), fRadius(r) {}	// コンストラクタ
 	~CAPSULE() {}																			// デストラクタ
+
+	SEGMENT Segment;		// 線分
+	float   fRadius;		// 半径
 }CAPSULE;
 
 // AABB
 typedef struct AABB
 {
-	FLOAT3 Point;		// 中心点
-	FLOAT3 HalLength;	// 各軸の辺の長さの半分
 	AABB() {}																// コンストラクタ
 	AABB(const FLOAT3 &p, const FLOAT3 &hl) : Point(p), HalLength(hl) {}	// コンストラクタ
 	inline float LenX(void) const { return HalLength.x * 2.0f; };			// X軸辺の長さを取得
 	inline float LenY(void) const { return HalLength.y * 2.0f; };			// Y軸辺の長さを取得
 	inline float LenZ(void) const { return HalLength.z * 2.0f; };			// Z軸辺の長さを取得
 	inline float Len(int i) { return *((&HalLength.x) + i) * 2.0f; }		// 辺の長さを取得
+
+	FLOAT3 Point;															// 中心点
+	FLOAT3 HalLength;														// 各軸の辺の長さの半分
 }AABB;
 
 // マトリックス
@@ -707,7 +668,6 @@ typedef struct MATRIX : public D3DXMATRIX
 	inline MATRIX operator -(CONST MATRIX &rhs) const;						// 四則演算子-
 	inline MATRIX operator -(void) const;									// 四則演算子-
 	inline MATRIX operator *(CONST MATRIX &rhs) const;						// 四則演算子*
-
 	inline MATRIX operator * (float rhs) const;								// 四則演算子*
 	inline MATRIX operator / (float rhs) const;								// 四則演算子/
 
@@ -715,22 +675,22 @@ typedef struct MATRIX : public D3DXMATRIX
 	inline void   Inverse(MATRIX *pMat, float *pDeterminant = NULL);		// 逆行列
 } MATRIX;
 
-/* * 入力キーのセル */
+// 入力キーのセル
 typedef struct _INPUTKEYCELL
 {
-	int             nKey;		// キー
-	int             nData;		// データ
-	_INPUTKEYCELL*  pNext;		// 次のデータポインタ
+	int            nKey;		// キー
+	int            nData;		// データ
+	_INPUTKEYCELL* pNext;		// 次のデータポインタ
 }INPUTKEYCELL;
 
-/* *タイマー情報 */
+// タイマー情報
 typedef struct _TIMER_INFO
 {
-	_TIMER_INFO() {};
-	_TIMER_INFO(int nStart, int nEnd);
+	_TIMER_INFO() {};					// コンストラクタ
+	_TIMER_INFO(int nStart, int nEnd);	// コンストラクタ
 
-	int nStart;		// 開始
-	int nEnd;		// 終了
+	int nStart;							// 開始
+	int nEnd;							// 終了
 }TIMER_INFO;
 
 /* *
@@ -739,13 +699,30 @@ typedef struct _TIMER_INFO
 */
 typedef struct _SETING_UV
 {
-	/* * コンストラクタ */
-	_SETING_UV() {}
-	_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV);
-	int nCntU;	// 横のカウント
-	int nNumU;	// 横の個数
-	int nCntV;	// 縦のカウント
-	int nNumV;	// 縦の個数
+	_SETING_UV() {}													// コンストラクタ
+	_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV);			// コンストラクタ
+
+	inline _SETING_UV& operator ++(void);							// 前置インクリメント
+	inline _SETING_UV  operator ++(int);							// 後置インクリメント
+	inline _SETING_UV& operator --(void);							// 前置デクリメント
+	inline _SETING_UV  operator --(int);							// 後置デクリメント
+
+	inline _SETING_UV& operator =(const int &rhs);					// 代入演算子
+
+	inline int         operator [](unsigned int nIdx) const;		// 配列添え字
+	inline int&        operator [](unsigned int nIdx);				// 配列添え字
+
+	inline void        SetCnt(const int nCntU, const int nCntV);	// カウントの設定
+	inline void        SetNum(const int nNumU, const int nNumV);	// 個数の設定
+	union {
+		struct {
+			int nCntU;		// 横のカウント
+			int nNumU;		// 横の個数
+			int nCntV;		// 縦のカウント
+			int nNumV;		// 縦の個数
+		};
+		int m[2][2];		// 配列 [U、V] [カウント、個数]
+	};
 }SETING_UV;
 
 /* *
@@ -754,53 +731,63 @@ typedef struct _SETING_UV
 */
 typedef struct _TEXTUREANIMEINFO
 {
-	/* * コンストラクタ */
-	_TEXTUREANIMEINFO() {}
-	_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration);
+	_TEXTUREANIMEINFO() {}											// コンストラクタ
+	_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIteration);	// コンストラクタ
 
-	int nFrame;		// フレーム
-	int nFrameMax;	// 最大フレーム数
-	int nIteration;	// 切り返し(1か-1)
+	inline int& operator++ (void);									// 前置インクリメント
+	inline int  operator++ (int);									// 後置インクリメント
+	inline int& operator-- (void);									// 前置デクリメント
+	inline int  operator-- (int);									// 後置デクリメント
+
+	inline void update(void);										// 更新
+	inline void clamp(void);										// クランプ
+	inline bool IsEqual(void) const;								// 同じとき
+	inline bool IsGreater(void) const;								// 大なり
+	inline bool IsGreaterEqual(void) const;							// 大なりイコール
+	inline bool IsSmall(void) const;								// 小なり
+	inline bool IsSmallEqual(void) const;							// 小なりイコール
+
+	union {
+		struct {
+			int nFrame;			// フレーム
+			int nFrameMax;		// 最大フレーム数
+			int nIteration;		// 切り返し(1か-1)
+		};
+		int m[3];				// 配列[1:フレーム、2:最大フレーム、3:切り返し(1か-1)]
+	};
+
 }TEXTUREANIMEINFO;
 
 // トランスフォーム情報
 typedef struct TRANSFORM
 {
-	/* * コンストラクタ */
 	TRANSFORM() : pos(MYLIB_3DVECTOR_ZERO), rot(MYLIB_3DVECTOR_ZERO), scal(MYLIB_SCALE_UNSET) {}														// コンストラクタ
 	TRANSFORM(D3DXVECTOR3 &pos, D3DXVECTOR3 &rot, D3DXVECTOR3 &scal, D3DXMATRIX &mtxWorld) : pos(pos), rot(rot), scal(scal), mtxWorld(mtxWorld) {}		// コンストラクタ
 	TRANSFORM(D3DXVECTOR3 &pos, D3DXVECTOR3 &rot, D3DXVECTOR3 &scal) : pos(pos), rot(rot), scal(scal) {}												// コンストラクタ
 
-	// inline void Move(CONST D3DXVECTOR3 &rhs);			// 移動
-	// inline void Move(CONST D3DXVECTOR2 &rhs);			// 移動
-	// inline void Move(const float &rhs);					// 移動
+	inline void Identity(void);	// マトリックスの初期化
 
-	// inline void FlatMove(CONST D3DXVECTOR3 &rhs);		// 平面移動
-	// inline void FlatMove(const float &rhs);				// 平面移動
-
-	inline void Identity(void);								// マトリックスの初期化
-
-	D3DXVECTOR3 pos;		// 位置
-	D3DXVECTOR3 rot;		// 回転
-	D3DXVECTOR3 scal;		// スケール
-	D3DXMATRIX mtxWorld;	// マトリックス
+	D3DXVECTOR3 pos;			// 位置
+	D3DXVECTOR3 rot;			// 回転
+	D3DXVECTOR3 scal;			// スケール
+	D3DXMATRIX  mtxWorld;		// マトリックス
 } TRANSFORM, *PTRANSFORM;
 
 
 /*-- モーションキー --*/
 typedef struct
 {
-	int				nFlame;		// フレーム数
-	D3DXVECTOR3		*pos;		// 位置
-	D3DXVECTOR3		*rot;		// 回転量
+	int           nFlame;		// フレーム数
+	D3DXVECTOR3 * pPos;			// 位置
+	D3DXVECTOR3 * pRot;			// 回転量
 } MOTION_KEY;
 
 /*-- モーション --*/
 typedef struct
 {
-	int			nLoop;			// ループするかどうか
-	int			nNumKey;		// キー数
-	MOTION_KEY	*MotionKey;		// モーションキー
+	int          nLoop;			// ループするかどうか
+	int          nNumKey;		// キー数
+	MOTION_KEY * pMotionKey;	// モーションキー
 }MOTION_INFO;
 
 
@@ -810,9 +797,9 @@ typedef struct GAGE_INFO
 	GAGE_INFO() {}
 	GAGE_INFO(RANGE SourceRange, int nSourceValue, float fSourceCoefficient);
 
-	RANGE		range;			// 範囲
-	int			nValue;			// いじる値
-	float		fCoefficient;	// 係数
+	RANGE range;			// 範囲
+	int   nValue;			// 値
+	float fCoefficient;		// 係数
 } GAGE_INFO;
 
 
@@ -1077,6 +1064,12 @@ public:
 	CString();
 	/* * デストラクタ */
 	~CString();
+
+	inline STRING operator = (CONST_STRING string);
+
+	/* * 文字列を追加する */
+	inline STRING operator += (CONST_STRING string);
+
 	/* * 初期化 */
 	inline void Init(void);
 	/* * 開放処理 */
@@ -1084,52 +1077,9 @@ public:
 	/* * 文字列の設定(設定していた場合は再設定する) */
 	inline void Set(STRING string);
 	inline void Set(CONST_STRING string);
-	inline STRING operator = (CONST_STRING string)
-	{
-		this->Set(string);
-		return this->m_string;
-	}
-
-	/* * 文字列を追加する */
-	inline STRING operator += (CONST_STRING string)
-	{
-		if (m_string == NULL) {
-			this->Set(string);
-		}
-		else {
-			// 文字列の長さを加算
-			this->m_nStringLength += strlen(string);
-			// 保存用文字列の生成
-			STRING str = new char[this->m_nStringLength];
-			// 文字列をコピーする
-			strcpy(str, this->m_string);
-			// 文字列を合成する
-			strcat(str, string);
-			// 既存の文字列を破棄
-			delete[]this->m_string;
-			this->m_string = nullptr;
-			// 新しく生成する
-			this->m_string = new char[this->m_nStringLength];
-			// 保存していた文字列をコピー
-			strcpy(this->m_string, str);
-			// 文字列の破棄
-			delete[]str;
-			str = nullptr;
-		}
-		return this->m_string;
-	}
 
 	/* * 文字列を合成する(MAX256) */
-	inline void Synthesize(char * fmt, ...)
-	{
-		char aStr[256];
-		aStr[0] = '\0';
-		va_list list;
-		va_start(list, fmt);
-		vsprintf(aStr, fmt, list);
-		va_end(list);
-		*this += aStr;
-	}
+	inline void Synthesize(char * fmt, ...);
 
 	/* * 文字列の取得 */
 	inline STRING Get(void);

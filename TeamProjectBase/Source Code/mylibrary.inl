@@ -1066,6 +1066,20 @@ inline FLOAT2 SEGMENT_2D::GetEndPoint(void) const
 	return pos + vec;
 }
 
+inline SEGMENT_2D& 
+SEGMENT_2D::operator = (const FLOAT2 &rhs)
+{
+	this->pos = rhs;
+	return *this;
+}
+
+inline SEGMENT_2D& 
+SEGMENT_2D::operator = (const VEC2 &rhs)
+{
+	this->vec = rhs;
+	return *this;
+}
+
 //----------------------------------------------------------------------------------------------------
 // 2Dカプセル
 //----------------------------------------------------------------------------------------------------
@@ -1082,6 +1096,27 @@ CAPSULE_2D::set(CONST FLOAT2 &pos, CONST VEC2 &vec, float &fRadius)
 	this->fRadius = fRadius;
 	this->Segment.pos = pos;
 	this->Segment.vec = vec;
+}
+
+inline CAPSULE_2D&
+CAPSULE_2D::operator = (const float &rhs)
+{
+	this->fRadius = rhs;
+	return *this;
+}
+
+inline CAPSULE_2D&
+CAPSULE_2D::operator = (const FLOAT2 &rhs)
+{
+	this->Segment.pos = rhs;
+	return *this;
+}
+
+inline CAPSULE_2D&
+CAPSULE_2D::operator = (const VEC2 &rhs)
+{
+	this->Segment.vec = rhs;
+	return *this;
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -1315,6 +1350,71 @@ inline _SETING_UV::_SETING_UV(int nCntU, int nNumU, int nCntV, int nNumV)
 	this->nNumV = nNumV;
 }
 
+inline _SETING_UV&
+_SETING_UV::operator ++(void)
+{
+	this->nCntU++;
+	this->nCntV++;
+	return *this;
+}
+
+inline _SETING_UV  
+_SETING_UV::operator ++(int)
+{
+	_SETING_UV temp = *this;
+	++*this;
+	return temp;
+}
+
+inline _SETING_UV&
+_SETING_UV::operator --(void)
+{
+	this->nCntU--;
+	this->nCntV--;
+	return *this;
+}
+
+inline _SETING_UV
+_SETING_UV::operator --(int)
+{
+	_SETING_UV temp = *this;
+	--*this;
+	return temp;
+}
+
+inline _SETING_UV &
+_SETING_UV::operator = (const int &rhs)
+{
+	this->nCntU =
+		this->nNumU =
+		this->nCntV =
+		this->nNumV = rhs;
+}
+
+inline int
+_SETING_UV::operator[] (unsigned int nIdx) const
+{
+	return (&this->nCntU)[nIdx];
+}
+inline int&
+_SETING_UV::operator[] (unsigned int nIdx)
+{
+	return (&this->nCntU)[nIdx];
+}
+
+inline void
+_SETING_UV::SetCnt(const int nCntU, const int nCntV)			// カウントの設定
+{
+	this->nCntU = nCntU;
+	this->nCntV = nCntV;
+}
+inline void
+_SETING_UV::SetNum(const int nNumU, const int nNumV)			// 個数の設定
+{
+	this->nNumU = nNumU;		// 横の個数
+	this->nNumV = nNumV;		// 縦の個数
+}
+
 //----------------------------------------------------------------------------------------------------
 // テクスチャアニメーション情報
 //----------------------------------------------------------------------------------------------------
@@ -1325,27 +1425,83 @@ inline _TEXTUREANIMEINFO::_TEXTUREANIMEINFO(int nFrame, int nFrameMax, int nIter
 	this->nIteration = nIteration;
 }
 
+inline int &
+_TEXTUREANIMEINFO::operator++ (void)
+{
+	this->nFrame++;
+	return this->nFrame;
+}
+
+inline int
+_TEXTUREANIMEINFO::operator++ (int)
+{
+	int temp = this->nFrame;
+	this->nFrame++;
+	return temp;
+}
+
+inline int &
+_TEXTUREANIMEINFO::operator-- (void)
+{
+	this->nFrame--;
+	return this->nFrame;
+}
+
+inline int
+_TEXTUREANIMEINFO::operator-- (int)
+{
+	int temp = this->nFrame;
+	this->nFrame--;
+	return temp;
+}
+
+inline void
+_TEXTUREANIMEINFO::update(void)
+{
+	this->nFrame += this->nIteration;
+}
+
+inline void
+_TEXTUREANIMEINFO::clamp(void)
+{
+	if (this->nIteration > 0) {
+		this->nIteration = 1;
+	}
+	else if (this->nIteration < 0) {
+		this->nIteration = -1;
+	}
+}
+inline bool
+_TEXTUREANIMEINFO::IsEqual(void) const
+{
+	return (this->nFrame == this->nFrameMax);
+}
+inline bool
+_TEXTUREANIMEINFO::IsGreater(void) const
+{
+	return (this->nFrame >this->nFrameMax);
+}
+inline bool
+_TEXTUREANIMEINFO::IsGreaterEqual(void) const
+{
+	return (this->nFrame >= this->nFrameMax);
+}
+inline bool
+_TEXTUREANIMEINFO::IsSmall(void) const
+{
+	return (this->nFrame < this->nFrameMax);
+}
+inline bool
+_TEXTUREANIMEINFO::IsSmallEqual(void) const
+{
+	return (this->nFrame <= this->nFrameMax);
+}
+
+
 
 //----------------------------------------------------------------------------------------------------
 // トランスフォーム情報
 //----------------------------------------------------------------------------------------------------
-///* * コンストラクタ */
-//inline
-//TRANSFORM::TRANSFORM(D3DXVECTOR3 &pos, D3DXVECTOR3 &rot, D3DXVECTOR3 &scal, D3DXMATRIX &mtxWorld)
-//{
-//	this->pos = pos;
-//	this->rot = rot;
-//	this->scal = scal;
-//	this->mtxWorld = mtxWorld;
-//}
-//inline
-//TRANSFORM::TRANSFORM(D3DXVECTOR3 &pos, D3DXVECTOR3 &rot, D3DXVECTOR3 &scal)
-//{
-//	this->pos = pos;
-//	this->rot = rot;
-//	this->scal = scal;
-//}
-
 // マトリックスの初期化
 inline void
 TRANSFORM::Identity(void)
@@ -2492,6 +2648,43 @@ CString::~CString()
 	this->release();
 }
 
+inline STRING
+CString::operator = (CONST_STRING string)
+{
+	this->Set(string);
+	return this->m_string;
+}
+
+/* * 文字列を追加する */
+inline STRING
+CString::operator += (CONST_STRING string)
+{
+	if (m_string == NULL) {
+		this->Set(string);
+	}
+	else {
+		// 文字列の長さを加算
+		this->m_nStringLength += strlen(string);
+		// 保存用文字列の生成
+		STRING str = new char[this->m_nStringLength];
+		// 文字列をコピーする
+		strcpy(str, this->m_string);
+		// 文字列を合成する
+		strcat(str, string);
+		// 既存の文字列を破棄
+		delete[]this->m_string;
+		this->m_string = nullptr;
+		// 新しく生成する
+		this->m_string = new char[this->m_nStringLength];
+		// 保存していた文字列をコピー
+		strcpy(this->m_string, str);
+		// 文字列の破棄
+		delete[]str;
+		str = nullptr;
+	}
+	return this->m_string;
+}
+
 /* * 初期化 */
 inline void
 CString::Init(void)
@@ -2540,6 +2733,18 @@ CString::Set(CONST_STRING string)
 		this->m_string = new char[this->m_nStringLength];
 		strcpy(this->m_string, string);
 	}
+}
+
+inline void
+CString::Synthesize(char * fmt, ...)
+{
+	char aStr[256];
+	aStr[0] = '\0';
+	va_list list;
+	va_start(list, fmt);
+	vsprintf(aStr, fmt, list);
+	va_end(list);
+	*this += aStr;
 }
 
 /* * 文字列の取得 */
