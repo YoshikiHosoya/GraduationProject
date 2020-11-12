@@ -78,14 +78,16 @@ int CClient::ConnectServer(void)
 // ===================================================================
 void CClient::WaitRecieve(void)
 {
-	char buf[256];					// テキストを格納する変数
+	char buf[256] = {};					// テキストを格納する変数
 	size_t bufSize = sizeof(buf);	// サイズを格納する変数
 
 	while (1)
 	{
 		// 接続しない
 		if (!m_bConnecting)
+		{
 			break;
+		}
 
 		// メモリブロックをリセット
 		memset(buf, 0, bufSize);
@@ -101,10 +103,9 @@ void CClient::WaitRecieve(void)
 		}
 
 		// テキストの受信
-		RecvText(buf);
+		if (strlen(buf) > 0)
+			RecvText(buf);
 	}
-	// winsock2の終了処理
-	WSACleanup();
 }
 
 // ===================================================================
@@ -152,6 +153,9 @@ void CClient::UninitClient(void)
 // ===================================================================
 void CClient::SendText(char * cSendText)
 {
+	char Text[65];
+	strcpy(Text, cSendText);
+
 	if (!m_bConnecting)
 	{
 #ifdef _DEBUG
@@ -160,12 +164,12 @@ void CClient::SendText(char * cSendText)
 		return;
 	}
 
-	int nLen = strlen(cSendText);
+	int nLen = strlen(Text);
 #ifdef _DEBUG
-	printf("送信 > %s [%d字]\n", cSendText, nLen);
+	printf("送信 > %s [%d字]\n", Text, nLen);
 #endif
 	// テキスト送信
-	if (send(m_socket, cSendText, nLen, 0) == -1)
+	if (send(m_socket, Text, nLen, 0) == -1)
 	{
 #ifdef _DEBUG
 		ErrorReport();

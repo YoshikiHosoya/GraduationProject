@@ -12,6 +12,7 @@
 #include "main.h"
 #include "manager.h"
 #include "mylibrary.h"
+#include "mouse.h"
 #include "chatTab.h"
 
 //------------------------------------------------------------------------------
@@ -223,7 +224,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static int nWheelFraction = 0;	// 回転量の端数
 	DWORD fwKeys;	// キー情報
 	int zDelta;	// 回転量
-	int nNotch;	// ノッチ数
+	int nNotch = 0;	// ノッチ数
 
 	switch (uMsg)
 	{
@@ -242,12 +243,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (nNotch > 0)
 		{
 			// ↑に回転（チルト）した
-			CChatTab::ScrollUp();
+			CMouse::SetScroll(CMouse::SCROLL_UP);
 		}
 		else if (nNotch < 0)
 		{
 			// ↓に回転（チルト）した
-			CChatTab::ScrollDown();
+			CMouse::SetScroll(CMouse::SCROLL_DOWN);
 		}
 		break;
 
@@ -265,9 +266,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		}
-		break;
-
-	default:
 		break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);  //規定の処理を提供
