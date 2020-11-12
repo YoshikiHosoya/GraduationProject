@@ -35,6 +35,14 @@ public:
 		CUR_MAX			// 最大数
 	}CURTYPE;
 
+	typedef enum
+	{
+		SCROLL_NONE,	// スクロールしていない
+		SCROLL_UP,		// 上にスクロール
+		SCROLL_DOWN,	// 下にスクロール
+		SCROLL_MAX
+	} MOUSE_SCROLL;
+
 	/* 構造体定義 */
 	typedef struct
 	{
@@ -52,6 +60,7 @@ public:
 	// 設定関数
 	inline void          SetCursorType(CONST CURTYPE type) { if (m_type != type)m_type = type; }					// カーソルタイプの設定
 	inline void          SetDisp(bool bDisp) { if (m_bDisp != bDisp)m_bDisp = bDisp; }								// 描画フラグの設定
+	static void			 SetScroll(MOUSE_SCROLL scroll) { m_scroll = scroll; }										// スクロールの状態の設定
 
 	// 取得関数
 	inline bool          GetPress(int nButton) { return (m_aButtonState[nButton] & 0x80) ? true : false; }			// 押しているとき
@@ -61,6 +70,7 @@ public:
 	inline LONG          GetMouseY(void) { return m_mouse.point.y; }												// マウスY軸
 	inline POINT         GetMousePoint(void) { return m_mouse.point; }												// マウスの位置
 	inline DIMOUSESTATE2 GetMouseState(void) { return m_mouse.state; }												// マウスの状態の取得
+	static MOUSE_SCROLL  GetScroll(void) { return m_scroll; }														// スクロールの状態の取得
 
 private:
 	/* メンバ変数 */
@@ -73,6 +83,7 @@ private:
 	HCURSOR              m_hCursor[CUR_MAX];					// カーソルハンドル
 	CURTYPE              m_type;								// カーソルタイプ
 	bool                 m_bDisp;								// 描画したフラグ
+	static MOUSE_SCROLL	 m_scroll;								// マウスのスクロールの状態
 };
 
 #endif
