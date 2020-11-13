@@ -71,37 +71,36 @@ public:
 
 	static CChatTab * Create(void);	// 生成
 
-	static D3DXVECTOR2 &GetTabPos(void)			{ return m_TabPos; }			// タブ座標の取得
-	static TABSTATE &GetTabState(void)			{ return m_tabState; }			// タブの状態の取得
-	static CHATKEEP *GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }	// テキストの背景ポリゴン取得
-	static void SetTabPos(D3DXVECTOR2 &pos)		{ m_TabPos = pos; }				// タブ座標の設定
-	static void InputText(void);
-	static void PressKey(int nKeyID, bool bShift);
-	static void SetChatKeyInfo(int nKeyID);
-	static void SetChatShiftKeyInfo(int nKeyID);
-	static void SendChatText(void);
-	static void RecvChatText(char *cText);
-
-	static void ScrollUp(void);		// マウス座標の上昇
-	static void ScrollDown(void);	// マウス座標の下降
+	static D3DXVECTOR2	&GetTabPos(void)			{ return m_TabPos; }			// タブ座標の取得
+	static TABSTATE		&GetTabState(void)			{ return m_tabState; }			// タブの状態の取得
+	static CHATKEEP		*GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }	// テキストの背景ポリゴン取得
+	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }				// タブ座標の設定
+	static void			SendChatText(void);											// テキストの送信
+	static void			SendPicture(void);											// ピクチャの送信
+	static void			RecvChatText(char *cText);									// テキストの受信
+	static void			ScrollUp(void);												// チャット履歴の上スクロール
+	static void			ScrollDown(void);											// チャット履歴の下スクロール
 
 private:
-	void ClickTab(void);	// タブクリック
-	void SlideTab(void);	// タブスライド
+	void		ClickTab(void);											// タブクリック
+	void		SlideTab(void);											// タブスライド
+	void		InputText(void);										// キー入力の総括
+	void		PressKey(int nKeyID, bool bShift);						// キー入力
+	void		SetChatKeyInfo(int nKeyID);								// 通常の入力
+	void		SetChatShiftKeyInfo(int nKeyID);						// シフトキーを用いた入力
 	static void CreateKeep(CChatBase::TEXTOWNER owner, char *cText);	// チャットキープの生成
 
-	CPolygon2D *m_pChatPoly[POLY_MAX];			// チャット用画像のポリゴン
-
-	static std::vector<CHATKEEP> m_chatKeep;	// 保持できるテキスト
-	static TABSTATE		m_tabState;				// タブの状態
-	static D3DXVECTOR2	m_TabPos;				// タブの親座標
-	static float		m_fScrollPosY;			// マウススクロールの座標
-	static int			m_nCntPress;			// 長押しのカウンタ
-	static int			m_nPressKey;			// 入力されたキーを格納する
-	static CChatText	*m_leftText;			// 残り時数を表示するテキスト
-	static CChatText	*m_SendText;			// 送るテキスト
-	int					m_nCntState;			// 状態管理のカウンタ
-	D3DXVECTOR2			m_moveDest;				// タブ移動の量
+	static std::vector<CHATKEEP>	m_chatKeep;							// 保持できるテキスト
+	static TABSTATE					m_tabState;							// タブの状態
+	static D3DXVECTOR2				m_TabPos;							// タブの親座標
+	static float					m_fScrollPosY;						// マウススクロールの座標
+	static int						m_nCntPress;						// 長押しのカウンタ
+	static int						m_nPressKey;						// 入力されたキーを格納する
+	static CChatText				*m_leftText;						// 残り時数を表示するテキスト
+	static CChatText				*m_SendText;						// 送るテキスト
+	CPolygon2D						*m_pChatPoly[POLY_MAX];				// チャット用画像のポリゴン
+	int								m_nCntState;						// 状態管理のカウンタ
+	D3DXVECTOR2						m_moveDest;							// タブ移動の量
 };
 
 #endif

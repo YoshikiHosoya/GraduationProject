@@ -11,6 +11,7 @@
 // ===================================================================
 #include "client.h"
 #include "chatTab.h"
+#include "Mylibrary.h"
 
 // ===================================================================
 // マクロ定義
@@ -18,6 +19,7 @@
 #define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
+#define LINK_SENDPICTURE		("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
 
 // ===================================================================
 // 静的メンバ変数の初期化
@@ -153,9 +155,6 @@ void CClient::UninitClient(void)
 // ===================================================================
 void CClient::SendText(char * cSendText)
 {
-	char Text[65];
-	strcpy(Text, cSendText);
-
 	if (!m_bConnecting)
 	{
 #ifdef _DEBUG
@@ -164,7 +163,10 @@ void CClient::SendText(char * cSendText)
 		return;
 	}
 
+	char Text[65];
+	strcpy(Text, cSendText);
 	int nLen = strlen(Text);
+
 #ifdef _DEBUG
 	printf("送信 > %s [%d字]\n", Text, nLen);
 #endif
@@ -191,10 +193,41 @@ void CClient::RecvText(char * cRecvText)
 }
 
 // ===================================================================
-// テキストの送信
+// ピクチャの送信
 // ===================================================================
-void CClient::SendTexture(char * cSendText)
+void CClient::SendPicture(void)
 {
+	if (!m_bConnecting)
+	{
+#ifdef _DEBUG
+		printf("サーバーに接続されていません\n");
+#endif
+		return;
+	}
+
+	// 変数宣言
+	CLoadFile Load;
+	CLoadFile::LOADRESULT result;	// 結果
+
+	// 読み込みファイルの情報を作成
+	if ((result = Load.LoadFileIntoString(LINK_SENDPICTURE)) != CLoadFile::LR_SUCCESS)
+	{
+		// エラー
+	}
+
+#ifdef _DEBUG
+	printf("ピクチャ送信 > [%dPixel]\n", Load.m_nuFileSize);
+#endif
+	// テキスト送信
+	if (send(m_socket, Load.m_pFileData, Load.m_nuFileSize, 0) == -1)
+	{
+#ifdef _DEBUG
+		ErrorReport();
+#endif
+	}
+
+	// ファイルデータの破棄
+	Load.DeleteFileData();
 }
 
 #ifdef _DEBUG
