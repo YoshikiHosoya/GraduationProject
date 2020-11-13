@@ -39,8 +39,9 @@ public:
 
 	typedef struct
 	{	// チャットキープの情報
-		CChatText *pKeepText;
-		CPolygon2D *pPolyBack;
+		CChatText *pKeepText;	// テキスト
+		CPolygon2D *pPolyPic;	// ポリゴン (ピクチャ)
+		CPolygon2D *pPolyBack;	// ポリゴン (背景)
 	} CHATKEEP;
 
 	typedef enum
@@ -71,15 +72,15 @@ public:
 
 	static CChatTab * Create(void);	// 生成
 
-	static D3DXVECTOR2	&GetTabPos(void)			{ return m_TabPos; }			// タブ座標の取得
-	static TABSTATE		&GetTabState(void)			{ return m_tabState; }			// タブの状態の取得
-	static CHATKEEP		*GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }	// テキストの背景ポリゴン取得
-	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }				// タブ座標の設定
-	static void			SendChatText(void);											// テキストの送信
-	static void			SendPicture(void);											// ピクチャの送信
-	static void			RecvChatText(char *cText);									// テキストの受信
-	static void			ScrollUp(void);												// チャット履歴の上スクロール
-	static void			ScrollDown(void);											// チャット履歴の下スクロール
+	static D3DXVECTOR2	&GetTabPos(void)			{ return m_TabPos; }						// タブ座標の取得
+	static TABSTATE		&GetTabState(void)			{ return m_tabState; }						// タブの状態の取得
+	static CHATKEEP		*GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }				// テキストの背景ポリゴン取得
+	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }							// タブ座標の設定
+	static void			SendChatText(void);														// テキストの送信
+	static void			AddPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture);	// ピクチャの追加
+	static void			RecvChatText(char *cText);												// テキストの受信
+	static void			ScrollUp(void);															// チャット履歴の上スクロール
+	static void			ScrollDown(void);														// チャット履歴の下スクロール
 
 private:
 	void		ClickTab(void);											// タブクリック

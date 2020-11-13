@@ -9,9 +9,11 @@
 // ===================================================================
 // インクルードファイル
 // ===================================================================
+#include "manager.h"
+#include "renderer.h"
 #include "client.h"
 #include "chatTab.h"
-#include "Mylibrary.h"
+#include "picture.h"
 
 // ===================================================================
 // マクロ定義
@@ -19,7 +21,7 @@
 #define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
-#define LINK_SENDPICTURE		("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
+#define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
 
 // ===================================================================
 // 静的メンバ変数の初期化
@@ -107,6 +109,8 @@ void CClient::WaitRecieve(void)
 		// テキストの受信
 		if (strlen(buf) > 0)
 			RecvText(buf);
+
+		RecvPicture();
 	}
 }
 
@@ -197,12 +201,13 @@ void CClient::RecvText(char * cRecvText)
 // ===================================================================
 void CClient::SendPicture(void)
 {
+	// 接続していない
 	if (!m_bConnecting)
 	{
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
 #endif
-		return;
+		//return;
 	}
 
 	// 変数宣言
@@ -216,18 +221,62 @@ void CClient::SendPicture(void)
 	}
 
 #ifdef _DEBUG
-	printf("ピクチャ送信 > [%dPixel]\n", Load.m_nuFileSize);
+	printf("ピクチャ送信 > [%d byte]\n", Load.m_nuFileSize);
 #endif
+
+	// ピクチャ送信を伝える
+	char sendTitle[16] = "SEND_PICTURE";
+	send(m_socket, sendTitle, strlen(sendTitle), 0);
+
 	// テキスト送信
 	if (send(m_socket, Load.m_pFileData, Load.m_nuFileSize, 0) == -1)
 	{
+		// エラーレポート
 #ifdef _DEBUG
 		ErrorReport();
 #endif
+		// ファイルデータの破棄
+		//Load.DeleteFileData();
+		//return;
 	}
+
+	LPDIRECT3DTEXTURE9 pTexture = NULL;
+
+	if (FAILED(CManager::GetRenderer()->GetDevice()->CreateTexture(128, 128, 1, 0, D3DFMT_A32B32G32R32F,
+		D3DPOOL_MANAGED, &pTexture, NULL)))
+	{
+		throw E_FAIL;
+	}
+
+	CString link;
+	link = LINK_SENDPICTURE;
+	CPicture::Reading(pTexture, link);
+
+	CChatTab::AddPicture(CChatBase::OWNER_OWN, pTexture);
 
 	// ファイルデータの破棄
 	Load.DeleteFileData();
+}
+
+// ===================================================================
+// ピクチャの受信
+// ===================================================================
+void CClient::RecvPicture(void)
+{
+	// 格納用
+	LPDIRECT3DTEXTURE9 pTexture = NULL;
+
+	if (FAILED(CManager::GetRenderer()->GetDevice()->CreateTexture(128, 128, 1, 0, D3DFMT_A32B32G32R32F,
+		D3DPOOL_MANAGED, &pTexture, NULL)))
+	{
+		throw E_FAIL;
+	}
+
+	//CString link;
+	//link = LINK_SENDPICTURE;
+	//CPicture::Reading(pTexture, link);
+
+	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
 }
 
 #ifdef _DEBUG
