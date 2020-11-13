@@ -32,6 +32,7 @@ CModule_Parts_No3_Wire::CModule_Parts_No3_Wire()
 {
 	m_Wire = CModule_No3_LampAndWire::WIRE::NONE;
 	m_WireColor = MagentaColor;
+	m_bCut = false;
 }
 
 //------------------------------------------------------------------------------
@@ -90,9 +91,9 @@ void CModule_Parts_No3_Wire::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //ワイヤーカラー設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No3_Wire::SetWireCol(CModule_No3_LampAndWire::WIRE wirecol)
+void CModule_Parts_No3_Wire::SetWire(CModule_No3_LampAndWire::WIRE wire)
 {
-	m_Wire = wirecol;
+	m_Wire = wire;
 
 	switch (m_Wire)
 	{

@@ -15,6 +15,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CModule_Parts_No3_Wire;
+class CScene3D;
 
 class CModule_No3_LampAndWire : public CModule_Base
 {
@@ -35,11 +36,12 @@ public:
 	CModule_No3_LampAndWire();
 	virtual ~CModule_No3_LampAndWire();
 
-	virtual HRESULT Init()			override;			//初期化
-	virtual void Update()			override;			//更新
-	virtual void Draw()				override;			//描画
-	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
+	virtual HRESULT Init()				override;			//初期化
+	virtual void Update()				override;			//更新
+	virtual void Draw()					override;			//描画
+	virtual void ShowDebugInfo()		override;			//デバッグ情報表記
 	void Operation()					override;			//モジュール操作
+
 private:
 	Vec<S_ptr<CModule_Parts_No3_Wire>> m_pWireList;		//ワイヤーのリスト
 	WIRE m_NowSelectWire;								//現在選択しているワイヤー
@@ -49,10 +51,70 @@ private:
 	int m_nBlueLampNum;									//青いランプ数
 
 	void CreateWire();									//ワイヤー生成
-	void CreateLamp();									//ランプ生成
+	void CreateModuleLamp();							//ランプ生成
 	void SetToCutWire();								//カットするワイヤー設定
 
-	void SetCutWire_FromColor(WIRE wire);						//色を基に切るワイヤー設定
+	void WireCut();										//ワイヤーカット
+	void CheckClear();									//クリアしたかチェック
+
+	//色を基に切るワイヤー設定
 	void SetCutWire_FromPlace(int nPlace);						//場所を基に切るワイヤー設定
+	void SetCutWire_FromLampRule();								//ランプルール
+
+//テンプレート関数
+//色を基に切るワイヤーを設定
+//指定した色右側、左側にも対応
+//ワイヤ色　Itr_Begin Itr_End 切る切らないフラグ　指定した色の設定か　左側のコードか　右側のコードか
+	template<class Itr>
+	inline void SetCutWire_FromColor(WIRE wire, Itr begin, Itr end, bool bFlag, bool bThisCode = true, bool bLeft = false, bool bRight = false)
+	{
+		//指定した色のイテレータ取得
+		auto itr = std::find_if(begin, end,
+			[wire](S_ptr<CModule_Parts_No3_Wire> &ptr) {return ptr->GetWire() == wire; });
+
+		//イテレータできた時
+		if (itr != end)
+		{
+			//このコードかどうか
+			if (bThisCode)
+			{
+				//クリアフラグを立てる
+				itr->get()->SetClearFlag(bFlag);
+			}
+			//左側のコードか
+			if (bLeft)
+			{
+				//仮でイテレータ生成
+				auto LocalItr = itr;
+
+				//イテレータが範囲内だった時
+				if (LocalItr != begin)
+				{
+					//一つ手前
+					--LocalItr;
+
+					//クリアフラグ設定
+					LocalItr->get()->SetClearFlag(true);
+				}
+			}
+			//右側のコードか
+			if (bLeft)
+			{
+				//仮でイテレータ生成
+				auto LocalItr = itr;
+
+
+				++LocalItr;
+
+				//一つ後ろのイテレータが範囲内だった時
+				if (LocalItr < end)
+				{
+
+					//クリアフラグ設定
+					LocalItr->get()->SetClearFlag(true);
+				}
+			}
+		}
+	}
 };
 #endif

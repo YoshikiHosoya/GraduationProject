@@ -28,11 +28,16 @@ public:
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
-	void SetWireCol(CModule_No3_LampAndWire::WIRE wirecol);
+	void SetWire(CModule_No3_LampAndWire::WIRE wire);			//ワイヤー設定
+	void SetWireCut(bool bCut) { m_bCut = bCut; };					//ワイヤーカットしたか設定
+
+	CModule_No3_LampAndWire::WIRE GetWire() { return m_Wire; };		//ワイヤー情報取得
+	bool GetWireCut() { return m_bCut; };							//ワイヤーカットしたか取得
 protected:
 
 private:
 	CModule_No3_LampAndWire::WIRE m_Wire;				//ワイヤー
 	D3DXCOLOR m_WireColor;								//ワイヤーの色
+	bool m_bCut;										//切ったかどうか
 };
 #endif

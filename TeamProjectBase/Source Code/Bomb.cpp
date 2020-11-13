@@ -593,11 +593,6 @@ void CBomb::ModuleSelect()
 				}
 
 			}
-
-
-
-
-
 		}
 	}
 }
@@ -648,15 +643,15 @@ void CBomb::CreateModuleDebug()
 	//7番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//8番目
-	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//9番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//10番目
-	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//11番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//12番目
-	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_None>();
 
 	//モジュール数確認
 	m_nModuleNum = std::count_if(m_pModuleList.begin(), m_pModuleList.end(),

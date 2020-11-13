@@ -27,7 +27,7 @@ public:
 	{
 		EFFECT_DEFAULT = 0,							//デフォルト
 		EFFECT_LED_LIGHT,							//ＬＥＤライト
-
+		EFFECT_MODULE_3_LED,						//モジュール３のライト
 		PARTICLE_MAX,
 	};
 
