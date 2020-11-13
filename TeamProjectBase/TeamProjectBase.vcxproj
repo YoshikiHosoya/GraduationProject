@@ -165,6 +165,8 @@
     <ClCompile Include="Source Code\connectMode.cpp" />
     <ClCompile Include="Source Code\Debug\debugproc.cpp" />
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp" />
+    <ClCompile Include="Source Code\DecodingManager.cpp" />
+    <ClCompile Include="Source Code\DecodingUI.cpp" />
     <ClCompile Include="Source Code\fade.cpp" />
     <ClCompile Include="Source Code\game.cpp" />
     <ClCompile Include="Source Code\hossolibrary.cpp" />
@@ -235,6 +237,8 @@
     <ClInclude Include="Source Code\connectMode.h" />
     <ClInclude Include="Source Code\Debug\debugproc.h" />
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h" />
+    <ClInclude Include="Source Code\DecodingManager.h" />
+    <ClInclude Include="Source Code\DecodingUI.h" />
     <ClInclude Include="Source Code\fade.h" />
     <ClInclude Include="Source Code\game.h" />
     <ClInclude Include="Source Code\GameObject.h" />
