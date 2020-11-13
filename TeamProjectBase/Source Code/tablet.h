@@ -28,10 +28,22 @@ public:
 		MODE_MOVEING,
 		MODE_MAX
 	} MODE;
+	enum
+	{
+		POS_NONE = -1,	
+		POS_TABLET,
+		POS_PEN,
+		POS_ERASER,
+		POS_SEND,
+		POS_MAX,
+	};
 
 	/* メンバ関数 */
 	CTablet();																								// コンストラクタ
 	~CTablet();																								// デストラクタ
+
+	static HRESULT       Load(void);																		// 読み込み
+	static HRESULT          LoadError(void);																				// エラーの検出
 
 	HRESULT              Init();																			// 初期化
 	void                 Update();																			// 更新
@@ -47,7 +59,7 @@ public:
 	void                 NonConstantVelocityProc(void);														// 不等速処理
 
 	// 生成
-	static std::shared_ptr<CTablet> Create(CONST D3DXVECTOR3 &pos);											// 生成
+	static std::shared_ptr<CTablet> Create(void);											// 生成
 
 	// 設定関数
 	inline void          SetMoveCoeff(const float fMoveCoeff) { m_fMoveCoeff = fMoveCoeff; }				// 移動係数の設定
@@ -69,9 +81,15 @@ public:
 	inline int &         GetDestFrame(void) { return m_nDestFrame; }										// 目的地までのフレームの取得
 
 private:
+	/* メンバ関数 */
+	static void          ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);
+	static void          SetFromString(CONST_STRING str);
+
+
 	/* メンバ変数 */
 	MyVector<std::shared_ptr<CTabletButton>> m_Button;														// ボタンのポインタ
-	float                                    m_fMoveCoeff;													// 移動係数
+	static D3DXVECTOR3                       m_aSetingPos[POS_MAX];											// 設定用の位置
+	static float                             m_fMoveCoeff;													// 移動係数
 	D3DXVECTOR3                              m_posDest;														// 目的地
 	MODE                                     m_mode;														// モード
 	bool                                     m_bConstVelocity;												// 等速フラグ

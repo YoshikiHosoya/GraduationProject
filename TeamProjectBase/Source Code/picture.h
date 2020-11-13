@@ -45,9 +45,9 @@ public:
 	void                    Draw();																							// 描画
 	inline void             ShowDebugInfo() {};																				// デバッグ情報表記
 
-	static HRESULT          Load(void);																						// 読み込み
 	static void             InitStaticMember(void);																			// 静的メンバの初期化
 	static void             UninitStaticMember(void);																		// 静的メンバの終了
+	static HRESULT          LoadError(void);																				// エラーの検出
 
 	void                    MatrixCal(void);																				// マトリックスの計算
 	void                    Writing(void);																					// 書き込み処理
@@ -55,6 +55,7 @@ public:
 	static void             TexterReadFromLine(CONST_STRING cnpLine, void*pOut);											// テクスチャ情報の1行から情報を読み取る
 
 	// 設定関数
+	static void             SetFromString(CONST_STRING str);																// 文字列から設定する
 	inline void             SetPos(CONST D3DXVECTOR3 &pos) { m_trans.pos = pos; }											// 位置の設定
 	inline void             SetRot(CONST D3DXVECTOR3 &rot) { m_trans.rot = rot; }											// 向きの設定
 	inline void             SetScal(CONST D3DXVECTOR3 &scal) { m_trans.scal = scal; }										// スケールの設定
@@ -67,8 +68,9 @@ public:
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.data; }															// フラグの取得
 	inline static CPaintingPen* GetPaintPen(void) { return m_pPen; }														// ペンの取得
 	// クリエイト関数
-	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos);		// 生成
+	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent);															// 生成
 	static HRESULT          MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile , LPDIRECT3DTEXTURE9 *ppTexture);// テクスチャの作成
+
 private:
 	/* 内部で使う関数 */
 	void                    MakeTexture(LPDIRECT3DDEVICE9 pDevice);															// テクスチャの作成
@@ -92,6 +94,7 @@ private:
 	static D3DXVECTOR2*     m_pPixelPos;																					// ピクセル位置のポインタ
 	static UINT             m_nNumMakeFile;																					// ファイルを作った回数
 	static CString          m_WriteToFile;																					// 書き込み先のァイル名
+	static D3DXVECTOR3      m_SetingPos;																					// 設定用の位置
 	LPDIRECT3DVERTEXBUFFER9 m_pVtexBuff;																					// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9      m_pTexture;																						// テクスチャポインタ
 	BITS4                   m_Flags;																						// フラグ

@@ -26,8 +26,8 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX] = {};	// テクスチャ情報
-
+LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX]   = Mybfunc_array(NULL);	// テクスチャ情報
+float              CTabletButton::m_aPressPos[CTabletButton::PRESS_MAX] = Mybfunc_array(0.0f);
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
 //-------------------------------------------------------------------------------------------------------------
@@ -61,6 +61,14 @@ void CTabletButton::Unload(void)
 	{
 		m_aTexture[nCntTex] = nullptr;
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// エラーの検出
+//-------------------------------------------------------------------------------------------------------------
+HRESULT CTabletButton::LoadError(void)
+{
+	return S_OK;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -120,7 +128,7 @@ void CTabletButton::Update()
 		// 位置の取得
 		D3DXVECTOR3 *pos = GetPosPtr();
 		// Z値を変更
-		pos->z = (m_bPress == true) ? TABLETBUTTON_PRESS_POS_Z : TABLETBUTTON_NOTPRESS_POS_Z;
+		pos->z = (m_bPress == true) ? m_aPressPos[CTabletButton::PRESSED] : m_aPressPos[CTabletButton::UNPRESSED];
 	}
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "\n押されたフラグ       == [%d]\n", (m_bPress) ? TRUE : FALSE);
@@ -134,6 +142,27 @@ void CTabletButton::Update()
 void CTabletButton::Draw()
 {
 	CSceneX::Draw();
+}
+
+
+//-------------------------------------------------------------------------------------------------------------
+// 文字列から設定する
+//-------------------------------------------------------------------------------------------------------------
+void CTabletButton::SetFromString(CONST_STRING str)
+{
+	// 変数宣言
+	float fData = MYLIB_FLOAT_UNSET;
+	// 押した時の位置
+	if (sscanf(str, "PressedPos = %f", &fData) == 1)
+	{
+		m_aPressPos[CTabletButton::PRESSED] = fData;
+	}
+	//押していない時の位置
+	else if (sscanf(str, "UnPressedPos = %f", &fData) == 1)
+	{
+		m_aPressPos[CTabletButton::UNPRESSED] = fData;
+	}
+
 }
 
 //-------------------------------------------------------------------------------------------------------------

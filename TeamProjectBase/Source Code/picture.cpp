@@ -36,33 +36,7 @@ D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;						// ピクセルサ
 D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;								// ピクセル位置のポインタ
 UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;						// ファイルを作った回数
 CString       CPicture::m_WriteToFile;												// 書き込み先のァイル名
-
-//-------------------------------------------------------------------------------------------------------------
-// 読み込み
-//-------------------------------------------------------------------------------------------------------------
-HRESULT CPicture::Load(void)
-{
-	// * メモ [Parameter]
-	// ファイル読み込み
-	if (CLoadFile::ReadLineByLineFromFile(PICTURE_FILENAME, ReadFromLine) != CLoadFile::LR_SUCCESS)
-	{
-#ifdef _DEBUG
-		std::cout << "<<<<<<CPictureのファイル読み込みが失敗しました。>>>>>>\n";
-#endif // _DEBUG
-		return E_FAIL;
-	}
-	// どちらもゼロの時
-	if (m_nNumPixelBlock.OneIsZero() == true)
-	{
-#ifdef _DEBUG
-		std::cout << "<<<<<<CPictureのどちらかのポリゴン数が0でした。>>>>>>\n";
-#endif // _DEBUG
-		return E_FAIL;
-	}
-	// 静的メンバの初期化
-	InitStaticMember();
-	return S_OK;
-}
+D3DXVECTOR3   CPicture::m_SetingPos       = MYLIB_VEC3_UNSET;						// 設定用の位置
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバの初期化
@@ -92,6 +66,30 @@ void CPicture::UninitStaticMember(void)
 	ReleasePen();
 	// ピクセル位置の開放
 	ReleasePixelPos();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// エラーの検出
+//-------------------------------------------------------------------------------------------------------------
+HRESULT CPicture::LoadError(void)
+{
+	// どちらもゼロの時
+	if (m_nNumPixelBlock.OneIsZero() == true)
+	{
+#ifdef _DEBUG
+		std::cout << "<<<<<<CPictureのどちらかのポリゴン数が0でした。>>>>>>\n";
+		return E_FAIL;
+#endif // _DEBUG
+	}
+	// ファイルサイズが設定されていない時
+	if (m_WriteToFile.size() == MYLIB_INT_UNSET)
+	{
+#ifdef _DEBUG
+		std::cout << "<<<<<<CPictureの書き込み先ファイルサイズが0でした。>>>>>>\n";
+		return E_FAIL;
+#endif // _DEBUG
+	}
+	return S_OK;
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -206,14 +204,14 @@ void CPicture::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
-std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent, CONST D3DXVECTOR3 &pos)
+std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CPicture> pPicture = std::make_shared<CPicture>();
 	// 親マトリックスの設定
 	pPicture->SetParent(pMtxParent);
 	// 位置の設定
-	pPicture->SetPos(pos);
+	pPicture->SetPos(m_SetingPos);
 	// 初期化
 	pPicture->Init();
 
@@ -639,4 +637,35 @@ void CPicture::TexterReadFromLine(CONST_STRING cnpLine, void*pOut)
 	}
 }
 
+//-------------------------------------------------------------------------------------------------------------
+// 文字列から設定する
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::SetFromString(CONST_STRING str)
+{
+	// 変数宣言
+	INTEGER2    NumPoly = MYLIB_INT2_UNSET;
+	D3DXVECTOR2 size = MYLIB_2DVECTOR_ZERO;
+	D3DXVECTOR3 pos = MYLIB_VEC3_UNSET;
+	char aFileName[MYLIB_STRINGSIZE] = { '\0' };
 
+	// 位置
+	if (sscanf(str, "pos = %f %f %f", &pos.x, &pos.y, &pos.z) == 3)
+	{
+		m_SetingPos = pos;
+	}
+	// ポリゴン数
+	else if (sscanf(str, "NumPolygon = %d %d", &NumPoly.nX, &NumPoly.nY) == 2)
+	{
+		m_nNumPixelBlock = NumPoly;
+	}
+	// ポリゴンサイズ
+	else if (sscanf(str, "Size = %f %f", &size.x, &size.y) == 2)
+	{
+		m_size = size;
+	}
+	// 書き込み先のファイル
+	else if (sscanf(str, "WriteToFile = %s", aFileName) == 1)
+	{
+		m_WriteToFile = aFileName;
+	}
+}

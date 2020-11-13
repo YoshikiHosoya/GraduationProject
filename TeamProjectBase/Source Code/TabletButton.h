@@ -29,19 +29,29 @@ public:
 		TYPE_SEND,		// 送信
 		TYPE_MAX,		// 最大
 	} TYPE;
+	enum PRESS
+	{
+		PRESSED = 0,	// 押された
+		UNPRESSED,		// 押されていない
+		PRESS_MAX,		// 最大
+	};
+
 
 	/* メンバ関数 */
 	CTabletButton();																// コンストラクタ
 	~CTabletButton();																// デストラクタ
 
-	static void Load(void);															// 読み込み
-	static void Unload(void);														// 開放
+	static void    Load(void);														// 読み込み
+	static void    Unload(void);													// 開放
+	static HRESULT LoadError(void);													// エラーの検出
+
 	HRESULT     Init();																// 初期化
 	void        Update();															// 更新
 	void        Draw();																// 描画
 	inline void ShowDebugInfo() {};													// デバッグ情報表記
 
 	// 設定関数
+	static void SetFromString(CONST_STRING str);									// 文字列から設定する
 	void        FlagProcToChangeMode(void);											// モードを変更するためのフラグ処理
 	void        SetChangeFlagProc(void);											// 変更フラグの設定処理
 	inline void SetType(TYPE type) { m_Type = type; }								// タイプの設定
@@ -64,6 +74,7 @@ public:
 private:
 	/* メンバ変数 */
 	static LPDIRECT3DTEXTURE9 m_aTexture[TYPE_MAX];		// テクスチャ情報
+	static float              m_aPressPos[PRESS_MAX];	// 押された位置
 	std::shared_ptr<CScene3D> m_pImage;					// 画像
 	TYPE                      m_Type;					// タイプ
 	bool                      m_bPress;					// 押されたフラグ
