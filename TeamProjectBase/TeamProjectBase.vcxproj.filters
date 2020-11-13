@@ -219,18 +219,6 @@
     <ClCompile Include="Source Code\polygon2D.cpp">
       <Filter>Chat</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module_No1_SymbolKeyPad.cpp">
-      <Filter>Bomb\module</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\module_parts_No1_SymbolKey.cpp">
-      <Filter>Bomb\module_parts</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\module_No2_ShapeKEypad.cpp">
-      <Filter>Bomb\module</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\module_parts_No2_ShapeKey.cpp">
-      <Filter>Bomb\module_parts</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\tablet.cpp">
       <Filter>Picture</Filter>
     </ClCompile>
@@ -255,9 +243,6 @@
     <ClCompile Include="Source Code\module_No4_4ColButton.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module_No3_LampAndWire.cpp">
-      <Filter>Bomb\module</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\module_parts_No4_ColButton.cpp">
       <Filter>Bomb\module_parts</Filter>
     </ClCompile>
@@ -270,14 +255,29 @@
     <ClCompile Include="Source Code\Bomb_Exterior.cpp">
       <Filter>Bomb</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module_parts_No3_Wire.cpp">
-      <Filter>Bomb\module_parts</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\DecodingUI.cpp">
       <Filter>DecodingBook</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\DecodingManager.cpp">
       <Filter>DecodingBook</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No0_SymbolKeyPad.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No1_ShapeKeypad.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_No2_LampAndWire.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No0_SymbolKey.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No1_ShapeKey.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No2_Wire.cpp">
+      <Filter>Bomb\module_parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,18 +458,6 @@
     <ClInclude Include="Source Code\polygon2D.h">
       <Filter>Chat</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module_No1_SymbolKeyPad.h">
-      <Filter>Bomb\module</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\module_parts_No1_SymbolKey.h">
-      <Filter>Bomb\module_parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\module_No2_ShapeKEypad.h">
-      <Filter>Bomb\module</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\module_parts_No2_ShapeKey.h">
-      <Filter>Bomb\module_parts</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\tablet.h">
       <Filter>Picture</Filter>
     </ClInclude>
@@ -494,9 +482,6 @@
     <ClInclude Include="Source Code\module_No4_4ColButton.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module_No3_LampAndWire.h">
-      <Filter>Bomb\module</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\module_parts_No4_ColButton.h">
       <Filter>Bomb\module_parts</Filter>
     </ClInclude>
@@ -509,14 +494,29 @@
     <ClInclude Include="Source Code\Bomb_Exterior.h">
       <Filter>Bomb</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module_parts_No3_Wire.h">
-      <Filter>Bomb\module_parts</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\DecodingUI.h">
       <Filter>DecodingBook</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\DecodingManager.h">
       <Filter>DecodingBook</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No0_SymbolKeyPad.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No1_ShapeKeypad.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No2_LampAndWire.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No0_SymbolKey.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No1_ShapeKey.h">
+      <Filter>Bomb\module_parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No2_Wire.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

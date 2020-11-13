@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールの図形のキーパッド処理  [module_No2_ShapeKeypad.cpp]
+//モジュールの図形のキーパッド処理  [module_No1_ShapeKeypad.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,8 +8,8 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_No2_ShapeKeypad.h"
-#include "module_parts_No2_ShapeKey.h"
+#include "module_No1_ShapeKeypad.h"
+#include "module_parts_No1_ShapeKey.h"
 #include "module_parts_ProgressLamp.h"
 #include "renderer.h"
 #include "manager.h"
@@ -38,7 +38,7 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_No2_ShapeKeyPad::CModule_No2_ShapeKeyPad()
+CModule_No1_ShapeKeyPad::CModule_No1_ShapeKeyPad()
 {
 	//初期化
 	m_pKeyPadList = {};
@@ -51,20 +51,20 @@ CModule_No2_ShapeKeyPad::CModule_No2_ShapeKeyPad()
 	m_nQuestionChangeCnt = 0;
 
 	//配列の大きさ設定
-	m_Memories.resize((int)CModule_No2_ShapeKeyPad::QUESTION::MAX);
+	m_Memories.resize((int)CModule_No1_ShapeKeyPad::QUESTION::MAX);
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_No2_ShapeKeyPad::~CModule_No2_ShapeKeyPad()
+CModule_No1_ShapeKeyPad::~CModule_No1_ShapeKeyPad()
 {
 	m_pKeyPadList.clear();
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_No2_ShapeKeyPad::Init()
+HRESULT CModule_No1_ShapeKeyPad::Init()
 {
 	//モデル情報設定
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO2));
@@ -95,7 +95,7 @@ HRESULT CModule_No2_ShapeKeyPad::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::Update()
+void CModule_No1_ShapeKeyPad::Update()
 {
 	CSceneX::Update();
 
@@ -112,7 +112,7 @@ void CModule_No2_ShapeKeyPad::Update()
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::Draw()
+void CModule_No1_ShapeKeyPad::Draw()
 {
 	CSceneX::Draw();
 
@@ -125,7 +125,7 @@ void CModule_No2_ShapeKeyPad::Draw()
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::ShowDebugInfo()
+void CModule_No1_ShapeKeyPad::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -163,7 +163,7 @@ void CModule_No2_ShapeKeyPad::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::Operation()
+void CModule_No1_ShapeKeyPad::Operation()
 {
 	int nSelectNumOld = m_nSelectNum;
 
@@ -221,7 +221,7 @@ void CModule_No2_ShapeKeyPad::Operation()
 	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
 	{
 		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No2_ShapeKey>(m_pKeyPadList);
+		CModule_Base::SelectRelease<CModule_Parts_No1_ShapeKey>(m_pKeyPadList);
 
 		//ゲームの視点変更
 		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
@@ -232,7 +232,7 @@ void CModule_No2_ShapeKeyPad::Operation()
 //------------------------------------------------------------------------------
 //ステート更新
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::UpdateState()
+void CModule_No1_ShapeKeyPad::UpdateState()
 {
 
 	switch (m_state)
@@ -291,7 +291,7 @@ void CModule_No2_ShapeKeyPad::UpdateState()
 //------------------------------------------------------------------------------
 //問題クリア
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::QuestionClear()
+void CModule_No1_ShapeKeyPad::QuestionClear()
 {
 	//押したボタンを保存
 	m_Memories[(int)m_NowQuestion].place = m_nSelectNum;
@@ -325,7 +325,7 @@ void CModule_No2_ShapeKeyPad::QuestionClear()
 //------------------------------------------------------------------------------
 //ディスプレイの図形生成
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::CreateDisplayShape()
+void CModule_No1_ShapeKeyPad::CreateDisplayShape()
 {
 	//ディスプレイの記号生成
 	m_pDisplayShape = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>
@@ -341,13 +341,13 @@ void CModule_No2_ShapeKeyPad::CreateDisplayShape()
 //------------------------------------------------------------------------------
 //キーパッド生成
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::CreateKeyPad()
+void CModule_No1_ShapeKeyPad::CreateKeyPad()
 {
 	//全てのキーに割り当てる
 	for (size_t nCnt = 0; nCnt < KEYPAD_NUM; nCnt++)
 	{
 		//キー生成
-		m_pKeyPadList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No2_ShapeKey>
+		m_pKeyPadList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No1_ShapeKey>
 			(KEYPAD_OFFSET + D3DXVECTOR3(-((KEYPAD_INTERVAL.x) * (KEYPAD_NUM / 2)) + (KEYPAD_INTERVAL.x * 0.5f) + (KEYPAD_INTERVAL.x * nCnt), 0.0f, 0.0f), GetMtxWorldPtr()));
 	}
 }
@@ -355,7 +355,7 @@ void CModule_No2_ShapeKeyPad::CreateKeyPad()
 //------------------------------------------------------------------------------
 //進捗度のランプ生成
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::CreateProgressLamp()
+void CModule_No1_ShapeKeyPad::CreateProgressLamp()
 {
 	m_pProgressLamp = CModule_Parts_Base::Create_ModuleParts<CModule_Parts_ProgressLamp>(PROGRESS_LAMP_OFFSET, GetMtxWorldPtr());
 }
@@ -363,7 +363,7 @@ void CModule_No2_ShapeKeyPad::CreateProgressLamp()
 //------------------------------------------------------------------------------
 //クリアしたかチェック
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::CheckClear()
+void CModule_No1_ShapeKeyPad::CheckClear()
 {
 	//問題を全て終えた時
 	if (m_NowQuestion >= QUESTION::MAX)
@@ -375,7 +375,7 @@ void CModule_No2_ShapeKeyPad::CheckClear()
 //------------------------------------------------------------------------------
 //図形をシャッフル
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::ShapeShuffle()
+void CModule_No1_ShapeKeyPad::ShapeShuffle()
 {
 	//番号が入ってる配列
 	Vec<SHAPE> nShapeList = { SHAPE::CIRCLE,SHAPE::CROSS ,SHAPE::TRIANGLE ,SHAPE::SQUARE };
@@ -396,7 +396,7 @@ void CModule_No2_ShapeKeyPad::ShapeShuffle()
 //------------------------------------------------------------------------------
 //アニメーション設定
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::SetDisplayShape(int nShape)
+void CModule_No1_ShapeKeyPad::SetDisplayShape(int nShape)
 {
 	//図形設定
 	m_DisplayShape = (SHAPE)nShape;
@@ -409,90 +409,90 @@ void CModule_No2_ShapeKeyPad::SetDisplayShape(int nShape)
 //------------------------------------------------------------------------------
 //次の押すキー設定
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::SetNextPushKey()
+void CModule_No1_ShapeKeyPad::SetNextPushKey()
 {
 	//現在が何問目か
 	switch (m_NowQuestion)
 	{
-	case CModule_No2_ShapeKeyPad::QUESTION::Q_1:
+	case CModule_No1_ShapeKeyPad::QUESTION::Q_1:
 		switch (m_DisplayShape)
 		{
-		case CModule_No2_ShapeKeyPad::SHAPE::CIRCLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::CIRCLE:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_2ND);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::CROSS:
+		case CModule_No1_ShapeKeyPad::SHAPE::CROSS:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::TRIANGLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::TRIANGLE:
 			SetNextPushKey_FromShape(SHAPE::TRIANGLE);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::SQUARE:
+		case CModule_No1_ShapeKeyPad::SHAPE::SQUARE:
 			SetNextPushKey_FromShape(SHAPE::CROSS);
 			break;
 		}
 		break;
 
-	case CModule_No2_ShapeKeyPad::QUESTION::Q_2:
+	case CModule_No1_ShapeKeyPad::QUESTION::Q_2:
 		switch (m_DisplayShape)
 		{
-		case CModule_No2_ShapeKeyPad::SHAPE::CIRCLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::CIRCLE:
 			SetNextPushKey_FromPlace(m_Memories[(int)QUESTION::Q_1].place);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::CROSS:
+		case CModule_No1_ShapeKeyPad::SHAPE::CROSS:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::TRIANGLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::TRIANGLE:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_2ND);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::SQUARE:
+		case CModule_No1_ShapeKeyPad::SHAPE::SQUARE:
 			SetNextPushKey_FromShape(SHAPE::CIRCLE);
 			break;
 		}
 		break;
 
-	case CModule_No2_ShapeKeyPad::QUESTION::Q_3:
+	case CModule_No1_ShapeKeyPad::QUESTION::Q_3:
 		switch (m_DisplayShape)
 		{
-		case CModule_No2_ShapeKeyPad::SHAPE::CIRCLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::CIRCLE:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_3RD);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::CROSS:
+		case CModule_No1_ShapeKeyPad::SHAPE::CROSS:
 			SetNextPushKey_FromShape(m_Memories[(int)QUESTION::Q_1].shape);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::TRIANGLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::TRIANGLE:
 			SetNextPushKey_FromShape(SHAPE::SQUARE);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::SQUARE:
+		case CModule_No1_ShapeKeyPad::SHAPE::SQUARE:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_1ST);
 			break;
 		}
 		break;
 
-	case CModule_No2_ShapeKeyPad::QUESTION::Q_4:
+	case CModule_No1_ShapeKeyPad::QUESTION::Q_4:
 		switch (m_DisplayShape)
 		{
-		case CModule_No2_ShapeKeyPad::SHAPE::CIRCLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::CIRCLE:
 			SetNextPushKey_FromPlace(m_Memories[(int)QUESTION::Q_2].place);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::CROSS:
+		case CModule_No1_ShapeKeyPad::SHAPE::CROSS:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_2ND);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::TRIANGLE:
+		case CModule_No1_ShapeKeyPad::SHAPE::TRIANGLE:
 			SetNextPushKey_FromShape(SHAPE::CIRCLE);
 			break;
 
-		case CModule_No2_ShapeKeyPad::SHAPE::SQUARE:
+		case CModule_No1_ShapeKeyPad::SHAPE::SQUARE:
 			SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
 			break;
 		}
@@ -504,11 +504,11 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey()
 //------------------------------------------------------------------------------
 //次の押すキー設定　図形を基に設定
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
+void CModule_No1_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
 {
 	//入力されたshapeと同じキー検索
 	auto itr = std::find_if(m_pKeyPadList.begin(), m_pKeyPadList.end(),
-		[shape](S_ptr<CModule_Parts_No2_ShapeKey> pPtr) {return pPtr->GetShape() == shape; });
+		[shape](S_ptr<CModule_Parts_No1_ShapeKey> pPtr) {return pPtr->GetShape() == shape; });
 
 	//nullcheck
 	if (itr != m_pKeyPadList.end())
@@ -521,7 +521,7 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey_FromShape(SHAPE shape)
 //------------------------------------------------------------------------------
 //次の押すキー設定　場所を基に設定
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::SetNextPushKey_FromPlace(PLACE place)
+void CModule_No1_ShapeKeyPad::SetNextPushKey_FromPlace(PLACE place)
 {
 	//nullcheck
 	if (m_pKeyPadList[place])
@@ -535,7 +535,7 @@ void CModule_No2_ShapeKeyPad::SetNextPushKey_FromPlace(PLACE place)
 //------------------------------------------------------------------------------
 //ステート設定
 //------------------------------------------------------------------------------
-void CModule_No2_ShapeKeyPad::SetState(STATE state)
+void CModule_No1_ShapeKeyPad::SetState(STATE state)
 {
 
 	m_state = state;

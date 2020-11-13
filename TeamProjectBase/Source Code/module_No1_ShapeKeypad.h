@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールの図形のキーパッド処理  [module_No2_ShapeKeypad.h]
+//モジュールの図形のキーパッド処理  [module_No1_ShapeKeypad.h]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -14,11 +14,11 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CModule_Parts_No2_ShapeKey;
+class CModule_Parts_No1_ShapeKey;
 class CModule_Parts_ProgressLamp;
 class CScene3D;
 
-class CModule_No2_ShapeKeyPad : public CModule_Base
+class CModule_No1_ShapeKeyPad : public CModule_Base
 {
 public:
 
@@ -70,8 +70,8 @@ public:
 	}MEMORIES;
 
 
-	CModule_No2_ShapeKeyPad();
-	virtual ~CModule_No2_ShapeKeyPad();
+	CModule_No1_ShapeKeyPad();
+	virtual ~CModule_No1_ShapeKeyPad();
 
 	virtual HRESULT Init()			override;			//初期化
 	virtual void Update()			override;			//更新
@@ -97,7 +97,7 @@ public:
 
 
 private:
-	Vec<S_ptr<CModule_Parts_No2_ShapeKey>> m_pKeyPadList;				//キーパッドのポインタの配列
+	Vec<S_ptr<CModule_Parts_No1_ShapeKey>> m_pKeyPadList;				//キーパッドのポインタの配列
 	Vec<MEMORIES> m_Memories;											//過去にどのボタン押したか記憶する
 	U_ptr<CScene3D> m_pDisplayShape;									//ディスプレイに映る図形のポリゴンのポインタ
 	S_ptr<CModule_Parts_ProgressLamp> m_pProgressLamp;					//進捗度ランプ

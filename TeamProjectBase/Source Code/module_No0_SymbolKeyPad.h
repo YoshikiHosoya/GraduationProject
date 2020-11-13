@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールのボタン処理  [Module_No1_SymbolKeypad.h]
+//モジュールのボタン処理  [Module_No0_SymbolKeypad.h]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -14,9 +14,9 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CModule_Parts_No1_SymbolKey;
+class CModule_Parts_No0_SymbolKey;
 
-class CModule_No1_SymbolKeyPad : public CModule_Base
+class CModule_No0_SymbolKeyPad : public CModule_Base
 {
 public:
 	enum ANSWER_PATTERN
@@ -30,8 +30,8 @@ public:
 		ANSWER_MAX,
 	};
 
-	CModule_No1_SymbolKeyPad();
-	virtual ~CModule_No1_SymbolKeyPad();
+	CModule_No0_SymbolKeyPad();
+	virtual ~CModule_No0_SymbolKeyPad();
 
 	virtual HRESULT Init()			override;			//初期化
 	virtual void Update()			override;			//更新
@@ -41,7 +41,7 @@ public:
 	void CreateKeyPad(ANSWER_PATTERN answer);			//キーパッド生成
 	void CheckClear();									//クリアしたか確認
 private:
-	Vec<S_ptr<CModule_Parts_No1_SymbolKey>> m_pKeyPadList;				//キーパッドのポインタの配列
+	Vec<S_ptr<CModule_Parts_No0_SymbolKey>> m_pKeyPadList;				//キーパッドのポインタの配列
 	ANSWER_PATTERN m_Answer;													//答えのパターン
 	int m_nNextSymbolNum;														//次のシンボル番号
 };

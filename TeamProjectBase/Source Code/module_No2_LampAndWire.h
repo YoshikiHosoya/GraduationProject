@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールのランプとワイヤーのやつの処理  [Module_No3_LampAndWire.h]
+//モジュールのランプとワイヤーのやつの処理  [Module_No2_LampAndWire.h]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -14,10 +14,10 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CModule_Parts_No3_Wire;
+class CModule_Parts_No2_Wire;
 class CScene3D;
 
-class CModule_No3_LampAndWire : public CModule_Base
+class CModule_No2_LampAndWire : public CModule_Base
 {
 public:
 
@@ -33,8 +33,8 @@ public:
 		MAX,
 	};
 
-	CModule_No3_LampAndWire();
-	virtual ~CModule_No3_LampAndWire();
+	CModule_No2_LampAndWire();
+	virtual ~CModule_No2_LampAndWire();
 
 	virtual HRESULT Init()				override;			//初期化
 	virtual void Update()				override;			//更新
@@ -43,7 +43,7 @@ public:
 	void Operation()					override;			//モジュール操作
 
 private:
-	Vec<S_ptr<CModule_Parts_No3_Wire>> m_pWireList;		//ワイヤーのリスト
+	Vec<S_ptr<CModule_Parts_No2_Wire>> m_pWireList;		//ワイヤーのリスト
 	WIRE m_NowSelectWire;								//現在選択しているワイヤー
 	int m_nSelectPlace;									//現在選択している場所
 
@@ -70,7 +70,7 @@ private:
 	{
 		//指定した色のイテレータ取得
 		auto itr = std::find_if(begin, end,
-			[wire](S_ptr<CModule_Parts_No3_Wire> &ptr) {return ptr->GetWire() == wire; });
+			[wire](S_ptr<CModule_Parts_No2_Wire> &ptr) {return ptr->GetWire() == wire; });
 
 		//イテレータできた時
 		if (itr != end)

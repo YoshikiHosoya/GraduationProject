@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No1_SymbolKey.h]
+//モジュールパーツのキーパッド  [module_parts_No0_SymbolKey.h]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 class CTimer;
 class CScene3D;
 
-class CModule_Parts_No1_SymbolKey : public CModule_Parts_Base
+class CModule_Parts_No0_SymbolKey : public CModule_Parts_Base
 {
 public:
 
@@ -28,8 +28,8 @@ public:
 		CLEAR,
 	};
 
-	CModule_Parts_No1_SymbolKey();
-	virtual ~CModule_Parts_No1_SymbolKey();
+	CModule_Parts_No0_SymbolKey();
+	virtual ~CModule_Parts_No0_SymbolKey();
 
 	virtual HRESULT Init()			override;			//初期化
 	virtual void Update()			override;			//更新

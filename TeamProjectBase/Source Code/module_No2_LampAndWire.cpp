@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールのランプとワイヤーのやつの処理  [Module_No3_LampAndWire.cpp]
+//モジュールのランプとワイヤーのやつの処理  [Module_No2_LampAndWire.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,8 +8,8 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_No3_LampAndWire.h"
-#include "module_parts_No3_Wire.h"
+#include "module_No2_LampAndWire.h"
+#include "module_parts_No2_Wire.h"
 #include "modelinfo.h"
 #include "manager.h"
 #include "keyboard.h"
@@ -32,7 +32,7 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_No3_LampAndWire::CModule_No3_LampAndWire()
+CModule_No2_LampAndWire::CModule_No2_LampAndWire()
 {
 	m_NowSelectWire = WIRE::RED;
 	m_nSelectPlace = 0;
@@ -44,14 +44,14 @@ CModule_No3_LampAndWire::CModule_No3_LampAndWire()
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_No3_LampAndWire::~CModule_No3_LampAndWire()
+CModule_No2_LampAndWire::~CModule_No2_LampAndWire()
 {
 
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_No3_LampAndWire::Init()
+HRESULT CModule_No2_LampAndWire::Init()
 {
 	//モデル情報設定
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO3));
@@ -77,7 +77,7 @@ HRESULT CModule_No3_LampAndWire::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::Update()
+void CModule_No2_LampAndWire::Update()
 {
 	D3DXVECTOR3 posorigin = CHossoLibrary::CalcMtxToVector3(*GetMtxWorldPtr());
 
@@ -98,14 +98,14 @@ void CModule_No3_LampAndWire::Update()
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::Draw()
+void CModule_No2_LampAndWire::Draw()
 {
 	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::ShowDebugInfo()
+void CModule_No2_LampAndWire::ShowDebugInfo()
 {
 #ifdef _DEBUG
 #endif //DEBUG
@@ -114,7 +114,7 @@ void CModule_No3_LampAndWire::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //モジュール操作
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::Operation()
+void CModule_No2_LampAndWire::Operation()
 {
 	int nSelectNumOld = m_nSelectPlace;
 
@@ -162,7 +162,7 @@ void CModule_No3_LampAndWire::Operation()
 	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
 	{
 		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No3_Wire>(m_pWireList);
+		CModule_Base::SelectRelease<CModule_Parts_No2_Wire>(m_pWireList);
 
 		//ゲームの視点変更
 		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
@@ -181,7 +181,7 @@ void CModule_No3_LampAndWire::Operation()
 //------------------------------------------------------------------------------
 //ワイヤー生成
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::CreateWire()
+void CModule_No2_LampAndWire::CreateWire()
 {
 	//ローカル変数　ワイヤーは6本で6色バラバラ
 	Vec<WIRE> wirecol = { WIRE::RED,WIRE::BLUE,WIRE::GREEN ,WIRE::YELLOW,WIRE::WHITE, WIRE::BLACK };
@@ -191,7 +191,7 @@ void CModule_No3_LampAndWire::CreateWire()
 
 	for(int nCnt = 0;  nCnt < WIRE_NUM; nCnt++)
 	{
-		m_pWireList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No3_Wire>
+		m_pWireList.emplace_back(CModule_Parts_Base::Create_ModuleParts<CModule_Parts_No2_Wire>
 			(WURE_OFFSET + D3DXVECTOR3(nCnt * WURE_ITNERVAL.x, 0.0f, 0.0f), GetMtxWorldPtr()));
 
 		m_pWireList[m_pWireList.size() - 1]->SetWire(wirecol[nCnt]);
@@ -201,7 +201,7 @@ void CModule_No3_LampAndWire::CreateWire()
 //------------------------------------------------------------------------------
 //ランプ生成
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::CreateModuleLamp()
+void CModule_No2_LampAndWire::CreateModuleLamp()
 {
 	//赤いランプをランダム設定
 	m_nRedLampNum = CHossoLibrary::RandomRangeUnsigned(0, LAMP_NUM);
@@ -217,7 +217,7 @@ void CModule_No3_LampAndWire::CreateModuleLamp()
 //------------------------------------------------------------------------------
 //切るべきワイヤー設定
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::SetToCutWire()
+void CModule_No2_LampAndWire::SetToCutWire()
 {
 	auto Itr_Begin = m_pWireList.begin();
 	auto Itr_End = m_pWireList.end();
@@ -281,7 +281,7 @@ void CModule_No3_LampAndWire::SetToCutWire()
 //------------------------------------------------------------------------------
 //切るべきワイヤー設定
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::WireCut()
+void CModule_No2_LampAndWire::WireCut()
 {
 	m_pWireList[m_nSelectPlace]->SetWireCut(true);
 	m_pWireList[m_nSelectPlace]->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO1_KEYPAD));
@@ -292,10 +292,10 @@ void CModule_No3_LampAndWire::WireCut()
 //------------------------------------------------------------------------------
 //切るべきワイヤー設定
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::CheckClear()
+void CModule_No2_LampAndWire::CheckClear()
 {
 	int nCount = std::count_if(m_pWireList.begin(), m_pWireList.end(),
-		[](S_ptr<CModule_Parts_No3_Wire> ptr) {return ptr->GetClearFlag(); });
+		[](S_ptr<CModule_Parts_No2_Wire> ptr) {return ptr->GetClearFlag(); });
 
 	if (nCount <= 0)
 	{
@@ -306,7 +306,7 @@ void CModule_No3_LampAndWire::CheckClear()
 //------------------------------------------------------------------------------
 //切るべきワイヤー設定 場所を基に設定
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::SetCutWire_FromPlace(int nPlace)
+void CModule_No2_LampAndWire::SetCutWire_FromPlace(int nPlace)
 {
 	if (nPlace < WIRE_NUM)
 	{
@@ -317,7 +317,7 @@ void CModule_No3_LampAndWire::SetCutWire_FromPlace(int nPlace)
 //------------------------------------------------------------------------------
 //切るべきワイヤー設定 ランプルールを基に設定
 //------------------------------------------------------------------------------
-void CModule_No3_LampAndWire::SetCutWire_FromLampRule()
+void CModule_No2_LampAndWire::SetCutWire_FromLampRule()
 {
 	auto Itr_Begin = m_pWireList.begin();
 	auto Itr_End = m_pWireList.end();

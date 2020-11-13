@@ -19,9 +19,9 @@
 #include "module_none.h"
 #include "module_timer.h"
 #include "module_Button.h"
-#include "module_No1_SymbolKeyPad.h"
-#include "module_No2_ShapeKeypad.h"
-#include "module_No3_LampAndWire.h"
+#include "module_No0_SymbolKeyPad.h"
+#include "module_No1_ShapeKeypad.h"
+#include "module_No2_LampAndWire.h"
 #include "module_No4_4ColButton.h"
 
 //------------------------------------------------------------------------------
@@ -300,9 +300,9 @@ void CBomb::CreateModule(int const nModuleNum)
 	////1”Ô–Ú
 	//CBomb::CreateModuleOne<CModule_Timer>();
 	////2”Ô–Ú
-	//CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	//CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
 	////3”Ô–Ú
-	//CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
+	//CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
 	////4”Ô–Ú
 	//CBomb::CreateModuleOne<CModule_None>();
 	////5”Ô–Ú
@@ -384,14 +384,14 @@ void CBomb::CreateModule_Random()
 		case CModule_Base::MODULE_TYPE::NO1_SYMBOL:
 			//if (nCntModule < nCntModule)
 			{
-				CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+				CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
 				nCntModule++;
 			}
 			break;
 		case CModule_Base::MODULE_TYPE::NO2_SHAPE:
 			//if (nCntModule < nCntModule)
 			{
-				CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
+				CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
 				nCntModule++;
 			}
 			break;
@@ -630,11 +630,11 @@ void CBomb::CreateModuleDebug()
 	//1”Ô–Ú
 	CBomb::CreateModuleOne<CModule_Timer>();
 	//2”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No1_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
 	//3”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No2_ShapeKeyPad>();
+	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
 	//4”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No3_LampAndWire>();
+	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
 	//5”Ô–Ú
 	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//6”Ô–Ú

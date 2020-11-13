@@ -20,7 +20,7 @@ FILENAME_LIST CParticleParam::m_aFileNameList =
 {
 	{ "data/Load/EffectParam/Default.txt" },
 	{ "data/Load/EffectParam/LEDLight.txt" },
-	{ "data/Load/EffectParam/ModulePartsNo3_Lamp.txt" },
+	{ "data/Load/EffectParam/ModulePartsNo2_Lamp.txt" },
 };
 //
 //FILENAME_LIST CParticleCreators::m_aFileNameList =
