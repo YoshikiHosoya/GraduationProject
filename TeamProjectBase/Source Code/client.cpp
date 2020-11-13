@@ -110,7 +110,7 @@ void CClient::WaitRecieve(void)
 		if (strlen(buf) > 0)
 			RecvText(buf);
 
-		RecvPicture();
+		//RecvPicture();
 	}
 }
 
@@ -276,7 +276,7 @@ void CClient::RecvPicture(void)
 	//link = LINK_SENDPICTURE;
 	//CPicture::Reading(pTexture, link);
 
-	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
+	//CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
 }
 
 #ifdef _DEBUG
