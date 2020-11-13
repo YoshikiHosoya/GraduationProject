@@ -146,6 +146,8 @@
 #define Mybfunc_Debug_open(str)			std::cout << str << " == open!!\n"					// 開いた(open!!)の出力
 #define Mybfunc_Debug_openfailed(str)	std::cout << str << " == open failed!!\n"			// 開くの失敗(open failed!!)の出力
 #define Mybfunc_Debug_close(str)		std::cout << str << " == close!!\n"					// 閉じる(close!!)の出力
+#define Mybfunc_Debug_error(str)		std::cout << "<<<<<"<< str << ">>>>>\n"				// エラーの出力
+#define Mybfunc_ErrorMessa(title,str)	MessageBox(NULL,title,str "\nどのボタン押しても無視されます",MB_ABORTRETRYIGNORE|MB_ICONERROR)
 #endif
 #define Mybfunc_gate(b)					if(b)												// 扉:真の時 ※使わない
 #define Mybfunc_iif(b)					(b == true) ? true: false							// 条件文から真偽を返す
@@ -157,6 +159,7 @@
 #define Mybfunc_bit_set(lhs,rhs)		(lhs |= (1 << rhs))									// ビットを立てる
 #define Mybfunc_bit_comp(lhs,rhs)		(lhs & (1 << rhs))									// ビットを比較
 #define Mybfunc_array(data)				{ data }											// 配列の初期化
+
 /* マクロキーワード */
 #define MLB_CASE(t)						break;case (t):										// ケース 条件
 #define MLB_DEFAULT						break;default:										// Switch文 それ以外
