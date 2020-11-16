@@ -32,9 +32,17 @@
 #define SIZE_TABBUTTON			(D3DXVECTOR3(40.0f, 100.0f, 0.0f))	// タブ開閉ボタンのサイズ
 #define SIZE_X_TEXTBOX			(280.0f)	// テキストボックスのサイズ
 #define SIZE_Y_TEXTBOX			(100.0f)	// テキストボックスのサイズ
+#define SIZE_X_TEXTBOX_PIC		(280.0f)	// テキストボックスのサイズ
+#define SIZE_Y_TEXTBOX_PIC		(240.0f)	// テキストボックスのサイズ
+#define SIZE_X_PICTURE			(260.0f)	// ピクチャのサイズ
+#define SIZE_Y_PICTURE			(190.0f)	// ピクチャのサイズ
 
 #define DIFPOS_X_TEXTBOX		(10.0f)		// テキストボックスの座標の差分
 #define DIFPOS_Y_TEXTBOX		(100.0f)	// テキストボックスの座標の差分
+#define DIFPOS_X_PICBOX			(10.0f)		// ピクチャボックスの座標の差分
+#define DIFPOS_Y_PICBOX			(250.0f)	// ピクチャボックスの座標の差分
+#define DIFPOS_X_PICTURE		(140.0f)	// ピクチャの座標の差分
+#define DIFPOS_Y_PICTURE		(138.0f)	// ピクチャの座標の差分
 #define DIFPOS_Y_TEXTBOX_UNDER	(85.0f)		// テキストボックスの座標の差分
 #define DIFPOS_X_KEEPTEXT		(5.0f)		// 保持するテキストの座標の差分
 #define DIFPOS_Y_KEEPTEXT		(40.0f)		// 保持するテキストの座標の差分
@@ -49,6 +57,8 @@
 #define COLOR_TABCLICK			(D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f))	// タブクリック時のカラー
 
 #define MOVE_SCROLL_TAB			(30.0f)	// マウススクロールによる座標移動
+
+#define LINK_SENDPICTURE		("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
 
 //=============================================================================
 // 静的メンバ変数の初期化
@@ -104,6 +114,11 @@ CChatTab::~CChatTab()
 		{
 			delete m_chatKeep[nCnt].pPolyBack;
 			m_chatKeep[nCnt].pPolyBack = nullptr;
+		}
+		if (m_chatKeep[nCnt].pPolyPic)
+		{
+			delete m_chatKeep[nCnt].pPolyPic;
+			m_chatKeep[nCnt].pPolyPic = nullptr;
 		}
 		if (m_chatKeep[nCnt].pKeepText)
 		{
@@ -297,19 +312,46 @@ void CChatTab::Update(void)
 			m_pChatPoly[nCnt]->Update();
 	}
 	
+	float fAllChatSize = DIFPOS_Y_TEXTBOX;
+
 	// チャット履歴の更新
-	for (int nCnt = 0; nCnt < (int)m_chatKeep.size(); nCnt++)
+	for (int nCnt = (int)m_chatKeep.size() - 1; nCnt > -1; nCnt--)
 	{
-		D3DXVECTOR3 pos = D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX,
-										DIFPOS_Y_TEXTBOX * ((int)m_chatKeep.size() - nCnt) + m_fScrollPosY,
-										0.0f);
+		if (!m_chatKeep[nCnt].pPolyBack)
+			continue;
 
-		m_chatKeep[nCnt].pPolyBack->SetPos(pos);
-		pos = m_chatKeep[nCnt].pPolyBack->GetPos();
-		m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+		D3DXVECTOR3 pos;
 
-		if (m_chatKeep[nCnt].pPolyBack)
+		if (m_chatKeep[nCnt].pKeepText)
+		{
+			// 座標設定
+			pos = D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX,
+				fAllChatSize + m_fScrollPosY,
+				0.0f);
+			// 背景ポリゴンの座標を決定
+			m_chatKeep[nCnt].pPolyBack->SetPos(pos);
 			m_chatKeep[nCnt].pPolyBack->Update();
+			// 背景座標をもとに、テキスト座標を決定
+			m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+
+			fAllChatSize += DIFPOS_Y_TEXTBOX;
+		}
+		else if (m_chatKeep[nCnt].pPolyPic)
+		{
+			// 座標設定
+			pos = D3DXVECTOR3(m_TabPos.x + DIFPOS_X_PICBOX,
+				fAllChatSize + m_fScrollPosY,
+				0.0f);
+
+			// 背景ポリゴンの座標を決定
+			m_chatKeep[nCnt].pPolyBack->SetPos(pos);
+			m_chatKeep[nCnt].pPolyBack->Update();
+			// 背景座標をもとに、テキスト座標を決定
+			m_chatKeep[nCnt].pPolyPic->SetPos(D3DXVECTOR3(pos.x + DIFPOS_X_PICTURE, pos.y + DIFPOS_Y_PICTURE, 0.0f));
+			m_chatKeep[nCnt].pPolyPic->Update();
+
+			fAllChatSize += DIFPOS_Y_PICBOX;
+		}
 	}
 
 	// タブが開いているときのみ、文字を入力できる
@@ -339,6 +381,8 @@ void CChatTab::Draw(void)
 			m_chatKeep[nCnt].pPolyBack->Draw();
 		if (m_chatKeep[nCnt].pKeepText)
 			m_chatKeep[nCnt].pKeepText->Draw();
+		if (m_chatKeep[nCnt].pPolyPic)
+			m_chatKeep[nCnt].pPolyPic->Draw();
 	}
 
 	if (m_pChatPoly[POLY_TITLE])
@@ -461,13 +505,38 @@ void CChatTab::SendChatText(void)
 }
 
 //==========================================================================================================================================================
-// ピクチャの送信
+// ピクチャの追加
 //==========================================================================================================================================================
-void CChatTab::SendPicture(void)
+void CChatTab::AddPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture)
 {
-	// 情報を送信
-	std::thread thread(CClient::SendPicture);
-	thread.detach();
+	// テキストを末尾に追加
+	CHATKEEP keep;
+	m_chatKeep.push_back(keep);
+	// 末尾の番号を取得
+	int nNumber = (int)m_chatKeep.size() - 1;
+
+	// 背景ポリゴンの生成
+	m_chatKeep[nNumber].pPolyBack = CPolygon2D::Create();
+	m_chatKeep[nNumber].pPolyBack->SetPos(D3DXVECTOR3(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX, 0.0f));
+	m_chatKeep[nNumber].pPolyBack->SetSize(D3DXVECTOR3(SIZE_X_TEXTBOX_PIC, SIZE_Y_TEXTBOX_PIC, 0.0f));
+	m_chatKeep[nNumber].pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+	owner == CChatBase::OWNER_OWN ?
+		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_02)) :
+		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_03));
+
+	// 文字列の生成
+	D3DXVECTOR3 BackPos = m_chatKeep[nNumber].pPolyBack->GetPos();
+	m_chatKeep[nNumber].pPolyPic = CPolygon2D::Create();
+	m_chatKeep[nNumber].pPolyPic->SetPos(BackPos);
+	m_chatKeep[nNumber].pPolyPic->SetSize(D3DXVECTOR3(SIZE_X_PICTURE, SIZE_Y_PICTURE, 0.0f));
+	m_chatKeep[nNumber].pPolyPic->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
+	m_chatKeep[nNumber].pPolyPic->BindTexture(pTexture);
+
+	m_chatKeep[nNumber].pKeepText = nullptr;
+
+	// 古いほうから削除
+	if (nNumber >= MAX_KEEPTEXT)
+		m_chatKeep.erase(m_chatKeep.begin());
 }
 
 //==========================================================================================================================================================
@@ -537,6 +606,9 @@ void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 
 	for (int nCnt = nNumber - 1; nCnt > -1; nCnt--)
 	{
+		if (!m_chatKeep[nCnt].pKeepText)
+			continue;
+
 		D3DXVECTOR3 pos = m_chatKeep[nCnt + 1].pPolyBack->GetPos();
 		m_chatKeep[nCnt].pPolyBack->SetPos(D3DXVECTOR3(pos.x, pos.y + SIZE_Y_TEXTBOX, 0.0f));
 		pos = m_chatKeep[nCnt].pPolyBack->GetPos();
@@ -545,6 +617,8 @@ void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 
 	// チャットに保存
 	m_chatKeep[nNumber].pKeepText->SetChatText(cText);
+
+	m_chatKeep[nNumber].pPolyPic = nullptr;
 
 	// 古いほうから削除
 	if (nNumber >= MAX_KEEPTEXT)

@@ -15,7 +15,7 @@
 #include "PaintingPen.h"
 #include "game.h"
 #include "tablet.h"
-#include "chatTab.h"
+#include "client.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -574,7 +574,8 @@ void CPicture::Writing(void)
 	fclose(pFile);
 
 	// ピクチャの送信
-	CChatTab::SendPicture();
+	std::thread thread(CClient::SendPicture);
+	thread.detach();
 }
 
 //-------------------------------------------------------------------------------------------------------------

@@ -13,6 +13,7 @@
 // インクルードファイル
 // ===================================================================
 #include "main.h"
+#include "Mylibrary.h"
 
 // ===================================================================
 // マクロ定義
@@ -48,7 +49,8 @@ public:
 	static void SetClientState(CLIENTSTATE state)	{ m_state = state; }			// 状態の設定
 	static void SendText(char* cSendText);											// 文章の送信
 	static void RecvText(char* cRecvText);											// 文章の受信
-	static void SendPicture(void);								// ピクチャの送信
+	static void SendPicture(void);													// ピクチャの送信
+	static void RecvPicture(void);													// ピクチャの受信
 
 private:
 	static CLIENTSTATE m_state;			// クライアントの状態
