@@ -41,7 +41,11 @@ public:
 	virtual void Update() = 0;															//更新
 	virtual void Draw() = 0;															//描画
 	virtual void ShowDebugInfo() = 0;													//デバッグ情報表記
-	virtual void Operation();															//モジュールの操作
+	virtual void Operation_Keyboard();												//モジュール操作　キーボード
+	virtual void Operation_Mouse();													//モジュール操作　マウス
+	virtual void ModuleAction(){};														//モジュールに対して何かアクションをする
+	virtual void ModuleCancel(){};														//モジュールの選択を解除
+
 	void CreateLamp();																	//ランプ生成
 	void CameraApproach();																//カメラを近づける
 
@@ -84,9 +88,9 @@ public:
 
 
 	//テンプレート関数
-	//モジュールの選択状態を解除する関数
-	//例) CModule_Base::Create<CModule_Timer>(...)
-	template <class ModuleParts> static void SelectRelease(Vec<S_ptr<ModuleParts>> &rList)
+	//モジュールの選択状態を設定する関数
+	//全部解除する場合はnSelectNumに-1を入れて使う
+	template <class ModuleParts> static void ModuleParts_Select(Vec<S_ptr<ModuleParts>> &rList,int nSelectNum)
 	{
 		//配列が空かどうかチェック
 		if (rList.empty())
@@ -94,10 +98,31 @@ public:
 			return;
 		}
 
-		for (auto &rPtr : rList)
+		for (int nCnt = 0; nCnt < (int)rList.size(); nCnt++)
+		{
+			//現在の選択番号と同じモノだけtrueにしておく
+			nCnt == nSelectNum ?
+				rList[nCnt]->SetSelect(true) :
+				rList[nCnt]->SetSelect(false);
+
+		}
+	}
+
+	//テンプレート関数
+	//モジュールの選択状態を解除する関数
+	//例) CModule_Base::Create<CModule_Timer>(...)
+	template <class ModuleParts> static void SetSelect_Vec(Vec<S_ptr<ModuleParts>> &rList, int nSelectNum)
+	{
+		//配列が空かどうかチェック
+		if (rList.empty())
+		{
+			return;
+		}
+
+
+		for (int nCnt = 0; auto &rPtr : rList; nCnt++)
 		{
 			rPtr->SetSelect(false);
-
 		}
 	}
 

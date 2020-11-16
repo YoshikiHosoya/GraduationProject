@@ -19,6 +19,8 @@
 #include "game.h"
 #include "Mylibrary.h"
 #include "scene3D.h"
+#include "mouse.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -163,69 +165,77 @@ void CModule_No1_ShapeKeyPad::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_No1_ShapeKeyPad::Operation()
+void CModule_No1_ShapeKeyPad::Operation_Keyboard()
 {
 	int nSelectNumOld = m_nSelectNum;
-
-	if (m_state != STATE::NORMAL)
-	{
-		for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
-		{
-			//nullcheck
-			if (m_pKeyPadList[nCnt].get())
-			{
-				m_pKeyPadList[nCnt]->SetSelect(false);
-			}
-		}
-		//return
-		return;
-	}
 
 	//入力が無かった時はbreak
 	CHossoLibrary::Selecting((int&)m_nSelectNum, nSelectNumOld, 4, 1);
 
-	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
-	{
-		//nullcheck
-		if (m_pKeyPadList[nCnt].get())
-		{
-			//現在の選択番号と同じモノだけtrueにしておく
-			nCnt == m_nSelectNum ?
-				m_pKeyPadList[nCnt]->SetSelect(true) :
-				m_pKeyPadList[nCnt]->SetSelect(false);
-		}
-	}
+	//選択している状態のモノを設定
+	CModule_Base::ModuleParts_Select<CModule_Parts_No1_ShapeKey>(m_pKeyPadList, m_nSelectNum);
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
-	{
-		if (m_pKeyPadList[m_nSelectNum].get())
-		{
-			//押したボタンがクリアボタンだった場合
-			if (m_pKeyPadList[m_nSelectNum]->GetClearFlag())
-			{
-				//クリア
-				QuestionClear();
+	//モジュール操作
+	CModule_Base::Operation_Keyboard();
 
-				//クリアしたかチェック
-				CheckClear();
-			}
-			else
-			{
-				//失敗
-				Module_Failed();
-			}
-		}
-	}
-
-	//nullcheck
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	//ステートがNORMALじゃない時
+	if (m_state != STATE::NORMAL)
 	{
 		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No1_ShapeKey>(m_pKeyPadList);
-
-		//ゲームの視点変更
-		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+		CModule_Base::ModuleParts_Select<CModule_Parts_No1_ShapeKey>(m_pKeyPadList, -1);
 	}
+}
+
+//------------------------------------------------------------------------------
+//モジュール操作　マウス
+//------------------------------------------------------------------------------
+void CModule_No1_ShapeKeyPad::Operation_Mouse()
+{
+	//レイの判定
+	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList, (int&)m_nSelectNum);
+
+	//マウス操作
+	CModule_Base::Operation_Mouse();
+}
+
+
+//------------------------------------------------------------------------------
+//モジュール
+//------------------------------------------------------------------------------
+void CModule_No1_ShapeKeyPad::ModuleAction()
+{
+	//選択番号が-1とかだった時
+	if (m_nSelectNum < 0)
+	{
+		return;
+	}
+
+	if (m_pKeyPadList[m_nSelectNum].get())
+	{
+		//押したボタンがクリアボタンだった場合
+		if (m_pKeyPadList[m_nSelectNum]->GetClearFlag())
+		{
+			//クリア
+			QuestionClear();
+
+			//クリアしたかチェック
+			CheckClear();
+		}
+		else
+		{
+			//失敗
+			Module_Failed();
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//モジュールの選択解除
+//------------------------------------------------------------------------------
+void CModule_No1_ShapeKeyPad::ModuleCancel()
+{
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No1_ShapeKey>(m_pKeyPadList, -1);
 
 }
 
@@ -242,19 +252,25 @@ void CModule_No1_ShapeKeyPad::UpdateState()
 		break;
 
 	case STATE::DISAPPEAR:
+		//カウントダウン
 		m_nQuestionChangeCnt--;
 
 		for (int nCnt = 0; nCnt < (int)m_pKeyPadList.size(); nCnt++)
 		{
+			//左から順番に
 			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
 			{
+				//奥に移動
 				m_pKeyPadList[nCnt]->GetPos().z += 1.0f;
+
+				//移動範囲設定
 				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z,-10.0f );
 			}
 		}
 
 		if (m_nQuestionChangeCnt <= 0)
 		{
+			//ステート切り替え
 			SetState(STATE::APPEAR);
 
 			//図形シャッフル
@@ -268,13 +284,18 @@ void CModule_No1_ShapeKeyPad::UpdateState()
 
 	case STATE::APPEAR:
 
+		//カウントダウン
 		m_nQuestionChangeCnt--;
 
 		for (int nCnt = 0; nCnt < (int)m_pKeyPadList.size(); nCnt++)
 		{
+			//左から順番に
 			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
 			{
+				//手前に移動
 				m_pKeyPadList[nCnt]->GetPos().z -= 1.0f;
+
+				//移動範囲制限
 				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z, -10.0f);
 			}
 		}

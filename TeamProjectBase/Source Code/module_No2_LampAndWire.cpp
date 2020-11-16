@@ -15,6 +15,8 @@
 #include "keyboard.h"
 #include "game.h"
 #include "particle.h"
+#include "mouse.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -79,16 +81,20 @@ HRESULT CModule_No2_LampAndWire::Init()
 //------------------------------------------------------------------------------
 void CModule_No2_LampAndWire::Update()
 {
+	//原点取得
 	D3DXVECTOR3 posorigin = CHossoLibrary::CalcMtxToVector3(*GetMtxWorldPtr());
 
+	//ランプ点灯
 	for (int nCnt = 0; nCnt < LAMP_NUM; nCnt++)
 	{
 		if (nCnt < m_nRedLampNum)
 		{
+			//赤ランプ
 			CParticle::CreateFromText(posorigin + LAMP_OFFSET + D3DXVECTOR3(LAMP_INTERVAL.x * nCnt, 0.0f, 0.0f), ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED,RedColor);
 		}
 		else
 		{
+			//青ランプ
 			CParticle::CreateFromText(posorigin + LAMP_OFFSET + D3DXVECTOR3(LAMP_INTERVAL.x * nCnt, 0.0f, 0.0f), ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED,BlueColor);
 		}
 	}
@@ -114,60 +120,18 @@ void CModule_No2_LampAndWire::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //モジュール操作
 //------------------------------------------------------------------------------
-void CModule_No2_LampAndWire::Operation()
+void CModule_No2_LampAndWire::Operation_Keyboard()
 {
 	int nSelectNumOld = m_nSelectPlace;
 
 	//選択処理
 	CHossoLibrary::Selecting(m_nSelectPlace, nSelectNumOld, 6, 1);
 
-	for (size_t nCnt = 0; nCnt < m_pWireList.size(); nCnt++)
-	{
-		//nullcheck
-		if (m_pWireList[nCnt].get())
-		{
-			//現在の選択番号と同じモノだけtrueにしておく
-			nCnt == m_nSelectPlace ?
-				m_pWireList[nCnt]->SetSelect(true) :
-				m_pWireList[nCnt]->SetSelect(false);
-		}
-	}
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No2_Wire>(m_pWireList, m_nSelectPlace);
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
-	{
-		//nullcheck
-		if (m_pWireList[m_nSelectPlace].get())
-		{
-			//ワイヤーカットされてない時
-			if (!m_pWireList[m_nSelectPlace]->GetWireCut())
-			{
-				//間違えたワイヤーだった時
-				if (!m_pWireList[m_nSelectPlace]->GetClearFlag())
-				{
-					//失敗
-					Module_Failed();
-				}
-
-				//ワイヤーカット
-				WireCut();
-
-				//クリアしたかチェック
-				CheckClear();
-			}
-		}
-	}
-
-
-	//nullcheck
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
-	{
-		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No2_Wire>(m_pWireList);
-
-		//ゲームの視点変更
-		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
-	}
-
+	//モジュール操作
+	CModule_Base::Operation_Keyboard();
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "-------------Module_No_3----------------\n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "RedLampNum >> [%d]\n", m_nRedLampNum);
@@ -177,6 +141,62 @@ void CModule_No2_LampAndWire::Operation()
 		m_pWireList[3]->GetClearFlag(), m_pWireList[4]->GetClearFlag(), m_pWireList[5]->GetClearFlag());
 
 }
+
+
+//------------------------------------------------------------------------------
+//モジュール操作　マウス
+//------------------------------------------------------------------------------
+void CModule_No2_LampAndWire::Operation_Mouse()
+{
+	//レイの判定
+	CHossoLibrary::RayCollision_ModuleSelect(m_pWireList, (int&)m_nSelectPlace);
+
+	//マウス操作
+	CModule_Base::Operation_Mouse();
+
+}
+
+//------------------------------------------------------------------------------
+//モジュールアクション
+//------------------------------------------------------------------------------
+void CModule_No2_LampAndWire::ModuleAction()
+{
+	//選択番号が-1とかだった時
+	if (m_nSelectPlace < 0)
+	{
+		return;
+	}
+	//nullcheck
+	if (m_pWireList[m_nSelectPlace].get())
+	{
+		//ワイヤーカットされてない時
+		if (!m_pWireList[m_nSelectPlace]->GetWireCut())
+		{
+			//間違えたワイヤーだった時
+			if (!m_pWireList[m_nSelectPlace]->GetClearFlag())
+			{
+				//失敗
+				Module_Failed();
+			}
+
+			//ワイヤーカット
+			WireCut();
+
+			//クリアしたかチェック
+			CheckClear();
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//モジュールの選択解除
+//------------------------------------------------------------------------------
+void CModule_No2_LampAndWire::ModuleCancel()
+{
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No2_Wire>(m_pWireList, -1);
+}
+
 
 //------------------------------------------------------------------------------
 //ワイヤー生成
@@ -360,7 +380,5 @@ void CModule_No2_LampAndWire::SetCutWire_FromLampRule()
 			}
 		}
 	}
-
-
 
 }

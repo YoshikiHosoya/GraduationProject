@@ -39,6 +39,7 @@ public:
 	void SetSymbol(int nSymbol);
 	void SetKeypadState(KEYPAD_STATE keypadstate);
 
+
 	KEYPAD_STATE GetKeyPadState()				{ return m_KeyPadState; };
 	int GetSymbolNum()							{ return m_nSymbolNum; };
 protected:

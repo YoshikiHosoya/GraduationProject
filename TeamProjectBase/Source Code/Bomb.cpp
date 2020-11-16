@@ -13,9 +13,11 @@
 #include "manager.h"
 #include "camera.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "game.h"
 #include "modelinfo.h"
 #include "Bomb_Exterior.h"
+#include "modelinfo.h"
 #include "module_none.h"
 #include "module_timer.h"
 #include "module_Button.h"
@@ -90,7 +92,17 @@ void CBomb::Update()
 		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
 	}
 
-	CBomb::Operator();
+
+	//キーボード操作
+	//CBomb::Operation_Keyboard();
+
+
+	//マウス操作
+	CBomb::Operation_Mouse();
+
+
+
+
 
 	//////std::cout << typeid(m_pModuleList[0].get());
 	//std::cout << "m_pModuleList[0]" << "Name >> " << typeid(m_pModuleList[0]).name() << NEWLINE;
@@ -168,13 +180,14 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 }
 
 //------------------------------------------------------------------------------
-//操作する
+//キーボード操作
 //------------------------------------------------------------------------------
-void CBomb::Operator()
+void CBomb::Operation_Keyboard()
 {
-	//配列が空だったらreturn
-	if (m_pModuleList.empty())
+	//配列が空か選択番号が-1だった場合
+	if (m_pModuleList.empty() || m_nSelectModuleNum < 0)
 	{
+		//return
 		return;
 	}
 
@@ -207,6 +220,7 @@ void CBomb::Operator()
 
 		if (pKeyboard->GetTrigger(DIK_RETURN))
 		{
+			//モジュール注視
 			CManager::GetGame()->SetGaze(CGame::GAZE::GAZE_MODULE);
 
 			//カメラを近づける
@@ -226,7 +240,7 @@ void CBomb::Operator()
 		if (m_pModuleList[m_nSelectModuleNum].get())
 		{
 			//現在選択されているモジュールを操作
-			m_pModuleList[m_nSelectModuleNum]->Operation();
+			m_pModuleList[m_nSelectModuleNum]->Operation_Keyboard();
 		}
 
 		break;
@@ -234,6 +248,58 @@ void CBomb::Operator()
 	default:
 		break;
 	}
+}
+
+//------------------------------------------------------------------------------
+//マウス操作
+//------------------------------------------------------------------------------
+void CBomb::Operation_Mouse()
+{
+	switch (CManager::GetGame()->GetGaze())
+	{
+
+		//通常時
+	case CGame::GAZE_DEFAULT:
+
+		break;
+
+		//爆弾を見てる時
+	case CGame::GAZE_BOMB:
+		//レイの判定
+		CHossoLibrary::RayCollision_ModuleSelect(m_pModuleList,m_nSelectModuleNum);
+
+		//何も選択されてない時はbreak
+		if (m_nSelectModuleNum < 0)
+		{
+			break;
+		}
+
+		//マウスクリックされた時
+		if (CManager::GetMouse()->GetTrigger(0))
+		{
+			//モジュール注視
+			CManager::GetGame()->SetGaze(CGame::GAZE::GAZE_MODULE);
+
+			//選択状態解除
+			m_pModuleList[m_nSelectModuleNum]->SetSelect(false);
+
+			//カメラ近づける
+			m_pModuleList[m_nSelectModuleNum]->CameraApproach();
+		}
+		break;
+
+		//モジュールを見ているとき
+	case CGame::GAZE_MODULE:
+		//nullcheck
+		if (m_pModuleList[m_nSelectModuleNum].get())
+		{
+			//現在選択されているモジュールを操作
+			m_pModuleList[m_nSelectModuleNum]->Operation_Mouse();
+		}
+		break;
+	}
+
+
 }
 
 //------------------------------------------------------------------------------
@@ -245,6 +311,7 @@ void CBomb::ModuleClearCheck()
 	if (std::count_if(m_pModuleList.begin(), m_pModuleList.end(),
 		[](S_ptr<CModule_Base> pModule) {return pModule->GetModuleClearFlag(); }) >= m_nModuleNum)
 	{
+		//ゲームクリア
 		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
 	}
 }
@@ -266,7 +333,7 @@ void CBomb::ModuleMiss()
 	if (itr != m_pModuleList.end())
 	{
 		//タイマー型に変換
-		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダウンキャスト
+		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダイナミックキャスト
 
 		//ミスカウントアップ
 		//全部ミスしたとき
@@ -408,6 +475,7 @@ void CBomb::CreateModule_Random()
 
 //------------------------------------------------------------------------------
 //モジュール選択
+//選択不可なモジュールがあるのでライブラリにあるやつとは別関数
 //------------------------------------------------------------------------------
 void CBomb::ModuleSelect()
 {
@@ -611,9 +679,11 @@ void CBomb::SearchHeadCanSelectNum(int nStartNum)
 		{
 			//現在の選択番号に設定
 			m_nSelectModuleNum = nCnt;
-			break;
+			return;
 		}
 	}
+	//選択可能なモジュールが存在しなかった場合
+	m_nSelectModuleNum = -1;
 }
 
 

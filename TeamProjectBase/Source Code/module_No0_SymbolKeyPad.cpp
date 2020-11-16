@@ -14,8 +14,6 @@
 #include "manager.h"
 #include "modelinfo.h"
 #include "timer.h"
-#include "keyboard.h"
-#include "game.h"
 #include "Mylibrary.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -36,6 +34,7 @@ CModule_No0_SymbolKeyPad::CModule_No0_SymbolKeyPad()
 {
 	m_pKeyPadList = {};
 	m_nNextSymbolNum = 0;
+	m_nSelectNum = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -109,65 +108,78 @@ void CModule_No0_SymbolKeyPad::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_No0_SymbolKeyPad::Operation()
+void CModule_No0_SymbolKeyPad::Operation_Keyboard()
 {
-	static int nSelectNum = 0;
-
-	int nSelectNumOld = nSelectNum;
+	int nSelectNumOld = m_nSelectNum;
 	int nCntClearPad = 0;
 
+	//選択処理
 	//入力が無かった時はbreak
-	CHossoLibrary::Selecting(nSelectNum, nSelectNumOld, 3, 3);
+	CHossoLibrary::Selecting(m_nSelectNum, nSelectNumOld, 3, 3);
 
-	for (size_t nCnt = 0; nCnt < m_pKeyPadList.size(); nCnt++)
+	//選択している状態のモノを設定
+	CModule_Base::ModuleParts_Select<CModule_Parts_No0_SymbolKey>(m_pKeyPadList, m_nSelectNum);
+
+	//キー操作
+	CModule_Base::Operation_Keyboard();
+}
+
+//------------------------------------------------------------------------------
+//モジュール操作　マウス
+//------------------------------------------------------------------------------
+void CModule_No0_SymbolKeyPad::Operation_Mouse()
+{
+	//レイの判定
+	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList, m_nSelectNum);
+
+	//マウス操作
+	CModule_Base::Operation_Mouse();
+}
+
+//------------------------------------------------------------------------------
+//モジュールアクション
+//------------------------------------------------------------------------------
+void CModule_No0_SymbolKeyPad::ModuleAction()
+{
+	//選択番号が-1とかだった時
+	if (m_nSelectNum < 0)
 	{
-		//nullcheck
-		if (m_pKeyPadList[nCnt].get())
-		{
-			//現在の選択番号と同じモノだけtrueにしておく
-			nCnt == nSelectNum ?
-				m_pKeyPadList[nCnt]->SetSelect(true) :
-				m_pKeyPadList[nCnt]->SetSelect(false);
-		}
+		return;
 	}
-
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
-	{
-		if (m_pKeyPadList[nSelectNum].get())
-		{
-			//クリア状態のボタンには何もできない
-			if (m_pKeyPadList[nSelectNum]->GetKeyPadState() == CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR)
-			{
-
-			}
-			//次のシンボルと同じシンボルだった時
-			else if (m_nNextSymbolNum == m_pKeyPadList[nSelectNum]->GetSymbolNum())
-			{
-				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR);
-				m_nNextSymbolNum++;
-
-				//クリアしたかチェック
-				CheckClear();
-			}
-			else
-			{	//失敗
-				m_pKeyPadList[nSelectNum]->SetKeypadState(CModule_Parts_No0_SymbolKey::KEYPAD_STATE::FAILED);
-				CModule_Base::Module_Failed();
-			}
-		}
-	}
-
-
 	//nullcheck
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	if (m_pKeyPadList[m_nSelectNum].get())
 	{
-		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No0_SymbolKey>(m_pKeyPadList);
+		//クリア状態のボタンには何もできない
+		if (m_pKeyPadList[m_nSelectNum]->GetKeyPadState() == CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR)
+		{
+			return;
+		}
+		//次のシンボルと同じシンボルだった時
+		else if (m_nNextSymbolNum == m_pKeyPadList[m_nSelectNum]->GetSymbolNum())
+		{
+			m_pKeyPadList[m_nSelectNum]->SetKeypadState(CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR);
+			m_nNextSymbolNum++;
 
-		//ゲームの視点変更
-		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+			//クリアしたかチェック
+			CheckClear();
+		}
+		else
+		{	//失敗
+			m_pKeyPadList[m_nSelectNum]->SetKeypadState(CModule_Parts_No0_SymbolKey::KEYPAD_STATE::FAILED);
+			CModule_Base::Module_Failed();
+		}
 	}
 }
+
+//------------------------------------------------------------------------------
+//モジュールの選択解除
+//------------------------------------------------------------------------------
+void CModule_No0_SymbolKeyPad::ModuleCancel()
+{
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No0_SymbolKey>(m_pKeyPadList, -1);
+}
+
 //------------------------------------------------------------------------------
 //キーパッド生成
 //------------------------------------------------------------------------------

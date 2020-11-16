@@ -195,6 +195,88 @@ public:
 			CHossoLibrary::Swap(vec[nCnt], vec[SwapIterator]);
 		}
 	}
+
+	//------------------------------------------------------------------------------
+	//Ray判定用　CSceneX継承前提
+	//Rayで判定を取ってtrueが返ってきた時に
+	//------------------------------------------------------------------------------
+	template <class X> static bool RayCollision_ModuleSelect(std::vector<X> &vec, int &nSelectNum)
+	{
+		// 変数宣言
+		D3DXVECTOR3*   pNearPos = &CManager::GetRay()->NearPos;	// レイの近い位置
+		D3DXVECTOR3*   pFarPos = &CManager::GetRay()->FarPos;	// レイの遠い位置
+		BOOL           bHit = FALSE;						// ヒットフラグ
+		D3DXMATRIX     invmat;									// 算出した逆行列
+		D3DXVECTOR3    ray;										// レイ
+		D3DXVECTOR3    InvNirePos;								// 算出した近い位置
+		D3DXVECTOR3    InvForePos;								// 算出した遠い位置
+		LPD3DXMESH     pMesh;									// メッシュ情報
+
+		bool bModuleHit = false;
+		int nCnt = -1;
+
+		//モジュールのリスト
+		for (auto ptr : vec)
+		{
+			//カウントアップ
+			nCnt++;
+
+			//既に何かヒットしてた時
+			if (bModuleHit)
+			{
+				//選択状態解除
+				ptr->SetSelect(false);
+				continue;
+			}
+
+			////選択できないモジュールだった場合
+			//if (!ptr->GetCanModuleSelect())
+			//{
+			//	//計算しない
+			//	continue;
+			//}
+
+			//メッシュ情報取得
+			pMesh = ptr->GetModelInfo()->GetMesh();
+
+			/* 対処いう物からみたレイに変換する */
+			//	逆行列の取得
+			D3DXMatrixInverse(&invmat, NULL, ptr->GetMtxWorldPtr());
+			//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
+			D3DXVec3TransformCoord(&InvNirePos, pNearPos, &invmat);
+			//	レイ終点情報を変換
+			D3DXVec3TransformCoord(&InvForePos, pFarPos, &invmat);
+			//	レイ方向情報を変換
+			D3DXVec3Normalize(&ray, &(InvForePos - InvNirePos));
+			//Rayを飛ばす
+			D3DXIntersect(pMesh, &InvNirePos, &ray, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
+
+			// HITしている時
+			if (bHit)
+			{
+				//選択状態
+				ptr->SetSelect(true);
+
+				//選択番号設定
+				nSelectNum = nCnt;
+
+				bModuleHit = true;
+			}
+			else
+			{
+				ptr->SetSelect(false);
+			}
+		}
+
+		//何もヒットしなかった時はカウント無効
+		if (!bModuleHit)
+		{
+			nSelectNum = -1;
+		}
+
+		//return
+		return bModuleHit;
+	}
 private:
 	static CKeyboard *m_pKeyboard;		//キーボードへのポインタ
 	static CPad_XInput *m_pXInput;		//XInputのパッドへのポインタ

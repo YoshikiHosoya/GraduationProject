@@ -77,7 +77,11 @@ public:
 	virtual void Update()			override;			//更新
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
-	void Operation()				override;			//モジュール操作
+	void Operation_Keyboard()		override;			//モジュール操作 キーボード
+	void Operation_Mouse()			override;			//モジュール操作 マウス
+	void ModuleAction()				override;			//モジュールのアクション
+	void ModuleCancel()				override;			//モジュールの選択解除
+
 	void UpdateState();									//ステートの更新
 
 	void CreateDisplayShape();							//ディスプレイの生成
