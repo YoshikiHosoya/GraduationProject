@@ -49,7 +49,7 @@ CModule_Parts_No1_ShapeKey::~CModule_Parts_No1_ShapeKey()
 HRESULT CModule_Parts_No1_ShapeKey::Init()
 {
 	//ÉÇÉfÉãèÓïÒê›íË
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO1_KEYPAD));
 
 	//ï∂éöÇÃê∂ê¨
 	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,

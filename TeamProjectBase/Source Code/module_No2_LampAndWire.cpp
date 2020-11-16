@@ -54,7 +54,7 @@ CModule_No2_LampAndWire::~CModule_No2_LampAndWire()
 HRESULT CModule_No2_LampAndWire::Init()
 {
 	//ÉÇÉfÉãèÓïÒê›íË
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO3));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO2));
 
 	//ÉèÉCÉÑÅ[ê∂ê¨
 	CreateWire();

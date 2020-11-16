@@ -51,7 +51,7 @@ CModule_No0_SymbolKeyPad::~CModule_No0_SymbolKeyPad()
 HRESULT CModule_No0_SymbolKeyPad::Init()
 {
 	//ƒ‚ƒfƒ‹î•ñİ’è
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO1));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO0));
 
 	//ƒ‰ƒ“ƒv¶¬
 	CModule_Base::CreateLamp();

@@ -32,18 +32,17 @@ public:
 		MODEL_MODULE_DEFAULT = 200,					//モジュール
 		MODEL_MODULE_NONE,							//モジュール　何も入ってない
 		MODEL_MODULE_TIMER,							//タイマー
-		MODEL_MODULE_NO1,							//1番目のモジュール
+		MODEL_MODULE_NO0,							//1番目のモジュール
+		MODEL_MODULE_NO1,							//2番目のモジュール
 		MODEL_MODULE_NO2,							//2番目のモジュール
-		MODEL_MODULE_NO3,							//2番目のモジュール
 		MODEL_MODULE_NO4,							//2番目のモジュール
 
 		//モジュールパーツ 300番台
 		MODEL_MODULEPARTS_CLEARLAMP = 300,			//クリアランプ
 		MODEL_MODULEPARTS_PROGRESSLAMP,				//進捗度ランプ
-		MODEL_MODULEPARTS_NO1_KEYPAD,				//1番目のモジュールのパーツ
-		MODEL_MODULEPARTS_NO2_KEYPAD,				//2番目のモジュールのパーツ
-		MODEL_MODULEPARTS_NO3_WIRE,				//2番目のモジュールのパーツ
-
+		MODEL_MODULEPARTS_NO0_KEYPAD,				//1番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO1_KEYPAD,				//2番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO2_WIRE,					//2番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO4_BUTTON,				//4番目のモジュールのパーツ
 
 		// タブレット 400番台

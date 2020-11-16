@@ -48,7 +48,7 @@ CModule_Parts_No2_Wire::~CModule_Parts_No2_Wire()
 HRESULT CModule_Parts_No2_Wire::Init()
 {
 	//ÉÇÉfÉãèÓïÒê›íË
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO3_WIRE));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_WIRE));
 
 	CSceneX::Init();
 

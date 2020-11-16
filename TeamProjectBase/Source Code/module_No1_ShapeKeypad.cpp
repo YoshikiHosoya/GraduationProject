@@ -67,7 +67,7 @@ CModule_No1_ShapeKeyPad::~CModule_No1_ShapeKeyPad()
 HRESULT CModule_No1_ShapeKeyPad::Init()
 {
 	//ƒ‚ƒfƒ‹î•ñİ’è
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO2));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO1));
 
 	//ƒ‰ƒ“ƒv¶¬
 	CModule_Base::CreateLamp();
