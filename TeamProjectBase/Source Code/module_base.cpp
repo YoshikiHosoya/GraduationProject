@@ -30,7 +30,6 @@
 //------------------------------------------------------------------------------
 CModule_Base::CModule_Base()
 {
-	m_bCanSelect = true;
 	m_bModuleClearFlag = false;
 }
 

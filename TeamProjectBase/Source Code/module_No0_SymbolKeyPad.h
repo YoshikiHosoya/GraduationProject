@@ -21,12 +21,12 @@ class CModule_No0_SymbolKeyPad : public CModule_Base
 public:
 	enum ANSWER_PATTERN
 	{
-		ANSWER_1 = 0,
-		ANSWER_2,
-		ANSWER_3,
-		ANSWER_4,
-		ANSWER_5,
-		ANSWER_6,
+		ANSWER_1 = 0,		//0-3
+		ANSWER_2,			//4-7
+		ANSWER_3,			//8-11
+		ANSWER_4,			//12-15
+		ANSWER_5,			//16-29
+		ANSWER_6,			//20-24
 		ANSWER_MAX,
 	};
 

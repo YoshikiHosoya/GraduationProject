@@ -57,10 +57,8 @@ public:
 
 	void SetButtonState(STATE state);
 
-
 	void NextButtonSet();
 	void PlayerInputReset();
-
 
 	void ButtonPushSuccess();
 	bool CheckModuleClear();
@@ -78,8 +76,6 @@ private:
 	int m_nButtonLightingCnt;										//ボタンのライト点滅用のカウント
 
 	int m_nPlayerPushNum;											//プレイヤーの入力した回数
-
-
 
 };
 #endif

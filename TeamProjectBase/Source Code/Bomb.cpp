@@ -20,7 +20,6 @@
 #include "modelinfo.h"
 #include "module_none.h"
 #include "module_timer.h"
-#include "module_Button.h"
 #include "module_No0_SymbolKeyPad.h"
 #include "module_No1_ShapeKeypad.h"
 #include "module_No2_LampAndWire.h"
@@ -99,10 +98,6 @@ void CBomb::Update()
 
 	//マウス操作
 	CBomb::Operation_Mouse();
-
-
-
-
 
 	//////std::cout << typeid(m_pModuleList[0].get());
 	//std::cout << "m_pModuleList[0]" << "Name >> " << typeid(m_pModuleList[0]).name() << NEWLINE;
@@ -356,12 +351,12 @@ void CBomb::CreateModule(int const nModuleNum)
 	//もしモジュールを表示できる範囲外の時は収める
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
-	//CreateModule_Random();
+	CreateModule_Random();
 
 
 //Debug用
 #ifdef _DEBUG
-	CreateModuleDebug();
+	//CreateModuleDebug();
 #endif //_DEBUG
 
 	////1番目
@@ -398,6 +393,7 @@ void CBomb::CreateModule(int const nModuleNum)
 		ptr->SetBombPtr(shared_from_this());
 	}
 
+	//選択可能なモジュール検索
 	SearchHeadCanSelectNum(0);
 }
 
@@ -411,7 +407,7 @@ void CBomb::CreateModule_Random()
 
 	//タイマー生成
 	CBomb::CreateModuleOne<CModule_Timer>();
-\
+
 	//モジュールが入らない分はNONEのモジュールを入れておく
 	while ((int)LocalList.size() < MAX_MODULE_NUM - m_nModuleNum - 1)
 	{
@@ -421,53 +417,46 @@ void CBomb::CreateModule_Random()
 	while (LocalList.size() < MAX_MODULE_NUM - 1)
 	{
 		//Buttonから4Buttonまでのランダム
-		LocalList.emplace_back((CModule_Base::MODULE_TYPE)CHossoLibrary::RandomRangeUnsigned((int)CModule_Base::MODULE_TYPE::NO1_SYMBOL, (int)CModule_Base::MODULE_TYPE::MAX));
+		LocalList.emplace_back((CModule_Base::MODULE_TYPE)CHossoLibrary::RandomRangeUnsigned((int)CModule_Base::MODULE_TYPE::NO0_SYMBOL, (int)CModule_Base::MODULE_TYPE::MAX));
 	}
 
 	//要素のシャッフル
 	CHossoLibrary::Vec_Shuffle(LocalList);
 
-	int nCntModule = 0;
-
-	//モジュール数分に達するまで
-	while ((int)m_pModuleList.size() < MAX_MODULE_NUM)
+	//モジュール生成
+	for(auto const &ModuleType : LocalList)
 	{
 		//モジュールタイプに応じて生成
-		switch (LocalList[nCntModule])
+		switch (ModuleType)
 		{
 			//モジュール無し
 		case CModule_Base::MODULE_TYPE::NONE:
 			CBomb::CreateModuleOne<CModule_None>();
-			nCntModule++;
 
 			break;
 
-			//	//ボタンモジュール
-			//case CModule_Base::MODULE_TYPE::BUTTON:
-			//	CBomb::CreateModuleOne<CModule_Button>();
-			//	break;
+			//シンボル
+		case CModule_Base::MODULE_TYPE::NO0_SYMBOL:
+			CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
 
-				//キーパッド
-		case CModule_Base::MODULE_TYPE::NO1_SYMBOL:
-			//if (nCntModule < nCntModule)
-			{
-				CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
-				nCntModule++;
-			}
 			break;
-		case CModule_Base::MODULE_TYPE::NO2_SHAPE:
-			//if (nCntModule < nCntModule)
-			{
-				CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
-				nCntModule++;
-			}
+
+			//図形
+		case CModule_Base::MODULE_TYPE::NO1_SHAPE:
+			CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
+
 			break;
+
+			//ワイヤー
+		case CModule_Base::MODULE_TYPE::NO2_WIRE:
+			CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
+
+			break;
+
+			//4色ボタン
 		case CModule_Base::MODULE_TYPE::NO4_4COLBUTTON:
-			//if (nCntModule < nCntModule)
-			{
-				CBomb::CreateModuleOne<CModule_No4_4ColButton>();
-				nCntModule++;
-			}
+			CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+
 			break;
 		}
 	}
@@ -695,7 +684,6 @@ void CBomb::CreateModuleDebug()
 {
 	//モジュール数をここで決める debug用
 	m_nModuleNum = 3;
-
 
 	//1番目
 	CBomb::CreateModuleOne<CModule_Timer>();

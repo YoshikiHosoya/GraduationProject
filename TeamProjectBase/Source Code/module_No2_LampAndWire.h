@@ -46,23 +46,23 @@ public:
 	void ModuleCancel()					override;			//モジュールの選択解除
 
 private:
-	Vec<S_ptr<CModule_Parts_No2_Wire>> m_pWireList;		//ワイヤーのリスト
-	WIRE m_NowSelectWire;								//現在選択しているワイヤー
-	int m_nSelectPlace;									//現在選択している場所
+	Vec<S_ptr<CModule_Parts_No2_Wire>> m_pWireList;			//ワイヤーのリスト
+	WIRE m_NowSelectWire;									//現在選択しているワイヤー
+	int m_nSelectPlace;										//現在選択している場所
 
-	int m_nRedLampNum;									//赤いランプ数
-	int m_nBlueLampNum;									//青いランプ数
+	int m_nRedLampNum;										//赤いランプ数
+	int m_nBlueLampNum;										//青いランプ数
 
-	void CreateWire();									//ワイヤー生成
-	void CreateModuleLamp();							//ランプ生成
-	void SetToCutWire();								//カットするワイヤー設定
+	void CreateWire();										//ワイヤー生成
+	void CreateModuleLamp();								//ランプ生成
+	void SetToCutWire();									//カットするワイヤー設定
 
-	void WireCut();										//ワイヤーカット
-	void CheckClear();									//クリアしたかチェック
+	void WireCut();											//ワイヤーカット
+	void CheckClear();										//クリアしたかチェック
 
 	//色を基に切るワイヤー設定
-	void SetCutWire_FromPlace(int nPlace);						//場所を基に切るワイヤー設定
-	void SetCutWire_FromLampRule();								//ランプルール
+	void SetCutWire_FromPlace(int nPlace);					//場所を基に切るワイヤー設定
+	void SetCutWire_FromLampRule();							//ランプルール
 
 //テンプレート関数
 //色を基に切るワイヤーを設定

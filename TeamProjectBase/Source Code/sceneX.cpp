@@ -35,6 +35,7 @@ CSceneX::CSceneX()
 	m_SceneXInfo = nullptr;
 	m_bSelecting = false;
 	m_bEmissive = false;
+	m_bCanSelect = true;
 
 	//ëçêîâ¡éZ
 	m_nNumSceneX++;
@@ -356,6 +357,9 @@ void CSceneX::ShowDebugInfo()
 #endif //DEBUG
 }
 
+//------------------------------------------------------------------------------
+//ê∂ê¨ä÷êî
+//------------------------------------------------------------------------------
 S_ptr<CSceneX> CSceneX::CreateShared(D3DXVECTOR3 const & pos, D3DXVECTOR3 const & rot, D3DXMATRIX * pParentMtx, CScene::OBJTYPE objtype, int nModelType)
 {
 	//ÉÅÉÇÉäämï€

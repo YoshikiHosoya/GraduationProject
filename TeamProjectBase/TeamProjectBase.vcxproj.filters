@@ -198,9 +198,6 @@
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\module_Button.cpp">
-      <Filter>Bomb\module</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\module_none.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
@@ -266,7 +263,7 @@
     </ClCompile>
     <ClCompile Include="Source Code\Decoding.cpp">
       <Filter>Mode</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Source Code\module_No0_SymbolKeyPad.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
@@ -440,9 +437,6 @@
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\module_Button.h">
-      <Filter>Bomb\module</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\module_none.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>
@@ -514,7 +508,7 @@
     </ClInclude>
     <ClInclude Include="Source Code\Decoding.h">
       <Filter>Mode</Filter>
-	 </ClInclude>
+    </ClInclude>
     <ClInclude Include="Source Code\module_No0_SymbolKeyPad.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>

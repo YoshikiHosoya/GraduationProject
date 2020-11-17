@@ -201,11 +201,7 @@ void CModule_No0_SymbolKeyPad::CreateKeyPad(ANSWER_PATTERN answer)
 	{
 		//イテレータ取得
 		auto itr = std::find_if(nAllSymbolPatternList.begin(), nAllSymbolPatternList.end(),
-			//ラムダ式
-			[nCnt, answer](int &rValue)
-		{
-			return (rValue == nCnt + answer * KEYPAD_NEED_CLEAR_KEY_NUM);
-		});
+			[nCnt, answer](int &rValue) {return (rValue == nCnt + answer * KEYPAD_NEED_CLEAR_KEY_NUM); });
 
 		//イテレータがend以外だった時
 		if (itr != nAllSymbolPatternList.end())
@@ -264,5 +260,8 @@ void CModule_No0_SymbolKeyPad::CheckClear()
 	{
 		//モジュールクリア
 		CModule_Base::Module_Clear();
+
+		//次の答えを消しとく
+		m_nNextSymbolNum = -1;
 	}
 }

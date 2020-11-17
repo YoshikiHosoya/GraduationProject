@@ -33,7 +33,6 @@ public:
 	void DrawPolygon();																			//ポリゴンの描画
 
 	void SetBillBoard(bool bBillBoard)	{ m_bBillBoard = bBillBoard;};							//ビルボード化
-
 	bool GetBillBoard() { return m_bBillBoard; };												//ビルボードかどうか取得
 
 	static int GetNumScene3D() { return m_nNumScene3D; };										//3Dポリゴン総数取得
