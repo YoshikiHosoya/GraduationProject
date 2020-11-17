@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No1_SymbolKey.cpp]
+//モジュールパーツのキーパッド  [module_parts_No0_SymbolKey.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No1_SymbolKey.h"
+#include "module_parts_No0_SymbolKey.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -32,7 +32,7 @@
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No1_SymbolKey::CModule_Parts_No1_SymbolKey()
+CModule_Parts_No0_SymbolKey::CModule_Parts_No0_SymbolKey()
 {
 	m_KeyPadState = KEYPAD_STATE::NORMAL;
 	m_nCntLampCnt = 0;
@@ -44,7 +44,7 @@ CModule_Parts_No1_SymbolKey::CModule_Parts_No1_SymbolKey()
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No1_SymbolKey::~CModule_Parts_No1_SymbolKey()
+CModule_Parts_No0_SymbolKey::~CModule_Parts_No0_SymbolKey()
 {
 	m_pLight.reset();
 	m_pSymbol.reset();
@@ -52,10 +52,10 @@ CModule_Parts_No1_SymbolKey::~CModule_Parts_No1_SymbolKey()
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No1_SymbolKey::Init()
+HRESULT CModule_Parts_No0_SymbolKey::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO1_KEYPAD));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO0_KEYPAD));
 
 	//パッドのライト生成
 	m_pLight = CSceneBase::ScenePolygonCreateSelfManagement<CScene3D>(KEYPAD_LIGHT_OFFSET, KEYPAD_LIGHTPOLYGON_SIZE, BlackColor, nullptr);
@@ -78,15 +78,15 @@ HRESULT CModule_Parts_No1_SymbolKey::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No1_SymbolKey::Update()
+void CModule_Parts_No0_SymbolKey::Update()
 {
 	D3DXVECTOR3 vec;
 
 	switch (m_KeyPadState)
 	{
-	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::NORMAL:
+	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::NORMAL:
 		break;
-	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::FAILED:
+	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::FAILED:
 		m_nCntLampCnt--;
 
 		if (m_nCntLampCnt < 0)
@@ -111,7 +111,7 @@ void CModule_Parts_No1_SymbolKey::Update()
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No1_SymbolKey::Draw()
+void CModule_Parts_No0_SymbolKey::Draw()
 {
 	if (m_pLight)
 	{
@@ -122,7 +122,7 @@ void CModule_Parts_No1_SymbolKey::Draw()
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No1_SymbolKey::ShowDebugInfo()
+void CModule_Parts_No0_SymbolKey::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
@@ -133,7 +133,7 @@ void CModule_Parts_No1_SymbolKey::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //シンボルの設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No1_SymbolKey::SetSymbol(int nSymbol)
+void CModule_Parts_No0_SymbolKey::SetSymbol(int nSymbol)
 {
 	m_nSymbolNum = nSymbol;
 
@@ -143,7 +143,7 @@ void CModule_Parts_No1_SymbolKey::SetSymbol(int nSymbol)
 //------------------------------------------------------------------------------
 //ランプの状態切り替え
 //------------------------------------------------------------------------------
-void CModule_Parts_No1_SymbolKey::SetKeypadState(KEYPAD_STATE keypadstate)
+void CModule_Parts_No0_SymbolKey::SetKeypadState(KEYPAD_STATE keypadstate)
 {
 	//同じステートだった時はreturn
 	if (m_KeyPadState == keypadstate)
@@ -157,14 +157,14 @@ void CModule_Parts_No1_SymbolKey::SetKeypadState(KEYPAD_STATE keypadstate)
 	//切り替わったステートに応じて処理
 	switch (m_KeyPadState)
 	{
-	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::NORMAL:
+	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::NORMAL:
 		m_pLight->SetColor(BlackColor);
 		break;
-	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::FAILED:
+	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::FAILED:
 		m_pLight->SetColor(RedColor);
 		m_nCntLampCnt = KEYPAD_LIGHT_REDLIGHTING_TIME;
 		break;
-	case CModule_Parts_No1_SymbolKey::KEYPAD_STATE::CLEAR:
+	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR:
 		m_pLight->SetColor(GreenColor);
 		SetPos(GetPos() + D3DXVECTOR3(0.0f, 0.0f, 5.0f));
 		CSceneX::CalcMtx_IncludeParentMtx();

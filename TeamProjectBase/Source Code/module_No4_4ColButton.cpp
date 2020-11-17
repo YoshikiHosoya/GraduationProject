@@ -17,6 +17,8 @@
 #include "modelinfo.h"
 #include "timer.h"
 #include "game.h"
+#include "mouse.h"
+
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -106,13 +108,17 @@ void CModule_No4_4ColButton::Update()
 {
 	CSceneX::Update();
 
+	//ボタンのステートが終了してる時
 	if (m_buttonState == CModule_No4_4ColButton::STATE::END)
 	{
+		//return
 		return;
 	}
 
+	//点灯カウントダウン
 	m_nButtonLightingCnt--;
 
+	//ボタンの状態に応じて処理を変える
 	switch (m_buttonState)
 	{
 	case CModule_No4_4ColButton::STATE::START:
@@ -171,64 +177,85 @@ void CModule_No4_4ColButton::ShowDebugInfo()
 	}
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT,NEWLINE);
-
-
 #endif //DEBUG
 }
+
 //------------------------------------------------------------------------------
 //キーパッド操作
 //------------------------------------------------------------------------------
-void CModule_No4_4ColButton::Operation()
+void CModule_No4_4ColButton::Operation_Keyboard()
 {
 	int nSelectNumOld = m_nNowSelectButton;
 
 	//入力が無かった時はbreak
 	CHossoLibrary::Selecting((int&)m_nNowSelectButton, nSelectNumOld, 2, 2);
 
-	for (size_t nCnt = 0; nCnt < m_pColButtonList.size(); nCnt++)
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No4_ColButton>(m_pColButtonList, m_nNowSelectButton);
+
+	//モジュール操作
+	CModule_Base::Operation_Keyboard();
+}
+
+//------------------------------------------------------------------------------
+//モジュール操作　マウス
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::Operation_Mouse()
+{
+	//レイの判定
+	CHossoLibrary::RayCollision_ModuleSelect(m_pColButtonList, (int&)m_nNowSelectButton);
+
+	//マウス操作
+	CModule_Base::Operation_Mouse();
+
+}
+
+//------------------------------------------------------------------------------
+//モジュールアクション
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::ModuleAction()
+{
+	//選択番号が-1とかだった時
+	if (m_nNowSelectButton < 0)
 	{
-		//nullcheck
-		if (m_pColButtonList[nCnt].get())
-		{
-			//現在の選択番号と同じモノだけtrueにしておく
-			nCnt == m_nNowSelectButton ?
-				m_pColButtonList[nCnt]->SetSelect(true) :
-				m_pColButtonList[nCnt]->SetSelect(false);
-		}
+		return;
 	}
-
-	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	//すでに終了していた場合
+	if (m_buttonState == STATE::END)
 	{
-		if (m_pColButtonList[m_nNowSelectButton].get())
-		{
-			//プレイヤーの入力状態
-			SetButtonState(STATE::PLAYER_INPUT);
-			m_pColButtonList[m_nNowSelectButton]->SetButtonLighting(true);
-
-			//押したボタンがクリアボタンだった場合
-			if (m_pColButtonList[m_nNowSelectButton]->GetClearFlag())
-			{
-				//正解のボタン押した
-				ButtonPushSuccess();
-			}
-			else
-			{
-				//失敗
-				Module_Failed();
-			}
-		}
+		//ミス
+		Module_Failed();
+		return;
 	}
-
 
 	//nullcheck
-	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	if (m_pColButtonList[m_nNowSelectButton].get())
 	{
-		//選択解除
-		CModule_Base::SelectRelease<CModule_Parts_No4_ColButton>(m_pColButtonList);
+		//プレイヤーの入力状態
+		SetButtonState(STATE::PLAYER_INPUT);
+		m_pColButtonList[m_nNowSelectButton]->SetButtonLighting(true);
 
-		//ゲームの視点変更
-		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+		//押したボタンがクリアボタンだった場合
+		if (m_pColButtonList[m_nNowSelectButton]->GetClearFlag())
+		{
+			//正解のボタン押した
+			ButtonPushSuccess();
+		}
+		else
+		{
+			//失敗
+			Module_Failed();
+		}
 	}
+}
+
+//------------------------------------------------------------------------------
+//モジュールの選択解除
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::ModuleCancel()
+{
+	//選択解除
+	CModule_Base::ModuleParts_Select<CModule_Parts_No4_ColButton>(m_pColButtonList, -1);
 }
 
 //------------------------------------------------------------------------------
@@ -243,17 +270,24 @@ void CModule_No4_4ColButton::SetButtonState(STATE state)
 	{
 	case CModule_No4_4ColButton::STATE::START:
 		m_nNowFlashNumber = -1;
+
+		//プレイヤーの入力情報リセット
 		PlayerInputReset();
 		break;
 
 	case CModule_No4_4ColButton::STATE::INTERVAL:
+		//ボタンの点灯の間隔設定
 		m_nButtonLightingCnt = COL_BUTTON_LIGHT_FLASH_INTERVAL;
 
 		break;
 
 	case CModule_No4_4ColButton::STATE::LIGHTING:
 		m_nNowFlashNumber++;
+
+		//基底回数以上にならないように設定
 		CHossoLibrary::RangeLimit_Equal(m_nNowFlashNumber, 0, 3);
+
+		//ボタンを光らせる
 		m_pColButtonList[m_QuestionButtonList[m_nNowFlashNumber]]->SetButtonLighting(true);
 
 
@@ -287,8 +321,8 @@ void CModule_No4_4ColButton::NextButtonSet()
 		m_pColButtonList[nCnt]->SetClearFlag(false);
 	}
 
-	BUTTON NextButton = BUTTON::RED;
-
+	//次に押すボタン設定
+	BUTTON NextButton = BUTTON::NONE;
 	switch (m_QuestionButtonList[m_nPlayerPushNum])
 	{
 	case BUTTON::RED:
@@ -318,8 +352,6 @@ void CModule_No4_4ColButton::NextButtonSet()
 		//クリアフラグ設定
 		itr->get()->SetClearFlag(true);
 	}
-
-
 }
 //------------------------------------------------------------------------------
 //プレイヤーの入力関係の変数リセット
@@ -336,29 +368,40 @@ void CModule_No4_4ColButton::PlayerInputReset()
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::ButtonPushSuccess()
 {
+	//プレイヤーのボタンクリア回数++
 	m_nPlayerPushNum++;
 
+	//クリア回数に到達したとき
 	if (m_nPlayerPushNum > m_nClearNum)
 	{
+		//クリアに必要なキー数追加
 		m_nClearNum++;
+
+		//進捗ランプ更新
 		m_pProgressLamp->SetProgress(m_nClearNum);
 	}
 
+	//モジュールクリアしてない時
 	if (!CheckModuleClear())
 	{
+		//次のボタン設定
 		NextButtonSet();
 	}
 }
 
 
 //------------------------------------------------------------------------------
-//次のクリアボタン設定
+//モジュールクリアしたか確認
 //------------------------------------------------------------------------------
 bool CModule_No4_4ColButton::CheckModuleClear()
 {
+	//出題数とクリアしたボタン数比較
 	if (m_nClearNum >= (int)m_QuestionButtonList.size())
 	{
+		//モジュールクリア
 		Module_Clear();
+
+		//終了
 		SetButtonState(STATE::END);
 		return true;
 	}

@@ -43,6 +43,8 @@ public:
 		TEX_CHAT_TABCLOSE,						// チャットタブ (閉じる)
 		TEX_CHAT_BOX_00,						// チャットボックス00
 		TEX_CHAT_BOX_01,						// チャットボックス01
+		TEX_CHAT_BOX_02,						// チャットボックス02
+		TEX_CHAT_BOX_03,						// チャットボックス03
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル

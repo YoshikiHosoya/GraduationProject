@@ -24,7 +24,8 @@ public:
 	//ボタンの色
 	enum BUTTON
 	{
-		RED = 0,			//赤
+		NONE = -1,			//NONE
+		RED,				//赤
 		GREEN,				//緑
 		BLUE,				//青
 		YELLOW				//黄
@@ -49,7 +50,10 @@ public:
 	virtual void Update()			override;			//更新
 	virtual void Draw()				override;			//描画
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
-	void Operation()				override;			//モジュール操作
+	void Operation_Keyboard()		override;			//モジュール操作 キーボード
+	void Operation_Mouse()			override;			//モジュール操作 マウス
+	void ModuleAction()				override;			//モジュールのアクション
+	void ModuleCancel()				override;			//モジュールの選択解除
 
 	void SetButtonState(STATE state);
 

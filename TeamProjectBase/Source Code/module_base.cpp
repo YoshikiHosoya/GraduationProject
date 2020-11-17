@@ -13,6 +13,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "camera.h"
 #include "Bomb.h"
 #include "game.h"
@@ -42,10 +43,48 @@ CModule_Base::~CModule_Base()
 }
 
 //------------------------------------------------------------------------------
-//モジュール操作
+//ランプ生成
 //------------------------------------------------------------------------------
-void CModule_Base::Operation()
+void CModule_Base::Operation_Keyboard()
 {
+	//決定キー
+	if (CManager::GetKeyboard()->GetTrigger(DIK_RETURN))
+	{
+		//モジュールのアクション
+		ModuleAction();
+	}
+
+	//キャンセル
+	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	{
+		//モジュールの選択解除
+		ModuleCancel();
+
+		//ゲームの視点変更
+		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+	}
+}
+
+//------------------------------------------------------------------------------
+//ランプ生成
+//------------------------------------------------------------------------------
+void CModule_Base::Operation_Mouse()
+{
+	//左クリック
+	if (CManager::GetMouse()->GetTrigger(0))
+	{
+		ModuleAction();
+	}
+
+	//キャンセル
+	if (CManager::GetKeyboard()->GetTrigger(DIK_BACKSPACE))
+	{
+		//モジュールの選択解除
+		ModuleCancel();
+
+		//ゲームの視点変更
+		CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+	}
 
 }
 

@@ -36,9 +36,10 @@ public:
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
 	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
-	void Operator();							//操作
-	void ModuleClearCheck();					//クリアしたかチェック
-	void ModuleMiss();							//モジュールミスった
+	void Operation_Keyboard();							//操作　キーボード
+	void Operation_Mouse();								//操作　マウス
+	void ModuleClearCheck();							//クリアしたかチェック
+	void ModuleMiss();									//モジュールミスった
 
 private:
 	int m_nModuleNum;																	//モジュール数

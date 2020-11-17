@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//モジュールパーツのキーパッド  [module_parts_No2_ShapeKey.cpp]
+//モジュールパーツのキーパッド  [module_parts_No1_ShapeKey.cpp]
 //Author:Yoshiki Hosoya
 //
 //------------------------------------------------------------------------------
@@ -8,7 +8,8 @@
 //------------------------------------------------------------------------------
 //インクルード
 //------------------------------------------------------------------------------
-#include "module_parts_No2_ShapeKey.h"
+#include "module_parts_No2_Wire.h"
+#include "module_No2_LampAndWire.h"
 #include "renderer.h"
 #include "manager.h"
 #include "modelinfo.h"
@@ -23,40 +24,31 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define KEYPAD_SYMBOL_OFFSET				(D3DXVECTOR3(0.0f,0.0f,-6.5f))
-#define KEYPAD_SYMBOLPOLYGON_SIZE			(D3DXVECTOR3(12.0f,12.0f,0.0f))
-#define KEYPAD_LIGHT_REDLIGHTING_TIME		(90)
 
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::CModule_Parts_No2_ShapeKey()
+CModule_Parts_No2_Wire::CModule_Parts_No2_Wire()
 {
-	m_pShape.reset();
-	m_Shape = CModule_No2_ShapeKeyPad::SHAPE::NONE;
+	m_Wire = CModule_No2_LampAndWire::WIRE::NONE;
+	m_WireColor = MagentaColor;
+	m_bCut = false;
 }
 
 //------------------------------------------------------------------------------
 //デストラクタ
 //------------------------------------------------------------------------------
-CModule_Parts_No2_ShapeKey::~CModule_Parts_No2_ShapeKey()
+CModule_Parts_No2_Wire::~CModule_Parts_No2_Wire()
 {
-	m_pShape.reset();
+
 }
 //------------------------------------------------------------------------------
 //初期化処理
 //------------------------------------------------------------------------------
-HRESULT CModule_Parts_No2_ShapeKey::Init()
+HRESULT CModule_Parts_No2_Wire::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_KEYPAD));
-
-	//文字の生成
-	m_pShape = CSceneBase::ScenePolygonCreateShared<CScene3D>(KEYPAD_SYMBOL_OFFSET, KEYPAD_SYMBOLPOLYGON_SIZE, WhiteColor,
-		CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
-
-	//親マトリックス設定
-	m_pShape->SetParentMtxPtr(GetMtxWorldPtr());
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_WIRE));
 
 	CSceneX::Init();
 
@@ -66,36 +58,67 @@ HRESULT CModule_Parts_No2_ShapeKey::Init()
 //------------------------------------------------------------------------------
 //更新処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Update()
+void CModule_Parts_No2_Wire::Update()
 {
 	CSceneX::Update();
 }
 //------------------------------------------------------------------------------
 //描画処理
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::Draw()
+void CModule_Parts_No2_Wire::Draw()
 {
-	CSceneX::Draw();
+	//ハードエッジ描画
+	//選択されているモデルのみ
+	CSceneX::DrawHardEdgeStencil();
+
+	//ワールドマトリックスの計算
+	CSceneX::CalcMtx_IncludeParentMtx();
+
+	//メッシュ描画　マテリアル色を設定
+	CSceneX::DrawMesh_SetMaterial(m_WireColor, false, { 2 });
+
+	//CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::ShowDebugInfo()
+void CModule_Parts_No2_Wire::ShowDebugInfo()
 {
 #ifdef _DEBUG
 
 #endif //DEBUG
 }
-
 //------------------------------------------------------------------------------
-//シンボルの設定
+//ワイヤーカラー設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No2_ShapeKey::SetShape(CModule_No2_ShapeKeyPad::SHAPE shape)
+void CModule_Parts_No2_Wire::SetWire(CModule_No2_LampAndWire::WIRE wire)
 {
-	// Shape設定
-	m_Shape = shape;
+	m_Wire = wire;
 
-	//UV設定
-	m_pShape->SetAnimation(CHossoLibrary::CalcUV_StaticFunc((int)shape, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01),
-							CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01));
+	switch (m_Wire)
+	{
+
+	case CModule_No2_LampAndWire::RED:
+		m_WireColor = RedColor;
+		break;
+	case CModule_No2_LampAndWire::BLUE:
+		m_WireColor = BlueColor;
+		break;
+	case CModule_No2_LampAndWire::GREEN:
+		m_WireColor = GreenColor;
+		break;
+	case CModule_No2_LampAndWire::YELLOW:
+		m_WireColor = YellowColor;
+		break;
+	case CModule_No2_LampAndWire::WHITE:
+		m_WireColor = WhiteColor;
+		break;
+	case CModule_No2_LampAndWire::BLACK:
+		m_WireColor = BlackColor;
+		break;
+
+
+	}
+
+
 }

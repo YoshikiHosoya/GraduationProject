@@ -22,18 +22,18 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/test/test_module.x" ,							MODEL_MODULE_DEFAULT },								//モジュール
 	{ "data/MODEL/test/test_module_none.x" ,					MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
 	{ "data/MODEL/BombTimer/BombTimer.x" ,						MODEL_MODULE_TIMER },								//タイマー
-	{ "data/MODEL/Module0/ModuleNumber0.x" ,					MODEL_MODULE_NO1 },									//キーパッド
-	{ "data/MODEL/Module1/ModuleNumber1.x" ,					MODEL_MODULE_NO2 },									//キーパッド
-	{ "data/MODEL/Module2/ModuleNumber2.x" ,					MODEL_MODULE_NO3 },									//キーパッド
+	{ "data/MODEL/Module0/ModuleNumber0.x" ,					MODEL_MODULE_NO0 },									//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1.x" ,					MODEL_MODULE_NO1 },									//キーパッド
+	{ "data/MODEL/Module2/ModuleNumber2.x" ,					MODEL_MODULE_NO2 },									//キーパッド
 	{ "data/MODEL/Module4/ModuleNumber4.x" ,					MODEL_MODULE_NO4 },									//キーパッド
 
 	//モジュールのパーツ
 	{ "data/MODEL/Lamp/Lamp.x" ,								MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
 	{ "data/MODEL/ProgressLamp/ProgressLamp.x" ,				MODEL_MODULEPARTS_PROGRESSLAMP },					//進捗度ランプ
 
-	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
-	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO2_KEYPAD },						//キーパッド
-	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,				MODEL_MODULEPARTS_NO3_WIRE },						//キーパッド
+	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO0_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,				MODEL_MODULEPARTS_NO2_WIRE },						//キーパッド
 
 	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 
