@@ -261,6 +261,12 @@
     <ClCompile Include="Source Code\DecodingManager.cpp">
       <Filter>DecodingBook</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\myhash.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Decoding.cpp">
+      <Filter>Mode</Filter>
+	</ClCompile>
     <ClCompile Include="Source Code\module_No0_SymbolKeyPad.cpp">
       <Filter>Bomb\module</Filter>
     </ClCompile>
@@ -500,6 +506,15 @@
     <ClInclude Include="Source Code\DecodingManager.h">
       <Filter>DecodingBook</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\myhash.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\DecodingTypes.h">
+      <Filter>DecodingBook</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Decoding.h">
+      <Filter>Mode</Filter>
+	 </ClInclude>
     <ClInclude Include="Source Code\module_No0_SymbolKeyPad.h">
       <Filter>Bomb\module</Filter>
     </ClInclude>

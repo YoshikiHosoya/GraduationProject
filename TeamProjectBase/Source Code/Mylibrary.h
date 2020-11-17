@@ -169,7 +169,7 @@
 // 列挙型定義
 //-------------------------------------------------------------------------------------------------------------
 // 頂点点の原点(対キーパッド)
-typedef enum
+typedef enum ORIGINVERTEXTYPE
 {
 	ORIGINVERTEXTYPE_NONE = 0,			// なし
 	ORIGINVERTEXTYPE_LOWERLEFT,			// 左下

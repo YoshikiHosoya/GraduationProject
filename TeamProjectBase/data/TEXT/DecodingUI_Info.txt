@@ -1,0 +1,60 @@
+//*************************************************************************************************************
+//
+// DecodingUI_Info
+//
+//*************************************************************************************************************
+[TellThePicture][Parameter]
+pos = 275 175
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0f
+originType = 15
+disp = 1
+
+[ShapeMemorization][Parameter]
+pos = 275 350
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1
+
+[CordCutting][Parameter]
+pos = 275 525
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1
+
+[Maze][Parameter]
+pos = 700 175
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1
+
+[Simon][Parameter]
+pos = 700 350
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1
+
+[Nowmaking][Parameter]
+pos = 700 525
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1
+
+[Backlight][Parameter]
+pos = 275 175
+size = 385 150
+col = 1.0 1.0 1.0 1.0
+angle = 0.0
+originType = 15
+disp = 1

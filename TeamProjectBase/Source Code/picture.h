@@ -66,7 +66,7 @@ public:
 
 	// 取得関数
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.data; }															// フラグの取得
-	inline static CPaintingPen* GetPaintPen(void) { return m_pPen; }														// ペンの取得
+	inline CPaintingPen*    GetPaintPen(void) { return m_pPen; }														// ペンの取得
 	// クリエイト関数
 	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent);															// 生成
 	static HRESULT          MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile , LPDIRECT3DTEXTURE9 *ppTexture);// テクスチャの作成
@@ -82,19 +82,19 @@ private:
 	static void             ReleasePen(void);																				// ペンの開放
 	void                    PaintProc(void);																				// 塗る処理
 	bool                    GetMousePosOnPicture(void);																		// 絵上のマウス位置の取得
-
+	bool                    ItIsPressingButtons(void);																		// タブレットのボタンを押しているか
 	/* メンバ変数 */
 	static INTEGER2         m_nNumPixelBlock;																				// ピクセル数
 	static FLOAT2           m_size;																							// 大きさ
 	static D3DXVECTOR3      m_PlaneNor;																						// 平面の法線
 	static D3DXVECTOR2      m_PixelSize;																					// ピクセルサイズ
 	static UINT             m_nNumDataMax;																					// 最大データ数
-	static CPaintingPen*    m_pPen;																							// ペンのポインタ
 	static D3DXVECTOR2      m_PixelSizehalf;																				// ピクセルサイズの半分
 	static D3DXVECTOR2*     m_pPixelPos;																					// ピクセル位置のポインタ
 	static UINT             m_nNumMakeFile;																					// ファイルを作った回数
 	static CString          m_WriteToFile;																					// 書き込み先のァイル名
 	static D3DXVECTOR3      m_SetingPos;																					// 設定用の位置
+	CPaintingPen*           m_pPen;																							// ペンのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtexBuff;																					// 頂点バッファのポインタ
 	LPDIRECT3DTEXTURE9      m_pTexture;																						// テクスチャポインタ
 	BITS4                   m_Flags;																						// フラグ

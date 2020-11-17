@@ -43,6 +43,14 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Paint/Pen_Button.png" },					// ブラシ
 	{ "data/TEXTURE/UI/Paint/Eraser_Button.png" },				// 消しゴム
 	{ "data/TEXTURE/UI/Paint/send.png" },						// 送信
+
+	{ "data/TEXTURE/UI/DecodingBook/T00.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/T01.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/T02.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/T03.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/T04.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/T05.png" },					// 解読UI
+	{ "data/TEXTURE/UI/DecodingBook/backLight.png" },			// 解読UIバックライト
 };
 
 //テクスチャ名の設定

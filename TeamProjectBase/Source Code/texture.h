@@ -56,6 +56,14 @@ public:
 		TEX_UI_ERASERBUTTON,					// 消しゴム
 		TEX_UI_SENDBUTTON,						// 送信
 
+		TEX_UI_DECODING_T00,					// 解読UI
+		TEX_UI_DECODING_T01,					// 解読UI
+		TEX_UI_DECODING_T02,					// 解読UI
+		TEX_UI_DECODING_T03,					// 解読UI
+		TEX_UI_DECODING_T04,					// 解読UI
+		TEX_UI_DECODING_T05,					// 解読UI
+		TEX_UI_DECODING_BACKLIGHT,				// 解読UIバックライト
+
 		TEX_MAX									//MAX
 	};
 

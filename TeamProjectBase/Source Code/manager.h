@@ -29,7 +29,7 @@ class CBaseMode;
 class CGame;
 class CSound;
 class CPad_XInput;
-
+class CDecoding;
 class CManager
 {
 public:
@@ -38,6 +38,7 @@ public:
 	{
 		MODE_NONE = -1,						//無し
 		MODE_TITLE,							//タイトル
+		MODE_DECODING,						// 解読
 		MODE_GAME,							//ゲーム
 		MODE_RESULT,						//リザルト
 		MODE_TEST,							//テスト画面
@@ -73,7 +74,7 @@ public:
 
 	static CBaseMode *GetBaseMode();											//ベースのモード取得
 	static CGame *GetGame();													//ゲーム取得 簡単に呼び出せるように
-
+	static CDecoding *GetDecoding();											// 解読の取得
 private:
 	static std::unique_ptr<CRenderer> m_pRenderer;		//レンダラーへのポインタ
 	static std::unique_ptr <CSound > m_pSound;			//サウンドへのポインタ
