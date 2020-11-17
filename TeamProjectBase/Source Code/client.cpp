@@ -197,7 +197,7 @@ void CClient::SendPicture(void)
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
 #endif
-		//return;
+		return;
 	}
 
 	// 変数宣言
@@ -263,13 +263,16 @@ void CClient::RecvText(void)
 	// 文字数分、メモリ確保
 	char *pFileBuffer = new char[nFileSize];
 	recv(m_socket, pFileBuffer, nFileSize, 0);
-	printf("ピクチャを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+
+	pFileBuffer[nFileSize] = '\0';
 
 #ifdef _DEBUG
-	printf("受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+	printf("テキストを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
 #endif
 	// チャットにテキストを追加
 	CChatTab::RecvChatText(pFileBuffer);
+
+	delete[] pFileBuffer;
 }
 
 // ===================================================================
@@ -301,13 +304,19 @@ void CClient::RecvPicture(void)
 		throw E_FAIL;
 	}
 
+	// ファイルを上書き
+	FILE *pFile;
+	pFile = fopen(LINK_SENDPICTURE, "w");
+	fprintf(pFile, "%s", pFileBuffer);
+	fclose(pFile);
+
 	delete[] pFileBuffer;
 
-	//CString link;
-	//link = LINK_SENDPICTURE;
-	//CPicture::Reading(pTexture, link);
+	CString link;
+	link = LINK_SENDPICTURE;
+	CPicture::Reading(pTexture, link);
 
-	//CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
+	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
 }
 
 #ifdef _DEBUG
