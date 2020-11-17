@@ -16,6 +16,7 @@
 #include "game.h"
 #include "tablet.h"
 #include "chatTab.h"
+#include "Decoding.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -32,7 +33,6 @@ FLOAT2        CPicture::m_size            = MYLIB_2DVECTOR_ZERO;					// 大きさ
 D3DXVECTOR3   CPicture::m_PlaneNor        = D3DXVECTOR3(0.0f, 0.0f, -1.0f);			// 平面の法線
 D3DXVECTOR2   CPicture::m_PixelSize       = MYLIB_VEC2_UNSET;						// ピクセルサイズ
 UINT          CPicture::m_nNumDataMax     = MYLIB_INT_UNSET;						// 最大データ数最大データ数
-CPaintingPen* CPicture::m_pPen            = nullptr;								// ペンのポインタ
 D3DXVECTOR2   CPicture::m_PixelSizehalf   = MYLIB_VEC2_UNSET;						// ピクセルサイズの半分
 D3DXVECTOR2*  CPicture::m_pPixelPos       = nullptr;								// ピクセル位置のポインタ
 UINT          CPicture::m_nNumMakeFile    = MYLIB_INT_UNSET;						// ファイルを作った回数
@@ -54,8 +54,6 @@ void CPicture::InitStaticMember(void)
 	CreatePixelPos();
 	// ペンの開放
 	ReleasePen();
-	// ペンの生成
-	m_pPen = CPaintingPen::Create();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -131,6 +129,13 @@ inline CPicture::~CPicture()
 		m_pVtexBuff->Release();
 		m_pVtexBuff = nullptr;
 	}
+
+	if (m_pPen)
+	{
+		m_pPen->Uninit();
+		delete m_pPen;
+		m_pPen = nullptr;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -143,6 +148,10 @@ HRESULT CPicture::Init()
 
 	// 初期化
 	MatrixCal();
+
+	// ペンの生成
+	m_pPen = CPaintingPen::Create();
+
 	m_Flags.data = MASK_DISP;
 	try
 	{	// テクスチャの作成
@@ -248,9 +257,9 @@ void CPicture::MakeTexture(LPDIRECT3DDEVICE9 pDevice)
 		throw E_FAIL;
 	}
 	// テクスチャカラーの初期化
-	InitTextureColor();
+	//InitTextureColor();
 	// 読み込み
-	//Reading(m_pTexture, m_WriteToFile);
+	Reading(m_pTexture, m_WriteToFile);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -399,12 +408,7 @@ void CPicture::ReleasePixelPos(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::ReleasePen(void)
 {
-	if (m_pPen)
-	{
-		m_pPen->Uninit();
-		delete m_pPen;
-		m_pPen = nullptr;
-	}
+
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -419,7 +423,7 @@ void CPicture::PaintProc(void)
 	}
 
 	// タブレットのボタンを押しているか
-	if (CManager::GetGame()->GetTablet()->ItIsPressingButtons() == true)
+	if (ItIsPressingButtons() == true)
 	{// 押している
 		return;
 	}
@@ -535,6 +539,28 @@ bool CPicture::GetMousePosOnPicture(void)
 
 	// マウスの左クリックが押されている時
 	return pMouse->GetPress(0);
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// タブレットのボタンを押しているか
+//-------------------------------------------------------------------------------------------------------------
+bool CPicture::ItIsPressingButtons(void)
+{
+	// 変数宣言
+	CGame *pGame = CManager::GetGame();	// ゲームの取得
+	CDecoding *pDecoding = CManager::GetDecoding();	// 解読の取得
+	if (pGame != nullptr)
+	{
+		// タブレットのボタンを押しているか
+		return pGame->GetTablet()->ItIsPressingButtons();
+	}
+	else if (pDecoding != nullptr)
+	{
+		// タブレットのボタンを押しているか
+		return pDecoding->GetTablet()->ItIsPressingButtons();
+	}
+
+	return false;
 }
 
 //-------------------------------------------------------------------------------------------------------------

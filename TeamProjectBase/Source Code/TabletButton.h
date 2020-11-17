@@ -16,7 +16,9 @@
 //-------------------------------------------------------------------------------------------------------------
 // クラス定義
 //-------------------------------------------------------------------------------------------------------------
-class CScene3D; 
+class CScene3D;
+class CPicture;
+class CPaintingPen;
 class CTabletButton : public CSceneX
 {
 public:
@@ -72,6 +74,9 @@ public:
 	static std::shared_ptr<CTabletButton> Create(D3DXMATRIX *pMtxParent,CONST D3DXVECTOR3 &pos, TYPE type);	// 生成
 
 private:
+	/* メンバ関数 */
+	static CPicture *GetPicture(void);					// ピクチャの取得
+	static CPaintingPen *GetPen(void);					// ペンの取得
 	/* メンバ変数 */
 	static LPDIRECT3DTEXTURE9 m_aTexture[TYPE_MAX];		// テクスチャ情報
 	static float              m_aPressPos[PRESS_MAX];	// 押された位置

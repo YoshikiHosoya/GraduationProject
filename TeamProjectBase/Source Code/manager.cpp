@@ -25,6 +25,8 @@
 #include "Debug/Debug_EffectViewer.h"
 #include "camera.h"
 #include "client.h"
+#include "Decoding.h"
+#include "DecodingManager.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -117,6 +119,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	std::thread t1(CClient::ConnectServer);
 	t1.detach();
 
+	// 解読UIの設定用ハッシュの作成
+	CDecodingManager::MakeHash();
 
 	//モード設定
 	SetMode(m_mode);
@@ -128,6 +132,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //------------------------------------------------------------------------------
 void CManager::Uninit()
 {
+	// 解読UIの設定用ハッシュの開放
+	CDecodingManager::ReleaseHash();
+
 	//ImGui終了
 	CHossoLibrary::UninitImgui();
 
@@ -276,6 +283,12 @@ void CManager::SetMode(MODE nextmode)
 		std::cout << "new BaseMode[Title]" << NEWLINE;
 		//m_pSound->Play(CSound::LABEL_BGM_TITLE);
 		break;
+		// Decoding
+	case MODE_DECODING:
+		m_pBaseMode.reset(new CDecoding);
+		std::cout << "new BaseMode[Decoding]" << NEWLINE;
+		//m_pSound->Play(CSound::LABEL_BGM_TITLE);
+		break;
 
 		//game
 	case MODE_GAME:
@@ -360,6 +373,30 @@ CGame * CManager::GetGame()
 			if (pGame)
 			{
 				return pGame;
+			}
+		}
+	}
+	return nullptr;
+}
+
+//------------------------------------------------------------------------------
+//解読の取得
+//------------------------------------------------------------------------------
+CDecoding * CManager::GetDecoding()
+{
+	//ゲーム中かどうか
+	if (m_mode == CManager::MODE_DECODING)
+	{
+		//nullcheck
+		if (m_pBaseMode)
+		{
+			//キャスト
+			CDecoding *pDecoding = ((CDecoding*)m_pBaseMode.get());
+
+			//nullcheck
+			if (pDecoding)
+			{
+				return pDecoding;
 			}
 		}
 	}

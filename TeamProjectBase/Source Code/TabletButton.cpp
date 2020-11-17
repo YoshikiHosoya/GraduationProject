@@ -16,6 +16,7 @@
 #include "manager.h"
 #include "mouse.h"
 #include "game.h"
+#include "Decoding.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -98,8 +99,14 @@ void CTabletButton::Update()
 {
 	// 変数宣言
 	CMouse*       pMouse   = CManager::GetMouse();					// マウスの取得
-	CPaintingPen* pPen     = CPicture::GetPaintPen();				// ペンの取得
-	CPicture*     pPicture = CManager::GetGame()->GetPicture();		// ピクチャの取得
+	CPaintingPen* pPen     = CTabletButton::GetPen();				// ペンの取得
+	CPicture*     pPicture = CTabletButton::GetPicture();			// ピクチャの取得
+
+	if (pPen == nullptr || pPicture == nullptr)
+	{
+		return;
+	}
+
 	// フラグが立っている時かつマウスが押されていない時
 	if (m_bPress && !pMouse->GetPress(0) && m_bChange)
 	{
@@ -232,5 +239,47 @@ std::shared_ptr<CTabletButton> CTabletButton::Create(D3DXMATRIX *pMtxParent, CON
 	pTabletButton_Base->AddSharedList(pTabletButton_Base);
 
 	return pTabletButton_Base;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ピクチャの取得
+//-------------------------------------------------------------------------------------------------------------
+CPicture * CTabletButton::GetPicture(void)
+{
+	// 変数宣言
+	CGame *pGame = CManager::GetGame();				// ゲームの取得
+	CDecoding *pDecoding = CManager::GetDecoding();	// 解読の取得
+	if (pGame != nullptr)
+	{
+		// ピクチャの取得
+		return pGame->GetPicture();
+	}
+	else if (pDecoding != nullptr)
+	{
+		// ピクチャの取得
+		return pDecoding->GetPicture();
+	}
+	return nullptr;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ペンの取得
+//-------------------------------------------------------------------------------------------------------------
+CPaintingPen * CTabletButton::GetPen(void)
+{
+	// 変数宣言
+	CGame *pGame = CManager::GetGame();				// ゲームの取得
+	CDecoding *pDecoding = CManager::GetDecoding();	// 解読の取得
+	if (pGame != nullptr)
+	{
+		// ペンの取得
+		return pGame->GetPicture()->GetPaintPen();
+	}
+	else if (pDecoding != nullptr)
+	{
+		// ペンの取得
+		return pDecoding->GetPicture()->GetPaintPen();
+	}
+	return nullptr;
 }
 

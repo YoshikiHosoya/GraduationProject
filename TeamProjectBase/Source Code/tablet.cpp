@@ -134,13 +134,13 @@ void CTablet::Update()
 		MLB_CASEEND;							// ケース終了
 	}
 
-	if (CManager::GetKeyboard()->GetTrigger(DIK_M))
-	{
-		this->SetDestinationProc(D3DXVECTOR3(0.0f, 0.0f, -300.0f));
-	}
-	// 変数宣言
-	FLOAT3* pPos = (FLOAT3 *)this->GetPosPtr();
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "現在位置 == [%.5f][%.5f][%.5f]\n", pPos->x, pPos->y, pPos->z);
+	//if (CManager::GetKeyboard()->GetTrigger(DIK_M))
+	//{
+	//	this->SetDestinationProc(D3DXVECTOR3(0.0f, 0.0f, -300.0f));
+	//}
+	//// 変数宣言
+	//FLOAT3* pPos = (FLOAT3 *)this->GetPosPtr();
+	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "現在位置 == [%.5f][%.5f][%.5f]\n", pPos->x, pPos->y, pPos->z);
 }
 
 //-------------------------------------------------------------------------------------------------------------
