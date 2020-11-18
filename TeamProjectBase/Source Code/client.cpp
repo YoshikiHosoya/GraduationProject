@@ -106,11 +106,13 @@ void CClient::WaitRecieve(void)
 			continue;
 		}
 
-		// テキストの受信
-		if (strlen(buf) > 0)
-			RecvText(buf);
+		if (strlen(buf) <= 0)
+			continue;
 
-		//RecvPicture();
+		if (strcmp(buf, "SEND_PICTURE") == 0)
+			RecvPicture();
+		else if (strcmp(buf, "SEND_TEXT") == 0)
+			RecvText();
 	}
 }
 
@@ -169,31 +171,19 @@ void CClient::SendText(char * cSendText)
 
 	char Text[65];
 	strcpy(Text, cSendText);
+	char cSend[16] = "SEND_TEXT";
 	int nLen = strlen(Text);
 
 #ifdef _DEBUG
 	printf("送信 > %s [%d字]\n", Text, nLen);
 #endif
-	// テキスト送信
-	if (send(m_socket, Text, nLen, 0) == -1)
-	{
-#ifdef _DEBUG
-		ErrorReport();
-#endif
-	}
-}
+	char cNumChar[256] = { 0 };
+	sprintf(cNumChar, "%d", nLen);
 
-// ===================================================================
-// テキストの受信
-// ===================================================================
-void CClient::RecvText(char * cRecvText)
-{
-	int nLen = strlen(cRecvText);
-#ifdef _DEBUG
-	printf("受信 > %s [%d字]\n", cRecvText, nLen);
-#endif
-	// チャットにテキストを追加
-	CChatTab::RecvChatText(cRecvText);
+	// テキスト送信
+	send(m_socket, cSend, sizeof(cSend), 0);
+	send(m_socket, cNumChar, sizeof(cNumChar), 0);
+	send(m_socket, Text, nLen, 0);
 }
 
 // ===================================================================
@@ -207,7 +197,7 @@ void CClient::SendPicture(void)
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
 #endif
-		//return;
+		return;
 	}
 
 	// 変数宣言
@@ -218,40 +208,37 @@ void CClient::SendPicture(void)
 	if ((result = Load.LoadFileIntoString(LINK_SENDPICTURE)) != CLoadFile::LR_SUCCESS)
 	{
 		// エラー
+#ifdef _DEBUG
+		printf("ピクチャの情報を読み込めません\n");
+#endif
+		// ファイルデータの破棄
+		Load.DeleteFileData();
+		return;
 	}
 
 #ifdef _DEBUG
 	printf("ピクチャ送信 > [%d byte]\n", Load.m_nuFileSize);
 #endif
 
-	// ピクチャ送信を伝える
-	char sendTitle[16] = "SEND_PICTURE";
-	send(m_socket, sendTitle, strlen(sendTitle), 0);
+	char Header[256] = { 0 };
+	char cSendPicture[16] = "SEND_PICTURE";
+	sprintf(Header, "%d", Load.m_nuFileSize);
+	send(m_socket, cSendPicture, sizeof(cSendPicture), 0);
+	send(m_socket, Header, sizeof(Header), 0);
+	send(m_socket, Load.m_pFileData, Load.m_nuFileSize, 0);
 
-	// テキスト送信
-	if (send(m_socket, Load.m_pFileData, Load.m_nuFileSize, 0) == -1)
-	{
-		// エラーレポート
-#ifdef _DEBUG
-		ErrorReport();
-#endif
-		// ファイルデータの破棄
-		//Load.DeleteFileData();
-		//return;
-	}
-
+	// 空のピクチャを生成
 	LPDIRECT3DTEXTURE9 pTexture = NULL;
-
 	if (FAILED(CManager::GetRenderer()->GetDevice()->CreateTexture(128, 128, 1, 0, D3DFMT_A32B32G32R32F,
 		D3DPOOL_MANAGED, &pTexture, NULL)))
 	{
 		throw E_FAIL;
 	}
-
+	// ピクチャの情報を格納
 	CString link;
 	link = LINK_SENDPICTURE;
 	CPicture::Reading(pTexture, link);
-
+	// 履歴に追加
 	CChatTab::AddPicture(CChatBase::OWNER_OWN, pTexture);
 
 	// ファイルデータの破棄
@@ -259,10 +246,55 @@ void CClient::SendPicture(void)
 }
 
 // ===================================================================
+// テキストの受信
+// ===================================================================
+void CClient::RecvText(void)
+{
+	// 初期化
+	char Header[256] = { 0 };
+	memset(Header, 0, sizeof(Header));
+
+	// 文字数を取得
+	recv(m_socket, Header, sizeof(Header), 0);
+	int nFileSize = atoi(Header);
+	if (nFileSize <= 0)
+		return;
+
+	// 文字数分、メモリ確保
+	char *pFileBuffer = new char[nFileSize];
+	recv(m_socket, pFileBuffer, nFileSize, 0);
+
+	pFileBuffer[nFileSize] = '\0';
+
+#ifdef _DEBUG
+	printf("テキストを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+#endif
+	// チャットにテキストを追加
+	CChatTab::RecvChatText(pFileBuffer);
+
+	delete[] pFileBuffer;
+}
+
+// ===================================================================
 // ピクチャの受信
 // ===================================================================
 void CClient::RecvPicture(void)
 {
+	// 初期化
+	char Header[256] = { 0 };
+	memset(Header, 0, sizeof(Header));
+
+	// 文字数を取得
+	recv(m_socket, Header, sizeof(Header), 0);
+	int nFileSize = atoi(Header);
+	if (nFileSize <= 0)
+		return;
+
+	// 文字数分、メモリ確保
+	char *pFileBuffer = new char[nFileSize];
+	recv(m_socket, pFileBuffer, nFileSize, 0);
+	printf("ピクチャを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+
 	// 格納用
 	LPDIRECT3DTEXTURE9 pTexture = NULL;
 
@@ -272,11 +304,19 @@ void CClient::RecvPicture(void)
 		throw E_FAIL;
 	}
 
-	//CString link;
-	//link = LINK_SENDPICTURE;
-	//CPicture::Reading(pTexture, link);
+	// ファイルを上書き
+	FILE *pFile;
+	pFile = fopen(LINK_SENDPICTURE, "w");
+	fprintf(pFile, "%s", pFileBuffer);
+	fclose(pFile);
 
-	//CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
+	delete[] pFileBuffer;
+
+	CString link;
+	link = LINK_SENDPICTURE;
+	CPicture::Reading(pTexture, link);
+
+	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
 }
 
 #ifdef _DEBUG
