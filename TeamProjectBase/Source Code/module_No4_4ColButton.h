@@ -46,22 +46,22 @@ public:
 	CModule_No4_4ColButton();
 	virtual ~CModule_No4_4ColButton();
 
-	virtual HRESULT Init()			override;			//初期化
-	virtual void Update()			override;			//更新
-	virtual void Draw()				override;			//描画
-	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
-	void Operation_Keyboard()		override;			//モジュール操作 キーボード
-	void Operation_Mouse()			override;			//モジュール操作 マウス
-	void ModuleAction()				override;			//モジュールのアクション
-	void ModuleCancel()				override;			//モジュールの選択解除
+	virtual HRESULT Init()			override;						//初期化
+	virtual void Update()			override;						//更新
+	virtual void Draw()				override;						//描画
+	virtual void ShowDebugInfo()	override;						//デバッグ情報表記
+	void Operation_Keyboard()		override;						//モジュール操作 キーボード
+	void Operation_Mouse()			override;						//モジュール操作 マウス
+	void ModuleAction()				override;						//モジュールのアクション
+	void ModuleCancel()				override;						//モジュールの選択解除
 
-	void SetButtonState(STATE state);
+	void SetButtonState(STATE state);								//ボタンの状態設定
 
-	void NextButtonSet();
-	void PlayerInputReset();
+	void NextButtonSet();											//次の押すボタン設定
+	void PlayerInputReset();										//プレイやーの入力リセット
 
-	void ButtonPushSuccess();
-	bool CheckModuleClear();
+	void ButtonPushSuccess();										//押すボタン正解
+	bool CheckModuleClear();										//モジュールクリアしたかチェック
 
 
 private:

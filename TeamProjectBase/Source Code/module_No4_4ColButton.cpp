@@ -18,6 +18,7 @@
 #include "timer.h"
 #include "game.h"
 #include "mouse.h"
+#include "sound.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -203,7 +204,7 @@ void CModule_No4_4ColButton::Operation_Keyboard()
 void CModule_No4_4ColButton::Operation_Mouse()
 {
 	//レイの判定
-	CHossoLibrary::RayCollision_ModuleSelect(m_pColButtonList, (int&)m_nNowSelectButton);
+	CHossoLibrary::RayCollision_ModuleSelect(m_pColButtonList.begin(), m_pColButtonList.end(), (int&)m_nNowSelectButton);
 
 	//マウス操作
 	CModule_Base::Operation_Mouse();

@@ -191,9 +191,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 		}
 	}
 
-	int *pData = new int;
-
-
 	//NULLチェック
 	if (pManager != NULL)
 	{

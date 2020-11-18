@@ -20,6 +20,7 @@
 #include "Mylibrary.h"
 #include "scene3D.h"
 #include "mouse.h"
+#include "sound.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -192,10 +193,17 @@ void CModule_No1_ShapeKeyPad::Operation_Keyboard()
 void CModule_No1_ShapeKeyPad::Operation_Mouse()
 {
 	//レイの判定
-	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList, (int&)m_nSelectNum);
+	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList.begin(), m_pKeyPadList.end(), (int&)m_nSelectNum);
 
 	//マウス操作
 	CModule_Base::Operation_Mouse();
+
+	//ステートがNORMALじゃない時
+	if (m_state != STATE::NORMAL)
+	{
+		//選択解除
+		CModule_Base::ModuleParts_Select<CModule_Parts_No1_ShapeKey>(m_pKeyPadList, -1);
+	}
 }
 
 
@@ -205,13 +213,17 @@ void CModule_No1_ShapeKeyPad::Operation_Mouse()
 void CModule_No1_ShapeKeyPad::ModuleAction()
 {
 	//選択番号が-1とかだった時
-	if (m_nSelectNum < 0)
+	if (m_nSelectNum < 0 || m_state != STATE::NORMAL)
 	{
 		return;
 	}
 
 	if (m_pKeyPadList[m_nSelectNum].get())
 	{
+
+		//音再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_MODULE_PUSH);
+
 		//押したボタンがクリアボタンだった場合
 		if (m_pKeyPadList[m_nSelectNum]->GetClearFlag())
 		{

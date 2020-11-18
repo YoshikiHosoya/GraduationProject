@@ -16,6 +16,7 @@
 #include "game.h"
 #include "particle.h"
 #include "mouse.h"
+#include "sound.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -149,7 +150,7 @@ void CModule_No2_LampAndWire::Operation_Keyboard()
 void CModule_No2_LampAndWire::Operation_Mouse()
 {
 	//レイの判定
-	CHossoLibrary::RayCollision_ModuleSelect(m_pWireList, (int&)m_nSelectPlace);
+	CHossoLibrary::RayCollision_ModuleSelect(m_pWireList.begin(), m_pWireList.end(), (int&)m_nSelectPlace);
 
 	//マウス操作
 	CModule_Base::Operation_Mouse();
@@ -172,6 +173,10 @@ void CModule_No2_LampAndWire::ModuleAction()
 		//ワイヤーカットされてない時
 		if (!m_pWireList[m_nSelectPlace]->GetWireCut())
 		{
+
+			//音再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_CUT);
+
 			//間違えたワイヤーだった時
 			if (!m_pWireList[m_nSelectPlace]->GetClearFlag())
 			{

@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 #include "module_base.h"
 #include "module_parts_lamp.h"
+#include "modelinfo.h"
 #include "manager.h"
 #include "renderer.h"
 #include "keyboard.h"
@@ -17,6 +18,7 @@
 #include "camera.h"
 #include "Bomb.h"
 #include "game.h"
+#include "sound.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -72,7 +74,19 @@ void CModule_Base::Operation_Mouse()
 	//左クリック
 	if (CManager::GetMouse()->GetTrigger(0))
 	{
+		//モジュールのアクション
 		ModuleAction();
+
+		//もしモジュール内をクリックしていなかった場合
+		if (!CHossoLibrary::MouseRayCollision_Boolean(GetMtxWorldPtr(), GetModelInfo()->GetMesh()))
+		{
+			//モジュールの選択解除
+			ModuleCancel();
+
+			//ゲームの視点変更
+			CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+
+		}
 	}
 
 	//キャンセル

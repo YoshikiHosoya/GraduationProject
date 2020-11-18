@@ -13,6 +13,7 @@
 #include "manager.h"
 #include "scene2D.h"
 #include "multinumber.h"
+#include "sound.h"
 
 //------------------------------------------------------------------------------
 //マクロ定義
@@ -25,13 +26,11 @@
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
-int CTimer::m_nTimer = 0;
 //------------------------------------------------------------------------------
 //コンストラクタ
 //------------------------------------------------------------------------------
 CTimer::CTimer()
 {
-	m_nTimer = DEFAULT_TIMER;
 	m_nCntFlame = DEFAULT_TIMER * 60;
 	m_bStop = false;
 	m_pMultiNumber = {};
@@ -49,25 +48,31 @@ CTimer::~CTimer()
 //------------------------------------------------------------------------------
 void CTimer::UpdateTimer()
 {
+	//ゲームが進行してない時はreturn
 	if (CManager::GetGame()->GetState() != CGame::STATE_NORMAL)
 	{
 		return;
 	}
+
 	//タイマーが動いている時
-	if (m_nTimer > 0 && m_bStop == false)
+	if (m_nCntFlame > 0 && m_bStop == false)
 	{
-		//フレーム加算
+		//カウントダウン
 		m_nCntFlame--;
 
 		//数値の更新
 		ChangeNumber();
 
-		//1秒おき
 		if (m_nCntFlame % 60 == 0)
 		{
-			//タイマーカウントダウン
-			m_nTimer--;
+			CManager::GetSound()->Play(CSound::LABEL_SE_COUNTDOWN_TIMER);
+		}
 
+		//タイマーが0になった時
+		if (m_nCntFlame <= 0)
+		{
+			//ゲームオーバー
+			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
 		}
 	}
 }
@@ -77,9 +82,9 @@ void CTimer::UpdateTimer()
 //------------------------------------------------------------------------------
 void CTimer::ChangeNumber()
 {
-	m_pMultiNumber[CTimer::TIMER_TYPE::MINUTE]->SetMultiNumber(m_nCntFlame / 60 / 60);
-	m_pMultiNumber[CTimer::TIMER_TYPE::SECOND]->SetMultiNumber(m_nCntFlame / 60 % 60);
-	m_pMultiNumber[CTimer::TIMER_TYPE::COMMA]->SetMultiNumber((int)((m_nCntFlame % 60) * (10.0f / 6.0f)));
+	m_pMultiNumber[CTimer::TIMER_TYPE::MINUTE]->SetMultiNumber(m_nCntFlame / 60 / 60);							//分
+	m_pMultiNumber[CTimer::TIMER_TYPE::SECOND]->SetMultiNumber(m_nCntFlame / 60 % 60);							//秒
+	m_pMultiNumber[CTimer::TIMER_TYPE::COMMA]->SetMultiNumber((int)((m_nCntFlame % 60) * (10.0f / 6.0f)));		//,秒
 
 }
 
@@ -100,9 +105,6 @@ std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, int c
 {
 	//メモリ確保
 	std::unique_ptr<CTimer>pTimer(new CTimer);
-
-	//時間設定
-	m_nTimer = nTimer;
 
 	for (int nCnt = 0; nCnt < CTimer::TIMER_TYPE::MAX; nCnt++)
 	{

@@ -26,7 +26,6 @@ public:
 		GREEN,
 	};
 
-
 	CModule_Parts_Lamp();
 	virtual ~CModule_Parts_Lamp();
 
@@ -36,7 +35,7 @@ public:
 	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
 
 	void SetLampState(LAMP_STATE lampstate);
-	LAMP_STATE GetLampState()					{ return m_LampState; };
+	LAMP_STATE GetLampState()		{ return m_LampState; };
 private:
 	int m_nCntLampCnt;					//ランプ用のカウント
 	LAMP_STATE m_LampState;				//ランプの状態

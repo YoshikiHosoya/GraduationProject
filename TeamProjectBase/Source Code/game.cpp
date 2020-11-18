@@ -185,7 +185,13 @@ void CGame::SetState(STATE state)
 			break;
 		case CGame::STATE_GAMEOVER:
 			m_nCntState = 120;
+
+			//‰æ–Ê‘S‘Ì‚É^‚Á•ƒ|ƒŠƒSƒ“
 			CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(SCREEN_CENTER_POS, SCREEN_SIZE, BlackColor, nullptr, CScene::OBJTYPE_FRONT);
+
+			//‰¹Ä¶
+			CManager::GetSound()->Play(CSound::LABEL_SE_EXPLOSION_00);
+
 			break;
 		case CGame::STATE_GAMECLEAR:
 			m_nCntState = 120;

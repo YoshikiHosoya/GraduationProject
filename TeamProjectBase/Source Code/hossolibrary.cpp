@@ -307,6 +307,37 @@ D3DXVECTOR3 CHossoLibrary::CalcMtxToVector3(D3DXMATRIX const & rMtx)
 }
 
 //------------------------------------------------------------------------------
+//マウスでのレイの判定
+//------------------------------------------------------------------------------
+bool CHossoLibrary::MouseRayCollision_Boolean(D3DXMATRIX *pMtx, LPD3DXMESH pMesh)
+{
+	// 変数宣言
+	D3DXVECTOR3*   pNearPos = &CManager::GetRay()->NearPos;	// レイの近い位置
+	D3DXVECTOR3*   pFarPos = &CManager::GetRay()->FarPos;	// レイの遠い位置
+	BOOL           bHit = FALSE;						// ヒットフラグ
+	D3DXMATRIX     invmat;									// 算出した逆行列
+	D3DXVECTOR3    ray;										// レイ
+	D3DXVECTOR3    InvNirePos;								// 算出した近い位置
+	D3DXVECTOR3    InvForePos;								// 算出した遠い位置
+
+	/* 対処いう物からみたレイに変換する */
+	//	逆行列の取得
+	D3DXMatrixInverse(&invmat, NULL, pMtx);
+	//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
+	D3DXVec3TransformCoord(&InvNirePos, pNearPos, &invmat);
+	//	レイ終点情報を変換
+	D3DXVec3TransformCoord(&InvForePos, pFarPos, &invmat);
+	//	レイ方向情報を変換
+	D3DXVec3Normalize(&ray, &(InvForePos - InvNirePos));
+	//Rayを飛ばす
+	D3DXIntersect(pMesh, &InvNirePos, &ray, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
+
+	//BOOL型とboolean型が違うので計算
+	//FALSEだったらfalseがreturn,TRUEだったらtrueをreturn
+	return (bHit == 1);
+}
+
+//------------------------------------------------------------------------------
 //Imgui初期化
 //------------------------------------------------------------------------------
  HRESULT CHossoLibrary::InitImgui(HWND hWnd)

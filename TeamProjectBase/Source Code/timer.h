@@ -35,12 +35,9 @@ public:
 	void ShowDebugInfo();														//デバッグ情報表記
 	static std::unique_ptr<CTimer> Create(D3DXVECTOR3 const &TimerCenterPos,int const nTimer,D3DXMATRIX *pMtx);			//生成処理
 
-	static int GetTimer() { return m_nTimer; };									//タイマー取得
 	void SetStop(bool bStop) { m_bStop = bStop; };								//タイマーストップ
 private:
-	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;					//ナンバーのポインタ
-	static LPDIRECT3DTEXTURE9 m_pTexture;										//テクスチャのポインタ
-	static int m_nTimer;														//タイマー 秒で管理
+	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;									//ナンバーのポインタ
 	int m_nCntFlame;															//カウント フレーム
 	bool m_bStop;																//ストップ
 };

@@ -24,7 +24,7 @@
 #include "module_No1_ShapeKeypad.h"
 #include "module_No2_LampAndWire.h"
 #include "module_No4_4ColButton.h"
-
+#include "sound.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -94,7 +94,6 @@ void CBomb::Update()
 
 	//キーボード操作
 	//CBomb::Operation_Keyboard();
-
 
 	//マウス操作
 	CBomb::Operation_Mouse();
@@ -250,6 +249,7 @@ void CBomb::Operation_Keyboard()
 //------------------------------------------------------------------------------
 void CBomb::Operation_Mouse()
 {
+
 	switch (CManager::GetGame()->GetGaze())
 	{
 
@@ -260,14 +260,19 @@ void CBomb::Operation_Mouse()
 
 		//爆弾を見てる時
 	case CGame::GAZE_BOMB:
+
 		//レイの判定
-		CHossoLibrary::RayCollision_ModuleSelect(m_pModuleList,m_nSelectModuleNum);
+		//裏と表で判定の範囲を変更
+		CHossoLibrary::RayCollision_ModuleSelect(m_pModuleList.begin() + (m_bCameraDir * 6), m_pModuleList.end() - ((!m_bCameraDir) * 6), m_nSelectModuleNum);
 
 		//何も選択されてない時はbreak
 		if (m_nSelectModuleNum < 0)
 		{
 			break;
 		}
+
+		//裏表反転
+		m_nSelectModuleNum += (m_bCameraDir * 6);
 
 		//マウスクリックされた時
 		if (CManager::GetMouse()->GetTrigger(0))
@@ -336,6 +341,11 @@ void CBomb::ModuleMiss()
 		{
 			//ゲームオーバー
 			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
+		}
+		else
+		{
+			//音再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
 		}
 	}
 }

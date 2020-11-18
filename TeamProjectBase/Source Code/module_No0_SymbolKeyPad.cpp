@@ -15,6 +15,7 @@
 #include "modelinfo.h"
 #include "timer.h"
 #include "Mylibrary.h"
+#include "sound.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -130,7 +131,7 @@ void CModule_No0_SymbolKeyPad::Operation_Keyboard()
 void CModule_No0_SymbolKeyPad::Operation_Mouse()
 {
 	//レイの判定
-	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList, m_nSelectNum);
+	CHossoLibrary::RayCollision_ModuleSelect(m_pKeyPadList.begin(),m_pKeyPadList.end(), m_nSelectNum);
 
 	//マウス操作
 	CModule_Base::Operation_Mouse();
@@ -154,8 +155,12 @@ void CModule_No0_SymbolKeyPad::ModuleAction()
 		{
 			return;
 		}
+
+		//音再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_MODULE_PUSH);
+
 		//次のシンボルと同じシンボルだった時
-		else if (m_nNextSymbolNum == m_pKeyPadList[m_nSelectNum]->GetSymbolNum())
+		if (m_nNextSymbolNum == m_pKeyPadList[m_nSelectNum]->GetSymbolNum())
 		{
 			m_pKeyPadList[m_nSelectNum]->SetKeypadState(CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR);
 			m_nNextSymbolNum++;

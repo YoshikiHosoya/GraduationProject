@@ -34,7 +34,8 @@
 //------------------------------------------------------------------------------
 CSound::CSound()
 {
-
+	//ミュートしない
+	m_bMute = true;
 }
 
 //------------------------------------------------------------------------------
@@ -82,12 +83,9 @@ HRESULT CSound::Init(HWND hWnd)
 {
 	HRESULT hr;
 
-	//ミュートしない
-	m_bMute = false;
-
 #ifdef _DEBUG
 	//デバッグ時はミュートする
-	m_bMute = true;
+	//m_bMute = true;
 #endif
 	// COMライブラリの初期化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);

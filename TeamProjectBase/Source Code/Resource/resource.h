@@ -15,6 +15,7 @@
 #endif
 
 #define IDI_SWORDICON 105
+
 #ifndef IDC_STATIC
 #define IDC_STATIC -1
 #endif

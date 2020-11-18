@@ -73,45 +73,45 @@ public:
 	CModule_No1_ShapeKeyPad();
 	virtual ~CModule_No1_ShapeKeyPad();
 
-	virtual HRESULT Init()			override;			//初期化
-	virtual void Update()			override;			//更新
-	virtual void Draw()				override;			//描画
-	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
-	void Operation_Keyboard()		override;			//モジュール操作 キーボード
-	void Operation_Mouse()			override;			//モジュール操作 マウス
-	void ModuleAction()				override;			//モジュールのアクション
-	void ModuleCancel()				override;			//モジュールの選択解除
+	virtual HRESULT Init()			override;					//初期化
+	virtual void Update()			override;					//更新
+	virtual void Draw()				override;					//描画
+	virtual void ShowDebugInfo()	override;					//デバッグ情報表記
+	void Operation_Keyboard()		override;					//モジュール操作 キーボード
+	void Operation_Mouse()			override;					//モジュール操作 マウス
+	void ModuleAction()				override;					//モジュールのアクション
+	void ModuleCancel()				override;					//モジュールの選択解除
 
-	void UpdateState();									//ステートの更新
+	void UpdateState();											//ステートの更新
 
-	void CreateDisplayShape();							//ディスプレイの生成
-	void CreateKeyPad();								//キーパッド生成
-	void CreateProgressLamp();							//進捗のランプ生成
+	void CreateDisplayShape();									//ディスプレイの生成
+	void CreateKeyPad();										//キーパッド生成
+	void CreateProgressLamp();									//進捗のランプ生成
 
-	void CheckClear();									//クリアしたか確認
-	void QuestionClear();								//問題クリア
-	void ShapeShuffle();								//図形のシャッフル
-	void SetDisplayShape(int nShape);					//ディスプレイの図形設定
+	void CheckClear();											//クリアしたか確認
+	void QuestionClear();										//問題クリア
+	void ShapeShuffle();										//図形のシャッフル
+	void SetDisplayShape(int nShape);							//ディスプレイの図形設定
 
-	void SetNextPushKey();								//次に押すキーの設定
-	void SetNextPushKey_FromShape(SHAPE shape);			//図形を基に次に押すキー設定
-	void SetNextPushKey_FromPlace(PLACE nPlace);		//場所を基に次に押すキー設定 ←から何番目か
+	void SetNextPushKey();										//次に押すキーの設定
+	void SetNextPushKey_FromShape(SHAPE shape);					//図形を基に次に押すキー設定
+	void SetNextPushKey_FromPlace(PLACE nPlace);				//場所を基に次に押すキー設定 ←から何番目か
 
-	void SetState(STATE state);							//ステート設定
+	void SetState(STATE state);									//ステート設定
 
 
 private:
-	Vec<S_ptr<CModule_Parts_No1_ShapeKey>> m_pKeyPadList;				//キーパッドのポインタの配列
-	Vec<MEMORIES> m_Memories;											//過去にどのボタン押したか記憶する
-	U_ptr<CScene3D> m_pDisplayShape;									//ディスプレイに映る図形のポリゴンのポインタ
-	S_ptr<CModule_Parts_ProgressLamp> m_pProgressLamp;					//進捗度ランプ
+	Vec<S_ptr<CModule_Parts_No1_ShapeKey>> m_pKeyPadList;		//キーパッドのポインタの配列
+	Vec<MEMORIES> m_Memories;									//過去にどのボタン押したか記憶する
+	U_ptr<CScene3D> m_pDisplayShape;							//ディスプレイに映る図形のポリゴンのポインタ
+	S_ptr<CModule_Parts_ProgressLamp> m_pProgressLamp;			//進捗度ランプ
 
-	SHAPE m_DisplayShape;													//ディスプレイの図形
-	QUESTION m_NowQuestion;													//現在何問目か
-	PLACE m_nSelectNum;														//選択番号
-	STATE m_state;															//状態
+	SHAPE m_DisplayShape;										//ディスプレイの図形
+	QUESTION m_NowQuestion;										//現在何問目か
+	PLACE m_nSelectNum;											//選択番号
+	STATE m_state;												//状態
 
-	int m_nQuestionChangeCnt;												//問題切り替え中のカウント
+	int m_nQuestionChangeCnt;									//問題切り替え中のカウント
 
 };
 #endif

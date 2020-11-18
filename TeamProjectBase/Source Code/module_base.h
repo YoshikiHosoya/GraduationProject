@@ -105,24 +105,6 @@ public:
 		}
 	}
 
-	//テンプレート関数
-	//モジュールの選択状態を解除する関数
-	//例) CModule_Base::Create<CModule_Timer>(...)
-	template <class ModuleParts> static void SetSelect_Vec(Vec<S_ptr<ModuleParts>> &rList, int nSelectNum)
-	{
-		//配列が空かどうかチェック
-		if (rList.empty())
-		{
-			return;
-		}
-
-
-		for (int nCnt = 0; auto &rPtr : rList; nCnt++)
-		{
-			rPtr->SetSelect(false);
-		}
-	}
-
 private:
 	std::weak_ptr<CBomb> m_pBomb;								//爆弾のポインタ
 	S_ptr<CModule_Parts_Lamp> m_pLamp;							//ランプのポインタ

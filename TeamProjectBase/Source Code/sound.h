@@ -23,16 +23,18 @@ public:
 	// サウンドファイル
 	typedef enum
 	{
-		LABEL_BGM_TITLE = 0,						//タイトル
-		LABEL_BGM_GAME,								//ゲーム
-		LABEL_BGM_RESULT,							//リザルト
+		LABEL_BGM_TITLE = 0,					//タイトル
+		LABEL_BGM_GAME,							//ゲーム
+		LABEL_BGM_RESULT,						//リザルト
 
 		//エフェクト
-		LABEL_SE_EXPLOSION_00,						//爆発
-		LABEL_SE_EXPLOSION_01,						//爆発
-		LABEL_SE_EXPLOSION_02,						//爆発
-		LABEL_SE_EXPLOSION_03,						//爆発
-		LABEL_SE_EXPLOSION_04,						//爆発
+		LABEL_SE_EXPLOSION_00,					//爆発
+
+		//モジュールの音
+		LABEL_SE_COUNTDOWN_TIMER,				//タイマーカウントダウン
+		LABEL_SE_MISS,							//失敗　ブザー
+		LABEL_SE_CUT,							//ワイヤーとかカット
+		LABEL_SE_MODULE_PUSH,					//ボタンプッシュ
 
 		//システム音
 		LABEL_SE_DECISION,						//決定
@@ -83,10 +85,12 @@ private:
 
 		//エフェクト
 		{ "data/SE/Effect/explosion_00.wav", 0 },					//SE 爆発
-		{ "data/SE/Effect/explosion_01.wav", 0 },					//SE 爆発
-		{ "data/SE/Effect/explosion_02.wav", 0 },					//SE 爆発
-		{ "data/SE/Effect/explosion_03.wav", 0 },					//SE 爆発
-		{ "data/SE/Effect/explosion_04.wav", 0 },					//SE 爆発
+
+		//モジュールアクション
+		{ "data/SE/Module/Timer.wav", 0 },							//SE タイマーカウントダウン
+		{ "data/SE/Module/Miss00.wav", 0 },							//SE 失敗
+		{ "data/SE/Module/WireCut.wav", 0 },						//SE カット
+		{ "data/SE/Module/Push.wav", 0 },						//SE カット
 
 		//システム音
 		{ "data/SE/System/decision.wav", 0 },						//SE 決定

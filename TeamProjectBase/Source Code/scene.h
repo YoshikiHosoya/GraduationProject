@@ -57,26 +57,26 @@ public:
 
 	static void ShowNumAll();
 
-	static void ReleaseAll();														//メモリ開放
-	static void UpdateAll();														//更新処理
-	static void DrawAll();															//描画処理
-	static void ShowDebugInfoAll();													//全てのデバッグ情報表記処理
+	static void ReleaseAll();															//メモリ開放
+	static void UpdateAll();															//更新処理
+	static void DrawAll();																//描画処理
+	static void ShowDebugInfoAll();														//全てのデバッグ情報表記処理
 
-	static void ReleaseSpecificObject(OBJTYPE objtype);								//選択したオブジェクトタイプを全てリリース
+	static void ReleaseSpecificObject(OBJTYPE objtype);									//選択したオブジェクトタイプを全てリリース
 
-	CScene::OBJTYPE GetObjType()				{ return m_objtype; };				//オブジェクトの種類取得
-	static int GetNumAll()						{ return m_nNumAll; };				//総数取得
 
-	void Release()								{ m_bDeadFlag = true; };			//メモリ開放
-	void SetObjType(OBJTYPE objtype)			{ m_objtype = objtype; };			//オブジェクトタイプ設定関数
+	void Release()								{ m_bDeadFlag = true; };				//メモリ開放
+	void SetObjType(OBJTYPE objtype)			{ m_objtype = objtype; };				//オブジェクトタイプ設定関数
 
-	bool GetDeleteFlag()						{ return m_bDeadFlag; };			//死亡フラグ取得
+	static void SetStop(bool bStop)				{ m_bStop = bStop; };					//ストップ処理
+	static void Set1FAction()					{ m_b1FAction = true; };				//１Fだけ進める処理
 
-	static void SetStop(bool bStop)				{ m_bStop = bStop; };				//ストップ処理
-	static void Set1FAction()					{ m_b1FAction = true; };			//１Fだけ進める処理
+	bool GetDeleteFlag()						{ return m_bDeadFlag; };				//死亡フラグ取得
+	CScene::OBJTYPE GetObjType()				{ return m_objtype; };					//オブジェクトの種類取得
 
-	static bool GetStop()						{ return m_bStop; };									//ストップ状態か取得
-	static void GetSceneList(OBJTYPE objtype, std::vector<std::shared_ptr<CScene>> &SceneList);			//シーン情報取得（配列ごと）
+	static int GetNumAll()						{ return m_nNumAll; };					//総数取得
+	static bool GetStop()						{ return m_bStop; };					//ストップ状態か取得
+	static void GetSceneList(OBJTYPE objtype, Vec<S_ptr<CScene>> &SceneList);			//シーン情報取得（配列ごと）
 
 	//Unique_ptrのリストに追加
 	template <class T> void AddUniqueList(T ptr)

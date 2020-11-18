@@ -111,14 +111,16 @@ public:
 	static bool CheckAnyButton();									//何かボタンを。。
 	static void ResetStickInfo();									//スティックのトリガー情報リセット
 
-	static bool Check3DMoveStick(D3DXVECTOR3 &Move, float const fMove,float const fCameraRot,float &fRotGoal);	//3D用　LStick　移動量計算
-	static bool Check3DCameraStick(D3DXVECTOR3 &Rot,float fHolizonMove,float fVerticalMove);					//3D用　RStick　移動量計算
+	static bool Check3DMoveStick(D3DXVECTOR3 &Move, float const fMove, float const fCameraRot, float &fRotGoal);	//3D用　LStick　移動量計算
+	static bool Check3DCameraStick(D3DXVECTOR3 &Rot, float fHolizonMove, float fVerticalMove);					//3D用　RStick　移動量計算
 
 	static void StartVibration(int nCntVibration);					//バイブレーション処理
 
 	static void CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot, D3DXVECTOR3 const &rScale);		//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);						//シャドーマトリックスの計算
-	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX const & rMtx);																		//マトリックスをVector3に変換
+	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX const & rMtx);																//マトリックスをVector3に変換
+	static bool MouseRayCollision_Boolean(D3DXMATRIX *pMtx, LPD3DXMESH pMesh);											//マウスのレイの判定
+
 
 	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);													//モデルの最大頂点と最少頂点を設定
 	static void SetBillboard(D3DXMATRIX *pMtx);																					//ビルボード設定
@@ -144,7 +146,7 @@ public:
 	static void CalcRotation(float &fRot);										//回転を360度以内にする計算
 	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
 
-	static bool Selecting(int &nSelectNum,int const &nSelectNumOld, int const nNumX, int const nNumY);
+	static bool Selecting(int &nSelectNum, int const &nSelectNumOld, int const nNumX, int const nNumY);
 	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, int tex);
 
 	//------------------------------------------------------------------------------
@@ -173,11 +175,11 @@ public:
 	//AとBを入れ替える処理
 	//intでもfloatでもいけるようにテンプレート
 	//------------------------------------------------------------------------------
-	template <class X> static void Swap(X &nValueA, X &nValueB)
+	template <class X> static void Swap(X &ValueA, X &ValueB)
 	{
-		X SaveValue = nValueA;
-		nValueA = nValueB;
-		nValueB = SaveValue;
+		X SaveValue = ValueA;
+		ValueA = ValueB;
+		ValueB = SaveValue;
 	}
 
 	//------------------------------------------------------------------------------
@@ -200,74 +202,46 @@ public:
 	//Ray判定用　CSceneX継承前提
 	//Rayで判定を取ってtrueが返ってきた時に
 	//------------------------------------------------------------------------------
-	template <class X> static bool RayCollision_ModuleSelect(std::vector<X> &vec, int &nSelectNum)
+	template <class Itr> static bool RayCollision_ModuleSelect(Itr begin, Itr end, int &nSelectNum)
 	{
-		// 変数宣言
-		D3DXVECTOR3*   pNearPos = &CManager::GetRay()->NearPos;	// レイの近い位置
-		D3DXVECTOR3*   pFarPos = &CManager::GetRay()->FarPos;	// レイの遠い位置
-		BOOL           bHit = FALSE;						// ヒットフラグ
-		D3DXMATRIX     invmat;									// 算出した逆行列
-		D3DXVECTOR3    ray;										// レイ
-		D3DXVECTOR3    InvNirePos;								// 算出した近い位置
-		D3DXVECTOR3    InvForePos;								// 算出した遠い位置
-		LPD3DXMESH     pMesh;									// メッシュ情報
-
 		bool bModuleHit = false;
 		int nCnt = -1;
 
-		//モジュールのリスト
-		for (auto ptr : vec)
+
+		for (Itr itr = begin ; itr != end; itr++)
 		{
 			//カウントアップ
 			nCnt++;
 
-			//既に何かヒットしてた時
-			if (bModuleHit)
+			//選択できないモジュールだった場合
+			if (!itr->get()->GetCanModuleSelect() || bModuleHit)
 			{
-				//選択状態解除
-				ptr->SetSelect(false);
+				//計算しない
+				itr->get()->SetSelect(false);
+
 				continue;
-			}
-
-			////選択できないモジュールだった場合
-			//if (!ptr->GetCanModuleSelect())
-			//{
-			//	//計算しない
-			//	continue;
-			//}
-
-			//メッシュ情報取得
-			pMesh = ptr->GetModelInfo()->GetMesh();
-
-			/* 対処いう物からみたレイに変換する */
-			//	逆行列の取得
-			D3DXMatrixInverse(&invmat, NULL, ptr->GetMtxWorldPtr());
-			//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
-			D3DXVec3TransformCoord(&InvNirePos, pNearPos, &invmat);
-			//	レイ終点情報を変換
-			D3DXVec3TransformCoord(&InvForePos, pFarPos, &invmat);
-			//	レイ方向情報を変換
-			D3DXVec3Normalize(&ray, &(InvForePos - InvNirePos));
-			//Rayを飛ばす
-			D3DXIntersect(pMesh, &InvNirePos, &ray, &bHit, NULL, NULL, NULL, NULL, NULL, NULL);
-
-			// HITしている時
-			if (bHit)
-			{
-				//選択状態
-				ptr->SetSelect(true);
-
-				//選択番号設定
-				nSelectNum = nCnt;
-
-				bModuleHit = true;
 			}
 			else
 			{
-				ptr->SetSelect(false);
+				//マウスとRayの判定
+				bModuleHit = CHossoLibrary::MouseRayCollision_Boolean(itr->get()->GetMtxWorldPtr(), itr->get()->GetModelInfo()->GetMesh());
+
+				// HITした時
+				if (bModuleHit)
+				{
+					//選択状態
+					itr->get()->SetSelect(true);
+
+					//選択番号設定
+					nSelectNum = nCnt;
+				}
+				else
+				{
+					//選択解除
+					itr->get()->SetSelect(false);
+				}
 			}
 		}
-
 		//何もヒットしなかった時はカウント無効
 		if (!bModuleHit)
 		{
@@ -277,6 +251,7 @@ public:
 		//return
 		return bModuleHit;
 	}
+
 private:
 	static CKeyboard *m_pKeyboard;		//キーボードへのポインタ
 	static CPad_XInput *m_pXInput;		//XInputのパッドへのポインタ
