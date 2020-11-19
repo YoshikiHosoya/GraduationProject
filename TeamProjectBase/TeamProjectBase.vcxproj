@@ -168,6 +168,7 @@
     <ClCompile Include="Source Code\Decoding.cpp" />
     <ClCompile Include="Source Code\DecodingManager.cpp" />
     <ClCompile Include="Source Code\DecodingUI.cpp" />
+    <ClCompile Include="Source Code\DecodingWindow.cpp" />
     <ClCompile Include="Source Code\fade.cpp" />
     <ClCompile Include="Source Code\game.cpp" />
     <ClCompile Include="Source Code\hossolibrary.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Source Code\DecodingManager.h" />
     <ClInclude Include="Source Code\DecodingTypes.h" />
     <ClInclude Include="Source Code\DecodingUI.h" />
+    <ClInclude Include="Source Code\DecodingWindow.h" />
     <ClInclude Include="Source Code\fade.h" />
     <ClInclude Include="Source Code\game.h" />
     <ClInclude Include="Source Code\GameObject.h" />
