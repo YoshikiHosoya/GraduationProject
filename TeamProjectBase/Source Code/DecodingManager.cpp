@@ -373,23 +373,6 @@ void CDecodingManager::UpdateSelect(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::UpdateConnect(void)
 {
-	// フレームが最大以上の時
-	if (m_nFrame >= m_nFrameMax)
-	{
-		// フレームを初期化
-		m_nFrame = 0;
-		// 次のモードに設定
-		m_mode = m_modeNext;
-		if (m_fScalValue >= 0)
-		{// ドキュメントを特定の位置に表示する
-			DisplayDocumentsInPlace();
-		}
-		else
-		{// ドキュメントの消滅
-			DisAppeaDocument();
-		}
-		return;
-	}
 	// フレームを加算する
 	m_nFrame++;
 	// 拡大値を加算
@@ -403,6 +386,23 @@ void CDecodingManager::UpdateConnect(void)
 		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
 		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
 		m_pUi[nCntUi]->UpdateVertex(true);
+	}
+
+	// フレームが最大以上の時
+	if (m_nFrame > m_nFrameMax)
+	{
+		// フレームを初期化
+		m_nFrame = 0;
+		// 次のモードに設定
+		m_mode = m_modeNext;
+		if (m_fScalValue >= 0)
+		{// ドキュメントを特定の位置に表示する
+			DisplayDocumentsInPlace();
+		}
+		else
+		{// ドキュメントの消滅
+			DisAppeaDocument();
+		}
 	}
 }
 
