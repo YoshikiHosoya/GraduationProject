@@ -114,3 +114,18 @@ void CMouse::Draw(void)
 	// カーソルハンドルの設定
 	SetCursor(m_hCursor[m_type]);
 }
+
+//-------------------------------------------------------------------------------------------------------------
+// スクロールした値を取得する
+//-------------------------------------------------------------------------------------------------------------
+int CMouse::GetScrollValue(void)
+{
+	switch (m_scroll)
+	{
+		MLB_CASE(SCROLL_NONE) return 0;			// スクロールしていない
+		MLB_CASE(SCROLL_UP)   return 1;			// 上にスクロール
+		MLB_CASE(SCROLL_DOWN) return -1;		// 下にスクロール
+		MLB_CASEEND;
+	}
+	return 0;
+}

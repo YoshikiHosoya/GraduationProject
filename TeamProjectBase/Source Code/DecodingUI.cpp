@@ -10,6 +10,8 @@
 #include "DecodingUI.h"
 #include "manager.h"
 #include "renderer.h"
+#include "Decoding.h"
+#include "DecodingManager.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバの初期化
@@ -56,7 +58,7 @@ HRESULT CDecodingUI::Init()
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
+	m_bSelect = false;
 	try
 	{// 頂点情報の作成
 		MakeVertex(pDevice);
@@ -104,7 +106,7 @@ void CDecodingUI::Draw()
 //-------------------------------------------------------------------------------------------------------------
 // 頂点情報の更新
 //-------------------------------------------------------------------------------------------------------------
-void CDecodingUI::UpdateVertex(bool bPos, bool bCol)
+void CDecodingUI::UpdateVertex(bool bPos, bool bCol, bool bTex)
 {
 	//頂点情報へのポインタ
 	VERTEX_2D *pVtx;
@@ -121,6 +123,11 @@ void CDecodingUI::UpdateVertex(bool bPos, bool bCol)
 		SetVatexCol(pVtx);
 	}
 
+	if (bTex)
+	{// UVの設定
+		SetVatexUV(pVtx);
+	}
+
 	//頂点データをアンロック
 	m_pVtxBuff->Unlock();
 }
@@ -128,10 +135,39 @@ void CDecodingUI::UpdateVertex(bool bPos, bool bCol)
 //-------------------------------------------------------------------------------------------------------------
 // 頂点情報の更新
 //-------------------------------------------------------------------------------------------------------------
-void CDecodingUI::UpdateVertex(D3DXVECTOR3 * pPos, D3DXVECTOR2 * pSize, D3DXCOLOR * pCol)
+void CDecodingUI::UpdateVertex(D3DXVECTOR3 * pPos, D3DXVECTOR2 * pSize, D3DXCOLOR * pCol, POLYVERTEXSUVINFO * pTex)
 {
 	// 頂点情報の更新
-	UpdateVertex(SetWithPosPtr(pPos) || SetWithSizePtr(pSize), SetWithColPtr(pCol));
+	UpdateVertex(SetWithPosPtr(pPos) || SetWithSizePtr(pSize), SetWithColPtr(pCol),SetWithTexPtr(pTex));
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 衝突判定
+//-------------------------------------------------------------------------------------------------------------
+bool CDecodingUI::Collision2D(CONST D3DXVECTOR2 & pos)
+{
+	// ベクトルを算出
+	VEC2 diff = VEC2(pos.x - m_pos.x, pos.y - m_pos.y);
+	// 行列を算出
+	VEC2 trans = VEC2(
+		cosf(m_fAngle) * diff.x + sinf(m_fAngle) * diff.y,
+		-sinf(m_fAngle) * diff.x + cosf(m_fAngle) * diff.y);
+
+	if (m_Vertexs.pos0.x <= trans.x && m_Vertexs.pos3.x >= trans.x &&
+		m_Vertexs.pos0.y <= trans.y && m_Vertexs.pos3.y >= trans.y)
+	{
+		return true;
+	}
+	return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 親の設定
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingUI::SetParent(CDecodingUI * pParent)
+{
+	m_Parent.pParent = pParent;
+	m_Parent.vecParent = m_pos - pParent->GetPos();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -256,14 +292,14 @@ void CDecodingUI::SetVatexPos(VERTEX_2D *pVtx, ORIGINVERTEXTYPE type, D3DXVECTOR
 		pVtx[3].pos = D3DXVECTOR3(pPos->x,            pPos->y + pSize->y, MYLIB_FLOAT_UNSET);
 		break;
 	case ORIGINVERTEXTYPE_ROTCENTER:
-		pVtx[0].pos.x = pPos->x + sinf(D3DX_PI + fRotation)*halfSize.y + sinf(m_fMinHalfPi + fRotation)*halfSize.x;
-		pVtx[0].pos.y = pPos->y + cosf(D3DX_PI + fRotation)*halfSize.y + cosf(m_fMinHalfPi + fRotation)*halfSize.x;
-		pVtx[1].pos.x = pPos->x + sinf(D3DX_PI + fRotation)*halfSize.y + sinf(m_fHalfPi + fRotation)*halfSize.x;
-		pVtx[1].pos.y = pPos->y + cosf(D3DX_PI + fRotation)*halfSize.y + cosf(m_fHalfPi + fRotation)*halfSize.x;
-		pVtx[2].pos.x = pPos->x + sinf(fRotation)*halfSize.y           + sinf(m_fMinHalfPi + fRotation)*halfSize.x;
-		pVtx[2].pos.y = pPos->y + cosf(fRotation)*halfSize.y           + cosf(m_fMinHalfPi + fRotation)*halfSize.x;
-		pVtx[3].pos.x = pPos->x + sinf(fRotation)*halfSize.y           + sinf(m_fHalfPi + fRotation)*halfSize.x;
-		pVtx[3].pos.y = pPos->y + cosf(fRotation)*halfSize.y           + cosf(m_fHalfPi + fRotation)*halfSize.x;
+		pVtx[0].pos.x = pPos->x + sinf(D3DX_PI - fRotation)*halfSize.y + sinf(m_fMinHalfPi - fRotation)*halfSize.x;
+		pVtx[0].pos.y = pPos->y + cosf(D3DX_PI - fRotation)*halfSize.y + cosf(m_fMinHalfPi - fRotation)*halfSize.x;
+		pVtx[1].pos.x = pPos->x + sinf(D3DX_PI - fRotation)*halfSize.y + sinf(m_fHalfPi - fRotation)*halfSize.x;
+		pVtx[1].pos.y = pPos->y + cosf(D3DX_PI - fRotation)*halfSize.y + cosf(m_fHalfPi - fRotation)*halfSize.x;
+		pVtx[2].pos.x = pPos->x + sinf(-fRotation)*halfSize.y           + sinf(m_fMinHalfPi - fRotation)*halfSize.x;
+		pVtx[2].pos.y = pPos->y + cosf(-fRotation)*halfSize.y           + cosf(m_fMinHalfPi - fRotation)*halfSize.x;
+		pVtx[3].pos.x = pPos->x + sinf(-fRotation)*halfSize.y           + sinf(m_fHalfPi - fRotation)*halfSize.x;
+		pVtx[3].pos.y = pPos->y + cosf(-fRotation)*halfSize.y           + cosf(m_fHalfPi - fRotation)*halfSize.x;
 		pVtx[0].pos.z = MYLIB_FLOAT_UNSET;
 		pVtx[1].pos.z = MYLIB_FLOAT_UNSET;
 		pVtx[2].pos.z = MYLIB_FLOAT_UNSET;
@@ -328,6 +364,12 @@ void CDecodingUI::SetVatexPos(VERTEX_2D *pVtx, ORIGINVERTEXTYPE type, D3DXVECTOR
 		pVtx[3].pos.z = MYLIB_FLOAT_UNSET;
 		break;
 	}
+
+	// 大きさのみの頂点情報を計算する
+	m_Vertexs.pos0 = FLOAT3(-m_size.x * MYLIB_HALF_SIZE, -m_size.y* MYLIB_HALF_SIZE, 0.0f);
+	m_Vertexs.pos1 = FLOAT3(m_size.x* MYLIB_HALF_SIZE, -m_size.y* MYLIB_HALF_SIZE, 0.0f);
+	m_Vertexs.pos2 = FLOAT3(-m_size.x* MYLIB_HALF_SIZE, m_size.y* MYLIB_HALF_SIZE, 0.0f);
+	m_Vertexs.pos3 = FLOAT3(m_size.x* MYLIB_HALF_SIZE, m_size.y* MYLIB_HALF_SIZE, 0.0f);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -340,4 +382,16 @@ void CDecodingUI::SetVatexCol(VERTEX_2D * pVtx)
 		pVtx[1].col =
 		pVtx[2].col =
 		pVtx[3].col = m_col;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 頂点UVの設定
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingUI::SetVatexUV(VERTEX_2D * pVtx)
+{
+	UVINFO halfSize = m_tex.size * MYLIB_HALF_SIZE;
+	pVtx[0].tex = D3DXVECTOR2(m_tex.pos.u - halfSize.u, m_tex.pos.v - halfSize.v);
+	pVtx[1].tex = D3DXVECTOR2(m_tex.pos.u + halfSize.u, m_tex.pos.v - halfSize.v);
+	pVtx[2].tex = D3DXVECTOR2(m_tex.pos.u - halfSize.u, m_tex.pos.v + halfSize.v);
+	pVtx[3].tex = D3DXVECTOR2(m_tex.pos.u + halfSize.u, m_tex.pos.v + halfSize.v);
 }

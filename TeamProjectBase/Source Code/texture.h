@@ -64,6 +64,17 @@ public:
 		TEX_UI_DECODING_T05,					// 解読UI
 		TEX_UI_DECODING_BACKLIGHT,				// 解読UIバックライト
 
+		TEX_UI_DECODING_D00,					// 解読書(Document)
+		TEX_UI_DECODING_D01,					// 解読書(Document)
+		TEX_UI_DECODING_D02,					// 解読書(Document)
+		TEX_UI_DECODING_D03,					// 解読書(Document)
+		TEX_UI_DECODING_D04,					// 解読書(Document)
+		TEX_UI_DECODING_D05,					// 解読書(Document)
+
+		TEX_UI_DECODING_CLOSE,					// 閉じるボタン
+		TEX_UI_DECODING_S_BAR,					// スクロールバー
+		TEX_UI_DECODING_S_HANDLE,				// スクロールハンドル
+
 		TEX_MAX									//MAX
 	};
 

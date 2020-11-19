@@ -51,6 +51,17 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/DecodingBook/T04.png" },					// 解読UI
 	{ "data/TEXTURE/UI/DecodingBook/T05.png" },					// 解読UI
 	{ "data/TEXTURE/UI/DecodingBook/backLight.png" },			// 解読UIバックライト
+
+	{ "data/TEXTURE/UI/DecodingBook/D00.png" },					// 解読書(Document)
+	{ "data/TEXTURE/UI/DecodingBook/D01.png" },					// 解読書(Document)
+	{ "data/TEXTURE/UI/DecodingBook/D02.png" },					// 解読書(Document)
+	{ "data/TEXTURE/UI/DecodingBook/D03.png" },					// 解読書(Document)
+	{ "data/TEXTURE/UI/DecodingBook/D04.png" },					// 解読書(Document)
+	{ "data/TEXTURE/UI/DecodingBook/D05.png" },					// 解読書(Document)
+
+	{ "data/TEXTURE/UI/DecodingBook/close.png" },				// 閉じるボタン
+	{ "data/TEXTURE/UI/DecodingBook/ScrollBar.png" },			// スクロールバー
+	{ "data/TEXTURE/UI/DecodingBook/ScrollHandle.png" },		// スクロールハンドル
 };
 
 //テクスチャ名の設定

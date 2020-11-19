@@ -299,8 +299,28 @@ typedef struct _RANGE
 	inline int     GetRand(void);									// 乱数の取得
 	inline bool    IsItGet(void);									// 取得できるか？
 
-	int nMax;	// 最大値
-	int nMin;	// 最小値
+	inline int     GetIntValue(void)
+	{
+		return nMax - nMin;
+	}
+	inline float   GetFloatValue(void)
+	{
+		return fMax - fMin;
+	}
+
+	union
+	{
+		struct
+		{
+			int nMax;	// 最大値
+			int nMin;	// 最小値
+		};
+		struct
+		{
+			float fMax;	// 最大値
+			float fMin;	// 最小値
+		};
+	};
 }RANGE;
 
 /* * int型2つ分 */
@@ -556,6 +576,14 @@ typedef struct FLOAT3 : public D3DXVECTOR3
 	FLOAT3(CONST D3DXVECTOR3* rhs) : D3DXVECTOR3(*rhs) {}																	// コンストラクタ
 	~FLOAT3() {}																											// デストラクタ
 
+	inline FLOAT3        operator = (CONST D3DXVECTOR3 rhs)
+	{
+		this->x = rhs.x;
+		this->y = rhs.y;
+		this->z = rhs.z;
+		return *this;
+	}
+
 	inline FLOAT3        operator +(const FLOAT3 &rhs) const;																// 四則演算子+
 	inline FLOAT3        operator -(const FLOAT3 &rhs) const;																// 四則演算子-
 	inline FLOAT3        operator -(void) const;																			// 四則演算子-
@@ -760,6 +788,78 @@ typedef struct _TEXTUREANIMEINFO
 	};
 
 }TEXTUREANIMEINFO;
+
+// UV情報
+typedef struct _UVINFO
+{
+	_UVINFO() {}
+	_UVINFO(_UVINFO &rhs) :u(rhs.u), v(rhs.v) {}
+	_UVINFO(float u, float v) :u(u), v(v) {}
+
+	inline _UVINFO & operator = (D3DXVECTOR2 &rhs)
+	{
+		this->u = rhs.x;
+		this->v = rhs.y;
+		return *this;
+	}
+
+	inline _UVINFO & operator += (D3DXVECTOR2 &rhs)
+	{
+		this->u += rhs.x;
+		this->v += rhs.y;
+		return *this;
+	}
+	inline _UVINFO & operator -= (D3DXVECTOR2 &rhs)
+	{
+		this->u -= rhs.x;
+		this->v -= rhs.y;
+		return *this;
+	}
+	inline _UVINFO & operator *= (D3DXVECTOR2 &rhs)
+	{
+		this->u *= rhs.x;
+		this->v *= rhs.y;
+		return *this;
+	}
+	inline _UVINFO & operator /= (D3DXVECTOR2 &rhs)
+	{
+		this->u /= rhs.x;
+		this->v /= rhs.y;
+		return *this;
+	}
+
+	inline _UVINFO operator + (D3DXVECTOR2 &rhs)
+	{
+		return _UVINFO(u + rhs.x, v + rhs.y);
+	}
+	inline _UVINFO operator - (D3DXVECTOR2 &rhs)
+	{
+		return _UVINFO(u - rhs.x, v - rhs.y);
+	}
+	inline _UVINFO operator * (D3DXVECTOR2 &rhs)
+	{
+		return _UVINFO(u * rhs.x, v * rhs.y);
+	}
+	inline _UVINFO operator / (D3DXVECTOR2 &rhs)
+	{
+		return _UVINFO(u / rhs.x, v / rhs.y);
+	}
+
+	inline _UVINFO operator * (float rhs)
+	{
+		return _UVINFO(u * rhs, v * rhs);
+	}
+	inline _UVINFO operator / (float rhs)
+	{
+		return _UVINFO(u / rhs, v / rhs);
+	}
+
+	float u;	// 横
+	float v;	// 縦
+}UVINFO;
+
+
+
 
 // トランスフォーム情報
 typedef struct TRANSFORM

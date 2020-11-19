@@ -66,7 +66,7 @@ HRESULT CDecoding::Init(HWND hWnd)
 	// 解読マネージャーの読み込み
 	CDecodingManager::Load();
 	// 解読マネージャーの生成
-	CDecodingManager::Create();
+	m_pDecodingManager = CDecodingManager::Create();
 	return S_OK;
 }
 
