@@ -37,10 +37,10 @@ public:
 		UI_MAZE,				// 迷路
 		UI_SIMON,				// サイモンゲーム
 		UI_NOWMAKING,			// 製作中
-		UI_DOCUMENT,			// ドキュメント
-		UI_CLOSE,				// 閉じる
-		UI_SCROLLBAR,			// スクロールバー
-		UI_SCROLLHANDLE,		// スクロールハンドル
+		//UI_DOCUMENT,			// ドキュメント
+		//UI_CLOSE,				// 閉じる
+		//UI_SCROLLBAR,			// スクロールバー
+		//UI_SCROLLHANDLE,		// スクロールハンドル
 		UI_MAX					// 最大数
 	};
 
@@ -53,15 +53,15 @@ public:
 		TEX_MAZE,
 		TEX_SIMON,
 		TEX_NOWMAKING,
-		TEX_D_TELLTHEPICTURE,
-		TEX_D_SHAPEMEMORIZATION,
-		TEX_D_CORDCUTTING,
-		TEX_D_MAZE,
-		TEX_D_SIMON,
-		TEX_D_NOWMAKING,
-		TEX_CLOSE,
-		TEX_SCROLLBAR,
-		TEX_SCROLLHANDLE,
+		//TEX_D_TELLTHEPICTURE,
+		//TEX_D_SHAPEMEMORIZATION,
+		//TEX_D_CORDCUTTING,
+		//TEX_D_MAZE,
+		//TEX_D_SIMON,
+		//TEX_D_NOWMAKING,
+		//TEX_CLOSE,
+		//TEX_SCROLLBAR,
+		//TEX_SCROLLHANDLE,
 		TEX_MAX
 	};
 
@@ -131,14 +131,14 @@ private:
 	int                          m_nSelectIndex;		// 選択している番号
 
 	int                          m_nFrame;				// フレームカウント
-	int                          m_nSign;				// 符号
-	float                        m_fScalValue;			// 拡大値変化値
-	float                        m_fScal;				// 拡大値
+	//int                          m_nSign;				// 符号
+	//float                        m_fScalValue;			// 拡大値変化値
+	//float                        m_fScal;				// 拡大値
 
-	VEC2                         m_VecPinch_center;		// つまんだ点から中心へののベクトル
+	//VEC2                         m_VecPinch_center;		// つまんだ点から中心へののベクトル
 
-	RANGE                        m_ScrollRange;			// スクロールの可動領域
-	float                        m_fScrollRangeValue;	// スクロールの可動域値
+	//RANGE                        m_ScrollRange;			// スクロールの可動領域
+	//float                        m_fScrollRangeValue;	// スクロールの可動域値
 
 };
 

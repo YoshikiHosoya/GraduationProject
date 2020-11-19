@@ -1527,6 +1527,36 @@ GAGE_INFO::GAGE_INFO(RANGE SourceRange, int nSourceValue, float fSourceCoefficie
 */
 
 //----------------------------------------------------------------------------------------------------
+// class CRange 範囲クラス
+//----------------------------------------------------------------------------------------------------
+template<class T>
+inline CRange<T>::CRange(CONST T nMax, CONST T nMin)
+{
+	this->max = nMax;
+	this->min = nMin;
+}
+template<class T>
+inline CRange<T>::CRange(CONST INTEGER2SOURCE& rhs)
+{
+
+	this->max = (T)rhs.nX;
+	this->min = (T)rhs.nY;
+}
+
+template<class T>
+inline CRange<T>::CRange(CONST RANGE& rhs)
+{
+	this->max = (T)rhs.nMax;
+	this->min = (T)rhs.nMin;
+}
+template<class T>
+inline CRange<T>::CRange(CONST T rhs)
+{
+	this->max = rhs;
+	this->min = rhs;
+}
+
+//----------------------------------------------------------------------------------------------------
 // class CMeasurement　計測クラス
 //----------------------------------------------------------------------------------------------------
 /* * 計測開始 */

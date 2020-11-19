@@ -23,6 +23,7 @@
 #include "tablet.h"
 #include "TabletButton.h"
 #include "DecodingManager.h"
+#include "DecodingWindow.h"
 
 //------------------------------------------------------------------------------
 // コンストラクタ
@@ -42,6 +43,8 @@ CDecoding::~CDecoding()
 	// ピクチャの静的メンバの終了
 	CPicture::UninitStaticMember();
 
+	// 解読ウィンドウの読み込み
+	CDecodingWindow::UnLoad();
 	CDecodingManager::Unload();
 }
 
@@ -65,6 +68,8 @@ HRESULT CDecoding::Init(HWND hWnd)
 	m_pPicture = CPicture::Create(m_pTablet->GetMtxWorldPtr());
 	// 解読マネージャーの読み込み
 	CDecodingManager::Load();
+	// 解読ウィンドウの読み込み
+	CDecodingWindow::Load();
 	// 解読マネージャーの生成
 	m_pDecodingManager = CDecodingManager::Create();
 	return S_OK;

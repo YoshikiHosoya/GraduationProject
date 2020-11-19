@@ -303,24 +303,9 @@ typedef struct _RANGE
 	{
 		return nMax - nMin;
 	}
-	inline float   GetFloatValue(void)
-	{
-		return fMax - fMin;
-	}
 
-	union
-	{
-		struct
-		{
-			int nMax;	// 最大値
-			int nMin;	// 最小値
-		};
-		struct
-		{
-			float fMax;	// 最大値
-			float fMin;	// 最小値
-		};
-	};
+	int nMax;	// 最大値
+	int nMin;	// 最小値
 }RANGE;
 
 /* * int型2つ分 */
@@ -924,6 +909,80 @@ typedef struct
 //-------------------------------------------------------------------------------------------------------------
 // クラス定義
 //-------------------------------------------------------------------------------------------------------------
+// 範囲クラス
+template <class T>
+class CRange
+{
+public:
+	enum MEM
+	{
+		M_MIN = 0,	// 最小
+		M_MAX,		// 最大
+		M_NUM,		// 個数
+	};
+
+	CRange() {}														// コンストラクタ
+	CRange(CONST T nMax, CONST T nMin);								// コンストラクタ
+	CRange(CONST INTEGER2SOURCE& rhs);								// コンストラクタ
+	CRange(CONST RANGE& rhs);										// コンストラクタ
+	CRange(CONST T rhs);											// コンストラクタ
+
+	//inline CRange  operator + (CONST RANGE& rhs) const;				// 四則演算子 +
+	//inline CRange  operator + (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 +
+	//inline CRange  operator + (CONST T rhs) const;					// 四則演算子 +
+	//inline CRange  operator + (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 +
+	//inline CRange  operator - (CONST RANGE& rhs) const;				// 四則演算子 -
+	//inline CRange  operator - (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 -
+	//inline CRange  operator - (CONST T rhs) const;					// 四則演算子 -
+	//inline CRange  operator - (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 -
+	//inline CRange  operator * (CONST RANGE& rhs) const;				// 四則演算子 *
+	//inline CRange  operator * (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 *
+	//inline CRange  operator * (CONST T rhs) const;					// 四則演算子 *
+	//inline CRange  operator * (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 *
+	//inline CRange  operator / (CONST RANGE& rhs) const;				// 四則演算子 /
+	//inline CRange  operator / (CONST INTEGER2SOURCE& rhs) const;	// 四則演算子 /
+	//inline CRange  operator / (CONST T rhs) const;					// 四則演算子 /
+	//inline CRange  operator / (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 /
+
+	//inline bool    operator == (CONST RANGE& rhs) const;			// 比較演算子 ==
+	//inline bool    operator == (CONST INTEGER2SOURCE& rhs) const;	// 比較演算子 ==
+	//inline bool    operator == (CONST T rhs) const;					// 比較演算子 ==
+	//inline bool    operator != (CONST RANGE& rhs) const;			// 比較演算子 !=
+	//inline bool    operator != (CONST INTEGER2SOURCE& rhs) const;	// 比較演算子 !=
+	//inline bool    operator != (CONST T rhs) const;					// 比較演算子 !=
+
+	//inline CRange& operator += (CONST RANGE& rhs);					// 代入演算子 +=
+	//inline CRange& operator += (CONST INTEGER2SOURCE& rhs);			// 代入演算子 +=
+	//inline CRange& operator += (CONST T rhs);						// 代入演算子 +=
+	//inline CRange& operator += (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 +=
+	//inline CRange& operator -= (CONST RANGE& rhs);					// 代入演算子 -=
+	//inline CRange& operator -= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 -=
+	//inline CRange& operator -= (CONST T rhs);						// 代入演算子 -=
+	//inline CRange& operator -= (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 -=
+	//inline CRange& operator *= (CONST RANGE& rhs);					// 代入演算子 *=
+	//inline CRange& operator *= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 *=
+	//inline CRange& operator *= (CONST T rhs);						// 代入演算子 *=
+	//inline CRange& operator *= (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 *=
+	//inline CRange& operator /= (CONST RANGE& rhs);					// 代入演算子 /=
+	//inline CRange& operator /= (CONST INTEGER2SOURCE& rhs);			// 代入演算子 /=
+	//inline CRange& operator /= (CONST T rhs);						// 代入演算子 /=
+	//inline CRange& operator /= (CONST D3DXVECTOR2 rhs) const;		// 四則演算子 /=
+
+	//inline int     GetRand(void);									// 乱数の取得
+	//inline bool    IsItGetRand(void);								// 乱数を取得できるか？
+
+	//inline T       GetDifference(void);								// 差の取得
+
+	union {
+		struct {
+			T min;			// 最小
+			T max;			// 最大
+		};
+		T m[M_NUM];			// [enum]
+	};
+};
+
+
 /* 計測クラス（リリース時は動作しない） */
 class CMeasurement
 {
