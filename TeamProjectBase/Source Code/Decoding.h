@@ -23,6 +23,7 @@
 class CChatBase;
 class CPicture;
 class CTablet;
+class CDecodingManager;
 class CDecoding : public CBaseMode
 {
 public:
@@ -69,6 +70,7 @@ public:
 	GAZE GetGaze() { return m_Gaze; };						//現在の視線取得
 	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
+	CDecodingManager * GetDecodingManager(void) { return m_pDecodingManager.get(); }
 protected:
 
 private:
@@ -78,6 +80,7 @@ private:
 	S_ptr<CChatBase> m_pChatBase;							// チャットのポインタ
 	S_ptr<CPicture>  m_pPicture;							// ピクチャポインタ
 	S_ptr<CTablet>   m_pTablet;								// タブレットポインタ
+	S_ptr<CDecodingManager> m_pDecodingManager;				// 解読書マネージャー
 };
 
 #endif

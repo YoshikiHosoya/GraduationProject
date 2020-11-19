@@ -23,16 +23,18 @@ typedef struct _SETINGINFO
 		col(MYLIB_D3DXCOR_SET),
 		fAngle(MYLIB_FLOAT_UNSET),
 		OriginType(ORIGINVERTEXTYPE_CENTER),
-		bDisp(true) {}
+		bDisp(true),
+		nParentID(-1) {}
 	_SETINGINFO(								// コンストラクタ
-		D3DXVECTOR3& pos, D3DXVECTOR2& size, D3DXCOLOR& col, float fAngle, ORIGINVERTEXTYPE OriginType, bool bDisp) :
-		pos(pos), size(size), col(col), fAngle(fAngle), OriginType(OriginType), bDisp(bDisp) {}
+		D3DXVECTOR3& pos, D3DXVECTOR2& size, D3DXCOLOR& col, float fAngle, ORIGINVERTEXTYPE OriginType, bool bDisp,int nParentID) :
+		pos(pos), size(size), col(col), fAngle(fAngle), OriginType(OriginType), bDisp(bDisp), nParentID(nParentID) {}
 	FLOAT3           pos;			// 位置
 	FLOAT2           size;			// 大きさ
 	D3DXCOLOR        col;			// 色
 	float            fAngle;		// 角度
 	ORIGINVERTEXTYPE OriginType;	// 原点タイプ
 	bool             bDisp;			// 描画フラグ
+	int              nParentID;		// 親のID
 }SETINGINFO;
 
 #endif

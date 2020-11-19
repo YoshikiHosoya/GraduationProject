@@ -72,7 +72,7 @@ public:
 	inline D3DXVECTOR2   GetMousePos(void) { return D3DXVECTOR2((float)m_mouse.point.x, (float)m_mouse.point.y); }				// マウスの位置の取得
 	inline DIMOUSESTATE2 GetMouseState(void) { return m_mouse.state; }												// マウスの状態の取得
 	static MOUSE_SCROLL  GetScroll(void) { return m_scroll; }														// スクロールの状態の取得
-
+	static int           GetScrollValue(void);																		// スクロールした値を取得する
 private:
 	/* メンバ変数 */
 	LPDIRECTINPUTDEVICE8 m_pDevice;								// デバイス
