@@ -25,7 +25,7 @@
 //------------------------------------------------------------------------------
 #define MAX_KEYPAD						(9)									//パッドの総数
 #define KEYPAD_INTERVAL					(D3DXVECTOR3(20.0f,20.0f,0.0f))		//パッドの間隔
-#define KEYPAD_OFFSET					(D3DXVECTOR3(-10.0f,0.0f,-20.0f))	//パッドのオフセット座標
+#define KEYPAD_OFFSET					(D3DXVECTOR3(-10.0f,0.0f,-22.0f))	//パッドのオフセット座標
 #define KEYPAD_NEED_CLEAR_KEY_NUM		(4)									//クリアに必要なキー数
 
 //------------------------------------------------------------------------------
