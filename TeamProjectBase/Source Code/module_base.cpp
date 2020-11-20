@@ -33,6 +33,7 @@
 CModule_Base::CModule_Base()
 {
 	m_bModuleClearFlag = false;
+	m_bOperating = false;
 }
 
 //------------------------------------------------------------------------------
@@ -41,6 +42,15 @@ CModule_Base::CModule_Base()
 CModule_Base::~CModule_Base()
 {
 	m_pLamp.reset();
+}
+
+//------------------------------------------------------------------------------
+//デバッグ情報表記
+//------------------------------------------------------------------------------
+void CModule_Base::ShowDebugInfo()
+{
+	ImGui::DragFloat3("BombPos", GetPos());
+
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +95,6 @@ void CModule_Base::Operation_Mouse()
 
 			//ゲームの視点変更
 			CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
-
 		}
 	}
 

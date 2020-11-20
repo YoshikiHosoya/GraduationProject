@@ -178,6 +178,9 @@ void CModule_No4_4ColButton::ShowDebugInfo()
 	}
 
 	CDebugProc::Print(CDebugProc::PLACE_LEFT,NEWLINE);
+
+	CModule_Base::ShowDebugInfo();
+
 #endif //DEBUG
 }
 

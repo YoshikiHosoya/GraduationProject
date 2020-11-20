@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,50.0f,40.0f))
+#define MODULE_INTERVAL (D3DXVECTOR3(120.0f,100.0f,80.0f))
 #define MAX_MODULE_NUM	 (12)
 //------------------------------------------------------------------------------
 //クラス定義
@@ -70,14 +70,19 @@ private:
 
 		//変数宣言
 		int nX = m_pModuleList.size() % 3;
-		int nY = m_pModuleList.size() / 3;
+		int nY = (m_pModuleList.size() / 3) % 2;
 		int nZ = m_pModuleList.size() / 6;
 
+		if (nZ)
+		{
+			nX = 2 - nX;
+		}
+
 		m_pModuleList.emplace_back(CModule_Base::Create_Module<Module>
-									(D3DXVECTOR3((-MODULE_INTERVAL.x + (MODULE_INTERVAL.x * nX)) * (1 - (nZ * 2)),
-												MODULE_INTERVAL.y - (MODULE_INTERVAL.y * ((nY % 2) * 2)),
-												-MODULE_INTERVAL.z + (MODULE_INTERVAL.z * nZ * 2)),
-									D3DXVECTOR3(0.0f, (D3DX_PI)* nZ, 0.0f), GetMtxWorldPtr()));
+					(D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(3, nX, MODULE_INTERVAL.x),
+									CHossoLibrary::CalcEvenPosition(2, nY, -MODULE_INTERVAL.y),
+									CHossoLibrary::CalcEvenPosition(2, nZ, MODULE_INTERVAL.z)),
+				D3DXVECTOR3(0.0f, (D3DX_PI)* nZ, 0.0f), GetMtxWorldPtr()));
 
 		return true;
 	}

@@ -113,6 +113,7 @@ std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, int c
 			CMultiNumber::Create(TimerCenterPos + D3DXVECTOR3(-TIMER_H_M_S_INTERVAL_X + TIMER_H_M_S_INTERVAL_X * nCnt, 0.0f, TIMER_H_M_S_INTERVAL_Z),
 								TIMER_SIZE, nTimer, 2, CMultiNumber::NUMBER_TYPE::NUMBER_3D, CScene::OBJTYPE_UI));
 
+
 		pTimer->m_pMultiNumber[nCnt]->SetParentMtxPtr(pMtx);
 		pTimer->m_pMultiNumber[nCnt]->SetColor(RedColor);
 	}

@@ -39,7 +39,7 @@ public:
 	virtual HRESULT Init() = 0;															//初期化
 	virtual void Update() = 0;															//更新
 	virtual void Draw() = 0;															//描画
-	virtual void ShowDebugInfo() = 0;													//デバッグ情報表記
+	virtual void ShowDebugInfo();													//デバッグ情報表記
 	virtual void Operation_Keyboard();													//モジュール操作　キーボード
 	virtual void Operation_Mouse();														//モジュール操作　マウス
 	virtual void ModuleAction(){};														//モジュールに対して何かアクションをする
@@ -50,10 +50,12 @@ public:
 
 	void SetModuleType(MODULE_TYPE module) { m_ModuleType = module; };					//モジュールのタイプ設定
 	void SetBombPtr(std::weak_ptr<CBomb> pBombPtr) { m_pBomb = pBombPtr; };				//ボムのポインタ設定
+	void SetOperating(bool bOperating) { m_bOperating = bOperating; };					//操作してる
 
 	CModule_Parts_Lamp *GetLampPtr() { return m_pLamp.get(); };							//ランプのポインタ取得
 	MODULE_TYPE GetModuleType() { return m_ModuleType; };								//モジュールの種類
 	bool GetModuleClearFlag() { return m_bModuleClearFlag; };							//モジュールのクリアフラグ取得
+	bool GetOperatin() { return m_bOperating; };										//操作してる
 
 	void Module_Clear();																//クリア
 	void Module_Failed();																//失敗
@@ -83,7 +85,6 @@ public:
 		return pPtr;
 	}
 
-
 	//テンプレート関数
 	//モジュールの選択状態を設定する関数
 	//全部解除する場合はnSelectNumに-1を入れて使う
@@ -110,5 +111,7 @@ private:
 	S_ptr<CModule_Parts_Lamp> m_pLamp;							//ランプのポインタ
 	MODULE_TYPE m_ModuleType;									//モジュールの種類
 	bool	m_bModuleClearFlag;									//モジュールのクリアフラグ
+	bool	m_bOperating;										//モジュール操作中
+
 };
 #endif

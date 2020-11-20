@@ -134,6 +134,9 @@ void CBomb::ShowDebugInfo()
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[BackSpace] 戻るボタン \n");
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "[F7] 爆発するかどうか設定 >> [%d] \n",m_bCanExplosion);
 
+
+	ImGui::DragFloat3("BombPos", GetPos());
+
 	if (CManager::GetKeyboard()->GetTrigger(DIK_F7))
 	{
 		m_bCanExplosion ^= 1;
@@ -228,11 +231,13 @@ void CBomb::Operation_Keyboard()
 		{
 			//選択解除
 			rPtr->SetSelect(false);
+			rPtr->SetOperating(false);
 		}
 
 		//nullcheck
 		if (m_pModuleList[m_nSelectModuleNum].get())
 		{
+
 			//現在選択されているモジュールを操作
 			m_pModuleList[m_nSelectModuleNum]->Operation_Keyboard();
 		}
@@ -361,12 +366,12 @@ void CBomb::CreateModule(int const nModuleNum)
 	//もしモジュールを表示できる範囲外の時は収める
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
-	CreateModule_Random();
-
+	//モジュールランダム生成
+	//CreateModule_Random();
 
 //Debug用
 #ifdef _DEBUG
-	//CreateModuleDebug();
+	CreateModuleDebug();
 #endif //_DEBUG
 
 	////1番目
@@ -711,13 +716,13 @@ void CBomb::CreateModuleDebug()
 	//7番目
 	CBomb::CreateModuleOne<CModule_None>();
 	//8番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
 	//9番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
 	//10番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
 	//11番目
-	CBomb::CreateModuleOne<CModule_None>();
+	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//12番目
 	CBomb::CreateModuleOne<CModule_None>();
 

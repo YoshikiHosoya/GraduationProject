@@ -161,6 +161,9 @@ void CModule_No1_ShapeKeyPad::ShowDebugInfo()
 		}
 	}
 
+	CModule_Base::ShowDebugInfo();
+
+
 #endif //DEBUG
 }
 //------------------------------------------------------------------------------

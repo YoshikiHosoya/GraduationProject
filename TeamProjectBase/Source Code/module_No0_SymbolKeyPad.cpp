@@ -104,6 +104,8 @@ void CModule_No0_SymbolKeyPad::ShowDebugInfo()
 
 	}
 
+	CModule_Base::ShowDebugInfo();
+
 #endif //DEBUG
 }
 //------------------------------------------------------------------------------

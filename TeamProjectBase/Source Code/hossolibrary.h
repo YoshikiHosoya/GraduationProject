@@ -112,14 +112,14 @@ public:
 	static void ResetStickInfo();									//スティックのトリガー情報リセット
 
 	static bool Check3DMoveStick(D3DXVECTOR3 &Move, float const fMove, float const fCameraRot, float &fRotGoal);	//3D用　LStick　移動量計算
-	static bool Check3DCameraStick(D3DXVECTOR3 &Rot, float fHolizonMove, float fVerticalMove);					//3D用　RStick　移動量計算
+	static bool Check3DCameraStick(D3DXVECTOR3 &Rot, float fHolizonMove, float fVerticalMove);						//3D用　RStick　移動量計算
 
 	static void StartVibration(int nCntVibration);					//バイブレーション処理
 
 	static void CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot, D3DXVECTOR3 const &rScale);		//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);						//シャドーマトリックスの計算
 	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX const & rMtx);																//マトリックスをVector3に変換
-	static bool MouseRayCollision_Boolean(D3DXMATRIX *pMtx, LPD3DXMESH pMesh);											//マウスのレイの判定
+	static bool MouseRayCollision_Boolean(D3DXMATRIX *pMtx, LPD3DXMESH pMesh);													//マウスのレイの判定
 
 
 	static void SetModelVertex(MODEL_VTX &pModelVtx, CModelInfo &pModelInfo);													//モデルの最大頂点と最少頂点を設定
@@ -139,12 +139,15 @@ public:
 
 	static bool ImGui_Combobox(std::vector<std::string> aItemNameList, std::string aTitle, int & nValue);		//ImGuiのコンボボックス
 
-	static int RandomRangeUnsigned(int nMin, int nMax);							//ランダムに値を返す関数　int型　符号なし
-	static float Random_PI();													//-3.14から3.14までのランダムで返す
-	static float Random(float fInputValue);										//入力された値の+-ランダムな値で返す
-	static D3DXVECTOR3 RandomVector3(float Max);								//ランダムなvector3型で値を返す
-	static void CalcRotation(float &fRot);										//回転を360度以内にする計算
-	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);								//回転を360度以内にする計算
+	static int RandomRangeUnsigned(int nMin, int nMax);									//ランダムに値を返す関数　int型　符号なし
+	static float Random_PI();															//-3.14から3.14までのランダムで返す
+	static float Random(float fInputValue);												//入力された値の+-ランダムな値で返す
+	static D3DXVECTOR3 RandomVector3(float Max);										//ランダムなvector3型で値を返す
+	static void CalcRotation(float &fRot);												//回転を360度以内にする計算
+	static void CalcRotation_XYZ(D3DXVECTOR3 &rot);										//回転を360度以内にする計算
+
+	static float CalcEvenPosition(int nMaxNum, int nNowNum, float fInterVal);			//複数個のオブジェクトを並べる時に均等になるように座標計算
+
 
 	static bool Selecting(int &nSelectNum, int const &nSelectNumOld, int const nNumX, int const nNumY);
 	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, int tex);

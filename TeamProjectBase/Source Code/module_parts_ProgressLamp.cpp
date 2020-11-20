@@ -88,7 +88,7 @@ void CModule_Parts_ProgressLamp::CreateProgressLamp()
 	{
 		//ÉâÉìÉvê∂ê¨
 		m_pProgressLamp.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>
-			(PROGRESS_LAMP_OFFSET + D3DXVECTOR3(((PROGRESS_LAMP_INTERVAL.x) * (PROGRESS_LAMP_NUM / 2)) - (PROGRESS_LAMP_INTERVAL.x * 0.5f) - (PROGRESS_LAMP_INTERVAL.x * nCnt), 0.0f, 0.0f),
+			(PROGRESS_LAMP_OFFSET - D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(PROGRESS_LAMP_NUM, nCnt, PROGRESS_LAMP_INTERVAL.x), 0.0f, 0.0f),
 				PROGRESS_LAMP_SIZE,
 				BlackColor,
 				nullptr,

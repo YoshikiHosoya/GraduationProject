@@ -85,18 +85,22 @@ void CModule_No2_LampAndWire::Update()
 	//原点取得
 	D3DXVECTOR3 posorigin = CHossoLibrary::CalcMtxToVector3(*GetMtxWorldPtr());
 
+
 	//ランプ点灯
 	for (int nCnt = 0; nCnt < LAMP_NUM; nCnt++)
 	{
+		//オフセット座標を算出
+		D3DXVec3TransformCoord(&posorigin, &(LAMP_OFFSET + D3DXVECTOR3(LAMP_INTERVAL.x * nCnt, 0.0f, 0.0f)), GetMtxWorldPtr());
+
 		if (nCnt < m_nRedLampNum)
 		{
 			//赤ランプ
-			CParticle::CreateFromText(posorigin + LAMP_OFFSET + D3DXVECTOR3(LAMP_INTERVAL.x * nCnt, 0.0f, 0.0f), ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED,RedColor);
+			CParticle::CreateFromText(posorigin, ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED, RedColor);
 		}
 		else
 		{
 			//青ランプ
-			CParticle::CreateFromText(posorigin + LAMP_OFFSET + D3DXVECTOR3(LAMP_INTERVAL.x * nCnt, 0.0f, 0.0f), ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED,BlueColor);
+			CParticle::CreateFromText(posorigin, ZeroVector3, CParticleParam::EFFECT_MODULE_3_LED, BlueColor);
 		}
 	}
 
@@ -115,6 +119,8 @@ void CModule_No2_LampAndWire::Draw()
 void CModule_No2_LampAndWire::ShowDebugInfo()
 {
 #ifdef _DEBUG
+	CModule_Base::ShowDebugInfo();
+
 #endif //DEBUG
 }
 

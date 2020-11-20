@@ -525,6 +525,19 @@ void CHossoLibrary::CalcRotation_XYZ(D3DXVECTOR3 & rot)
 
 }
 //------------------------------------------------------------------------------
+//複数個のオブジェクトを並べる時に均等になるように座標計算
+//------------------------------------------------------------------------------
+float CHossoLibrary::CalcEvenPosition(int nMaxNum, int nNowNum, float fInterVal)
+{
+	//偶数か奇数で計算が変わる
+	float fValue = nMaxNum % 2 ?
+		(-fInterVal * (nMaxNum / 2) + (fInterVal * nNowNum)) :								//偶数
+		(-fInterVal * (nMaxNum / 2) + (fInterVal * 0.5f) + (fInterVal * nNowNum));			//奇数
+
+	return fValue;
+}
+
+//------------------------------------------------------------------------------
 //選択
 //------------------------------------------------------------------------------
 bool CHossoLibrary::Selecting(int &nSelectNum, int const &nSelectNumOld, int const nNumX, int const nNumY)
