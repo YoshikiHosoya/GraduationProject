@@ -62,8 +62,17 @@ public:
 	void           Update();								//更新
 	void           Draw();									//描画
 
+	void           Appearance(void);						// 出現
+	void           Disappearance(void);						// 消滅
+
+	void           Display(void);							// 表示させる
+	void           DoNotDisplay(void);						// 表示させない
+
+	inline void    SetSign(int nSign) { if (nSign != 0)m_nSign = abs(nSign) / nSign; }
+	inline void    SetScal(float fScal) { m_fScal = fScal; }
 private:
 	/* メンバ関数 */
+	void InitSeting(void);								// 設定の初期化
 	void MakeUI(void);									// UIの作成
 	void SetPosAccordingParent(void);					// 親に従って位置を設定する
 
@@ -72,9 +81,11 @@ private:
 
 	/* メンバ変数 */
 	static LPDIRECT3DTEXTURE9    m_pTexture[TEX_MAX];	// テクスチャ情報
-	static SETINGINFO            m_Seting[TYPE_MAX];	// 設定情報
+	static SETINGINFO            m_InitSeting[TYPE_MAX];// 初期設定情報
 	static CHash *               m_pHash;				// ハッシュのポインタ
 	std::shared_ptr<CDecodingUI> m_pUi[TYPE_MAX];		// UI
+
+	SETINGINFO                  m_Seting[TYPE_MAX];		// 設定情報
 
 	int                          m_nSign;				// 符号
 	float                        m_fScalValue;			// 拡大値変化値
@@ -82,7 +93,7 @@ private:
 
 	// スクロール
 	VEC2                         m_VecPinch_center;		// つまんだ点から中心へののベクトル
-	RANGE                        m_ScrollRange;			// スクロールの可動領域
+	CRange<float>                m_ScrollRange;			// スクロールの可動領域
 	float                        m_fScrollRangeValue;	// スクロールの可動域値
 };
 

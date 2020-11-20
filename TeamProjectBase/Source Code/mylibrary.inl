@@ -1556,6 +1556,12 @@ inline CRange<T>::CRange(CONST T rhs)
 	this->min = rhs;
 }
 
+template<class T>
+inline T CRange<T>::GetDifference(void)
+{
+	return max - min;
+}
+
 //----------------------------------------------------------------------------------------------------
 // class CMeasurement　計測クラス
 //----------------------------------------------------------------------------------------------------

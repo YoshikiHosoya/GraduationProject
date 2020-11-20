@@ -303,9 +303,23 @@ typedef struct _RANGE
 	{
 		return nMax - nMin;
 	}
-
-	int nMax;	// 最大値
-	int nMin;	// 最小値
+	inline float     GetFloatValue(void)
+	{
+		return fMax - fMin;
+	}
+	union
+	{
+		struct
+		{
+			int nMax;	// 最大値
+			int nMin;	// 最小値
+		};
+		struct
+		{
+			float fMax;	// 最大値
+			float fMin;	// 最小値
+		};
+	};
 }RANGE;
 
 /* * int型2つ分 */
@@ -971,7 +985,7 @@ public:
 	//inline int     GetRand(void);									// 乱数の取得
 	//inline bool    IsItGetRand(void);								// 乱数を取得できるか？
 
-	//inline T       GetDifference(void);								// 差の取得
+	inline T         GetDifference(void);								// 差の取得
 
 	union {
 		struct {
