@@ -27,6 +27,8 @@ public:
 
 		//爆弾関係 100番台
 		MODEL_BOMBBOX = 100,						//ボム
+		MODEL_BATTERY_SMALL,						//バッテリー
+		MODEL_BATTERY_BIG,							//バッテリー
 
 		//モジュール 200番台
 		MODEL_MODULE_DEFAULT = 200,					//モジュール
@@ -43,6 +45,8 @@ public:
 		MODEL_MODULEPARTS_NO0_KEYPAD,				//1番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO1_KEYPAD,				//2番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO2_WIRE,					//2番目のモジュールのパーツ
+		MODEL_MODULEPARTS_NO2_WIRE_CUT,				//2番目のモジュールのパーツ ワイヤー切れてる状態
+
 		MODEL_MODULEPARTS_NO4_BUTTON,				//4番目のモジュールのパーツ
 
 		// タブレット 400番台

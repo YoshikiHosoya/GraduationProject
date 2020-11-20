@@ -77,5 +77,9 @@ private:
 
 	int m_nPlayerPushNum;											//ƒvƒŒƒCƒ„[‚Ì“ü—Í‚µ‚½‰ñ”
 
+
+	void SetNextButton_NotBattery_NotSerialNo(BUTTON &NextButton);
+	void SetNextButton_YesBattery_NotSerialNo(BUTTON &NextButton);
+
 };
 #endif

@@ -21,12 +21,12 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define EXTERIOR_OFFSET_TOP				(D3DXVECTOR3(160.0f,110.0f,0.0f))			//外装のオフセット 上下のほう
+#define EXTERIOR_OFFSET_TOP				(D3DXVECTOR3(145.0f,123.0f,0.0f))			//外装のオフセット 上下のほう
 #define EXTERIOR_OFFSET_SIDE			(D3DXVECTOR3(420.0f,70.0f,0.0f))			//外装のオフセット 左右のほう
 
 #define MAX_EXTERIOR_NUM				(10)										//外装の総数
 
-#define MAX_BUTTERY_NUM					(2)											//バッテリーの最大数
+#define MAX_BUTTERY_NUM					(MAX_EXTERIOR_NUM)							//バッテリーの最大数
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -35,7 +35,6 @@ CBomb_Exterior::CBomb_Exterior()
 {
 	m_pBatteryList.clear();
 	m_ExteriorList.clear();
-	m_nBatteryNum = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -70,6 +69,14 @@ U_ptr<CBomb_Exterior> CBomb_Exterior::CreateBombExterior(D3DXMATRIX * pBombMtx)
 }
 
 //------------------------------------------------------------------------------
+//外装の数を数える
+//------------------------------------------------------------------------------
+int CBomb_Exterior::CountExteriorNum(EXTERIOR_TYPE type)
+{
+	return std::count(m_ExteriorList.begin(), m_ExteriorList.end(), type);
+}
+
+//------------------------------------------------------------------------------
 //外装に何をセットするか決める
 //------------------------------------------------------------------------------
 void CBomb_Exterior::SetExterior()
@@ -78,7 +85,10 @@ void CBomb_Exterior::SetExterior()
 	for (int nCnt = 0; nCnt < (rand() % MAX_BUTTERY_NUM); nCnt++)
 	{
 		//バッテリー追加
-		m_ExteriorList.emplace_back(EXTERIOR_TYPE::BATTERY);
+		//大きいバッテリーか小さいバッテリーかランダム
+		rand() % 2 == 0 ?
+			m_ExteriorList.emplace_back(EXTERIOR_TYPE::BATTERY_SMALL) :
+			m_ExteriorList.emplace_back(EXTERIOR_TYPE::BATTERY_BIG);
 	}
 
 	//最大数になるまで
@@ -113,15 +123,19 @@ void CBomb_Exterior::Create(D3DXMATRIX * pBombMtx)
 		//種類に応じてオブジェクトを変える
 		switch (m_ExteriorList[nCnt])
 		{
-		case EXTERIOR_TYPE::BATTERY:
-			//バッテリー生成
-			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
-				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_MODULEPARTS_NO4_BUTTON));
+		case EXTERIOR_TYPE::BATTERY_SMALL:
 
-			//バッテリー数++
-			m_nBatteryNum++;
+			//小バッテリー生成
+			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
+				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_BATTERY_SMALL));
 			break;
 
+		case EXTERIOR_TYPE::BATTERY_BIG:
+
+			//大バッテリー生成
+			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
+				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_BATTERY_BIG));
+			break;
 		}
 	}
 }

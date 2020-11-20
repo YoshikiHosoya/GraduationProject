@@ -22,10 +22,10 @@
 //------------------------------------------------------------------------------
 //É}ÉNÉç
 //------------------------------------------------------------------------------
-#define TIMER_OFFSET_POS			(D3DXVECTOR3(0.0f,-8.0f,-2.0f))
-#define MISSCOUNTER_OFFSET_POS		(D3DXVECTOR3(-5.0f,22.0f,-32.0f))
+#define TIMER_OFFSET_POS			(D3DXVECTOR3(0.0f,-11.0f,0.0f))
+#define MISSCOUNTER_OFFSET_POS		(D3DXVECTOR3(-12.0f,15.0f,-20.0f))
 #define MISSCOUNTER_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
-#define MISSCOUNTER_INTERVAL		(D3DXVECTOR3(13.0f,0.0f,0.0f))
+#define MISSCOUNTER_INTERVAL		(D3DXVECTOR3(18.0f,0.0f,0.0f))
 
 
 //------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ HRESULT CModule_Timer::Init()
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
-		m_pMissCounter.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(MISSCOUNTER_OFFSET_POS + D3DXVECTOR3(nCnt * MISSCOUNTER_INTERVAL.x,0.0f,0.0f), MISSCOUNTER_SIZE, RedColor, nullptr, OBJTYPE_MODULE_PARTS_SYMBOL));
+		m_pMissCounter.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(MISSCOUNTER_OFFSET_POS + D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(2, nCnt, MISSCOUNTER_INTERVAL.x),0.0f,0.0f), MISSCOUNTER_SIZE, RedColor, nullptr, OBJTYPE_MODULE_PARTS_SYMBOL));
 		m_pMissCounter[m_pMissCounter.size() - 1]->SetParentMtxPtr(GetMtxWorldPtr());
 		m_pMissCounter[m_pMissCounter.size() - 1]->SetLighting(false);
 		m_pMissCounter[m_pMissCounter.size() - 1]->SetDisp(false);

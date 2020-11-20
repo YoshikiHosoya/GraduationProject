@@ -49,8 +49,10 @@ public:
 	void CameraApproach();																//カメラを近づける
 
 	void SetModuleType(MODULE_TYPE module) { m_ModuleType = module; };					//モジュールのタイプ設定
-	void SetBombPtr(std::weak_ptr<CBomb> pBombPtr) { m_pBomb = pBombPtr; };				//ボムのポインタ設定
+	void SetBombPtr(W_ptr<CBomb> pBombPtr) { m_pBomb = pBombPtr; };						//ボムのポインタ設定
 	void SetOperating(bool bOperating) { m_bOperating = bOperating; };					//操作してる
+
+	W_ptr<CBomb> GetBombWeakPtr() { return m_pBomb; };									//ボムのweakポインタ取得
 
 	CModule_Parts_Lamp *GetLampPtr() { return m_pLamp.get(); };							//ランプのポインタ取得
 	MODULE_TYPE GetModuleType() { return m_ModuleType; };								//モジュールの種類

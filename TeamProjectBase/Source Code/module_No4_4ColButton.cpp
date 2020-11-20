@@ -11,6 +11,8 @@
 #include "module_No4_4ColButton.h"
 #include "module_parts_No4_ColButton.h"
 #include "module_parts_ProgressLamp.h"
+#include "Bomb.h"
+#include "Bomb_Exterior.h"
 #include "renderer.h"
 #include "manager.h"
 #include "keyboard.h"
@@ -244,6 +246,10 @@ void CModule_No4_4ColButton::ModuleAction()
 		{
 			//正解のボタン押した
 			ButtonPushSuccess();
+
+			//音再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_MODULE_PUSH);
+
 		}
 		else
 		{
@@ -327,23 +333,17 @@ void CModule_No4_4ColButton::NextButtonSet()
 
 	//次に押すボタン設定
 	BUTTON NextButton = BUTTON::NONE;
-	switch (m_QuestionButtonList[m_nPlayerPushNum])
+
+	////バッテリーがついていた場合
+	//if (CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_BIG) ||
+	//	CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_SMALL))
+	//{
+	//	SetNextButton_YesBattery_NotSerialNo(NextButton);
+	//}
+	//else
 	{
-	case BUTTON::RED:
-		NextButton = BUTTON::GREEN;
-		break;
+		SetNextButton_NotBattery_NotSerialNo(NextButton);
 
-	case BUTTON::GREEN:
-		NextButton = BUTTON::BLUE;
-		break;
-
-	case BUTTON::BLUE:
-		NextButton = BUTTON::RED;
-		break;
-
-	case BUTTON::YELLOW:
-		NextButton = BUTTON::YELLOW;
-		break;
 	}
 
 	//次のボタンと同じボタンを検索
@@ -410,5 +410,60 @@ bool CModule_No4_4ColButton::CheckModuleClear()
 		return true;
 	}
 	return false;
+}
+
+//------------------------------------------------------------------------------
+//次に押すボタン設定
+//バッテリ有
+//シリアルナンバー母音無し
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::SetNextButton_YesBattery_NotSerialNo(BUTTON & NextButton)
+{
+	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	{
+	case BUTTON::RED:
+		NextButton = BUTTON::YELLOW;
+		break;
+
+	case BUTTON::BLUE:
+		NextButton = BUTTON::GREEN;
+		break;
+
+	case BUTTON::YELLOW:
+		NextButton = BUTTON::BLUE;
+		break;
+
+	case BUTTON::GREEN:
+		NextButton = BUTTON::RED;
+		break;
+	}
+}
+
+//------------------------------------------------------------------------------
+//次に押すボタン設定
+//バッテリ無
+//シリアルナンバー母音無し
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::SetNextButton_NotBattery_NotSerialNo(BUTTON & NextButton)
+{
+	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	{
+	case BUTTON::RED:
+		NextButton = BUTTON::GREEN;
+		break;
+
+	case BUTTON::BLUE:
+		NextButton = BUTTON::RED;
+		break;
+
+	case BUTTON::YELLOW:
+		NextButton = BUTTON::YELLOW;
+		break;
+
+	case BUTTON::GREEN:
+		NextButton = BUTTON::BLUE;
+		break;
+
+	}
 }
 

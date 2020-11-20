@@ -25,7 +25,7 @@
 //------------------------------------------------------------------------------
 //ƒ}ƒNƒ
 //------------------------------------------------------------------------------
-#define WURE_OFFSET					(D3DXVECTOR3(-37.0f,0.0f,-23.0f))
+#define WURE_OFFSET					(D3DXVECTOR3(-37.0f,20.0f,-23.0f))
 #define WURE_ITNERVAL				(D3DXVECTOR3(12.0f,0.0f,0.0f))
 #define WIRE_NUM					(6)
 #define LAMP_OFFSET					(D3DXVECTOR3(-28.0f,-5.0f,-30.0f))
@@ -315,7 +315,7 @@ void CModule_No2_LampAndWire::SetToCutWire()
 void CModule_No2_LampAndWire::WireCut()
 {
 	m_pWireList[m_nSelectPlace]->SetWireCut(true);
-	m_pWireList[m_nSelectPlace]->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO1_KEYPAD));
+	m_pWireList[m_nSelectPlace]->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_WIRE_CUT));
 	m_pWireList[m_nSelectPlace]->SetClearFlag(false);
 
 }

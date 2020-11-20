@@ -21,7 +21,8 @@
 #include "scene3D.h"
 #include "mouse.h"
 #include "sound.h"
-
+#include "Bomb.h"
+#include "Bomb_Exterior.h"
 //------------------------------------------------------------------------------
 //Ã“Iƒƒ“ƒo•Ï”‚Ì‰Šú‰»
 //------------------------------------------------------------------------------
@@ -276,7 +277,7 @@ void CModule_No1_ShapeKeyPad::UpdateState()
 			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
 			{
 				//‰œ‚ÉˆÚ“®
-				m_pKeyPadList[nCnt]->GetPos().z += 1.0f;
+				m_pKeyPadList[nCnt]->GetPos().z += 1.5f;
 
 				//ˆÚ“®”ÍˆÍÝ’è
 				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z,-10.0f );
@@ -308,7 +309,7 @@ void CModule_No1_ShapeKeyPad::UpdateState()
 			if ((QUESTION_CHANGE_TIME - m_nQuestionChangeCnt) / (QUESTION_CHANGE_TIME / 4) >= nCnt)
 			{
 				//Žè‘O‚ÉˆÚ“®
-				m_pKeyPadList[nCnt]->GetPos().z -= 1.0f;
+				m_pKeyPadList[nCnt]->GetPos().z -= 1.5f;
 
 				//ˆÚ“®”ÍˆÍ§ŒÀ
 				CHossoLibrary::RangeLimit_Equal(m_pKeyPadList[nCnt]->GetPos().z, DISPLAY_SHAPE_OFFSET.z, -10.0f);
@@ -529,7 +530,11 @@ void CModule_No1_ShapeKeyPad::SetNextPushKey()
 			break;
 
 		case CModule_No1_ShapeKeyPad::SHAPE::SQUARE:
-			SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
+			CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::EXTERIOR_TYPE::BATTERY_BIG) >= 2 ?
+				SetNextPushKey_FromShape(SHAPE::TRIANGLE) :
+				SetNextPushKey_FromPlace(PLACE::LEFT_TO_4TH);
+
+
 			break;
 		}
 		break;

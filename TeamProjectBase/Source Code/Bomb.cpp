@@ -163,11 +163,12 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 	//モデル情報設定
 	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBBOX));
 
+	//ボムの外装生成
+	pBomb->m_pBombExterior = CBomb_Exterior::CreateBombExterior(pBomb->GetMtxWorldPtr());
+
 	//モジュール生成
 	pBomb->CreateModule(nModuleNum);
 
-	//ボムの外装生成
-	pBomb->m_pBombExterior = CBomb_Exterior::CreateBombExterior(pBomb->GetMtxWorldPtr());
 
 	//Scene側で管理
 	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
@@ -371,34 +372,34 @@ void CBomb::CreateModule(int const nModuleNum)
 
 //Debug用
 #ifdef _DEBUG
-	CreateModuleDebug();
+	//CreateModuleDebug();
 #endif //_DEBUG
 
-	////1番目
-	//CBomb::CreateModuleOne<CModule_Timer>();
-	////2番目
-	//CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
-	////3番目
-	//CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
-	////4番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////5番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////6番目
-	//CBomb::CreateModuleOne<CModule_None>();
+	//1番目
+	CBomb::CreateModuleOne<CModule_Timer>();
+	//2番目
+	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
+	//3番目
+	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
+	//4番目
+	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
+	//5番目
+	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+	//6番目
+	CBomb::CreateModuleOne<CModule_None>();
 
-	////7番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////8番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////9番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////10番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////11番目
-	//CBomb::CreateModuleOne<CModule_None>();
-	////12番目
-	//CBomb::CreateModuleOne<CModule_None>();
+	//7番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//8番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//9番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//10番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//11番目
+	CBomb::CreateModuleOne<CModule_None>();
+	//12番目
+	CBomb::CreateModuleOne<CModule_None>();
 
 
 	//生成したリスト全てに

@@ -166,7 +166,7 @@ void CModule_Parts_No0_SymbolKey::SetKeypadState(KEYPAD_STATE keypadstate)
 		break;
 	case CModule_Parts_No0_SymbolKey::KEYPAD_STATE::CLEAR:
 		m_pLight->SetColor(GreenColor);
-		SetPos(GetPos() + D3DXVECTOR3(0.0f, 0.0f, 5.0f));
+		SetPos(GetPos() + D3DXVECTOR3(0.0f, 0.0f, 10.0f));
 		CSceneX::CalcMtx_IncludeParentMtx();
 		SetClearFlag(true);
 		break;

@@ -208,14 +208,11 @@ public:
 	template <class Itr> static bool RayCollision_ModuleSelect(Itr begin, Itr end, int &nSelectNum)
 	{
 		bool bModuleHit = false;
-		int nCnt = -1;
+		int nCnt = 0;
 
 
-		for (Itr itr = begin ; itr != end; itr++)
+		for (Itr itr = begin ; itr != end; itr++, nCnt++)
 		{
-			//カウントアップ
-			nCnt++;
-
 			//選択できないモジュールだった場合
 			if (!itr->get()->GetCanModuleSelect() || bModuleHit)
 			{

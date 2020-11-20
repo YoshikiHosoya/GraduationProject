@@ -17,6 +17,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//爆弾関係
 	{ "data/MODEL/BombBox/bombbox.x" ,							MODEL_BOMBBOX },									//爆弾
+	{ "data/MODEL/Battery/Battery_1.x" ,						MODEL_BATTERY_SMALL },								//小バッテリー
+	{ "data/MODEL/Battery/Battery_2.x" ,						MODEL_BATTERY_BIG },								//大バッテリー
 
 	//モジュール
 	{ "data/MODEL/test/test_module.x" ,							MODEL_MODULE_DEFAULT },								//モジュール
@@ -33,7 +35,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 
 	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO0_KEYPAD },						//キーパッド
 	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
-	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,				MODEL_MODULEPARTS_NO2_WIRE },						//キーパッド
+	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,				MODEL_MODULEPARTS_NO2_WIRE },						//ワイヤー
+	{ "data/MODEL/Module2/ModuleNumber2_CordCutting.x" ,		MODEL_MODULEPARTS_NO2_WIRE_CUT },					//ワイヤー　切れてる状態
 
 	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 

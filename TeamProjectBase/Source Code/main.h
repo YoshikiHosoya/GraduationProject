@@ -54,6 +54,7 @@
 template <class T> 	using Vec = std::vector<T>;				//vectorå^
 template <class T> 	using U_ptr = std::unique_ptr<T>;		//Unique_ptr
 template <class T> 	using S_ptr = std::shared_ptr<T>;		//Shared_ptr
+template <class T> 	using W_ptr = std::weak_ptr<T>;			//Weak_ptr
 
 //------------------------------------------------------------------------------
 //ç\ë¢ëÃ
