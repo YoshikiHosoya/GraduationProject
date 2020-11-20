@@ -338,7 +338,7 @@ void CDecodingManager::UpdateSelect(void)
 	bool        bOverlap = false;					// 重なっているフラグ
 
 	// UI数ループ
-	for (int nCntUi = UI_TELLTHEPICTURE; nCntUi < UI_MAX; nCntUi++)
+	for (int nCntUi = UI_TELLTHEPICTURE; nCntUi < UI_DOCUMENT; nCntUi++)
 	{
 		// 2Dの衝突判定
 		if (m_pUi[nCntUi]->Collision2D(MousePos) == false)
