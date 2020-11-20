@@ -24,7 +24,7 @@
 //-------------------------------------------------------------------------------------------------------------
 LPDIRECT3DTEXTURE9 CDecodingWindow::m_pTexture[TEX_MAX] = Mybfunc_array(nullptr);
 CHash *            CDecodingWindow::m_pHash	            = nullptr;
-SETINGINFO         CDecodingWindow::m_Seting[TYPE_MAX];
+SETINGINFO         CDecodingWindow::m_InitSeting[TYPE_MAX];
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -104,7 +104,7 @@ HRESULT CDecodingWindow::Load(void)
 	// 設定情報の初期化
 	for (int nCntSet = 0; nCntSet < TYPE_MAX; nCntSet++)
 	{
-		m_Seting[nCntSet] = SETINGINFO();
+		m_InitSeting[nCntSet] = SETINGINFO();
 	}
 
 	// ファイル読み込み
@@ -146,6 +146,9 @@ CDecodingWindow* CDecodingWindow::Create(void)
 //-------------------------------------------------------------------------------------------------------------
 HRESULT CDecodingWindow::Init()
 {
+	// 設定の初期化
+	InitSeting();
+
 	// UIの作成
 	MakeUI();
 
@@ -154,12 +157,12 @@ HRESULT CDecodingWindow::Init()
 	m_Seting[TYPE_SCROLLHANDLE].size.y = m_Seting[TYPE_SCROLLBAR].size.y * 0.75f;
 
 	// 可動域の計算
-	//m_ScrollRange.fMax = m_Seting[TYPE_SCROLLBAR].size.y*MYLIB_HALF_SIZE - (m_Seting[TYPE_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
-	//m_ScrollRange.fMin = -m_Seting[TYPE_SCROLLBAR].size.y*MYLIB_HALF_SIZE + (m_Seting[TYPE_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
-	//m_fScrollRangeValue = m_ScrollRange.GetFloatValue();
+	m_ScrollRange.max   = m_Seting[TYPE_SCROLLBAR].size.y*MYLIB_HALF_SIZE - (m_Seting[TYPE_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
+	m_ScrollRange.min   = -m_Seting[TYPE_SCROLLBAR].size.y*MYLIB_HALF_SIZE + (m_Seting[TYPE_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
+	m_fScrollRangeValue = m_ScrollRange.GetDifference();
 
 	// スクロールハンドルの位置の設定を変更
-	//m_Seting[TYPE_SCROLLHANDLE].pos.y = m_Seting[TYPE_SCROLLBAR].pos.y + m_ScrollRange.fMin - m_Seting[TYPE_SCROLLBAR].pos.y;
+	m_Seting[TYPE_SCROLLHANDLE].pos.y = m_Seting[TYPE_SCROLLBAR].pos.y + m_ScrollRange.min - m_Seting[TYPE_SCROLLBAR].pos.y;
 
 	// 親の設定
 	SetPosAccordingParent();
@@ -178,6 +181,90 @@ void CDecodingWindow::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::Draw()
 {
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 出現
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::Appearance(void)
+{
+	// 拡大値を加算
+	m_fScal += m_fScalValue;
+	// ウィンドウの更新
+	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size *m_fScal);
+	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
+	// そのほかの更新
+	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 消滅
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::Disappearance(void)
+{
+	// 拡大値を加算
+	m_fScal -= m_fScalValue;
+	// ウィンドウの更新
+	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size *m_fScal);
+	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
+	// そのほかの更新
+	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 表示させる
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::Display(void)
+{
+	// ウィンドウの更新
+	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size);
+	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
+	// そのほかの更新
+	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent);
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size);
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 表示させない
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::DoNotDisplay(void)
+{
+	// ウィンドウの更新
+	m_pUi[TYPE_WINDOW]->SetDispFlag(false);
+	// そのほかの更新
+	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetDispFlag(false);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 設定の初期化
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::InitSeting(void)
+{
+	// 初期化
+	SETINGINFO *pInit = &m_InitSeting[0];		// 初期設定情報のポインタ
+	SETINGINFO *pSet  = &m_Seting[0];			// 設定情報のポインタ
+
+	for (int nCntType = TYPE_WINDOW; nCntType < TYPE_MAX; nCntType++)
+	{
+		pSet[nCntType] = pInit[nCntType];
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -230,7 +317,7 @@ void CDecodingWindow::ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryTy
 	char        sData[MYLIB_STRINGSIZE] = { 0 };
 	SETINGINFO* pSet = nullptr;				// 設定情報のポインタ
 
-	pSet = &m_Seting[atoi(m_pHash->Search((char*)cnpEntryType))];
+	pSet = &m_InitSeting[atoi(m_pHash->Search((char*)cnpEntryType))];
 	if (sscanf(cnpLine, "pos = %f %f", &pos.x, &pos.y) == 2)
 	{
 		pSet->pos = pos;

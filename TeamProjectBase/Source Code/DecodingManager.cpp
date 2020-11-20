@@ -57,10 +57,10 @@ void CDecodingManager::MakeHash(void)
 		{ "Maze" },
 		{ "Simon" },
 		{ "Nowmaking" },
-		//{ "Document" },
-		//{ "Close" },
-		//{ "ScrollBar" },
-		//{ "ScrollHandle" },
+		{ "Document" },
+		{ "Close" },
+		{ "ScrollBar" },
+		{ "ScrollHandle" },
 	};
 	// データ
 	char * Data[UI_MAX] =
@@ -72,10 +72,10 @@ void CDecodingManager::MakeHash(void)
 		{ "4" },
 		{ "5" },
 		{ "6" },
-		//{ "7" },
-		//{ "8" },
-		//{ "9" },
-		//{ "10" },
+		{ "7" },
+		{ "8" },
+		{ "9" },
+		{ "10" },
 	};
 	// ハッシュの作成
 	m_pHash = CHash::Create();
@@ -125,15 +125,15 @@ HRESULT CDecodingManager::Load(void)
 	m_pTexture[TEX_SIMON]               = CTexture::GetTexture(CTexture::TEX_UI_DECODING_T04);
 	m_pTexture[TEX_NOWMAKING]           = CTexture::GetTexture(CTexture::TEX_UI_DECODING_T05);
 	m_pTexture[TEX_BACKLIGHT]           = CTexture::GetTexture(CTexture::TEX_UI_DECODING_BACKLIGHT);
-	//m_pTexture[TEX_D_TELLTHEPICTURE]    = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D00);
-	//m_pTexture[TEX_D_SHAPEMEMORIZATION] = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D01);
-	//m_pTexture[TEX_D_CORDCUTTING]       = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D02);
-	//m_pTexture[TEX_D_MAZE]              = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D03);
-	//m_pTexture[TEX_D_SIMON]             = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D04);
-	//m_pTexture[TEX_D_NOWMAKING]         = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D05);
-	//m_pTexture[TEX_CLOSE]               = CTexture::GetTexture(CTexture::TEX_UI_DECODING_CLOSE);
-	//m_pTexture[TEX_SCROLLBAR]           = CTexture::GetTexture(CTexture::TEX_UI_DECODING_S_BAR);
-	//m_pTexture[TEX_SCROLLHANDLE]        = CTexture::GetTexture(CTexture::TEX_UI_DECODING_S_HANDLE);
+	m_pTexture[TEX_D_TELLTHEPICTURE]    = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D00);
+	m_pTexture[TEX_D_SHAPEMEMORIZATION] = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D01);
+	m_pTexture[TEX_D_CORDCUTTING]       = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D02);
+	m_pTexture[TEX_D_MAZE]              = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D03);
+	m_pTexture[TEX_D_SIMON]             = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D04);
+	m_pTexture[TEX_D_NOWMAKING]         = CTexture::GetTexture(CTexture::TEX_UI_DECODING_D05);
+	m_pTexture[TEX_CLOSE]               = CTexture::GetTexture(CTexture::TEX_UI_DECODING_CLOSE);
+	m_pTexture[TEX_SCROLLBAR]           = CTexture::GetTexture(CTexture::TEX_UI_DECODING_S_BAR);
+	m_pTexture[TEX_SCROLLHANDLE]        = CTexture::GetTexture(CTexture::TEX_UI_DECODING_S_HANDLE);
 
 	// 設定情報の初期化
 	for (int nCntSet = 0; nCntSet < UI_MAX ; nCntSet++)
@@ -189,16 +189,16 @@ HRESULT CDecodingManager::Init()
 
 	RANGE ra;
 	// スクロールハンドルの大きさの設定を変更
-	//m_pUi[UI_SCROLLHANDLE]->SetSize(D3DXVECTOR2(m_pUi[UI_SCROLLHANDLE]->GetSize().x, m_Seting[UI_SCROLLBAR].size.y * 0.75f));
-	//m_Seting[UI_SCROLLHANDLE].size.y = m_Seting[UI_SCROLLBAR].size.y * 0.75f;
+	m_pUi[UI_SCROLLHANDLE]->SetSize(D3DXVECTOR2(m_pUi[UI_SCROLLHANDLE]->GetSize().x, m_Seting[UI_SCROLLBAR].size.y * 0.75f));
+	m_Seting[UI_SCROLLHANDLE].size.y = m_Seting[UI_SCROLLBAR].size.y * 0.75f;
 
 	// 可動域の計算
-	//m_ScrollRange.fMax = m_Seting[UI_SCROLLBAR].size.y*MYLIB_HALF_SIZE - (m_Seting[UI_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
-	//m_ScrollRange.fMin = -m_Seting[UI_SCROLLBAR].size.y*MYLIB_HALF_SIZE + (m_Seting[UI_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
-	//m_fScrollRangeValue = m_ScrollRange.GetFloatValue();
+	m_ScrollRange.fMax = m_Seting[UI_SCROLLBAR].size.y*MYLIB_HALF_SIZE - (m_Seting[UI_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
+	m_ScrollRange.fMin = -m_Seting[UI_SCROLLBAR].size.y*MYLIB_HALF_SIZE + (m_Seting[UI_SCROLLHANDLE].size.y*MYLIB_HALF_SIZE);
+	m_fScrollRangeValue = m_ScrollRange.GetFloatValue();
 
 	// スクロールハンドルの位置の設定を変更
-	//m_Seting[UI_SCROLLHANDLE].pos.y = m_Seting[UI_SCROLLBAR].pos.y + m_ScrollRange.fMin - m_Seting[UI_SCROLLBAR].pos.y;
+	m_Seting[UI_SCROLLHANDLE].pos.y = m_Seting[UI_SCROLLBAR].pos.y + m_ScrollRange.fMin - m_Seting[UI_SCROLLBAR].pos.y;
 
 	// 親をもとに位置を設定する
 	SetPosAccordingParent();
@@ -261,17 +261,15 @@ void CDecodingManager::CreateUi(void)
 	{
 		// UIの生成
 		m_pUi[nCntUI] = CDecodingUI::Create(m_Seting[nCntUI]);
-		//if (nCntUI > UI_DOCUMENT)
-		//{
-		//	// テクスチャの連結
-		//	m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI + 5]);
-		//}
-		//else {
-		//	// テクスチャの連結
-		//	m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI]);
-		//}
-
-		m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI]);
+		if (nCntUI > UI_DOCUMENT)
+		{
+			// テクスチャの連結
+			m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI + 5]);
+		}
+		else {
+			// テクスチャの連結
+			m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI]);
+		}
 	}
 }
 
@@ -297,12 +295,12 @@ void CDecodingManager::SetPosAccordingParent(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::InitDocumentUVInfo(void)
 {
-	//CDecodingUI::POLYVERTEXSUVINFO SetingTex;
-	//SetingTex.pos.u = 0.5f;
-	//SetingTex.pos.v = 0.75f * 0.5f;
-	//SetingTex.size.u = 1.0f;
-	//SetingTex.size.v = 0.75f;
-	//m_pUi[UI_DOCUMENT]->UpdateVertex(NULL, NULL, NULL, &SetingTex);
+	CDecodingUI::POLYVERTEXSUVINFO SetingTex;
+	SetingTex.pos.u = 0.5f;
+	SetingTex.pos.v = 0.75f * 0.5f;
+	SetingTex.size.u = 1.0f;
+	SetingTex.size.v = 0.75f;
+	m_pUi[UI_DOCUMENT]->UpdateVertex(NULL, NULL, NULL, &SetingTex);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -310,23 +308,23 @@ void CDecodingManager::InitDocumentUVInfo(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::InitConnect(void)
 {
-	//switch (m_modeNext)
-	//{
-	//	MLB_CASE(CDecodingManager::MODE_SELECT) m_nSign = -1;
-	//	MLB_CASE(CDecodingManager::MODE_SHOW)   m_nSign = 1;
-	//	MLB_CASEEND;
-	//}
+	switch (m_modeNext)
+	{
+		MLB_CASE(CDecodingManager::MODE_SELECT) m_nSign = -1;
+		MLB_CASE(CDecodingManager::MODE_SHOW)   m_nSign = 1;
+		MLB_CASEEND;
+	}
 
 	m_nFrame = 0;
-	//m_fScalValue = (1.0f / (m_nFrameMax + 1) * m_nSign);
-	//if (m_fScalValue >= 0)
-	//{
-	//	m_fScal = 0.0f;
-	//}
-	//else
-	//{
-	//	m_fScal = 1.0f;
-	//}
+	m_fScalValue = (1.0f / (m_nFrameMax + 1) * m_nSign);
+	if (m_fScalValue >= 0)
+	{
+		m_fScal = 0.0f;
+	}
+	else
+	{
+		m_fScal = 1.0f;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -387,18 +385,6 @@ void CDecodingManager::UpdateConnect(void)
 {
 	// フレームを加算する
 	m_nFrame++;
-	// 拡大値を加算
-	//m_fScal += m_fScalValue;
-	// ドキュメントの更新
-	//m_pUi[UI_DOCUMENT]->SetSize(m_Seting[UI_DOCUMENT].size *m_fScal);
-	//m_pUi[UI_DOCUMENT]->UpdateVertex(true);
-	//// そのほかの更新
-	//for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
-	//{
-	//	m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
-	//	m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
-	//	m_pUi[nCntUi]->UpdateVertex(true);
-	//}
 
 	// フレームが最大以上の時
 	if (m_nFrame > m_nFrameMax)
@@ -407,14 +393,33 @@ void CDecodingManager::UpdateConnect(void)
 		m_nFrame = 0;
 		// 次のモードに設定
 		m_mode = m_modeNext;
-		//if (m_fScalValue >= 0)
-		//{// ドキュメントを特定の位置に表示する
-		//	DisplayDocumentsInPlace();
-		//}
-		//else
-		//{// ドキュメントの消滅
-		//	DisAppeaDocument();
-		//}
+
+		switch (m_mode)
+		{
+			MLB_CASE(CDecodingManager::MODE_SELECT)
+				// ウィンドウの更新
+				m_pUi[UI_DOCUMENT]->SetDispFlag(false);
+				// そのほかの更新
+				for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
+				{
+					m_pUi[nCntUi]->SetDispFlag(false);
+				}
+			MLB_CASE(CDecodingManager::MODE_SHOW)   DisplayDocumentsInPlace();
+			MLB_CASEEND;
+		}
+	}
+
+	// 拡大値を加算
+	m_fScal += m_fScalValue;
+	// ウィンドウの更新
+	m_pUi[UI_DOCUMENT]->SetSize(m_Seting[UI_DOCUMENT].size *m_fScal);
+	m_pUi[UI_DOCUMENT]->UpdateVertex(true);
+	// そのほかの更新
+	for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
+		m_pUi[nCntUi]->UpdateVertex(true);
 	}
 }
 
@@ -439,31 +444,31 @@ void CDecodingManager::UpdateShow(void)
 void CDecodingManager::CloseButtonProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos)
 {
 	// 2Dの衝突判定
-	//if (m_pUi[UI_CLOSE]->Collision2D(*pMousePos) == false)
-	//{
-	//	if (m_nSelectIndex != UI_SCROLLHANDLE)
-	//	{
-	//		m_nSelectIndex = -1;
-	//	}
-	//	return;
-	//}
+	if (m_pUi[UI_CLOSE]->Collision2D(*pMousePos) == false)
+	{
+		if (m_nSelectIndex != UI_SCROLLHANDLE)
+		{
+			m_nSelectIndex = -1;
+		}
+		return;
+	}
 
 	// 選択フラグが消えている時
-	//if (m_pUi[UI_CLOSE]->GetSelectFlag() == false)
-	//{// 選択フラグを立てる
-	//	m_pUi[UI_CLOSE]->SetSelectFlag(true);
-	//}
+	if (m_pUi[UI_CLOSE]->GetSelectFlag() == false)
+	{// 選択フラグを立てる
+		m_pUi[UI_CLOSE]->SetSelectFlag(true);
+	}
 	// 右クリックを離した時かつ選択された番号と同じとき
-	//if (pMouse->GetRelease(0) &&
-	//	m_nSelectIndex == UI_CLOSE)
-	//{
-	//	SstMode(MODE_SELECT);
-	//}
-	//// マウスを押したとき
-	//if (pMouse->GetTrigger(0))
-	//{
-	//	m_nSelectIndex = UI_CLOSE;
-	//}
+	if (pMouse->GetRelease(0) &&
+		m_nSelectIndex == UI_CLOSE)
+	{
+		SstMode(MODE_SELECT);
+	}
+	// マウスを押したとき
+	if (pMouse->GetTrigger(0))
+	{
+		m_nSelectIndex = UI_CLOSE;
+	}
 
 }
 
@@ -488,12 +493,12 @@ void CDecodingManager::ScrollProc(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 void CDecodingManager::PinchScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 {
 	// スクロールバーを動かす処理
-	//if (m_pUi[UI_SCROLLHANDLE]->Collision2D(*pMousePos) == true &&
-	//	pMouse->GetTrigger(0))
-	//{
-	//	m_VecPinch_center = VEC2(m_pUi[UI_SCROLLHANDLE]->GetPos().x - pMousePos->x, m_pUi[UI_SCROLLHANDLE]->GetPos().y - pMousePos->y);
-	//	m_nSelectIndex = UI_SCROLLHANDLE;
-	//}
+	if (m_pUi[UI_SCROLLHANDLE]->Collision2D(*pMousePos) == true &&
+		pMouse->GetTrigger(0))
+	{
+		m_VecPinch_center = VEC2(m_pUi[UI_SCROLLHANDLE]->GetPos().x - pMousePos->x, m_pUi[UI_SCROLLHANDLE]->GetPos().y - pMousePos->y);
+		m_nSelectIndex = UI_SCROLLHANDLE;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -501,18 +506,18 @@ void CDecodingManager::PinchScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePo
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 {
-	//if (!pMouse->GetPress(0))
-	//{
-	//	m_nSelectIndex = -1;
-	//	return;
-	//}
-	//if (m_nSelectIndex == UI_SCROLLHANDLE)
-	//{
-	//	m_pUi[UI_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, pMousePos->y + m_VecPinch_center.y));
-	//	m_pUi[UI_SCROLLHANDLE]->UpdateVertex(true);
-	//	// ドキュメントをスクロールする
-	//	ScrollThroughDocument();
-	//}
+	if (!pMouse->GetPress(0))
+	{
+		m_nSelectIndex = -1;
+		return;
+	}
+	if (m_nSelectIndex == UI_SCROLLHANDLE)
+	{
+		m_pUi[UI_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, pMousePos->y + m_VecPinch_center.y));
+		m_pUi[UI_SCROLLHANDLE]->UpdateVertex(true);
+		// ドキュメントをスクロールする
+		ScrollThroughDocument();
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -520,20 +525,20 @@ void CDecodingManager::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::MouseWheelScroll(D3DXVECTOR2 * pMousePos)
 {
-	//if (m_nSelectIndex != -1)
-	//{
-	//	return;
-	//}
+	if (m_nSelectIndex != -1)
+	{
+		return;
+	}
 
-	//int nScrollValu = CMouse::GetScrollValue();
-	//if (nScrollValu == 0)
-	//{
-	//	return;
-	//}
-	//m_pUi[UI_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, m_pUi[UI_SCROLLHANDLE]->GetPos().y -= nScrollValu *30.0f));
-	//m_pUi[UI_SCROLLHANDLE]->UpdateVertex(true);
-	//// ドキュメントをスクロールする
-	//ScrollThroughDocument();
+	int nScrollValu = CMouse::GetScrollValue();
+	if (nScrollValu == 0)
+	{
+		return;
+	}
+	m_pUi[UI_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, m_pUi[UI_SCROLLHANDLE]->GetPos().y -= nScrollValu *30.0f));
+	m_pUi[UI_SCROLLHANDLE]->UpdateVertex(true);
+	// ドキュメントをスクロールする
+	ScrollThroughDocument();
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -542,20 +547,20 @@ void CDecodingManager::MouseWheelScroll(D3DXVECTOR2 * pMousePos)
 float CDecodingManager::ScrollClamp(D3DXVECTOR2 *pMousePos,float fPosY)
 {
 	// 変数宣言
-	//CDecodingUI * pScrollBar = m_pUi[UI_SCROLLBAR].get();
-	//CDecodingUI * pScrollHandle = m_pUi[UI_SCROLLHANDLE].get();
+	CDecodingUI * pScrollBar = m_pUi[UI_SCROLLBAR].get();
+	CDecodingUI * pScrollHandle = m_pUi[UI_SCROLLHANDLE].get();
 
-	//// 枠内に収める
-	//if (pScrollBar->GetPos().y + pScrollBar->GetSize().y *MYLIB_HALF_SIZE <= fPosY + pScrollHandle->GetSize().y*MYLIB_HALF_SIZE)
-	//{
-	//	fPosY = (pScrollBar->GetPos().y + pScrollBar->GetSize().y*MYLIB_HALF_SIZE - (pScrollHandle->GetSize().y*MYLIB_HALF_SIZE));
-	//	m_VecPinch_center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, fPosY - pMousePos->y);
-	//}
-	//if (pScrollBar->GetPos().y - pScrollBar->GetSize().y *MYLIB_HALF_SIZE >= fPosY - pScrollHandle->GetSize().y*MYLIB_HALF_SIZE)
-	//{
-	//	fPosY = (pScrollBar->GetPos().y - pScrollBar->GetSize().y*MYLIB_HALF_SIZE + (pScrollHandle->GetSize().y*MYLIB_HALF_SIZE));
-	//	m_VecPinch_center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, fPosY - pMousePos->y);
-	//}
+	// 枠内に収める
+	if (pScrollBar->GetPos().y + pScrollBar->GetSize().y *MYLIB_HALF_SIZE <= fPosY + pScrollHandle->GetSize().y*MYLIB_HALF_SIZE)
+	{
+		fPosY = (pScrollBar->GetPos().y + pScrollBar->GetSize().y*MYLIB_HALF_SIZE - (pScrollHandle->GetSize().y*MYLIB_HALF_SIZE));
+		m_VecPinch_center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, fPosY - pMousePos->y);
+	}
+	if (pScrollBar->GetPos().y - pScrollBar->GetSize().y *MYLIB_HALF_SIZE >= fPosY - pScrollHandle->GetSize().y*MYLIB_HALF_SIZE)
+	{
+		fPosY = (pScrollBar->GetPos().y - pScrollBar->GetSize().y*MYLIB_HALF_SIZE + (pScrollHandle->GetSize().y*MYLIB_HALF_SIZE));
+		m_VecPinch_center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, fPosY - pMousePos->y);
+	}
 	return fPosY;
 }
 
@@ -565,12 +570,12 @@ float CDecodingManager::ScrollClamp(D3DXVECTOR2 *pMousePos,float fPosY)
 void CDecodingManager::ScrollThroughDocument(void)
 {
 	// ベクトルを計算する
-	//float fVec = m_pUi[UI_SCROLLHANDLE]->GetPos().y - (m_pUi[UI_SCROLLBAR]->GetPos().y + m_ScrollRange.fMin);
-	//CDecodingUI::POLYVERTEXSUVINFO *pSetingTex = m_pUi[UI_DOCUMENT]->GetTex();
-	//float fBasePosY = (0.75f * 0.5f);
-	//float fScal = 1.0f - (fBasePosY + fBasePosY);
-	//pSetingTex->pos.v = (fBasePosY)+(fScal *  (fVec / m_fScrollRangeValue));
-	//m_pUi[UI_DOCUMENT]->UpdateVertex(false, false, true);
+	float fVec = m_pUi[UI_SCROLLHANDLE]->GetPos().y - (m_pUi[UI_SCROLLBAR]->GetPos().y + m_ScrollRange.fMin);
+	CDecodingUI::POLYVERTEXSUVINFO *pSetingTex = m_pUi[UI_DOCUMENT]->GetTex();
+	float fBasePosY = (0.75f * 0.5f);
+	float fScal = 1.0f - (fBasePosY + fBasePosY);
+	pSetingTex->pos.v = (fBasePosY)+(fScal *  (fVec / m_fScrollRangeValue));
+	m_pUi[UI_DOCUMENT]->UpdateVertex(false, false, true);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -578,17 +583,17 @@ void CDecodingManager::ScrollThroughDocument(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::DisplayDocumentsInPlace(void)
 {
-	//m_pUi[UI_DOCUMENT]->SetDispFlag(true);
-	//m_pUi[UI_DOCUMENT]->SetSize(m_Seting[UI_DOCUMENT].size);
-	//m_pUi[UI_DOCUMENT]->UpdateVertex(true);
+	m_pUi[UI_DOCUMENT]->SetDispFlag(true);
+	m_pUi[UI_DOCUMENT]->SetSize(m_Seting[UI_DOCUMENT].size);
+	m_pUi[UI_DOCUMENT]->UpdateVertex(true);
 
-	//for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
-	//{
-	//	m_pUi[nCntUi]->SetDispFlag(true);
-	//	m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_Seting[nCntUi].pos);
-	//	m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size);
-	//	m_pUi[nCntUi]->UpdateVertex(true);
-	//}
+	for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetDispFlag(true);
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_Seting[nCntUi].pos);
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size);
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -596,18 +601,18 @@ void CDecodingManager::DisplayDocumentsInPlace(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::AppeaDocument(int nCntUi)
 {
-	//m_pUi[UI_DOCUMENT]->BindTexture(m_pTexture[nCntUi + 6]);
-	//m_pUi[UI_DOCUMENT]->SetDispFlag(true);
-	//m_pUi[UI_DOCUMENT]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
-	//m_pUi[UI_DOCUMENT]->UpdateVertex(true);
+	m_pUi[UI_DOCUMENT]->BindTexture(m_pTexture[nCntUi + 6]);
+	m_pUi[UI_DOCUMENT]->SetDispFlag(true);
+	m_pUi[UI_DOCUMENT]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
+	m_pUi[UI_DOCUMENT]->UpdateVertex(true);
 
-	//for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
-	//{
-	//	m_pUi[nCntUi]->SetDispFlag(true);
-	//	m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos());
-	//	m_pUi[nCntUi]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
-	//	m_pUi[nCntUi]->UpdateVertex(true);
-	//}
+	for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetDispFlag(true);
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos());
+		m_pUi[nCntUi]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -615,11 +620,11 @@ void CDecodingManager::AppeaDocument(int nCntUi)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::DisAppeaDocument(void)
 {
-	//m_pUi[UI_DOCUMENT]->SetDispFlag(false);
-	//for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
-	//{
-	//	m_pUi[nCntUi]->SetDispFlag(false);
-	//}
+	m_pUi[UI_DOCUMENT]->SetDispFlag(false);
+	for (int nCntUi = UI_CLOSE; nCntUi < UI_MAX; nCntUi++)
+	{
+		m_pUi[nCntUi]->SetDispFlag(false);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
