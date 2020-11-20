@@ -21,7 +21,6 @@
 // マクロ定義
 //=============================================================================
 #define MAX_KEEPTEXT			(20)	// 保持できるテキストの最大数
-#define SIZE_CHATTEXT			(64)	// チャットテキストの最大サイズ
 
 #define POS_OPENTAB				(D3DXVECTOR2(980.0f, 720.0f))	// 開いたタブの座標
 #define POS_CLOSETAB			(D3DXVECTOR2(1280.0f, 720.0f))	// 閉じたタブの座標
@@ -488,20 +487,9 @@ void CChatTab::PressKey(int nKeyID, bool bShift)
 //==========================================================================================================================================================
 void CChatTab::SendChatText(void)
 {
-	char *KeepText = new char[SIZE_CHATTEXT];
-	strcpy(KeepText, m_SendText->GetChatText().c_str());
-
 	// 記入したテキストを送信
-	std::thread t2(CClient::SendText, KeepText);
+	std::thread t2(CClient::SendText);
 	t2.detach();
-
-	// 記入した文字列をリセット
-	m_SendText->GetChatText().clear();
-
-	// チャットキープの生成
-	CreateKeep(CChatBase::OWNER_OWN, KeepText);
-
-	delete[] KeepText;
 }
 
 //==========================================================================================================================================================
@@ -583,6 +571,9 @@ void CChatTab::ScrollDown(void)
 //==========================================================================================================================================================
 void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 {
+	char *cNewText = new char[strlen(cText)];
+	strcpy(cNewText, cText);
+
 	// テキストを末尾に追加
 	CHATKEEP keep;
 	m_chatKeep.push_back(keep);
@@ -616,8 +607,9 @@ void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 	}
 
 	// チャットに保存
-	m_chatKeep[nNumber].pKeepText->SetChatText(cText);
+	m_chatKeep[nNumber].pKeepText->SetChatText(cNewText);
 
+	delete[] cNewText;
 	m_chatKeep[nNumber].pPolyPic = nullptr;
 
 	// 古いほうから削除

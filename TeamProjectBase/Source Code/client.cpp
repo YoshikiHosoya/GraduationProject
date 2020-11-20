@@ -13,15 +13,22 @@
 #include "renderer.h"
 #include "client.h"
 #include "chatTab.h"
+#include "chatText.h"
 #include "picture.h"
 
 // ===================================================================
 // マクロ定義
 // ===================================================================
-#define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
+#define IPADDRESS_SERVER	("25.10.240.177")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
 #define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
+
+#define SIZE_SEND_TEXT		(9)					// SEND_TEXTのサイズ
+#define SIZE_SEND_PICTURE	(12)				// SEND_PICTUREのサイズ
+#define SIZE_SPACE			(2)					// 文字列のスペースのサイズ
+
+#define NUM_CMPCHAR			(6)					// 受信時のテキストかピクチャかの比較用
 
 // ===================================================================
 // 静的メンバ変数の初期化
@@ -82,9 +89,6 @@ int CClient::ConnectServer(void)
 // ===================================================================
 void CClient::WaitRecieve(void)
 {
-	char buf[256] = {};					// テキストを格納する変数
-	size_t bufSize = sizeof(buf);	// サイズを格納する変数
-
 	while (1)
 	{
 		// 接続しない
@@ -93,26 +97,26 @@ void CClient::WaitRecieve(void)
 			break;
 		}
 
-		// メモリブロックをリセット
-		memset(buf, 0, bufSize);
+		char cData[256];
+		memset(cData, 0, sizeof(cData));
 
-		// 接続待ち
-		if (recv(m_socket, buf, bufSize, 0) == -1)
+		// 受信待ち
+		if (recv(m_socket, cData, sizeof(cData), 0) <= 0)
 		{
-#ifdef _DEBUG
-			// エラーレポート
-			ErrorReport();
-#endif
+			// 受信していない
 			continue;
 		}
 
-		if (strlen(buf) <= 0)
-			continue;
-
-		if (strcmp(buf, "SEND_PICTURE") == 0)
-			RecvPicture();
-		else if (strcmp(buf, "SEND_TEXT") == 0)
-			RecvText();
+		// ピクチャ受信
+		if (strncmp(cData, "SEND_PICTURE", NUM_CMPCHAR) == 0)
+		{
+			RecvPicture(cData);
+		}
+		// テキスト受信
+		else if (strncmp(cData, "SEND_TEXT", NUM_CMPCHAR) == 0)
+		{
+			RecvText(cData);
+		}
 	}
 }
 
@@ -159,31 +163,57 @@ void CClient::UninitClient(void)
 // ===================================================================
 // テキストの送信
 // ===================================================================
-void CClient::SendText(char * cSendText)
+void CClient::SendText(void)
 {
 	if (!m_bConnecting)
 	{
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
 #endif
-		return;
+		//return;
 	}
 
-	char Text[65];
-	strcpy(Text, cSendText);
-	char cSend[16] = "SEND_TEXT";
-	int nLen = strlen(Text);
+	// 文字列を格納するメモリを確保
+	char *cSendText = new char[SIZE_CHATTEXT];
+	char *cSendSize = new char[2];
+
+	// メモリリセット
+	memset(cSendText, 0, sizeof(cSendText));
+	memset(cSendSize, 0, sizeof(cSendSize));
+
+	// 事前にデータを格納・計算
+	strcpy(cSendText, CChatTab::GetSendText()->GetChatText().c_str());
+	sprintf(cSendSize, "%d", strlen(cSendText));
+
+	// 送信用文字列のメモリ確保
+	char *cSendAll = new char[SIZE_SEND_TEXT + strlen(cSendSize) + SIZE_CHATTEXT + SIZE_SPACE];
+	memset(cSendAll, 0, sizeof(cSendAll));
+
+	// 送信データをまとめる
+	strcpy(cSendAll, "SEND_TEXT");
+	strcat(cSendAll, " ");
+	strcat(cSendAll, cSendSize);
+	strcat(cSendAll, " ");
+	strcat(cSendAll, cSendText);
 
 #ifdef _DEBUG
-	printf("送信 > %s [%d字]\n", Text, nLen);
+	// 送信データをデバッグで表示
+	printf("テキスト送信 > %s [%d字]\n", cSendAll, strlen(cSendAll));
 #endif
-	char cNumChar[256] = { 0 };
-	sprintf(cNumChar, "%d", nLen);
 
-	// テキスト送信
-	send(m_socket, cSend, sizeof(cSend), 0);
-	send(m_socket, cNumChar, sizeof(cNumChar), 0);
-	send(m_socket, Text, nLen, 0);
+	// データ送信
+	send(m_socket, cSendAll, strlen(cSendAll), 0);
+
+	// 履歴に追加
+	CChatTab::CreateKeep(CChatBase::OWNER_OWN, cSendText);
+
+	// 記入した文字列をリセット
+	CChatTab::GetSendText()->GetChatText().clear();
+
+	// メモリ破棄
+	delete[] cSendAll;
+	delete[] cSendSize;
+	delete[] cSendText;
 }
 
 // ===================================================================
@@ -191,13 +221,12 @@ void CClient::SendText(char * cSendText)
 // ===================================================================
 void CClient::SendPicture(void)
 {
-	// 接続していない
 	if (!m_bConnecting)
 	{
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
 #endif
-		return;
+		//return;
 	}
 
 	// 変数宣言
@@ -216,16 +245,39 @@ void CClient::SendPicture(void)
 		return;
 	}
 
+	int nPixel = strlen(Load.m_pFileData);
+
+	// 文字列を格納するメモリを確保
+	char *cSendPicture = new char[Load.m_nuFileSize];
+	char *cSendSize = new char[5];
+	memset(cSendPicture, 0, sizeof(cSendPicture));
+	memset(cSendSize, 0, sizeof(cSendSize));
+
+	// 事前にデータを格納・計算
+	strcpy(cSendPicture, Load.m_pFileData);
+	sprintf(cSendSize, "%d", nPixel);
+
+	// 送信用文字列のメモリ確保
+	char *cSendAll = new char[SIZE_SEND_PICTURE + strlen(cSendSize) + nPixel + SIZE_SPACE];
+	memset(cSendAll, 0, sizeof(cSendAll));
+
+	// 送信データをまとめる
+	strcpy(cSendAll, "SEND_PICTURE");
+	strcat(cSendAll, " ");
+	strcat(cSendAll, cSendSize);
+	strcat(cSendAll, " ");
+	strcat(cSendAll, cSendPicture);
+
 #ifdef _DEBUG
-	printf("ピクチャ送信 > [%d byte]\n", Load.m_nuFileSize);
+	// 送信データをデバッグで表示
+	printf("ピクチャ送信 > %s [%dPixel]\n", cSendAll, strlen(cSendAll));
 #endif
 
-	char Header[256] = { 0 };
-	char cSendPicture[16] = "SEND_PICTURE";
-	sprintf(Header, "%d", Load.m_nuFileSize);
-	send(m_socket, cSendPicture, sizeof(cSendPicture), 0);
-	send(m_socket, Header, sizeof(Header), 0);
-	send(m_socket, Load.m_pFileData, Load.m_nuFileSize, 0);
+	// データ送信
+	send(m_socket, cSendAll, strlen(cSendAll), 0);
+
+	// ファイルデータの破棄
+	Load.DeleteFileData();
 
 	// 空のピクチャを生成
 	LPDIRECT3DTEXTURE9 pTexture = NULL;
@@ -240,60 +292,52 @@ void CClient::SendPicture(void)
 	CPicture::Reading(pTexture, link);
 	// 履歴に追加
 	CChatTab::AddPicture(CChatBase::OWNER_OWN, pTexture);
-
-	// ファイルデータの破棄
-	Load.DeleteFileData();
 }
 
 // ===================================================================
 // テキストの受信
 // ===================================================================
-void CClient::RecvText(void)
+void CClient::RecvText(char *data)
 {
-	// 初期化
-	char Header[256] = { 0 };
-	memset(Header, 0, sizeof(Header));
-
 	// 文字数を取得
-	recv(m_socket, Header, sizeof(Header), 0);
-	int nFileSize = atoi(Header);
-	if (nFileSize <= 0)
+	int nLen;
+	char cText[65];
+	memset(cText, 0, sizeof(cText));
+	sscanf(data, "SEND_TEXT %d %s", &nLen, cText);
+	if (nLen <= 0)
 		return;
 
-	// 文字数分、メモリ確保
-	char *pFileBuffer = new char[nFileSize];
-	recv(m_socket, pFileBuffer, nFileSize, 0);
-
-	pFileBuffer[nFileSize] = '\0';
-
 #ifdef _DEBUG
-	printf("テキストを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+	// テキストがあれば表示
+	printf("テキストを受信 > %s [%d字]\n", cText, nLen);
 #endif
-	// チャットにテキストを追加
-	CChatTab::RecvChatText(pFileBuffer);
 
-	delete[] pFileBuffer;
+	// 末尾にnull文字
+	cText[nLen] = '\0';
+
+	// チャットにテキストを追加
+	CChatTab::RecvChatText(cText);
 }
 
 // ===================================================================
 // ピクチャの受信
 // ===================================================================
-void CClient::RecvPicture(void)
+void CClient::RecvPicture(char *data)
 {
-	// 初期化
-	char Header[256] = { 0 };
-	memset(Header, 0, sizeof(Header));
-
 	// 文字数を取得
-	recv(m_socket, Header, sizeof(Header), 0);
-	int nFileSize = atoi(Header);
-	if (nFileSize <= 0)
+	int nLen;
+	sscanf(data, "SEND_TEXT %d", &nLen);
+	if (nLen <= 0)
 		return;
 
-	// 文字数分、メモリ確保
-	char *pFileBuffer = new char[nFileSize];
-	recv(m_socket, pFileBuffer, nFileSize, 0);
-	printf("ピクチャを受信 > %s [%d字]\n", pFileBuffer, nFileSize);
+	char *cPicData = new char[nLen + 1];
+	memset(cPicData, 0, sizeof(cPicData));
+	sscanf(data, "SEND_TEXT %d %s", &nLen, cPicData);
+
+#ifdef _DEBUG
+	// テキストがあれば表示
+	printf("ピクチャを受信 > %s [%dPixel]\n", cPicData, nLen);
+#endif
 
 	// 格納用
 	LPDIRECT3DTEXTURE9 pTexture = NULL;
@@ -307,10 +351,10 @@ void CClient::RecvPicture(void)
 	// ファイルを上書き
 	FILE *pFile;
 	pFile = fopen(LINK_SENDPICTURE, "w");
-	fprintf(pFile, "%s", pFileBuffer);
+	fprintf(pFile, "%s", cPicData);
 	fclose(pFile);
 
-	delete[] pFileBuffer;
+	delete[] cPicData;
 
 	CString link;
 	link = LINK_SENDPICTURE;

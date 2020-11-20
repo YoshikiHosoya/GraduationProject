@@ -31,6 +31,13 @@ public:
 		CLIENT_CLOSE,	// 接続を閉じる
 	} CLIENTSTATE;
 
+	typedef enum
+	{
+		SEND_OBJECT,	// 送信する物のタイプ
+		SEND_DATA,		// 送信するデータ
+		SEND_MAX
+	} SENDINFO;
+
 	CClient() {};	// コンストラクタ
 	~CClient() {};		// デストラクタ
 
@@ -47,10 +54,10 @@ public:
 	static CLIENTSTATE &GetClientState(void)		{ return m_state; }				// 状態の取得
 	static void SetAccepting(bool bConnect)			{ m_bConnecting = bConnect; }	// 接続の設定
 	static void SetClientState(CLIENTSTATE state)	{ m_state = state; }			// 状態の設定
-	static void SendText(char* cSendText);											// 文章の送信
-	static void RecvText(void);														// 文章の受信
+	static void SendText(void);														// 文章の送信
 	static void SendPicture(void);													// ピクチャの送信
-	static void RecvPicture(void);													// ピクチャの受信
+	static void RecvText(char *data);												// 文章の受信
+	static void RecvPicture(char *data);											// ピクチャの受信
 
 private:
 	static CLIENTSTATE m_state;			// クライアントの状態

@@ -75,12 +75,14 @@ public:
 	static D3DXVECTOR2	&GetTabPos(void)			{ return m_TabPos; }						// タブ座標の取得
 	static TABSTATE		&GetTabState(void)			{ return m_tabState; }						// タブの状態の取得
 	static CHATKEEP		*GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }				// テキストの背景ポリゴン取得
+	static CChatText	*GetSendText(void)			{ return m_SendText; }						// テキストの背景ポリゴン取得
 	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }							// タブ座標の設定
 	static void			SendChatText(void);														// テキストの送信
 	static void			AddPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture);	// ピクチャの追加
 	static void			RecvChatText(char *cText);												// テキストの受信
 	static void			ScrollUp(void);															// チャット履歴の上スクロール
 	static void			ScrollDown(void);														// チャット履歴の下スクロール
+	static void			CreateKeep(CChatBase::TEXTOWNER owner, char *cText);					// チャットキープの生成
 
 private:
 	void		ClickTab(void);											// タブクリック
@@ -89,7 +91,6 @@ private:
 	void		PressKey(int nKeyID, bool bShift);						// キー入力
 	void		SetChatKeyInfo(int nKeyID);								// 通常の入力
 	void		SetChatShiftKeyInfo(int nKeyID);						// シフトキーを用いた入力
-	static void CreateKeep(CChatBase::TEXTOWNER owner, char *cText);	// チャットキープの生成
 
 	static std::vector<CHATKEEP>	m_chatKeep;							// 保持できるテキスト
 	static TABSTATE					m_tabState;							// タブの状態
