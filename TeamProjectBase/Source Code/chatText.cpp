@@ -68,17 +68,18 @@ void CChatText::Draw(void)
 	// 行数を格納
 	int nLine = nLenText / MAXCHAR_ONELINE + 1;
 
-	char *cWriteText = new char[MAXCHAR_ONELINE];
+	char *cWriteText = new char[MAXCHAR_ONELINE + 1];
+
 	RECT rect = m_rect;
 
 	// 行数分だけ繰り返す
 	for (int nCnt = 0; nCnt < nLine; nCnt++)
 	{
-		strcpy(cWriteText, "");
+		memset(cWriteText, 0, sizeof(cWriteText));
 
 		// 文章を30文字毎に切り分ける
-		std::string str = m_text.substr(nCnt * MAXCHAR_ONELINE, MAXCHAR_ONELINE);
-		strcpy(cWriteText, str.c_str());
+		strcpy(cWriteText, m_text.substr(nCnt * MAXCHAR_ONELINE, MAXCHAR_ONELINE).c_str());
+		cWriteText[MAXCHAR_ONELINE] = '\0';
 
 		// 右端で改行
 		if (nCnt != 0)
@@ -93,6 +94,7 @@ void CChatText::Draw(void)
 			m_col);
 	}
 
+	// 文字列の破棄
 	delete[] cWriteText;
 }
 

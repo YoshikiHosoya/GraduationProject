@@ -47,7 +47,11 @@ public:
 	// テキストの取得
 	std::string &GetChatText(void) { return m_text; }
 	// テキストの設定
-	void SetChatText(char *cText) { m_text = cText; }
+	void SetChatText(char *cText) 
+	{ 
+		m_text.clear();
+		m_text = cText; 
+	}
 	// 保持するテキストの位置設定
 	void SetKeepRectBegin(D3DXVECTOR2 rectBegin)
 	{ m_rect = { (LONG)rectBegin.x, (LONG)rectBegin.y, SCREEN_WIDTH, SCREEN_HEIGHT }; }
