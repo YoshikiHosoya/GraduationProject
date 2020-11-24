@@ -72,6 +72,9 @@ HRESULT CDecoding::Init(HWND hWnd)
 	CDecodingWindow::Load();
 	// 解読マネージャーの生成
 	m_pDecodingManager = CDecodingManager::Create();
+
+	//チャット機能
+	CChatBase::Create();
 	return S_OK;
 }
 

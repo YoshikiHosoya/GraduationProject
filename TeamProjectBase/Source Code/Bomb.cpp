@@ -375,6 +375,10 @@ void CBomb::CreateModule(int const nModuleNum)
 	//CreateModuleDebug();
 #endif //_DEBUG
 
+
+	m_nModuleNum = 4;
+
+
 	//1”Ô–Ú
 	CBomb::CreateModuleOne<CModule_Timer>();
 	//2”Ô–Ú
