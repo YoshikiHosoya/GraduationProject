@@ -163,6 +163,8 @@
     <ClCompile Include="Source Code\chatText.cpp" />
     <ClCompile Include="Source Code\client.cpp" />
     <ClCompile Include="Source Code\connectMode.cpp" />
+    <ClCompile Include="Source Code\connectBase.cpp" />
+    <ClCompile Include="Source Code\connectUI.cpp" />
     <ClCompile Include="Source Code\Debug\debugproc.cpp" />
     <ClCompile Include="Source Code\Debug\Debug_EffectViewer.cpp" />
     <ClCompile Include="Source Code\Decoding.cpp" />
@@ -237,6 +239,8 @@
     <ClInclude Include="Source Code\chatText.h" />
     <ClInclude Include="Source Code\client.h" />
     <ClInclude Include="Source Code\connectMode.h" />
+    <ClInclude Include="Source Code\connectBase.h" />
+    <ClInclude Include="Source Code\connectUI.h" />
     <ClInclude Include="Source Code\Debug\debugproc.h" />
     <ClInclude Include="Source Code\Debug\Debug_EffectViewer.h" />
     <ClInclude Include="Source Code\Decoding.h" />
