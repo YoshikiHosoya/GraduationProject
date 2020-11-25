@@ -34,6 +34,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CHAT/chatBox02.png" },						// チャットボックス02
 	{ "data/TEXTURE/CHAT/chatBox03.png" },						// チャットボックス03
 
+	{ "data/TEXTURE/CONNECTMODE/LoadIcon.png" },				// 接続中のロードアイコン
+
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
 	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト

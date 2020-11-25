@@ -1,11 +1,11 @@
 // ===================================================================
 //
-// 接続モード処理 [ connectMode.h ]
+// 接続UIの基盤処理 [ connectBase.h ]
 // Author : KANAN NAGANAWA
 //
 // ===================================================================
-#ifndef _CONNECTMODE_H_
-#define _CONNECTMODE_H_
+#ifndef _CONNECTBASE_H_
+#define _CONNECTBASE_H_
 
 #define _CRT_SECURE_NO_WARNINGS // 警告除去
 
@@ -13,7 +13,7 @@
 // インクルードファイル
 // ===================================================================
 #include "main.h"
-#include "basemode.h"
+#include "scene.h"
 
 // ===================================================================
 // マクロ定義
@@ -22,20 +22,23 @@
 // ===================================================================
 // クラス定義
 // ===================================================================
-class CConnectBase;
+class CConnectUI;
 
-class CConnectMode : public CBaseMode
+class CConnectBase : public CScene
 {
 public:
-	CConnectMode();
-	~CConnectMode();
-	HRESULT Init(HWND hWnd);								//初期化
-	void Update();											//更新
-	void Draw();											//描画
-	void ShowDebugInfo();									//デバッグ情報表記
+	CConnectBase();
+	~CConnectBase();
+
+	virtual HRESULT Init(void);			// 初期化
+	virtual void Update(void);			// 更新
+	virtual void Draw(void);			// 描画
+	virtual void ShowDebugInfo() {};		//デバッグ情報表記
+
+	static std::shared_ptr<CConnectBase> Create(void);	// 生成
 
 private:
-	std::shared_ptr<CConnectBase> m_pConnectBase;
+	CConnectUI *m_pUI;	// UIのポインタ
 };
 
 #endif
