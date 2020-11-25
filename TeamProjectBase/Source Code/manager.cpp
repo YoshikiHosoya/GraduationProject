@@ -26,6 +26,7 @@
 #include "camera.h"
 #include "client.h"
 #include "Decoding.h"
+#include "connectMode.h"
 #include "DecodingManager.h"
 
 //------------------------------------------------------------------------------
@@ -315,6 +316,13 @@ void CManager::SetMode(MODE nextmode)
 	case MODE_EFFECT_VIEWER:
 		m_pBaseMode.reset(new CDebug_EffectViewer);
 		std::cout << "new BaseMode[CTestMode]" << NEWLINE;
+		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		break;
+
+		//result
+	case MODE_CONNECT_SERVER:
+		m_pBaseMode.reset(new CConnectMode);
+		std::cout << "new BaseMode[CConectMode]" << NEWLINE;
 		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
