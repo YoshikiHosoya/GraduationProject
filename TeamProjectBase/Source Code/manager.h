@@ -42,6 +42,7 @@ public:
 		MODE_GAME,							//ゲーム
 		MODE_RESULT,						//リザルト
 		MODE_TEST,							//テスト画面
+		MODE_CONNECT_SERVER,				//サーバー接続
 		MODE_EFFECT_VIEWER,					//エフェクトビューワ
 		MODE_END							//ゲーム終了
 	};

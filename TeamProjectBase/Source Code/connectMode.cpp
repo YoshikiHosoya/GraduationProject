@@ -5,11 +5,11 @@
 //
 //==========================================================================================================================================================
 #include "connectMode.h"
+#include "connectBase.h"
 #include "manager.h"
 #include "renderer.h"
 #include "fade.h"
 #include "camera.h"
-#include "polygon2D.h"
 
 //==========================================================================================================================================================
 // マクロ定義
@@ -42,13 +42,7 @@ HRESULT CConnectMode::Init(HWND hWnd)
 	//カメラ座標設定
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
-	/*for (int nCnt = 0; nCnt < CONNECTUI_MAX; nCnt++)
-	{
-		m_pConnectUI[nCnt] = CPolygon2D::Create();
-		m_pConnectUI[nCnt]->SetPos(m_posUI[nCnt]);
-		m_pConnectUI[nCnt]->SetSize(m_sizeUI[nCnt]);
-		m_pConnectUI[nCnt]->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
-	}*/
+	m_pConnectBase = CConnectBase::Create();
 
 	return S_OK;
 }
@@ -58,10 +52,6 @@ HRESULT CConnectMode::Init(HWND hWnd)
 //==========================================================================================================================================================
 void CConnectMode::Update()
 {
-
-
-
-
 	//なんかボタン押されたとき
 	if (CHossoLibrary::CheckAnyButton())
 	{
@@ -75,6 +65,7 @@ void CConnectMode::Update()
 //==========================================================================================================================================================
 void CConnectMode::Draw()
 {
+
 }
 
 //==========================================================================================================================================================

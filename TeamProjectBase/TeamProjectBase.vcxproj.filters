@@ -55,11 +55,14 @@
     <Filter Include="Chat">
       <UniqueIdentifier>{d8dd88f2-7c7b-461c-b28c-24510cd82408}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Picture">
-      <UniqueIdentifier>{969aa955-2626-42bb-9ece-1f30cd168d9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DecodingBook">
       <UniqueIdentifier>{4e452cc5-025d-4a22-a18b-bcf6ef1426a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="connectUI">
+      <UniqueIdentifier>{6330b118-b503-4fd0-803e-59751ad749fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Picture">
+      <UniqueIdentifier>{969aa955-2626-42bb-9ece-1f30cd168d9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +287,12 @@
     </ClCompile>
     <ClCompile Include="Source Code\DecodingWindow.cpp">
       <Filter>DecodingBook</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\connectBase.cpp">
+      <Filter>connectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\connectUI.cpp">
+      <Filter>connectUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -532,6 +541,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\DecodingWindow.h">
       <Filter>DecodingBook</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\connectBase.h">
+      <Filter>connectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\connectUI.h">
+      <Filter>connectUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
