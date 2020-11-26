@@ -173,47 +173,53 @@ void CClient::SendText(void)
 		//return;
 	}
 
-	// 文字列を格納するメモリを確保
-	char *cSendText = new char[SIZE_CHATTEXT];
-	char *cSendSize = new char[2];
+	// 送信用文字列
+	std::string strSend;
+	// 文字数を格納
+	int nLen = (int)CChatTab::GetSendText()->GetChatText().size();
+	// 文字列を格納
+	char *cKeep = new char[nLen + 1];
+	memset(cKeep, 0, nLen + 1);
+	strcpy(cKeep, CChatTab::GetSendText()->GetChatText().c_str());
 
-	// メモリリセット
-	memset(cSendText, 0, sizeof(cSendText));
-	memset(cSendSize, 0, sizeof(cSendSize));
+	// 文字数を文字列として格納
+	char *cSendSize;
+	if (nLen >= 10)
+	{	// 2桁以上
+		cSendSize = new char[2 + 1];
+		memset(cSendSize, 0, 2 + 1);
+	}
+	else
+	{	// 1桁以下
+		cSendSize = new char[1 + 1];
+		memset(cSendSize, 0, 1 + 1);
+	}
+	sprintf(cSendSize, "%d", nLen);
 
-	// 事前にデータを格納・計算
-	strcpy(cSendText, CChatTab::GetSendText()->GetChatText().c_str());
-	sprintf(cSendSize, "%d", strlen(cSendText));
-
-	// 送信用文字列のメモリ確保
-	char *cSendAll = new char[SIZE_SEND_TEXT + strlen(cSendSize) + SIZE_CHATTEXT + SIZE_SPACE];
-	memset(cSendAll, 0, sizeof(cSendAll));
-
-	// 送信データをまとめる
-	strcpy(cSendAll, "SEND_TEXT");
-	strcat(cSendAll, " ");
-	strcat(cSendAll, cSendSize);
-	strcat(cSendAll, " ");
-	strcat(cSendAll, cSendText);
+	// 情報を全て格納
+	strSend += "SEND_TEXT";
+	strSend += " ";
+	strSend += cSendSize;
+	strSend += " ";
+	strSend += cKeep;
 
 #ifdef _DEBUG
 	// 送信データをデバッグで表示
-	printf("テキスト送信 > %s [%d字]\n", cSendAll, strlen(cSendAll));
+	printf("テキスト送信 > %s [%d字]\n", strSend.c_str(), strSend.size());
 #endif
 
 	// データ送信
-	send(m_socket, cSendAll, strlen(cSendAll), 0);
-
+	send(m_socket, strSend.c_str(), (int)strSend.size(), 0);
 	// 履歴に追加
-	CChatTab::CreateKeep(CChatBase::OWNER_OWN, cSendText);
+	CChatTab::CreateKeep(CChatBase::OWNER_OWN, cKeep);
 
 	// 記入した文字列をリセット
 	CChatTab::GetSendText()->GetChatText().clear();
+	strSend.clear();
 
-	// メモリ破棄
-	delete[] cSendAll;
+	// メモリを開放
 	delete[] cSendSize;
-	delete[] cSendText;
+	delete[] cKeep;
 }
 
 // ===================================================================
