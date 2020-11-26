@@ -17,15 +17,16 @@
 #define CAMERA_MOVE_SPEED			(10.0f)			//カメラ移動速度
 #define CAMERA_HORIZON_ROTATION		(0.05f)			//カメラの横回転
 #define CAMERA_VERTICAL_ROTATION	(0.02f)			//カメラの縦回転
-#define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,80.0f,0.0f))
+#define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,200.0f,0.0f))
 
 
-#define DEFAULT_DISTANCE			(400.0f)		//カメラの距離
+#define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
+#define APPROACH_DISTANCE			(300.0f)		//カメラの距離
+
 #define DEFAULT_CAMERA_ROTATION		(D3DXVECTOR3(0.13f,0.0f,0.0f))
 
 #define CAMERA_LENGTH_NEAR			(10.0f)			//カメラの見える距離（近）
 #define CAMERA_LENGTH_FAR			(5000.0f)		//カメラの見える距離（遠）
-
 
 //-----------------------------------------------------------------------------
 // 静的メンバ変数宣言
@@ -51,6 +52,8 @@ CCamera::CCamera()
 	m_MousePosCurrent = ZeroVector2;
 	m_MousePosOld = ZeroVector2;
 	m_MouseRotSave = ZeroVector2;
+
+	m_bApproach = false;
 
 	ResetCamera();
 
@@ -101,11 +104,11 @@ void CCamera::Update(void)
 
 	case CCamera::CAMERA_DEBUG:
 
-		//マウスによるカメラ操作
-		Operation();
+		////マウスによるカメラ操作
+		//Operation();
 
-		//カメラ移動
-		MoveCameraDebug();
+		////カメラ移動
+		//MoveCameraDebug();
 
 		//カメラ回転
 		RotCameraDebug();
@@ -246,7 +249,7 @@ void CCamera::RotCameraDebug(void)
 	m_posVDest.z = m_posR.z - cosf(m_rot.x) * cosf(m_rot.y) * m_fDistance;
 
 	// 視点の更新
-	m_posV += (m_posVDest - m_posV) * 0.2f;
+	m_posV += (m_posVDest - m_posV) * 0.15f;
 
 	/*---------------------------------------------
 	//	注視点の更新
@@ -257,7 +260,7 @@ void CCamera::RotCameraDebug(void)
 	m_posRDest.z;
 
 	// 注視点の更新
-	m_posR += (m_posRDest - m_posR) * 0.2f;
+	m_posR += (m_posRDest - m_posR) * 0.15f;
 }
 
 //-----------------------------------------------------------------------------
@@ -397,6 +400,20 @@ void CCamera::ApproachCamera(D3DXVECTOR3 posRDest)
 {
 	m_posRDest = posRDest;
 	m_rot = DEFAULT_CAMERA_ROTATION;
+	m_fDistance = APPROACH_DISTANCE;
+
+	m_bApproach = true;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// カメラから離れる
+//-------------------------------------------------------------------------------------------------------------
+void CCamera::LeaveCamera()
+{
+	m_fDistance = DEFAULT_DISTANCE;
+	m_posRDest = DEFAULT_POS_R;
+	m_bApproach = false;
+
 }
 
 //-------------------------------------------------------------------------------------------------------------

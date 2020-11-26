@@ -113,11 +113,11 @@ void CModule_Parts_No0_SymbolKey::Update()
 //------------------------------------------------------------------------------
 void CModule_Parts_No0_SymbolKey::Draw()
 {
+	CSceneX::Draw();
 	if (m_pLight)
 	{
 		m_pLight->Draw();
 	}
-	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記

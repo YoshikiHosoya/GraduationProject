@@ -21,8 +21,8 @@ SCRIPT
 		COLLISION = 0							//当たり判定があるかどうか
 		TEXTURE = 1							//テクスチャ
 		SHAPE = 0								//パーティクルの出し方
-		LIFE = 3								//ライフ
-		NUMBER = 1								//個数
+		LIFE = 2								//ライフ
+		NUMBER = 3								//個数
 		SPEED = 0.0								//速度
 		RANGE = 0.5								//範囲
 		ALPHADAMPING = 1.00						//アルファ値の減衰値

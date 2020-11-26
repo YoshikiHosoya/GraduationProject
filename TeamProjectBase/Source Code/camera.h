@@ -37,6 +37,7 @@ public:
 	void SetState(CAMERA_STATE state) { m_CameraState = state; };			//カメラの状態切り替え
 	void ResetCamera();														//カメラリセット
 	void ApproachCamera(D3DXVECTOR3 posRDest);								//カメラを近づける処理
+	void LeaveCamera();														//カメラを離れる
 
 	void Operation(void);
 
@@ -45,6 +46,8 @@ public:
 	D3DXVECTOR3 GetCameraPosR()		{ return m_posR; };						//注視点取得
 	D3DXMATRIX* GetMtxView()		{ return &m_mtxView; };					//ビューマトリックス取得
 	D3DXMATRIX* GetMtxProjection()	{ return &m_mtxProjection; };			//プロジェクションマトリック取得
+
+	float GetDistance()				{ return m_fDistance; };
 
 	CAMERA_STATE GetCameraState()	{return m_CameraState;};
 
@@ -71,6 +74,8 @@ private:
 	D3DXVECTOR3		m_DirecVector;					//向いてるベクトル
 
 	CAMERA_STATE	m_CameraState;					//カメラの状態
+
+	bool m_bApproach;								//カメラが接近してるかどうか
 
 	void MoveCameraDebug();							//カメラ移動処理
 	void RotCameraDebug();							//カメラ回転処理

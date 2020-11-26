@@ -19,7 +19,7 @@
 // ===================================================================
 // マクロ定義
 // ===================================================================
-#define IPADDRESS_SERVER	("25.10.240.177")	// サーバのIPアドレス
+#define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
 #define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
@@ -69,7 +69,7 @@ int CClient::ConnectServer(void)
 		{
 #ifdef _DEBUG
 			printf("接続中…\n");
-#endif 
+#endif
 			// 再接続
 			continue;
 		}

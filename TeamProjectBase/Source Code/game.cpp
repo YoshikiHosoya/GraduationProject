@@ -65,12 +65,12 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(STATE::STATE_READY);
+	SetState(STATE::STATE_NORMAL);
 	//パーティクルのマネージャ
 	CParticleManager::Create();
 
 	//爆弾生成
-	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,120.0f,0.0f), ZeroVector3, 5);
+	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,200.0f,0.0f), ZeroVector3, CBomb::EASY);
 
 	//マップ生成
 	CMap::Create();
@@ -223,7 +223,7 @@ void CGame::SetGaze(GAZE gaze)
 
 			break;
 		case CGame::GAZE_BOMB:
-			//CManager::GetRenderer()->GetCamera()->
+			CManager::GetRenderer()->GetCamera()->LeaveCamera();
 			break;
 		case CGame::GAZE_MODULE:
 

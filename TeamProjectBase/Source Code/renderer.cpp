@@ -43,8 +43,8 @@ CRenderer::CRenderer()
 	m_pCamera = nullptr;
 	m_pDebugProc = nullptr;
 	m_pLight = nullptr;
-	m_bDispDebugProcInfo = true;
-	m_bDispImGuiInfo = true;
+	m_bDispDebugProcInfo = false;
+	m_bDispImGuiInfo = false;
 }
 //------------------------------------------------------------------------------
 //デストラクタ

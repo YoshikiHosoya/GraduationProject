@@ -36,6 +36,10 @@ bool CBomb::m_bCanExplosion = false;
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
+#define MODULE_NUM_EASY		(2)
+#define MODULE_NUM_NORMAL	(3)
+#define MODULE_NUM_HARD		(5)
+
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -47,6 +51,7 @@ CBomb::CBomb()
 	m_pModuleList = {};
 	m_pBombExterior.reset();
 	m_bCameraDir = true;
+	m_RotDest = GetRot();
 }
 
 //------------------------------------------------------------------------------
@@ -73,9 +78,7 @@ void CBomb::Update()
 {
 	CSceneX::Update();
 
-	const D3DXVECTOR3 &CameraRot = CManager::GetRenderer()->GetCamera()->GetCameraRot();
-
-	fabsf(CameraRot.y) >= D3DX_PI * 0.5f ?
+	fabsf(GetRot().y) >= D3DX_PI * 0.5f ?
 		m_bCameraDir = true :
 		m_bCameraDir = false;
 
@@ -148,7 +151,7 @@ void CBomb::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //生成関数
 //------------------------------------------------------------------------------
-S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int const nModuleNum)
+S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, DIFFICULTY const difficulty)
 {
 	//メモリ確保
 	S_ptr<CBomb> pBomb = std::make_shared<CBomb>();
@@ -160,6 +163,8 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 	pBomb->SetPos(pos);
 	pBomb->SetRot(rot);
 
+	pBomb->m_difficulty = difficulty;
+
 	//モデル情報設定
 	pBomb->BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_BOMBBOX));
 
@@ -167,7 +172,7 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, int
 	pBomb->m_pBombExterior = CBomb_Exterior::CreateBombExterior(pBomb->GetMtxWorldPtr());
 
 	//モジュール生成
-	pBomb->CreateModule(nModuleNum);
+	pBomb->CreateModule();
 
 
 	//Scene側で管理
@@ -256,6 +261,8 @@ void CBomb::Operation_Keyboard()
 void CBomb::Operation_Mouse()
 {
 
+	Operation_Camera();
+
 	switch (CManager::GetGame()->GetGaze())
 	{
 
@@ -286,6 +293,9 @@ void CBomb::Operation_Mouse()
 			//モジュール注視
 			CManager::GetGame()->SetGaze(CGame::GAZE::GAZE_MODULE);
 
+			//回転を元に戻す
+			m_RotDest = ZeroVector3 + D3DXVECTOR3(0.0f, m_bCameraDir * D3DX_PI, 0.0f);
+
 			//選択状態解除
 			m_pModuleList[m_nSelectModuleNum]->SetSelect(false);
 
@@ -305,6 +315,127 @@ void CBomb::Operation_Mouse()
 		break;
 	}
 
+
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 操作
+//-------------------------------------------------------------------------------------------------------------
+void CBomb::Operation_Camera()
+{
+
+	// キーボードの取得
+	//Ckeyboard *pKeyboard = &CManager::GetKeyboard();
+
+	// マウスの取得
+	CMouse *pMouse = CManager::GetMouse();
+	// マウスの状態を取得
+	DIMOUSESTATE2* pMouseState = &pMouse->GetMouseState();
+
+
+	static D3DXVECTOR3 m_MouseRotSave = ZeroVector3;
+
+	D3DXVECTOR2 NewRotation = D3DXVECTOR2(0.0f, 0.0f);
+
+	if (pMouse->GetPress(1) == true)
+	{
+		// ヨー回転
+		NewRotation.y = ((float)pMouseState->lX) / (D3DX_PI*2.0f) *0.02f;
+		m_RotDest.y -= NewRotation.y;
+
+		// 回転量を360度ないに直す
+		CMylibrary::SetFixTheRotation(&m_RotDest.y);
+
+		// ピッチロー回転
+		NewRotation.x = ((float)pMouseState->lY) / (D3DX_PI*2.0f) *0.02f;
+
+		// 回転を90度未満に抑える
+		if (NewRotation.x >= D3DX_PI*0.49f)
+		{
+			NewRotation.x = D3DX_PI*0.49f;
+		}
+		else if (NewRotation.x <= -D3DX_PI*0.49f)
+		{
+			NewRotation.x = -D3DX_PI*0.49f;
+		}
+		m_RotDest.x -= NewRotation.x;
+	}
+
+	if (pMouse->GetRelease(1))
+	{
+		m_MouseRotSave.y = m_RotDest.y;
+		m_MouseRotSave.x = m_RotDest.x;
+	}
+
+	//// カメラの公転
+	//if (pKeyboard->GetPress(DIK_RIGHTARROW))
+	//{
+	//	m_rot.y += CAMERA_ROTATION_SPEED;
+	//}
+	//else if (pKeyboard->GetPress(DIK_LEFTARROW))
+	//{
+	//	m_rot.y -= CAMERA_ROTATION_SPEED;
+	//}
+	//if (pKeyboard->GetPress(DIK_UPARROW))
+	//{
+	//	m_rot.x += CAMERA_ROTATION_SPEED*0.3f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_DOWNARROW))
+	//{
+	//	m_rot.x -= CAMERA_ROTATION_SPEED*0.3f;
+	//}
+	//// 距離の倍率変更
+	//if (pKeyboard->GetPress(DIK_4))
+	//{
+	//	m_fMagnificat += 0.01f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_5))
+	//{
+	//	m_fMagnificat -= 0.01f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_1))
+	//{
+	//	m_fMagnificat = 1.0f;
+	//}
+	//else if (pKeyboard->GetPress(DIK_2))
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
+	//}
+	//else if (pKeyboard->GetPress(DIK_3))
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
+	//}
+
+	//// 拡大率の制限
+	//if (m_fMagnificat >= CAMERA_MAGNIFICAT_MIN)
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
+	//}
+	//else if (m_fMagnificat <= CAMERA_MAGNIFICAT_MAX)
+	//{
+	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
+	//}
+
+	// カメラの回転を90度未満に抑える
+	if (m_RotDest.x >= D3DX_PI*0.49f)
+	{
+		m_RotDest.x = D3DX_PI*0.49f;
+	}
+	else if (m_RotDest.x <= -D3DX_PI*0.49f)
+	{
+		m_RotDest.x = -D3DX_PI*0.49f;
+	}
+	// 回転量を360度ないに直す
+	CHossoLibrary::CalcRotation(m_RotDest.y);
+
+	//回転の差分
+	D3DXVECTOR3 rotDiff = m_RotDest - GetRot();
+
+	//3.14の中に収める
+	CHossoLibrary::CalcRotation_XYZ(rotDiff);
+
+	//ちょっとづつ回転
+	GetRot() += (rotDiff / 5);
 
 }
 
@@ -359,16 +490,14 @@ void CBomb::ModuleMiss()
 //------------------------------------------------------------------------------
 //モジュール生成
 //------------------------------------------------------------------------------
-void CBomb::CreateModule(int const nModuleNum)
+void CBomb::CreateModule()
 {
-	//モデル数代入
-	m_nModuleNum = nModuleNum;
 
 	//もしモジュールを表示できる範囲外の時は収める
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
 	//モジュールランダム生成
-	//CreateModule_Random();
+	CreateModule_Random();
 
 //Debug用
 #ifdef _DEBUG
@@ -376,34 +505,35 @@ void CBomb::CreateModule(int const nModuleNum)
 #endif //_DEBUG
 
 
-	m_nModuleNum = 4;
+	////モデル数代入
+	//m_nModuleNum = 4;
 
 
-	//1番目
-	CBomb::CreateModuleOne<CModule_Timer>();
-	//2番目
-	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
-	//3番目
-	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
-	//4番目
-	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
-	//5番目
-	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
-	//6番目
-	CBomb::CreateModuleOne<CModule_None>();
+	////1番目
+	//CBomb::CreateModuleOne<CModule_Timer>();
+	////2番目
+	//CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
+	////3番目
+	//CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
+	////4番目
+	//CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
+	////5番目
+	//CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+	////6番目
+	//CBomb::CreateModuleOne<CModule_None>();
 
-	//7番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//8番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//9番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//10番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//11番目
-	CBomb::CreateModuleOne<CModule_None>();
-	//12番目
-	CBomb::CreateModuleOne<CModule_None>();
+	////7番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////8番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////9番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////10番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////11番目
+	//CBomb::CreateModuleOne<CModule_None>();
+	////12番目
+	//CBomb::CreateModuleOne<CModule_None>();
 
 
 	//生成したリスト全てに
@@ -422,22 +552,43 @@ void CBomb::CreateModule(int const nModuleNum)
 //------------------------------------------------------------------------------
 void CBomb::CreateModule_Random()
 {
+
 	//ローカルのリスト
 	Vec<CModule_Base::MODULE_TYPE> LocalList = {};
 
 	//タイマー生成
 	CBomb::CreateModuleOne<CModule_Timer>();
 
-	//モジュールが入らない分はNONEのモジュールを入れておく
-	while ((int)LocalList.size() < MAX_MODULE_NUM - m_nModuleNum - 1)
+	switch (m_difficulty)
 	{
-		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NONE);
+	case CBomb::EASY:
+		m_nModuleNum = MODULE_NUM_EASY;
+		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NO0_SYMBOL);
+		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NO1_SHAPE);
+
+		break;
+
+	case CBomb::NORMAL:
+		m_nModuleNum = MODULE_NUM_NORMAL;
+
+		break;
+
+	case CBomb::HARD:
+		m_nModuleNum = MODULE_NUM_HARD;
+		break;
 	}
-	//最大数になるまでモジュールを入れる
-	while (LocalList.size() < MAX_MODULE_NUM - 1)
+
+	//モジュール数に達するまでランダムでモジュール設定
+	while ((int)LocalList.size() < m_nModuleNum)
 	{
 		//Buttonから4Buttonまでのランダム
 		LocalList.emplace_back((CModule_Base::MODULE_TYPE)CHossoLibrary::RandomRangeUnsigned((int)CModule_Base::MODULE_TYPE::NO0_SYMBOL, (int)CModule_Base::MODULE_TYPE::MAX));
+	}
+
+	//最大数分までNONEのモジュールを入れておく
+	while (LocalList.size() < MAX_MODULE_NUM - 1)
+	{
+		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NONE);
 	}
 
 	//要素のシャッフル

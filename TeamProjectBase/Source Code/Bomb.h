@@ -27,6 +27,14 @@ class CBomb : public CSceneX , public std::enable_shared_from_this<CBomb>
 {
 public:
 
+	//難易度
+	enum DIFFICULTY
+	{
+		EASY,
+		NORMAL,
+		HARD,
+	};
+
 	CBomb();
 	virtual ~CBomb();
 
@@ -35,21 +43,25 @@ public:
 	virtual void Draw()				override;									//描画
 	virtual void ShowDebugInfo()	override;									//デバッグ情報表記
 
-	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot,int const nModuleNum);
+	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, DIFFICULTY const difficulty);
 	void Operation_Keyboard();													//操作　キーボード
 	void Operation_Mouse();														//操作　マウス
+	void Operation_Camera();													//カメラ操作
+
 	void ModuleClearCheck();													//クリアしたかチェック
 	void ModuleMiss();															//モジュールミスった
 
 	CBomb_Exterior *GetBombExterior() { return m_pBombExterior.get(); };		//モジュール外装のポインタ取得
 private:
+	D3DXVECTOR3 m_RotDest;														//回転の決定先
 	int m_nModuleNum;															//モジュール数
 	int m_nSelectModuleNum;														//選択しているモジュール数
 	bool m_bCameraDir;															//カメラが正面向いているか
+	DIFFICULTY m_difficulty;													//難易度
 	Vec<S_ptr<CModule_Base>> m_pModuleList;										//モジュールのリスト
 	U_ptr<CBomb_Exterior> m_pBombExterior;										//爆弾の外装のポインタ
 
-	void CreateModule(int const nModuleNum);									//モジュール生成
+	void CreateModule();								//モジュール生成
 	void CreateModule_Random();													//モジュール生成　ランダム配置
 	void ModuleSelect();														//モジュールの洗濯処理
 	void SearchHeadCanSelectNum(int nStartNum);									//一番最初の選択可能番号検索
