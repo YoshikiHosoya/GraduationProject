@@ -294,6 +294,12 @@
     <ClCompile Include="Source Code\connectUI.cpp">
       <Filter>connectUI</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\module_No3_PassWord.cpp">
+      <Filter>Bomb\module</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\module_parts_No3_Button.cpp">
+      <Filter>Bomb\module_parts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\camera.h">
@@ -547,6 +553,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\connectUI.h">
       <Filter>connectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_No3_PassWord.h">
+      <Filter>Bomb\module</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\module_parts_No3_Button.h">
+      <Filter>Bomb\module_parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

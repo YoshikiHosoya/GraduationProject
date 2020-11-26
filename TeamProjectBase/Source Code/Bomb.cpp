@@ -435,7 +435,7 @@ void CBomb::Operation_Camera()
 	CHossoLibrary::CalcRotation_XYZ(rotDiff);
 
 	//‚¿‚å‚Á‚Æ‚Ã‚Â‰ñ“]
-	GetRot() += (rotDiff / 5);
+	GetRot() += (rotDiff * 0.15f);
 
 }
 

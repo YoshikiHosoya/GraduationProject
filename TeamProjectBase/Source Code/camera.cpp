@@ -107,8 +107,8 @@ void CCamera::Update(void)
 		////マウスによるカメラ操作
 		//Operation();
 
-		////カメラ移動
-		//MoveCameraDebug();
+		//カメラ移動
+		MoveCameraDebug();
 
 		//カメラ回転
 		RotCameraDebug();

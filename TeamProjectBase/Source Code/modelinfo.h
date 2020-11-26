@@ -52,6 +52,9 @@ public:
 		// タブレット 400番台
 		MODEL_TABLET = 400,							// タブレット
 		MODEL_TABLET_BUTTON,						// タブレットのボタン
+
+		// 背景オブジェクト 500番台
+		MODEL_BACKGROUND = 500,						//背景
 	};
 
 

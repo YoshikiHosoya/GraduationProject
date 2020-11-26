@@ -41,8 +41,11 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 
 	// タブレット
-	{ "data/MODEL/Tablet/Tablet.x" ,							  MODEL_TABLET },										// タブレット
-	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_TABLET_BUTTON },								// タブレットボタン
+	{ "data/MODEL/Tablet/Tablet.x" ,							  MODEL_TABLET },									// タブレット
+	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_TABLET_BUTTON },							// タブレットボタン
+
+	//背景
+	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_BACKGROUND },								// タブレットボタン
 
 };
 
