@@ -571,7 +571,7 @@ void CChatTab::ScrollDown(void)
 //==========================================================================================================================================================
 void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 {
-	char *cNewText = new char[strlen(cText)];
+	char *cNewText = new char[strlen(cText) + 1];
 	strcpy(cNewText, cText);
 
 	// テキストを末尾に追加
