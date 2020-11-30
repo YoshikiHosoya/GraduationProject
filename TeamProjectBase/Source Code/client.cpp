@@ -19,7 +19,7 @@
 // ===================================================================
 // マクロ定義
 // ===================================================================
-#define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
+#define IPADDRESS_SERVER	("25.10.240.177")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
 #define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
@@ -251,36 +251,33 @@ void CClient::SendPicture(void)
 		return;
 	}
 
-	int nPixel = strlen(Load.m_pFileData);
+	char *cLoadData = new char[Load.m_nuFileSize + 1];
+	memset(cLoadData, 0, Load.m_nuFileSize + 1);
+	strcpy(cLoadData, Load.m_pFileData);
+	cLoadData[Load.m_nuFileSize] = '\0';
 
-	// 文字列を格納するメモリを確保
-	char *cSendPicture = new char[Load.m_nuFileSize];
-	char *cSendSize = new char[5];
-	memset(cSendPicture, 0, sizeof(cSendPicture));
-	memset(cSendSize, 0, sizeof(cSendSize));
+	// 送信用文字列
+	std::string strSend;
+	// ピクセル数を格納
+	int nPixel = Load.m_nuFileSize;
 
-	// 事前にデータを格納・計算
-	strcpy(cSendPicture, Load.m_pFileData);
+	char *cSendSize = new char[5 + 1];
+	memset(cSendSize, 0, 5 + 1);
 	sprintf(cSendSize, "%d", nPixel);
 
-	// 送信用文字列のメモリ確保
-	char *cSendAll = new char[SIZE_SEND_PICTURE + strlen(cSendSize) + nPixel + SIZE_SPACE];
-	memset(cSendAll, 0, sizeof(cSendAll));
-
-	// 送信データをまとめる
-	strcpy(cSendAll, "SEND_PICTURE");
-	strcat(cSendAll, " ");
-	strcat(cSendAll, cSendSize);
-	strcat(cSendAll, " ");
-	strcat(cSendAll, cSendPicture);
+	strSend += "SEND_PICTURE";
+	strSend += " ";
+	strSend += cSendSize;
+	strSend += " ";
+	strSend += cLoadData;
 
 #ifdef _DEBUG
 	// 送信データをデバッグで表示
-	printf("ピクチャ送信 > %s [%dPixel]\n", cSendAll, strlen(cSendAll));
+	printf("ピクチャ送信 > %s [%dPixel] [%dbyte]\n", strSend.c_str(), nPixel, (int)strSend.size());
 #endif
 
 	// データ送信
-	send(m_socket, cSendAll, strlen(cSendAll), 0);
+	send(m_socket, strSend.c_str(), (int)strSend.size(), 0);
 
 	// ファイルデータの破棄
 	Load.DeleteFileData();
@@ -298,6 +295,10 @@ void CClient::SendPicture(void)
 	CPicture::Reading(pTexture, link);
 	// 履歴に追加
 	CChatTab::AddPicture(CChatBase::OWNER_OWN, pTexture);
+
+	strSend.clear();
+	delete[] cSendSize;
+	delete[] cLoadData;
 }
 
 // ===================================================================
@@ -332,17 +333,26 @@ void CClient::RecvPicture(char *data)
 {
 	// 文字数を取得
 	int nLen;
-	sscanf(data, "SEND_TEXT %d", &nLen);
+	int nPixel = 0;
+	sscanf(data, "SEND_PICTURE %d max = %d", &nLen, &nPixel);
 	if (nLen <= 0)
 		return;
 
-	char *cPicData = new char[nLen + 1];
+	char *cPicData = new char[nPixel + 1];
 	memset(cPicData, 0, sizeof(cPicData));
-	sscanf(data, "SEND_TEXT %d %s", &nLen, cPicData);
+	sscanf(data, "SEND_PICTURE %d max = %d %s", &nLen, &nPixel, cPicData);
+
+	char cPicSize[6];
+	sprintf(cPicSize, "%d", nPixel);
+	std::string strRecv;
+
+	strRecv += "max = ";
+	strRecv += cPicSize;
+	strRecv += cPicData;
 
 #ifdef _DEBUG
 	// テキストがあれば表示
-	printf("ピクチャを受信 > %s [%dPixel]\n", cPicData, nLen);
+	printf("ピクチャを受信 > %s [%dPixel] [%dbyte]\n", strRecv.c_str(), nPixel, nLen);
 #endif
 
 	// 格納用
@@ -357,7 +367,7 @@ void CClient::RecvPicture(char *data)
 	// ファイルを上書き
 	FILE *pFile;
 	pFile = fopen(LINK_SENDPICTURE, "w");
-	fprintf(pFile, "%s", cPicData);
+	fprintf(pFile, "%s", strRecv.c_str());
 	fclose(pFile);
 
 	delete[] cPicData;

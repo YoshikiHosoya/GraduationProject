@@ -75,7 +75,7 @@ void CChatText::Draw(void)
 	// s”•ª‚¾‚¯ŒJ‚è•Ô‚·
 	for (int nCnt = 0; nCnt < nLine; nCnt++)
 	{
-		memset(cWriteText, 0, sizeof(cWriteText));
+		memset(cWriteText, 0, MAXCHAR_ONELINE + 1);
 
 		// •¶Í‚ğ30•¶š–ˆ‚ÉØ‚è•ª‚¯‚é
 		strcpy(cWriteText, m_text.substr(nCnt * MAXCHAR_ONELINE, MAXCHAR_ONELINE).c_str());
