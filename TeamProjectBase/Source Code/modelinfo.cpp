@@ -27,6 +27,7 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Module0/ModuleNumber0.x" ,								MODEL_MODULE_NO0 },									//キーパッド
 	{ "data/MODEL/Module1/ModuleNumber1.x" ,								MODEL_MODULE_NO1 },									//キーパッド
 	{ "data/MODEL/Module2/ModuleNumber2.x" ,								MODEL_MODULE_NO2 },									//キーパッド
+	{ "data/MODEL/Module3/ModuleNumber3.x" ,								MODEL_MODULE_NO3 },									//キーパッド
 	{ "data/MODEL/Module4/ModuleNumber4.x" ,								MODEL_MODULE_NO4 },									//キーパッド
 
 	//モジュールのパーツ
@@ -37,8 +38,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,							MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
 	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,							MODEL_MODULEPARTS_NO2_WIRE },						//ワイヤー
 	{ "data/MODEL/Module2/ModuleNumber2_CordCutting.x" ,					MODEL_MODULEPARTS_NO2_WIRE_CUT },					//ワイヤー　切れてる状態
-	{ "data/MODEL/Module3/Module_Parts_No3_Button.x" ,						MODEL_MODULEPARTS_NO3_BUTTON },						//キーパッド
-	{ "data/MODEL/Module3/Module_Parts_No3_Decition_Button.x" ,				MODEL_MODULEPARTS_NO3_DECITION_BUTTON },			//キーパッド　送信ボタン
+	{ "data/MODEL/Module3/ModuleNumber3_Button.x" ,							MODEL_MODULEPARTS_NO3_BUTTON },						//キーパッド
+	{ "data/MODEL/Module3/ModuleNumber3_Button2.x" ,						MODEL_MODULEPARTS_NO3_DECITION_BUTTON },			//キーパッド　送信ボタン
 
 	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,							MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 

@@ -26,16 +26,16 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define BUTTON_OFFSET					(D3DXVECTOR3(0.0f,5.0f,-20.0f))
-#define BUTTON_ITNERVAL					(D3DXVECTOR3(12.0f,17.0f,0.0f))
+#define BUTTON_OFFSET					(D3DXVECTOR3(-3.1f,0.0f,-20.0f))
+#define BUTTON_ITNERVAL					(D3DXVECTOR3(14.0f,18.0f,0.0f))
 #define BUTTON_NUM						(10)
 #define NUMBER_NUM						(5)
 
-#define DISPLAYNUM_OFFSET				(D3DXVECTOR3(0.0f,5.0f,-20.0f))
-#define DISPLAYNUM_INTERVAL				(D3DXVECTOR3(12.0f,0.0f,0.0f))
-#define DISPLAYNUM_SIZE					(D3DXVECTOR3(8.0f,15.0f,0.0f))
+#define DISPLAYNUM_OFFSET				(D3DXVECTOR3(-3.1f,0.0f,-20.0f))
+#define DISPLAYNUM_INTERVAL				(D3DXVECTOR3(14.0f,0.0f,0.0f))
+#define DISPLAYNUM_SIZE					(D3DXVECTOR3(11.0f,18.0f,0.0f))
 
-#define DECITION_BUTTON_OFFSET			(D3DXVECTOR3(0.0f,-28.0f,-20.0f))
+#define DECITION_BUTTON_OFFSET			(D3DXVECTOR3(0.0f,-30.0f,-20.0f))
 
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ CModule_No3_PassWord::~CModule_No3_PassWord()
 HRESULT CModule_No3_PassWord::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_DEFAULT));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULE_NO3));
 
 	//ボタン生成
 	CreateButton();

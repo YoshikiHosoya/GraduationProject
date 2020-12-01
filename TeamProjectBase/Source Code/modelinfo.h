@@ -34,10 +34,11 @@ public:
 		MODEL_MODULE_DEFAULT = 200,					//モジュール
 		MODEL_MODULE_NONE,							//モジュール　何も入ってない
 		MODEL_MODULE_TIMER,							//タイマー
-		MODEL_MODULE_NO0,							//1番目のモジュール
-		MODEL_MODULE_NO1,							//2番目のモジュール
+		MODEL_MODULE_NO0,							//0番目のモジュール
+		MODEL_MODULE_NO1,							//1番目のモジュール
 		MODEL_MODULE_NO2,							//2番目のモジュール
-		MODEL_MODULE_NO4,							//2番目のモジュール
+		MODEL_MODULE_NO3,							//3番目のモジュール
+		MODEL_MODULE_NO4,							//4番目のモジュール
 
 		//モジュールパーツ 300番台
 		MODEL_MODULEPARTS_CLEARLAMP = 300,			//クリアランプ
