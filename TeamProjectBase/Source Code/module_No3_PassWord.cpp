@@ -239,7 +239,7 @@ void CModule_No3_PassWord::CreateDisplayNum()
 	for (int nCnt = 0; nCnt < NUMBER_NUM ; nCnt++)
 	{
 		m_pDisplayNum.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(DISPLAYNUM_OFFSET + D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(5, nCnt, DISPLAYNUM_INTERVAL.x), 0.0f, 0.0f),
-			DISPLAYNUM_SIZE, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER), CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
+			DISPLAYNUM_SIZE, BlackColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER), CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
 		m_pDisplayNum[nCnt]->SetParentMtxPtr(GetMtxWorldPtr());
 
 		//UVç¿ïWê›íË
