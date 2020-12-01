@@ -15,6 +15,7 @@
 #include "chatTab.h"
 #include "chatText.h"
 #include "picture.h"
+#include <sys/stat.h>
 
 // ===================================================================
 // マクロ定義
@@ -22,6 +23,8 @@
 #define IPADDRESS_SERVER	("25.10.240.177")	// サーバのIPアドレス
 #define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
+
+#define LINK_SENDTEXT		("data/SAVEDATA/SendText.txt")					// 送信用テキストのパス
 #define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")	// 送信用ピクチャのパス
 
 #define SIZE_SEND_TEXT		(9)					// SEND_TEXTのサイズ
@@ -172,6 +175,71 @@ void CClient::SendText(void)
 #endif
 		//return;
 	}
+	
+	FILE *fp;
+	char *buffer;
+	struct stat stbuf;
+	int fd;
+	char aData[100];
+
+	// ファイルを開く
+	if ((fp = fopen(LINK_SENDTEXT, "wb")) == NULL)
+	{
+		// エラー
+		printf("テキスト読み込みエラー\n");
+	}
+
+	// ファイルにデータを書き込み
+	fwrite(CChatTab::GetSendText()->GetChatText().c_str(),	// 書き込む文字列
+		CChatTab::GetSendText()->GetChatText().size(),		// 書き込むサイズ
+		1,													// 書き込むデータの数
+		fp);												// 書き込み先
+
+	// ファイルを閉じる
+	fclose(fp);
+
+	// ファイルサイズの取得
+	fd = stat(LINK_SENDTEXT, &stbuf);
+	printf("ファイルサイズ : %.1f byte (%d bit) \n", (float)stbuf.st_size / 8, (int)stbuf.st_size);
+
+	buffer = new char[stbuf.st_size];
+	if (buffer == NULL) {
+		/* エラー処理 */
+	}
+
+	// 情報を格納
+	aData[0] = 1;
+	aData[1] = stbuf.st_size;
+
+	for (int nCnt = 0; nCnt < stbuf.st_size; nCnt++)
+	{
+		aData[5 + nCnt] = buffer[nCnt];
+	}
+
+	printf("%s\n", &aData);
+
+	delete[] buffer;
+
+	// ファイルサイズを格納
+	int *pData = (int*)&aData[1];
+	*pData = stbuf.st_size;
+
+	// ファイルを閉じる
+	fclose(fp);
+
+	//send(m_socket, aData, pData, 0);
+
+	/*char cBuf[64];
+	memset(cBuf, 0, 64);
+	char cSize[4] = fread(cBuf, fstat(LINK_SENDTEXT, ), 1, fp);
+
+	char aData[100];
+
+	// 送信データ
+	aData[0] = 1;
+	aData[1];
+
+	aData[5];
 
 	// 送信用文字列
 	std::string strSend;
@@ -197,8 +265,7 @@ void CClient::SendText(void)
 	sprintf(cSendSize, "%d", nLen);
 
 	// 情報を全て格納
-	strSend += "SEND_TEXT";
-	strSend += " ";
+	strSend += "1";
 	strSend += cSendSize;
 	strSend += " ";
 	strSend += cKeep;
@@ -219,7 +286,7 @@ void CClient::SendText(void)
 
 	// メモリを開放
 	delete[] cSendSize;
-	delete[] cKeep;
+	delete[] cKeep;*/
 }
 
 // ===================================================================
