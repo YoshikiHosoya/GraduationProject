@@ -46,6 +46,8 @@ public:
 		MODEL_MODULEPARTS_NO1_KEYPAD,				//2番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO2_WIRE,					//2番目のモジュールのパーツ
 		MODEL_MODULEPARTS_NO2_WIRE_CUT,				//2番目のモジュールのパーツ ワイヤー切れてる状態
+		MODEL_MODULEPARTS_NO3_BUTTON,				//3番目のモジュールパーツ
+		MODEL_MODULEPARTS_NO3_DECITION_BUTTON,		//3番目のモジュールパーツ 送信ボタン
 
 		MODEL_MODULEPARTS_NO4_BUTTON,				//4番目のモジュールのパーツ
 

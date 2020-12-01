@@ -11,7 +11,6 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "module_parts_base.h"
-#include "module_No2_LampAndWire.h"
 
 //------------------------------------------------------------------------------
 //クラス定義
@@ -20,24 +19,31 @@ class CModule_Parts_No3_Button : public CModule_Parts_Base
 {
 public:
 
+	//ボタンの種類
+	enum BUTTONTYPE
+	{
+		NONE = -1,		//無し
+		UP,				//↑
+		DOWN,			//↓
+	};
+
+
 	CModule_Parts_No3_Button();
 	virtual ~CModule_Parts_No3_Button();
 
-	virtual HRESULT Init()			override;			//初期化
-	virtual void Update()			override;			//更新
-	virtual void Draw()				override;			//描画
-	virtual void ShowDebugInfo()	override;			//デバッグ情報表記
+	virtual HRESULT Init()			override;						//初期化
+	virtual void Update()			override;						//更新
+	virtual void Draw()				override;						//描画
+	virtual void ShowDebugInfo()	override;						//デバッグ情報表記
 
-	void SetWire(CModule_No2_LampAndWire::WIRE wire);			//ワイヤー設定
-	void SetWireCut(bool bCut) { m_bCut = bCut; };					//ワイヤーカットしたか設定
+	void SetButtonType(BUTTONTYPE type);							//ボタンタイプ設定
 
-	CModule_No2_LampAndWire::WIRE GetWire() { return m_Wire; };		//ワイヤー情報取得
-	bool GetWireCut() { return m_bCut; };							//ワイヤーカットしたか取得
+	BUTTONTYPE GetButtonType() { return m_ButtonType; };			//ボタンタイプ取得
+
 protected:
 
 private:
-	CModule_No2_LampAndWire::WIRE m_Wire;				//ワイヤー
-	D3DXCOLOR m_WireColor;								//ワイヤーの色
-	bool m_bCut;										//切ったかどうか
+	BUTTONTYPE m_ButtonType;										//ボタンタイプ
+	int m_nNumber_To_Left;											//左から何番目のボタンか
 };
 #endif

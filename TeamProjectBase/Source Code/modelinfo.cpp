@@ -16,36 +16,38 @@ Vec<S_ptr<CModelInfo>> CModelInfo::m_apModelList = {};
 Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 {
 	//爆弾関係
-	{ "data/MODEL/BombBox/bombbox.x" ,							MODEL_BOMBBOX },									//爆弾
-	{ "data/MODEL/Battery/Battery_1.x" ,						MODEL_BATTERY_SMALL },								//小バッテリー
-	{ "data/MODEL/Battery/Battery_2.x" ,						MODEL_BATTERY_BIG },								//大バッテリー
+	{ "data/MODEL/BombBox/bombbox.x" ,										MODEL_BOMBBOX },									//爆弾
+	{ "data/MODEL/Battery/Battery_1.x" ,									MODEL_BATTERY_SMALL },								//小バッテリー
+	{ "data/MODEL/Battery/Battery_2.x" ,									MODEL_BATTERY_BIG },								//大バッテリー
 
 	//モジュール
-	{ "data/MODEL/test/test_module.x" ,							MODEL_MODULE_DEFAULT },								//モジュール
-	{ "data/MODEL/test/test_module_none.x" ,					MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
-	{ "data/MODEL/BombTimer/BombTimer.x" ,						MODEL_MODULE_TIMER },								//タイマー
-	{ "data/MODEL/Module0/ModuleNumber0.x" ,					MODEL_MODULE_NO0 },									//キーパッド
-	{ "data/MODEL/Module1/ModuleNumber1.x" ,					MODEL_MODULE_NO1 },									//キーパッド
-	{ "data/MODEL/Module2/ModuleNumber2.x" ,					MODEL_MODULE_NO2 },									//キーパッド
-	{ "data/MODEL/Module4/ModuleNumber4.x" ,					MODEL_MODULE_NO4 },									//キーパッド
+	{ "data/MODEL/test/test_module.x" ,										MODEL_MODULE_DEFAULT },								//モジュール
+	{ "data/MODEL/test/test_module_none.x" ,								MODEL_MODULE_NONE },								//モジュール　何もないやつ　茶色の
+	{ "data/MODEL/BombTimer/BombTimer.x" ,									MODEL_MODULE_TIMER },								//タイマー
+	{ "data/MODEL/Module0/ModuleNumber0.x" ,								MODEL_MODULE_NO0 },									//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1.x" ,								MODEL_MODULE_NO1 },									//キーパッド
+	{ "data/MODEL/Module2/ModuleNumber2.x" ,								MODEL_MODULE_NO2 },									//キーパッド
+	{ "data/MODEL/Module4/ModuleNumber4.x" ,								MODEL_MODULE_NO4 },									//キーパッド
 
 	//モジュールのパーツ
-	{ "data/MODEL/Lamp/Lamp.x" ,								MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
-	{ "data/MODEL/ProgressLamp/ProgressLamp.x" ,				MODEL_MODULEPARTS_PROGRESSLAMP },					//進捗度ランプ
+	{ "data/MODEL/Lamp/Lamp.x" ,											MODEL_MODULEPARTS_CLEARLAMP },						//ランプ
+	{ "data/MODEL/ProgressLamp/ProgressLamp.x" ,							MODEL_MODULEPARTS_PROGRESSLAMP },					//進捗度ランプ
 
-	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,				MODEL_MODULEPARTS_NO0_KEYPAD },						//キーパッド
-	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,				MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
-	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,				MODEL_MODULEPARTS_NO2_WIRE },						//ワイヤー
-	{ "data/MODEL/Module2/ModuleNumber2_CordCutting.x" ,		MODEL_MODULEPARTS_NO2_WIRE_CUT },					//ワイヤー　切れてる状態
+	{ "data/MODEL/Module0/ModuleNumber0_Button.x" ,							MODEL_MODULEPARTS_NO0_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module1/ModuleNumber1_Button.x" ,							MODEL_MODULEPARTS_NO1_KEYPAD },						//キーパッド
+	{ "data/MODEL/Module2/ModuleNumber2_Cord.x" ,							MODEL_MODULEPARTS_NO2_WIRE },						//ワイヤー
+	{ "data/MODEL/Module2/ModuleNumber2_CordCutting.x" ,					MODEL_MODULEPARTS_NO2_WIRE_CUT },					//ワイヤー　切れてる状態
+	{ "data/MODEL/Module3/Module_Parts_No3_Button.x" ,						MODEL_MODULEPARTS_NO3_BUTTON },						//キーパッド
+	{ "data/MODEL/Module3/Module_Parts_No3_Decition_Button.x" ,				MODEL_MODULEPARTS_NO3_DECITION_BUTTON },			//キーパッド　送信ボタン
 
-	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,				MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
+	{ "data/MODEL/Module4/ModuleNumber4_Lamp.x" ,							MODEL_MODULEPARTS_NO4_BUTTON },						//キーパッド
 
 	// タブレット
-	{ "data/MODEL/Tablet/Tablet.x" ,							  MODEL_TABLET },									// タブレット
-	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_TABLET_BUTTON },							// タブレットボタン
+	{ "data/MODEL/Tablet/Tablet.x" ,										MODEL_TABLET },										// タブレット
+	{ "data/MODEL/Tablet/TabletButton.x" ,									MODEL_TABLET_BUTTON },								// タブレットボタン
 
 	//背景
-	{ "data/MODEL/Tablet/TabletButton.x" ,						  MODEL_BACKGROUND },								// タブレットボタン
+	{ "data/MODEL/Tablet/TabletButton.x" ,									MODEL_BACKGROUND },									// タブレットボタン
 
 };
 

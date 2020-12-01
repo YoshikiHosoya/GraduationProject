@@ -44,6 +44,7 @@ public:
 	virtual void ShowDebugInfo()	override;									//デバッグ情報表記
 
 	static S_ptr<CBomb> CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, DIFFICULTY const difficulty);
+	void CreateModule();								//モジュール生成
 	void Operation_Keyboard();													//操作　キーボード
 	void Operation_Mouse();														//操作　マウス
 	void Operation_Camera();													//カメラ操作
@@ -61,7 +62,6 @@ private:
 	Vec<S_ptr<CModule_Base>> m_pModuleList;										//モジュールのリスト
 	U_ptr<CBomb_Exterior> m_pBombExterior;										//爆弾の外装のポインタ
 
-	void CreateModule();								//モジュール生成
 	void CreateModule_Random();													//モジュール生成　ランダム配置
 	void ModuleSelect();														//モジュールの洗濯処理
 	void SearchHeadCanSelectNum(int nStartNum);									//一番最初の選択可能番号検索

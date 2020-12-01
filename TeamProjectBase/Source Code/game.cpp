@@ -72,6 +72,9 @@ HRESULT CGame::Init(HWND hWnd)
 	//爆弾生成
 	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,200.0f,0.0f), ZeroVector3, CBomb::EASY);
 
+	//モジュール生成
+	m_pBomb->CreateModule();
+
 	//マップ生成
 	CMap::Create();
 

@@ -60,7 +60,7 @@ public:
 	const NUMBER_EFFECT GetNumberType() { return m_NumberEffect; };			//種類取得
 
 private:
-	Vec<U_ptr<CSceneBase>> m_pNumberList;					//ナンバーのポインタのリスト
+	Vec<U_ptr<CSceneBase>> m_pNumberList;									//ナンバーのポインタのリスト
 	NUMBER_EFFECT m_NumberEffect;											//種類
 	int m_nValue;															//値
 	int m_nCnt;																//点滅カウント

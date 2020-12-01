@@ -23,6 +23,7 @@
 #include "module_No0_SymbolKeyPad.h"
 #include "module_No1_ShapeKeypad.h"
 #include "module_No2_LampAndWire.h"
+#include "module_No3_PassWord.h"
 #include "module_No4_4ColButton.h"
 #include "sound.h"
 //------------------------------------------------------------------------------
@@ -170,10 +171,6 @@ S_ptr<CBomb> CBomb::CreateBomb(D3DXVECTOR3 const pos, D3DXVECTOR3 const rot, DIF
 
 	//ƒ{ƒ€‚ÌŠO‘•¶¬
 	pBomb->m_pBombExterior = CBomb_Exterior::CreateBombExterior(pBomb->GetMtxWorldPtr());
-
-	//ƒ‚ƒWƒ…[ƒ‹¶¬
-	pBomb->CreateModule();
-
 
 	//Scene‘¤‚ÅŠÇ—
 	pBomb->SetObjType(CScene::OBJTYPE_BOMB);
@@ -350,14 +347,8 @@ void CBomb::Operation_Camera()
 		NewRotation.x = ((float)pMouseState->lY) / (D3DX_PI*2.0f) *0.02f;
 
 		// ‰ñ“]‚ð90“x–¢–ž‚É—}‚¦‚é
-		if (NewRotation.x >= D3DX_PI*0.49f)
-		{
-			NewRotation.x = D3DX_PI*0.49f;
-		}
-		else if (NewRotation.x <= -D3DX_PI*0.49f)
-		{
-			NewRotation.x = -D3DX_PI*0.49f;
-		}
+		CHossoLibrary::RangeLimit_Equal(NewRotation.x, -D3DX_PI * 0.49f, D3DX_PI * 0.49f);
+
 		m_RotDest.x -= NewRotation.x;
 	}
 
@@ -367,64 +358,9 @@ void CBomb::Operation_Camera()
 		m_MouseRotSave.x = m_RotDest.x;
 	}
 
-	//// ƒJƒƒ‰‚ÌŒö“]
-	//if (pKeyboard->GetPress(DIK_RIGHTARROW))
-	//{
-	//	m_rot.y += CAMERA_ROTATION_SPEED;
-	//}
-	//else if (pKeyboard->GetPress(DIK_LEFTARROW))
-	//{
-	//	m_rot.y -= CAMERA_ROTATION_SPEED;
-	//}
-	//if (pKeyboard->GetPress(DIK_UPARROW))
-	//{
-	//	m_rot.x += CAMERA_ROTATION_SPEED*0.3f;
-	//}
-	//else if (pKeyboard->GetPress(DIK_DOWNARROW))
-	//{
-	//	m_rot.x -= CAMERA_ROTATION_SPEED*0.3f;
-	//}
-	//// ‹——£‚Ì”{—¦•ÏX
-	//if (pKeyboard->GetPress(DIK_4))
-	//{
-	//	m_fMagnificat += 0.01f;
-	//}
-	//else if (pKeyboard->GetPress(DIK_5))
-	//{
-	//	m_fMagnificat -= 0.01f;
-	//}
-	//else if (pKeyboard->GetPress(DIK_1))
-	//{
-	//	m_fMagnificat = 1.0f;
-	//}
-	//else if (pKeyboard->GetPress(DIK_2))
-	//{
-	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
-	//}
-	//else if (pKeyboard->GetPress(DIK_3))
-	//{
-	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
-	//}
-
-	//// Šg‘å—¦‚Ì§ŒÀ
-	//if (m_fMagnificat >= CAMERA_MAGNIFICAT_MIN)
-	//{
-	//	m_fMagnificat = CAMERA_MAGNIFICAT_MIN;
-	//}
-	//else if (m_fMagnificat <= CAMERA_MAGNIFICAT_MAX)
-	//{
-	//	m_fMagnificat = CAMERA_MAGNIFICAT_MAX;
-	//}
-
 	// ƒJƒƒ‰‚Ì‰ñ“]‚ð90“x–¢–ž‚É—}‚¦‚é
-	if (m_RotDest.x >= D3DX_PI*0.49f)
-	{
-		m_RotDest.x = D3DX_PI*0.49f;
-	}
-	else if (m_RotDest.x <= -D3DX_PI*0.49f)
-	{
-		m_RotDest.x = -D3DX_PI*0.49f;
-	}
+	CHossoLibrary::RangeLimit_Equal(m_RotDest.x, -D3DX_PI * 0.49f, D3DX_PI * 0.49f);
+
 	// ‰ñ“]—Ê‚ð360“x‚È‚¢‚É’¼‚·
 	CHossoLibrary::CalcRotation(m_RotDest.y);
 
@@ -497,11 +433,11 @@ void CBomb::CreateModule()
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
 	//ƒ‚ƒWƒ…[ƒ‹ƒ‰ƒ“ƒ_ƒ€¶¬
-	CreateModule_Random();
+	//CreateModule_Random();
 
 //Debug—p
 #ifdef _DEBUG
-	//CreateModuleDebug();
+	CreateModuleDebug();
 #endif //_DEBUG
 
 
@@ -854,31 +790,31 @@ void CBomb::SearchHeadCanSelectNum(int nStartNum)
 void CBomb::CreateModuleDebug()
 {
 	//ƒ‚ƒWƒ…[ƒ‹”‚ð‚±‚±‚ÅŒˆ‚ß‚é debug—p
-	m_nModuleNum = 3;
+	m_nModuleNum = 1;
 
 	//1”Ô–Ú
 	CBomb::CreateModuleOne<CModule_Timer>();
 	//2”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_No3_PassWord>();
 	//3”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
-	//4”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
-	//5”Ô–Ú
 	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+	//4”Ô–Ú
+	CBomb::CreateModuleOne<CModule_None>();
+	//5”Ô–Ú
+	CBomb::CreateModuleOne<CModule_None>();
 	//6”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
 
 	//7”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
 	//8”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No0_SymbolKeyPad>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//9”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No1_ShapeKeyPad>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//10”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//11”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
+	CBomb::CreateModuleOne<CModule_None>();
 	//12”Ô–Ú
 	CBomb::CreateModuleOne<CModule_None>();
 

@@ -44,7 +44,7 @@ CModule_No4_4ColButton::CModule_No4_4ColButton()
 {
 	m_pColButtonList.clear();
 	m_nNowSelectButton = BUTTON::RED;
-	m_buttonState = STATE::START;
+	m_buttonState = STATE::READY;
 	m_nButtonLightingCnt = 0;
 	m_nNowFlashNumber = -1;
 	m_nClearNum = 0;
@@ -85,13 +85,10 @@ HRESULT CModule_No4_4ColButton::Init()
 		m_pColButtonList[nCnt]->SetButtonCol((BUTTON)nCnt);
 
 		//答えのパターン生成
-		m_QuestionButtonList.emplace_back((BUTTON)CHossoLibrary::RandomRangeUnsigned(0, 3));
+		m_QuestionButtonList.emplace_back((BUTTON)CHossoLibrary::RandomRangeUnsigned(0, 4));
 
 		nCnt++;
 	}
-
-	//次のボタン設定
-	NextButtonSet();
 
 	//ランプ生成
 	CModule_Base::CreateLamp();
@@ -124,6 +121,17 @@ void CModule_No4_4ColButton::Update()
 	//ボタンの状態に応じて処理を変える
 	switch (m_buttonState)
 	{
+	case CModule_No4_4ColButton::STATE::READY:
+		if (CManager::GetGame()->GetState() == CGame::STATE::STATE_NORMAL)
+		{
+			//次のボタン設定
+			NextButtonSet();
+
+			SetButtonState(STATE::START);
+		}
+		break;
+
+
 	case CModule_No4_4ColButton::STATE::START:
 	case CModule_No4_4ColButton::STATE::INTERVAL:
 		if (m_nButtonLightingCnt <= 0)
@@ -278,6 +286,10 @@ void CModule_No4_4ColButton::SetButtonState(STATE state)
 
 	switch (state)
 	{
+	case CModule_No4_4ColButton::STATE::READY:
+
+		break;
+
 	case CModule_No4_4ColButton::STATE::START:
 		m_nNowFlashNumber = -1;
 
@@ -334,13 +346,13 @@ void CModule_No4_4ColButton::NextButtonSet()
 	//次に押すボタン設定
 	BUTTON NextButton = BUTTON::NONE;
 
-	////バッテリーがついていた場合
-	//if (CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_BIG) ||
-	//	CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_SMALL))
-	//{
-	//	SetNextButton_YesBattery_NotSerialNo(NextButton);
-	//}
-	//else
+	//バッテリーがついていた場合
+	if (CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_BIG) ||
+		CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_SMALL))
+	{
+		SetNextButton_YesBattery_NotSerialNo(NextButton);
+	}
+	else
 	{
 		SetNextButton_NotBattery_NotSerialNo(NextButton);
 

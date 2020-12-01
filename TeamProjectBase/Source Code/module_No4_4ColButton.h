@@ -33,6 +33,7 @@ public:
 
 	enum class STATE
 	{
+		READY,				//準備
 		START,				//開始
 		LIGHTING,			//点灯
 		INTERVAL,			//次のボタン点滅までのインターバル

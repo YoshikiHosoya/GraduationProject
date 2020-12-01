@@ -30,9 +30,7 @@
 //------------------------------------------------------------------------------
 CModule_Parts_No3_Button::CModule_Parts_No3_Button()
 {
-	m_Wire = CModule_No2_LampAndWire::WIRE::NONE;
-	m_WireColor = MagentaColor;
-	m_bCut = false;
+	m_ButtonType = BUTTONTYPE::NONE;
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +46,7 @@ CModule_Parts_No3_Button::~CModule_Parts_No3_Button()
 HRESULT CModule_Parts_No3_Button::Init()
 {
 	//モデル情報設定
-	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO2_WIRE));
+	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_MODULEPARTS_NO3_BUTTON));
 
 	CSceneX::Init();
 
@@ -67,17 +65,7 @@ void CModule_Parts_No3_Button::Update()
 //------------------------------------------------------------------------------
 void CModule_Parts_No3_Button::Draw()
 {
-	//ハードエッジ描画
-	//選択されているモデルのみ
-	CSceneX::DrawHardEdgeStencil();
-
-	//ワールドマトリックスの計算
-	CSceneX::CalcMtx_IncludeParentMtx();
-
-	//メッシュ描画　マテリアル色を設定
-	CSceneX::DrawMesh_SetMaterial(m_WireColor, false, { 2 });
-
-	//CSceneX::Draw();
+	CSceneX::Draw();
 }
 //------------------------------------------------------------------------------
 //デバッグ情報表記
@@ -88,37 +76,21 @@ void CModule_Parts_No3_Button::ShowDebugInfo()
 
 #endif //DEBUG
 }
+
 //------------------------------------------------------------------------------
-//ワイヤーカラー設定
+//ボタンの種類設定
 //------------------------------------------------------------------------------
-void CModule_Parts_No3_Button::SetWire(CModule_No2_LampAndWire::WIRE wire)
+void CModule_Parts_No3_Button::SetButtonType(BUTTONTYPE type)
 {
-	m_Wire = wire;
+	m_ButtonType = type;
 
-	switch (m_Wire)
+	switch (type)
 	{
-
-	case CModule_No2_LampAndWire::RED:
-		m_WireColor = RedColor;
+	case CModule_Parts_No3_Button::UP:
 		break;
-	case CModule_No2_LampAndWire::BLUE:
-		m_WireColor = BlueColor;
+	case CModule_Parts_No3_Button::DOWN:
+		SetRot(D3DXVECTOR3(0.0f, 0.0f, D3DX_PI));
 		break;
-	case CModule_No2_LampAndWire::GREEN:
-		m_WireColor = GreenColor;
-		break;
-	case CModule_No2_LampAndWire::YELLOW:
-		m_WireColor = YellowColor;
-		break;
-	case CModule_No2_LampAndWire::WHITE:
-		m_WireColor = WhiteColor;
-		break;
-	case CModule_No2_LampAndWire::BLACK:
-		m_WireColor = BlackColor;
-		break;
-
-
 	}
-
 
 }
