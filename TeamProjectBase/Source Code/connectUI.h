@@ -29,7 +29,10 @@ class CConnectUI
 public:
 	typedef enum
 	{
-		CONNECTUI_LOADICON,	// ロードアイコン
+		CONNECTUI_BACK_00,		// 1Pの背景
+		CONNECTUI_BACK_01,		// 2Pの背景
+		CONNECTUI_LOADICON_00,	// ロードアイコン
+		CONNECTUI_LOADICON_01,	// ロードアイコン
 		CONNECTUI_MAX
 	} CONNECTUITYPE;
 
@@ -43,9 +46,16 @@ public:
 
 	static CConnectUI * Create(void);	// 生成
 private:
-	void CreateUI(void);		// UI生成
-	void LoadAnim(CPolygon2D *pUI);		// ロードアイコンのアニメーション
-	CPolygon2D *m_pConnectUI[CONNECTUI_MAX];
+	void UpdateCntAnim(void);			// アニメーションカウンタの更新
+	void CreateBackTab(void);			// 背景タブの生成
+	void CreateLoadIcon(void);			// ロードアイコンの生成
+	void LoadIconAnim(CPolygon2D *pUI);		// ロードアイコンのアニメーション
+	static CPolygon2D *m_pConnectUI[CONNECTUI_MAX];
+	static D3DXVECTOR2 m_UIPos[CONNECTUI_MAX];
+	static D3DXVECTOR2 m_UISize[CONNECTUI_MAX];
+
+	int m_nCntAnim;
+	int m_nCntPattern;
 };
 
 #endif

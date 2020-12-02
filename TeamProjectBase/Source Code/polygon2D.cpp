@@ -41,9 +41,9 @@ CPolygon2D::~CPolygon2D()
 //=============================================================================
 HRESULT CPolygon2D::Init()
 {
-	m_pos		= ZeroVector3;
-	m_rot		= ZeroVector3;
-	m_size		= ZeroVector3;
+	m_pos		= ZeroVector2;
+	m_rot		= ZeroVector2;
+	m_size		= ZeroVector2;
 	m_col		= WhiteColor;
 	m_fAngle	= 0.0f;
 	m_fLength	= 0.0f;
@@ -146,7 +146,7 @@ CPolygon2D *CPolygon2D::Create(void)
 //=============================================================================
 // ÉTÉCÉYÇÃê›íË
 //=============================================================================
-void CPolygon2D::SetSize(const D3DXVECTOR3 & size)
+void CPolygon2D::SetSize(const D3DXVECTOR2 & size)
 {
 	m_size = size;
 
@@ -234,58 +234,58 @@ void CPolygon2D::MakeVertexPos(void)
 	switch (m_posStart)
 	{
 	case POSSTART_TOP_LEFT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(0.0f,		0.0f, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x, 0.0f, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(0.0f,		m_size.y, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x, m_size.y, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f,	  0.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x, 0.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f,	  m_size.y, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x, m_size.y, 0.0f);
 		break;
 	case POSSTART_TOP_CENTRAL:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f, 0.0f, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f,	0.0f, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f, m_size.y, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f,	m_size.y, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, 0.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f, 0.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, m_size.y, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f,	m_size.y, 0.0f);
 		break;
 	case POSSTART_TOP_RIGHT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x,	0.0f, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(0.0f,			0.0f, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x,	m_size.y, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(0.0f,			m_size.y, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, 0.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, m_size.y, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f,			m_size.y, 0.0f);
 		break;
 	case POSSTART_CENTRAL_LEFT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(0.0f,		-m_size.y * 0.5f, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x, -m_size.y * 0.5f, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(0.0f,		m_size.y * 0.5f, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x, m_size.y * 0.5f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, -m_size.y * 0.5f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x, -m_size.y * 0.5f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, m_size.y * 0.5f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x, m_size.y * 0.5f, 0.0f);
 		break;
 	case POSSTART_CENTRAL_CENTRAL:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f,-m_size.y * 0.5f,0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f, -m_size.y * 0.5f, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f,m_size.y * 0.5f,0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f, m_size.y * 0.5f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y * 0.5f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f, -m_size.y * 0.5f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, m_size.y * 0.5f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f, m_size.y * 0.5f, 0.0f);
 		break;
 	case POSSTART_CENTRAL_RIGHT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x,	-m_size.y * 0.5f,0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(0.0f,			-m_size.y * 0.5f,0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x,	m_size.y * 0.5f,0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(0.0f,			m_size.y * 0.5f,0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, -m_size.y * 0.5f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, -m_size.y * 0.5f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, m_size.y * 0.5f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f,			m_size.y * 0.5f,0.0f);
 		break;
 	case POSSTART_BOTTOM_LEFT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(0.0f,			-m_size.y, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x,		-m_size.y, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(0.0f,			0.0f, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x,		0.0f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, -m_size.y, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x, -m_size.y, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x,		0.0f, 0.0f);
 		break;
 	case POSSTART_BOTTOM_CENTRAL:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f,	-m_size.y, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x * 0.5f, 0.0f, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(m_size.x * 0.5f,	0.0f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, -m_size.y, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f, -m_size.y, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x * 0.5f, 0.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(m_size.x * 0.5f,	0.0f, 0.0f);
 		break;
 	case POSSTART_BOTTOM_RIGHT:
-		pVtx[0].pos = m_pos + D3DXVECTOR3(-m_size.x,	-m_size.y, 0.0f);
-		pVtx[1].pos = m_pos + D3DXVECTOR3(0.0f,			-m_size.y, 0.0f);
-		pVtx[2].pos = m_pos + D3DXVECTOR3(-m_size.x,	0.0f, 0.0f);
-		pVtx[3].pos = m_pos + D3DXVECTOR3(0.0f,			0.0f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, -m_size.y, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f, -m_size.y, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(-m_size.x, 0.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f) + D3DXVECTOR3(0.0f,			0.0f, 0.0f);
 		break;
 	}
 

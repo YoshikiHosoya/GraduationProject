@@ -47,6 +47,8 @@ public:
 		TEX_CHAT_BOX_03,						// チャットボックス03
 
 		TEX_CONNECT_LOAD,						// 接続中のロードアイコン
+		TEX_CONNECT_BACK_00,					// 接続中の背景(1P)
+		TEX_CONNECT_BACK_01,					// 接続中の背景(2P)
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル
