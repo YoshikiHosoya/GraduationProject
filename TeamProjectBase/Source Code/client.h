@@ -27,6 +27,13 @@ class CClient
 public:
 	typedef enum
 	{
+		ORDER_NONE = 0,	// 指示なし
+		ORDER_SENDTEXT = 1,		// テキスト送信
+		ORDER_SENDPICTURE,		// ピクチャ送信
+	} SERVER_ORDER;
+
+	typedef enum
+	{
 		CLIENT_CONNECT,	// 接続
 		CLIENT_CLOSE,	// 接続を閉じる
 	} CLIENTSTATE;

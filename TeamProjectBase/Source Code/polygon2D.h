@@ -48,14 +48,14 @@ public:
 	void BindTexture(const LPDIRECT3DTEXTURE9 tex)	{ m_pTexture = tex; }	// テクスチャのバインド
 
 	void SetPosStart(const POSSTART_TYPE posStart)	{ m_posStart = posStart; }	// 位置の始点
-	void SetPos(const D3DXVECTOR3 & pos)			{ m_pos = pos; }			// 位置設定処理
+	void SetPos(const D3DXVECTOR2 & pos)			{ m_pos = pos; }			// 位置設定処理
 	void SetbShow(bool bShow)						{ m_bShow = bShow; }		// 描画するか設定
 	void SetCol(const D3DXCOLOR & col);											// 色設定処理
-	void SetSize(const D3DXVECTOR3 & size);										// 大きさ設定処理
+	void SetSize(const D3DXVECTOR2 & size);										// 大きさ設定処理
 	void SetAnim(const D3DXVECTOR2 & UV, const D3DXVECTOR2 & size);				// テクスチャ座標設定
 
-	D3DXVECTOR3 &GetPos(void)	{ return m_pos; }						// 位置取得処理
-	D3DXVECTOR3 &GetSize(void)	{ return m_size; }						// 大きさ取得処理
+	D3DXVECTOR2 &GetPos(void)	{ return m_pos; }						// 位置取得処理
+	D3DXVECTOR2 &GetSize(void)	{ return m_size; }						// 大きさ取得処理
 	D3DXCOLOR	&GetCol(void)	{ return m_col; }						// カラーの取得
 	bool GetbShow(void)			{ return m_bShow; }						// 描画するか取得
 
@@ -63,9 +63,9 @@ public:
 
 protected:
 	POSSTART_TYPE m_posStart;											// 位置の視点
-	D3DXVECTOR3 m_pos;													// 位置
-	D3DXVECTOR3 m_size;													// 大きさ
-	D3DXVECTOR3 m_rot;													// 回転
+	D3DXVECTOR2 m_pos;													// 位置
+	D3DXVECTOR2 m_size;													// 大きさ
+	D3DXVECTOR2 m_rot;													// 回転
 	D3DXCOLOR m_col;													// カラー
 	bool  m_bShow;														// 描画するか
 	float m_fAngle;														// 角度
