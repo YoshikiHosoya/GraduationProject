@@ -9,3 +9,6 @@
 /TeamProjectBase/imgui.ini
 TeamProjectBase/TeamProjectBase.VC.VC.opendb
 /TeamProjectBase/data/SAVEDATA/PictureTextures/PicTex.txt
+/TeamProjectBase/data/SAVEDATA/PictureTextures/RecvPicTex.txt
+/TeamProjectBase/data/SAVEDATA/SendText.txt
+/TeamProjectBase/data/SAVEDATA/RecvText.txt
