@@ -47,7 +47,7 @@ public:
 		TEX_CHAT_BOX_03,						// チャットボックス03
 
 		TEX_CONNECT_LOAD,						// 接続中のロードアイコン
-		
+
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル
 		TEX_UI_RESULT,							//UI リザルト
@@ -95,6 +95,7 @@ public:
 		//モジュールのパーツ
 		SEPARATE_TEX_MODULEPARTS_MODULE00,					//モジュールナンバー0 暗号みたいなやつ
 		SEPARATE_TEX_MODULEPARTS_MODULE01,					//モジュールナンバー1 〇×△□
+		SEPARATE_TEX_MODULEPARTS_MODULE03,					//モジュールナンバー3 パスワードの模様
 
 
 		SEPARATE_TEX_MAX									//MAX

@@ -50,6 +50,7 @@ private:
 
 	S_ptr<CSceneX>	m_pDecitionButton;						//送信ボタン
 	Vec<int> m_nDisplayNum;									//ディスプレイの番号
+	S_ptr<CScene3D>	m_pSymbol;								//記号
 	int m_nSelectNum;										//現在選択している場所
 	int m_nAnswerNum;										//答えの番号
 	ANSWER_PATTERN m_AnswerPattern;							//答えのパターン
@@ -57,8 +58,8 @@ private:
 	void SetAnswer();										//答えパターン設定
 	void CreateDisplayNum();								//ディスプレイに表記される数値
 	void CreateButton();									//ワイヤー生成
+	void CreateSymbol();									//模様
 	void CheckClear();										//クリアしたかチェック
-
 	void ChangeDisplayNum();								//ディスプレイの番号変更
 
 

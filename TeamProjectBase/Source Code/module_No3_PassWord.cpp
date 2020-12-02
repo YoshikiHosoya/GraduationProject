@@ -31,9 +31,12 @@
 #define BUTTON_NUM						(10)
 #define NUMBER_NUM						(5)
 
-#define DISPLAYNUM_OFFSET				(D3DXVECTOR3(-3.1f,0.0f,-20.0f))
+#define DISPLAYNUM_OFFSET				(D3DXVECTOR3(-3.1f,0.0f,-21.0f))
 #define DISPLAYNUM_INTERVAL				(D3DXVECTOR3(14.0f,0.0f,0.0f))
 #define DISPLAYNUM_SIZE					(D3DXVECTOR3(11.0f,18.0f,0.0f))
+
+#define SYMBOL_OFFSET					(D3DXVECTOR3(37.0f,-30.0f,-20.0f))
+#define SYMBOL_SIZE						(D3DXVECTOR3(18.0f,18.0f,0.0f))
 
 #define DECITION_BUTTON_OFFSET			(D3DXVECTOR3(0.0f,-30.0f,-20.0f))
 
@@ -48,6 +51,7 @@ CModule_No3_PassWord::CModule_No3_PassWord()
 	m_pDisplayNum = {};
 	m_nDisplayNum = { 0,0,0,0,0 };
 	m_nAnswerNum = 0;
+	m_pSymbol.reset();
 	m_AnswerPattern = ANSWER_PATTERN::ANSWER_1;
 }
 
@@ -59,6 +63,8 @@ CModule_No3_PassWord::~CModule_No3_PassWord()
 	m_pDecitionButton.reset();
 	m_pDisplayNum = {};
 	m_nDisplayNum = {};
+	m_pSymbol.reset();
+
 }
 //------------------------------------------------------------------------------
 //初期化処理
@@ -79,6 +85,9 @@ HRESULT CModule_No3_PassWord::Init()
 
 	//答え設定
 	SetAnswer();
+
+	//記号生成
+	CreateSymbol();
 
 	//初期化
 	CSceneX::Init();
@@ -210,25 +219,32 @@ void CModule_No3_PassWord::SetAnswer()
 	{
 	case CModule_No3_PassWord::ANSWER_1:
 		m_nAnswerNum = 26816;
+
 		break;
 	case CModule_No3_PassWord::ANSWER_2:
 		m_nAnswerNum = 48390;
+
 		break;
 	case CModule_No3_PassWord::ANSWER_3:
 		m_nAnswerNum = 55163;
+
 		break;
 	case CModule_No3_PassWord::ANSWER_4:
 		m_nAnswerNum = 72843;
+
 		break;
 	case CModule_No3_PassWord::ANSWER_5:
 		m_nAnswerNum = 80390;
+
 		break;
 	case CModule_No3_PassWord::ANSWER_6:
 		m_nAnswerNum = 92864;
+
 		break;
 	default:
 		break;
 	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -239,7 +255,7 @@ void CModule_No3_PassWord::CreateDisplayNum()
 	for (int nCnt = 0; nCnt < NUMBER_NUM ; nCnt++)
 	{
 		m_pDisplayNum.emplace_back(CSceneBase::ScenePolygonCreateShared<CScene3D>(DISPLAYNUM_OFFSET + D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(5, nCnt, DISPLAYNUM_INTERVAL.x), 0.0f, 0.0f),
-			DISPLAYNUM_SIZE, BlackColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER), CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
+			DISPLAYNUM_SIZE, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER), CScene::OBJTYPE_MODULE_PARTS_SYMBOL));
 		m_pDisplayNum[nCnt]->SetParentMtxPtr(GetMtxWorldPtr());
 
 		//UV座標設定
@@ -271,6 +287,19 @@ void CModule_No3_PassWord::CreateButton()
 
 	//送信ボタン生成
 	m_pDecitionButton = CSceneX::CreateShared(DECITION_BUTTON_OFFSET, ZeroVector3, GetMtxWorldPtr(), OBJTYPE_MODULE_PARTS, CModelInfo::MODEL_MODULEPARTS_NO3_DECITION_BUTTON);
+
+}
+
+//------------------------------------------------------------------------------
+//模様生成
+//------------------------------------------------------------------------------
+void CModule_No3_PassWord::CreateSymbol()
+{
+	m_pSymbol = CSceneBase::ScenePolygonCreateShared<CScene3D>(SYMBOL_OFFSET, SYMBOL_SIZE, BlackColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
+	m_pSymbol->SetParentMtxPtr(GetMtxWorldPtr());
+
+	//アニメーション設定
+	m_pSymbol->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(m_AnswerPattern, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03), CTexture::GetSparateTex_UVSize(CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03));
 
 }
 

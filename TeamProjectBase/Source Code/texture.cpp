@@ -76,6 +76,7 @@ FILENAME_LIST CTexture::m_aSeparateTexFileNameList =
 
 	{ "data/TEXTURE/ModuleParts/Icon_Module00.png" },					//”š”­
 	{ "data/TEXTURE/ModuleParts/Icon_Module01.png" },					//”š”­
+	{ "data/TEXTURE/ModuleParts/Icon_Module03.png" },					//”š”­
 
 };
 
@@ -90,6 +91,7 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,						D3DXVECTOR2(10,1),	ZeroVector2 },		//”š”­
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00,				D3DXVECTOR2(12,2),	ZeroVector2 },		//”š”­
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01,				D3DXVECTOR2(4,1),	ZeroVector2 },		//”š”­
+	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03,				D3DXVECTOR2(6,1),	ZeroVector2 },		//”š”­
 
 };
 
