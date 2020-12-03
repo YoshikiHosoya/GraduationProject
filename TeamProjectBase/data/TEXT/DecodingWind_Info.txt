@@ -1,0 +1,39 @@
+//*************************************************************************************************************
+//
+// DecodingWind_Info
+//
+//*************************************************************************************************************
+[TellThePicture_Wind][Parameter]
+pos = 426 360
+size = 700 700
+col = 1.0 1.0 1.0 1.0
+AspectRatio = 5.0 14.0
+SizeScal = 1.0 1.0
+
+[ShapeMemorization_Wind][Parameter]
+pos = 426 360
+size = 700 700
+col = 1.0 1.0 1.0 1.0
+AspectRatio = 5.0 14.0
+SizeScal = 1.0 1.0
+
+[CordCutting_Wind][Parameter]
+pos = 426 360
+size = 700 700
+col = 1.0 1.0 1.0 1.0
+AspectRatio = 5.0 14.0
+SizeScal = 1.0 1.0
+
+[Maze_Wind][Parameter]
+pos = 426 360
+size = 700 700
+col = 1.0 1.0 1.0 1.0
+AspectRatio = 5.0 14.0
+SizeScal = 1.0 1.0
+
+[Simon_Wind][Parameter]
+pos = 426 360
+size = 700 700
+col = 1.0 1.0 1.0 1.0
+AspectRatio = 5.0 14.0
+SizeScal = 1.0 1.0

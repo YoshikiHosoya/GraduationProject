@@ -59,6 +59,9 @@ HRESULT CDecodingUI::Init()
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	m_bSelect = false;
+	m_state =
+	m_stateOld = STATE_NORMAL;
+	m_bStateSwitch = false;
 	try
 	{// 頂点情報の作成
 		MakeVertex(pDevice);
@@ -142,6 +145,29 @@ void CDecodingUI::UpdateVertex(D3DXVECTOR3 * pPos, D3DXVECTOR2 * pSize, D3DXCOLO
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// 状態の更新
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingUI::UpdateState(void)
+{
+	// 状態切り替えフラグがtrueの時
+	if (m_bStateSwitch == true)
+	{// falseに切り替える
+		m_bStateSwitch = false;
+	}
+
+	// 前回の状態と状態が違うとき
+	if (m_stateOld != m_state)
+	{// 前回の状態を設定
+		m_stateOld = m_state;
+		// 状態切り替えフラグがfalseの時
+		if (m_bStateSwitch == false)
+		{// trueに切り替える
+			m_bStateSwitch = true;
+		}
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // 衝突判定
 //-------------------------------------------------------------------------------------------------------------
 bool CDecodingUI::Collision2D(CONST D3DXVECTOR2 & pos)
@@ -156,8 +182,14 @@ bool CDecodingUI::Collision2D(CONST D3DXVECTOR2 & pos)
 	if (m_Vertexs.pos0.x <= trans.x && m_Vertexs.pos3.x >= trans.x &&
 		m_Vertexs.pos0.y <= trans.y && m_Vertexs.pos3.y >= trans.y)
 	{
+		m_state = STATE_OVERLAP;
+		// 状態の更新
+		UpdateState();
 		return true;
 	}
+	m_state = STATE_NORMAL;
+	// 状態の更新
+	UpdateState();
 	return false;
 }
 

@@ -18,6 +18,7 @@
 // 前方宣言
 //-------------------------------------------------------------------------------------------------------------
 class CDecodingUI;
+class CDecodingWindow;
 class CHash;
 class CMouse;
 //-------------------------------------------------------------------------------------------------------------
@@ -27,6 +28,7 @@ class CDecodingManager : public CScene
 {
 public:
 	/* 列挙型定義 */
+	// UI
 	enum
 	{
 		UI_NONE = -1,			// 無し
@@ -36,35 +38,32 @@ public:
 		UI_CORDCUTTING,			// コードを切る
 		UI_MAZE,				// 迷路
 		UI_SIMON,				// サイモンゲーム
-		UI_NOWMAKING,			// 製作中
-		UI_DOCUMENT,			// ドキュメント
-		UI_CLOSE,				// 閉じる
-		UI_SCROLLBAR,			// スクロールバー
-		UI_SCROLLHANDLE,		// スクロールハンドル
 		UI_MAX					// 最大数
 	};
-
+	// ウィンドウ
 	enum
 	{
-		TEX_BACKLIGHT,
-		TEX_TELLTHEPICTURE,
-		TEX_SHAPEMEMORIZATION,
-		TEX_CORDCUTTING,
-		TEX_MAZE,
-		TEX_SIMON,
-		TEX_NOWMAKING,
-		TEX_D_TELLTHEPICTURE,
-		TEX_D_SHAPEMEMORIZATION,
-		TEX_D_CORDCUTTING,
-		TEX_D_MAZE,
-		TEX_D_SIMON,
-		TEX_D_NOWMAKING,
-		TEX_CLOSE,
-		TEX_SCROLLBAR,
-		TEX_SCROLLHANDLE,
-		TEX_MAX
+		WIND_NONE = -1,			// 無し
+		WIND_TELLTHEPICTURE,	// 写真を教えてください
+		WIND_SHAPEMEMORIZATION,	// 形の暗記
+		WIND_CORDCUTTING,		// コードを切る
+		WIND_MAZE,				// 迷路
+		WIND_SIMON,				// サイモンゲーム
+		WIND_MAX,				// 最大数
 	};
-
+	// テクスチャ
+	enum
+	{
+		TEX_NONE = -1,			// 無し
+		TEX_BACKLIGHT,			// バックライト
+		TEX_TELLTHEPICTURE,		// 絵を教えてもらう
+		TEX_SHAPEMEMORIZATION,	// 形の暗記
+		TEX_CORDCUTTING,		// コードを切る
+		TEX_MAZE,				// 迷路
+		TEX_SIMON,				// サイモンゲーム
+		TEX_MAX					// 最大数
+	};
+	// モード
 	enum MODE
 	{
 		MODE_SELECT,			// 選択
@@ -98,48 +97,27 @@ public:
 private:
 	/* メンバ関数 */
 	void CreateUi(void);								// UIの生成
+	void CreateWind(void);								// ウィンドウの生成
 	void SetPosAccordingParent(void);					// 親に従って位置を設定する
-	void InitDocumentUVInfo(void);						// ドキュメントのUV情報の初期化
 	void InitConnect(void);								// 接続モードの初期化
 	void UpdateSelect(void);							// 選択するときの更新処理
 	void UpdateConnect(void);							// 接続モード更新処理
 	void UpdateShow(void);								// 解読書を表示しているときの更新処理
 
-	void CloseButtonProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos);		// 閉じるボタンの処理
-	void ScrollProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos);			// スクロールの処理
-	void PinchScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos);	// スクロールハンドルをつまむ
-	void MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos);	// スクロールハンドルを動かす
-	void MouseWheelScroll(D3DXVECTOR2 * pMousePos);						// マウスホイールスクロール
-	float ScrollClamp(D3DXVECTOR2 *pMousePos, float fPosY);				// スクロールのクランプ
-	void ScrollThroughDocument(void);									// ドキュメントのスクロール
-
-	void DisplayDocumentsInPlace(void);					// ドキュメントを特定の位置に表示する
-
-	void AppeaDocument(int nCntUi);						// ドキュメントの出現
-	void DisAppeaDocument(void);						// ドキュメントの消滅
-
-	static void ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);	// 1行から情報を読み取る
+	static void UiInfoReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);		// 1行から情報を読み取る
+	static void WindInfoReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);	// 1行から情報を読み取る
 
 	/* メンバ変数 */
-	static CHash *               m_pHash;				// ハッシュのポインタ
-	static LPDIRECT3DTEXTURE9    m_pTexture[TEX_MAX];	// テクスチャ情報
-	static SETINGINFO            m_Seting[UI_MAX];		// 設定情報
-	static int                   m_nFrameMax;			// 最大フレーム
-	std::shared_ptr<CDecodingUI> m_pUi[UI_MAX];			// UI
-	MODE                         m_mode;				// モード
-	MODE                         m_modeNext;			// 次のモード
-	int                          m_nSelectIndex;		// 選択している番号
-
-	int                          m_nFrame;				// フレームカウント
-	int                          m_nSign;				// 符号
-	float                        m_fScalValue;			// 拡大値変化値
-	float                        m_fScal;				// 拡大値
-
-	VEC2                         m_VecPinch_center;		// つまんだ点から中心へののベクトル
-
-	RANGE                        m_ScrollRange;			// スクロールの可動領域
-	float                        m_fScrollRangeValue;	// スクロールの可動域値
-
+	static CHash *                   m_pHash;					// ハッシュのポインタ
+	static LPDIRECT3DTEXTURE9        m_pTexture[TEX_MAX];		// テクスチャ情報
+	static SETINGINFO                m_Seting[UI_MAX];			// 設定情報
+	static WINDOW_SETING             m_WindSeting[WIND_MAX];	// ウィンドウの設定情報
+	std::shared_ptr<CDecodingUI>     m_pUi[UI_MAX];				// UI
+	std::shared_ptr<CDecodingWindow> m_pWind[WIND_MAX];			// ウィンドウ
+	MODE                             m_mode;					// モード
+	MODE                             m_modeNext;				// 次のモード
+	int                              m_nSelectIndex;			// 選択している番号
+	CDecodingWindow*                 m_pActiveWind;				// アクティブなウィンドウのポインタ
 };
 
 #endif
