@@ -102,11 +102,11 @@ void CClient::WaitRecieve(void)
 			break;
 		}
 
-		char cData[16524];
+		char cData[16600];
 		memset(cData, 0, sizeof(cData));
 
 		// 受信待ち
-		if (recv(m_socket, cData, 16524, 0) <= 0)
+		if (recv(m_socket, cData, 16600, 0) <= 0)
 		{
 			// 受信していない
 			continue;
@@ -294,14 +294,14 @@ void CClient::SendPicture(void)
 	printf("ピクチャ送信 > %s [%d字]\n", &buffer[5], (int)stbuf.st_size);
 #endif
 	// 送信
-	send(m_socket, buffer, 5 + stbuf.st_size, 0);
+	send(m_socket, buffer, 5 + stbuf.st_size + 1, 0);
 
 	// 空のピクチャを生成
 	LPDIRECT3DTEXTURE9 pTexture = NULL;
 	if (FAILED(CManager::GetRenderer()->GetDevice()->CreateTexture(128, 128, 1, 0, D3DFMT_A32B32G32R32F,
 		D3DPOOL_MANAGED, &pTexture, NULL)))
 	{
-		throw E_FAIL;
+		std::cout << "ピクチャ生成失敗\n";
 	}
 	// ピクチャの情報を格納
 	CString link;
@@ -394,6 +394,8 @@ void CClient::RecvPicture(char *data)
 	CPicture::Reading(pTexture, link);
 
 	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
+
+	delete[] cPicData;
 }
 
 #ifdef _DEBUG
