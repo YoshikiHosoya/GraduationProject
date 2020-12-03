@@ -43,13 +43,6 @@ angle = 0.0
 originType = 15
 disp = 1
 
-[Nowmaking][Parameter]
-pos = 700 525
-size = 385 150
-col = 1.0 1.0 1.0 1.0
-angle = 0.0
-originType = 15
-disp = 1
 
 [Backlight][Parameter]
 pos = 275 175
@@ -58,43 +51,4 @@ col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
 disp = 0
-
-[Document][Parameter]
-pos = 426 360
-size = 700 700
-col = 1.0 1.0 1.0 1.0
-angle = 0.0
-originType = 15
-disp = 0
-
-[Close][Parameter]
-pos = 375 -325
-size = 50 50
-col = 1.0 0.0 0.0 1.0
-angle = 0.0
-originType = 15
-disp = 0
-Parent = Document
-
-[ScrollBar][Parameter]
-pos = 375 25
-size = 50 650
-col = 0.3 0.3 0.3 0.8
-angle = 0.0
-originType = 15
-disp = 0
-Parent = Document
-
-[ScrollHandle][Parameter]
-pos = 0.0 -300
-size = 50 50
-col = 0.7 0.7 0.7 1.0
-angle = 0.0
-originType = 15
-disp = 0
-Parent = ScrollBar
-
-
-[SetUp][Parameter]
-ModeCount = 3
 

@@ -32,10 +32,12 @@ Parent = Window
 [ScrollHandle][Parameter]
 pos = 0.0 -300
 size = 50 50
-col = 0.7 0.7 0.7 1.0
+col = 0.5 0.5 0.5 1.0
 angle = 0.0
 originType = 15
 disp = 0
 Parent = ScrollBar
 
+[SetUp][Parameter]
+ModeCount = 3
 

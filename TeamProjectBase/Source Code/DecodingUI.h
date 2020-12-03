@@ -20,6 +20,15 @@
 class CDecodingUI : public CScene
 {
 public:
+	/* 列挙型構造 */
+	typedef enum
+	{
+		STATE_NONE = -1,
+		STATE_NORMAL,
+		STATE_OVERLAP,
+		STATE_MAX
+	} STATE;
+
 	/* 構造体定義 */
 	// ポリゴンの頂点情報
 	typedef struct _POLYVERTEXS
@@ -54,21 +63,6 @@ public:
 		VEC3         vecParent;				// 親とのベクトル
 	}PARENT;
 
-	typedef struct _POLYVERTEXSUVINFO
-	{
-		_POLYVERTEXSUVINFO() : pos(0.0f, 0.0f), size(0.0f, 0.0f) {}
-		_POLYVERTEXSUVINFO(UVINFO& pos, UVINFO& size) : pos(pos), size(size) {}
-		union {
-			struct {
-				UVINFO pos;
-				UVINFO size;
-			};
-			UVINFO uv[2];
-			float   m[4];
-		};
-
-	}POLYVERTEXSUVINFO;
-
 
 
 	/* メンバ関数 */
@@ -84,6 +78,8 @@ public:
 
 	void                      UpdateVertex(bool bPos, bool bCol = false, bool bTex = false);												// 頂点情報の更新
 	void                      UpdateVertex(D3DXVECTOR3* pPos, D3DXVECTOR2* pSize = NULL, D3DXCOLOR *pCol = NULL, POLYVERTEXSUVINFO * pTex = NULL);				// 頂点情報の更新
+
+	void                      UpdateState(void);
 
 	// 衝突判定
 	bool Collision2D(CONST D3DXVECTOR2 &pos);
@@ -106,6 +102,10 @@ public:
 	inline bool               SetWithColPtr(D3DXCOLOR *pCol)     { if (pCol != NULL) { m_col = *pCol; return true; } return false; }	// 色ポインタで色を設定
 	inline bool               SetWithTexPtr(POLYVERTEXSUVINFO * pTex) { if (pTex != NULL) { m_tex = *pTex; return true; } return false; }
 	inline void               SetSelectFlag(bool bSelect) { m_bSelect = bSelect; }														// 選択フラグの設定
+	inline void               SetState(STATE state) { m_state = state; }																// 状態の設定
+	inline void               SetStateOld(STATE state) { m_stateOld = state; }															// 前回の状態の設定
+	inline void               SetStateSwitchFlag(bool bStateSwitch) { m_bStateSwitch = bStateSwitch; }									// 状態切り替わりフラグ
+
 	// 取得関数
 	inline LPDIRECT3DTEXTURE9 GetTexture(void) { return m_pTexture; }											// テクスチャの取得
 	inline FLOAT3&            GetPos(void) { return m_pos; }													// 位置の取得
@@ -123,6 +123,10 @@ public:
 	inline bool               GetSelectFlag(void) { return m_bSelect; }											// 選択フラグの取得
 	inline PARENT*            GetParent(void) { return &m_Parent; }
 	inline POLYVERTEXSUVINFO* GetTex(void) { return &m_tex; }
+	inline STATE&             GetState(void) { return m_state; }
+	inline STATE&             GetStateOld(void) { return m_stateOld; }
+	inline bool               GetStateSwitchFlag(void) { return m_bStateSwitch; }
+
 private:
 	/* メンバ関数 */
 	void MakeVertex(LPDIRECT3DDEVICE9 pDevice);																	// 頂点情報の作成
@@ -141,9 +145,12 @@ private:
 	ORIGINVERTEXTYPE        m_OriginType;			// 原点タイプ
 	bool                    m_bDisp;				// 描画フラフラグ
 	POLYVERTEXS             m_Vertexs;				// 頂点情報
-	bool                    m_bSelect;				// 選択されている
 	PARENT                  m_Parent;				// 親情報
 	POLYVERTEXSUVINFO       m_tex;					// UV座標
+	bool                    m_bSelect;				// 選択されている
+	STATE                   m_state;				// 状態
+	STATE                   m_stateOld;				// 前回の状態
+	bool                    m_bStateSwitch;			// 状態が切り替わったフラグ
 };
 
 #endif
