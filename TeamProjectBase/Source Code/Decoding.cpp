@@ -24,6 +24,7 @@
 #include "TabletButton.h"
 #include "DecodingManager.h"
 #include "DecodingWindow.h"
+#include "keyboard.h"
 
 //------------------------------------------------------------------------------
 // コンストラクタ
@@ -84,7 +85,8 @@ HRESULT CDecoding::Init(HWND hWnd)
 void CDecoding::Update()
 {
 	//なんかボタン押されたとき
-	if (CHossoLibrary::CheckAnyButton())
+	if (CManager::GetKeyboard()->GetPress(DIK_RSHIFT) && 
+		CManager::GetKeyboard()->GetPress(DIK_RETURN))
 	{
 		//チュートリアルに遷移
 		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
