@@ -22,10 +22,8 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-LPDIRECT3DTEXTURE9 CDecodingWindow::m_pTexture[TEX_MAX]      = Mybfunc_array(nullptr);
-LPDIRECT3DTEXTURE9 CDecodingWindow::m_pDocTexture[TEX_W_MAX] = Mybfunc_array(nullptr);
-FLOAT2             CDecodingWindow::m_SpectRatio[TYPE_MAX]   = Mybfunc_array(MYLIB_VEC2_UNSET);
-FLOAT2             CDecodingWindow::m_WindSizeScal[TYPE_MAX] = Mybfunc_array(MYLIB_VEC2_UNSET);
+LPDIRECT3DTEXTURE9 CDecodingWindow::m_pTexture[TEX_MAX]      = Mlf_array(nullptr);
+LPDIRECT3DTEXTURE9 CDecodingWindow::m_pDocTexture[TEX_W_MAX] = Mlf_array(nullptr);
 CHash *            CDecodingWindow::m_pHash	                 = nullptr;
 SETINGINFO         CDecodingWindow::m_InitSeting[TYPE_MAX];
 int                CDecodingWindow::m_nFrameMax              = MYLIB_INT_UNSET;
@@ -180,7 +178,7 @@ HRESULT CDecodingWindow::Init(WINDOW_SETING &Seting)
 	// スクロールハンドルの位置の設定を変更
 	m_Seting[TYPE_SCROLLHANDLE].pos.y = m_Seting[TYPE_SCROLLBAR].pos.y + m_ScrollRange.min - m_Seting[TYPE_SCROLLBAR].pos.y;
 
-	// 親の設定
+		// 親の設定
 	SetPosAccordingParent();
 
 	// 符号の設定
@@ -413,7 +411,6 @@ void CDecodingWindow::ScrollProc(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 {
 	// スクロールハンドルを動かす
 	MoveScrollHandle(pMouse, pMousePos);
-
 	// マウスホイールスクロール
 	MouseWheelScroll(pMousePos);
 }
@@ -432,7 +429,7 @@ void CDecodingWindow::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 			// 選択されている番号に代入
 			m_nSelectIndex = TYPE_SCROLLHANDLE;
 			// 色を変更
-			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), m_Seting[TYPE_SCROLLHANDLE].col);
 			m_VecPinch_Center = VEC2(m_pUi[TYPE_SCROLLHANDLE]->GetPos().x - pMousePos->x, m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - pMousePos->y);
 		}
 		// それ以外
@@ -470,7 +467,6 @@ void CDecodingWindow::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
 		}
 		m_nSelectIndex = -1;
-		std::cout << "離した\n";
 	}
 	else if(m_pUi[TYPE_SCROLLHANDLE]->GetState() == CDecodingUI::STATE_NORMAL &&
 		m_pUi[TYPE_SCROLLHANDLE]->GetStateSwitchFlag() == true)
@@ -530,12 +526,15 @@ float CDecodingWindow::ScrollClamp(D3DXVECTOR2 * pMousePos, float fPosY)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::ScrollScreen(void)
 {
-	// ベクトルを計算する
-	float fVec = m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - (m_pUi[TYPE_SCROLLBAR]->GetPos().y + m_ScrollRange.min);
-	POLYVERTEXSUVINFO *pSetingTex = m_pUi[TYPE_WINDOW]->GetTex();
-	float fBasePosY = (0.75f * 0.5f);
-	float fScal = 1.0f - (m_fScrInitPos + m_fScrInitPos);
-	pSetingTex->pos.v = (m_fScrInitPos)+(fScal *  (fVec / m_fScrollRangeValue));
+	// テクスチャUV情報を取得
+	POLYVERTEXSUVINFO *pTex = m_pUi[TYPE_WINDOW]->GetTex();
+	// ベクトルを計算
+	float fVec              = m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - (m_pUi[TYPE_SCROLLBAR]->GetPos().y + m_ScrollRange.min);
+	// スケールを計算
+	float fScal             = 1.0f - (m_fScrInitPos + m_fScrInitPos);
+	// UV位置を設定
+	pTex->pos.v             = m_fScrInitPos + (fScal *  (fVec / m_fScrollRangeValue));
+	// 頂点情報の更新
 	m_pUi[TYPE_WINDOW]->UpdateVertex(false, false, true);
 }
 
@@ -614,7 +613,7 @@ void CDecodingWindow::ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryTy
 	D3DXCOLOR   col                     = MYLIB_D3DXCOR_SET;				// 色
 	float       fData                   = MYLIB_FLOAT_UNSET;				// float型のデータ
 	int         nData                   = MYLIB_INT_UNSET;					// int型のデータ
-	char        sData[MYLIB_STRINGSIZE] = Mybfunc_array(MYLIB_CHAR_UNSET);	// 文字列のデータ
+	char        sData[MYLIB_STRINGSIZE] = Mlf_array(MYLIB_CHAR_UNSET);	// 文字列のデータ
 	SETINGINFO* pSet                    = nullptr;							// 設定情報のポインタ
 
 	if (strcmp(cnpEntryType, "SetUp") == 0)

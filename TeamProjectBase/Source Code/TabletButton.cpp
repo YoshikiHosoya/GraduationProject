@@ -27,8 +27,8 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX]   = Mybfunc_array(NULL);	// テクスチャ情報
-float              CTabletButton::m_aPressPos[CTabletButton::PRESS_MAX] = Mybfunc_array(0.0f);
+LPDIRECT3DTEXTURE9 CTabletButton::m_aTexture[CTabletButton::TYPE_MAX]   = Mlf_array(NULL);	// テクスチャ情報
+float              CTabletButton::m_aPressPos[CTabletButton::PRESS_MAX] = Mlf_array(0.0f);
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
 //-------------------------------------------------------------------------------------------------------------
@@ -113,10 +113,10 @@ void CTabletButton::Update()
 		// タイプ分岐処理
 		switch (m_Type)
 		{
-			MLB_CASE(TYPE_PEN)   pPen->SetMode(CPaintingPen::MODE_BRUSH);	// ペン
-			MLB_CASE(TYPE_ERASER)pPen->SetMode(CPaintingPen::MODE_ERASER);	// 消しゴム
-			MLB_CASE(TYPE_SEND)  pPicture->Writing();						// 送信
-			MLB_CASEEND;													// ケース終了
+			ML_CASE(TYPE_PEN)   pPen->SetMode(CPaintingPen::MODE_BRUSH);	// ペン
+			ML_CASE(TYPE_ERASER)pPen->SetMode(CPaintingPen::MODE_ERASER);	// 消しゴム
+			ML_CASE(TYPE_SEND)  pPicture->Writing();						// 送信
+			ML_CASEEND;														// ケース終了
 		}
 		// 押されたフラグを消す
 		m_bPress = false;
@@ -137,10 +137,6 @@ void CTabletButton::Update()
 		// Z値を変更
 		pos->z = (m_bPress == true) ? m_aPressPos[CTabletButton::PRESSED] : m_aPressPos[CTabletButton::UNPRESSED];
 	}
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "\n押されたフラグ       == [%d]\n", (m_bPress) ? TRUE : FALSE);
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "変更フラグ           == [%d]\n", (m_bChange) ? TRUE : FALSE);
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "内側で押されたフラグ == [%d]\n", (m_bInPress) ? TRUE : FALSE);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -169,7 +165,6 @@ void CTabletButton::SetFromString(CONST_STRING str)
 	{
 		m_aPressPos[CTabletButton::UNPRESSED] = fData;
 	}
-
 }
 
 //-------------------------------------------------------------------------------------------------------------

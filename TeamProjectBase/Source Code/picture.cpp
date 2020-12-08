@@ -185,7 +185,7 @@ void CPicture::Update()
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::Draw()
 {
-	if (Mybfunc_bit_comp(m_Flags.data, CPicture::FLAG_DISP))
+	if (Mlf_bit_comp(m_Flags.data, CPicture::FLAG_DISP))
 	{
 		//デバイス取得
 		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -603,6 +603,9 @@ void CPicture::Writing(void)
 	// ピクチャの送信
 	std::thread thread(CClient::SendPicture);
 	thread.detach();
+
+	// 色を初期化
+	InitTextureColor();
 }
 
 //-------------------------------------------------------------------------------------------------------------

@@ -66,8 +66,8 @@ public:
 	// モード
 	enum MODE
 	{
+		MODE_CONNECT = 0,		// 接続
 		MODE_SELECT,			// 選択
-		MODE_CONNECT,			// 接続
 		MODE_SHOW,				// 解読書を表示している
 		MODE_MAX				// 最大
 	};
