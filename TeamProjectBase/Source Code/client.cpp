@@ -20,10 +20,9 @@
 // ===================================================================
 // マクロ定義
 // ===================================================================
-#define IPADDRESS_SERVER	("172.16.11.199")	// サーバのIPアドレス
-#define PORT_SERVER			(12345)				// サーバのポート番号
 #define VERSION_WINSOCK		(2)					// winsockのバージョン
 
+#define LINK_IPADDRESS		("data/TEXT/IP.txt")								// IPアドレスのパス
 #define LINK_SENDTEXT		("data/SAVEDATA/SendText.txt")						// 送信用テキストのパス
 #define LINK_RECVTEXT		("data/SAVEDATA/RecvText.txt")						// 受信用テキストのパス
 #define LINK_SENDPICTURE	("data/SAVEDATA/PictureTextures/PicTex.txt")		// 送信用ピクチャのパス
@@ -40,6 +39,79 @@
 // ===================================================================
 bool CClient::m_bConnecting = false;
 SOCKET CClient::m_socket = NULL;
+CClient::SOCKINFO CClient::m_sockInfo = {};
+
+// ===================================================================
+// IPアドレスのロード
+// ===================================================================
+HRESULT CClient::LoadIP(void)
+{
+	// 変数宣言
+	FILE *pFile;
+	char cReadText[MAX_TEXT];
+	char cHeadText[MAX_TEXT];
+	char cAddress[64];
+	u_short port;
+
+	// ファイルを開く
+	pFile = fopen(LINK_IPADDRESS, "r");
+
+#ifdef _DEBUG
+	std::cout << "IPアドレス・ポート番号の取得を開始\n";
+#endif
+
+	// 失敗
+	if (!pFile)
+	{
+#ifdef _DEBUG
+		std::cout << "ファイルオープンに失敗\n";
+#endif
+		return E_FAIL;
+	}
+
+	// スクリプトがくるまで繰り返す
+	while (strcmp(cHeadText, "SCRIPT") != 0)
+	{
+		fgets(cReadText, sizeof(cReadText), pFile);
+		sscanf(cReadText, "%s", &cHeadText);
+	}
+	// スクリプトが来たら
+	if (strcmp(cHeadText, "SCRIPT") == 0)
+	{
+		// エンドスクリプトがくるまで繰り返す
+		while (strcmp(cHeadText, "END_SCRIPT") != 0)
+		{
+			strcpy(cHeadText, "");
+			fgets(cReadText, sizeof(cReadText), pFile);
+			sscanf(cReadText, "%s", &cHeadText);
+			// 改行
+			if (strcmp(cHeadText, "\n") == 0)
+				continue;
+			// IPアドレス
+			if (strcmp(cHeadText, "IPアドレス") == 0)
+				sscanf(cReadText, "IPアドレス : %s", cAddress);
+			// ポート番号
+			if (strcmp(cHeadText, "ポート番号") == 0)
+				sscanf(cReadText, "ポート番号 : %hd", &port);
+		}
+	}
+
+	// ファイルを閉じる
+	fclose(pFile);
+
+	// 情報を格納
+	strcpy(m_sockInfo.ip_Addr, cAddress);
+	m_sockInfo.port = port;
+
+#ifdef _DEBUG
+	std::cout << "取得完了\n";
+	std::cout << "IPアドレス : " << m_sockInfo.ip_Addr << std::endl;
+	std::cout << "ポート番号 : " << m_sockInfo.port << std::endl;
+#endif
+
+	// 成功
+	return S_OK;
+}
 
 // ===================================================================
 // メイン関数
@@ -56,13 +128,16 @@ int CClient::ConnectServer(void)
 		return 0;
 	}
 
+	// IPアドレスを取得
+	LoadIP();
+
 	// ソケットの作成
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
 
 	// 接続先指定用構造体の準備
 	server.sin_family = AF_INET;
-	server.sin_port = htons(PORT_SERVER);
-	server.sin_addr.S_un.S_addr = inet_addr(IPADDRESS_SERVER);
+	server.sin_port = htons(m_sockInfo.port);
+	server.sin_addr.S_un.S_addr = inet_addr(m_sockInfo.ip_Addr);
 
 	while (!m_bConnecting)
 	{
