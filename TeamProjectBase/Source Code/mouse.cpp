@@ -122,10 +122,10 @@ int CMouse::GetScrollValue(void)
 {
 	switch (m_scroll)
 	{
-		MLB_CASE(SCROLL_NONE) return 0;			// スクロールしていない
-		MLB_CASE(SCROLL_UP)   return 1;			// 上にスクロール
-		MLB_CASE(SCROLL_DOWN) return -1;		// 下にスクロール
-		MLB_CASEEND;
+		ML_CASE(SCROLL_NONE) return 0;			// スクロールしていない
+		ML_CASE(SCROLL_UP)   return 1;			// 上にスクロール
+		ML_CASE(SCROLL_DOWN) return -1;			// 下にスクロール
+		ML_CASEEND;								// ケース終了
 	}
 	return 0;
 }

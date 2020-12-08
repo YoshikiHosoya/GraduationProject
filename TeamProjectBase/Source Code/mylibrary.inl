@@ -2003,12 +2003,12 @@ inline int MyVector<T>::AddCapacity(int nSize) const
 	// 変数宣言
 	int nNewCapacity;	// 新しい容量
 	// 新しい容量を設定
-	nNewCapacity = Mybfunc_iifEx(
+	nNewCapacity = Mlf_iifEx(
 		(this->m_nCapacity != 0),
 		(this->m_nCapacity + this->m_nCapacity / 2),
 		8);
 	// 大きいほうを返す
-	return Mybfunc_iifEx(
+	return Mlf_iifEx(
 		(nNewCapacity > this->m_nSize),
 		nNewCapacity,
 		this->m_nSize);

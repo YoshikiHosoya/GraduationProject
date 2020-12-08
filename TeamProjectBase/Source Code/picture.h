@@ -61,8 +61,8 @@ public:
 	inline void             SetScal(CONST D3DXVECTOR3 &scal) { m_trans.scal = scal; }										// スケールの設定
 	inline void             SetParent(D3DMATRIX *pMtxParent) { m_pMtxParent = pMtxParent; }									// 親のマトリックス
 	inline void             SetFlag(const int nMask) { m_Flags.data = nMask; }												// フラグの設定
-	inline void             BuildFlag(const int nFlagIndex) { Mybfunc_bit_set(m_Flags.data, nFlagIndex); }					// フラグを建てる
-	inline void             BreakFlag(const int nFlagIndex) { Mybfunc_bit_clear(m_Flags.data, nFlagIndex); }				// フラグを壊す
+	inline void             BuildFlag(const int nFlagIndex) { Mlf_bit_set(m_Flags.data, nFlagIndex); }					// フラグを建てる
+	inline void             BreakFlag(const int nFlagIndex) { Mlf_bit_clear(m_Flags.data, nFlagIndex); }				// フラグを壊す
 
 	// 取得関数
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.data; }															// フラグの取得
