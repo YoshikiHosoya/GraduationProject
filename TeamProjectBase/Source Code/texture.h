@@ -49,6 +49,13 @@ public:
 		TEX_CONNECT_LOAD,						// 接続中のロードアイコン
 		TEX_CONNECT_BACK_00,					// 接続中の背景(1P)
 		TEX_CONNECT_BACK_01,					// 接続中の背景(2P)
+		TEX_CONNECT_CONNECTING,					// 接続中の表記
+		TEX_CONNECT_CONNECTED,					// 接続完了の表記
+		TEX_CONNECT_SELECT_MODE,				// モード選択
+		TEX_CONNECT_SELECT_REMOVE,				// モード(解除)
+		TEX_CONNECT_SLECT_SOLVE,				// モード(解読)
+		TEX_CONNECT_GUEST_SELECTING,			// ゲストの選択中
+		TEX_CONNECT_GUEST_SELECTED,				// ゲストの選択
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
 		TEX_UI_TITLE,							//UI タイトル
