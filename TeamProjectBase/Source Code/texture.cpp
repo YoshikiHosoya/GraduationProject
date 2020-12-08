@@ -37,6 +37,14 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CONNECTMODE/LoadIcon.png" },				// 接続中のロードアイコン
 	{ "data/TEXTURE/CONNECTMODE/tab_00.png" },					// 接続中の背景(1P)
 	{ "data/TEXTURE/CONNECTMODE/tab_01.png" },					// 接続中の背景(2P)
+	{ "data/TEXTURE/CONNECTMODE/connecting.png" },				// 接続中の表記
+	{ "data/TEXTURE/CONNECTMODE/connected.png" },				// 接続完了の表記
+	{ "data/TEXTURE/CONNECTMODE/select_mode.png" },				// モード選択
+	{ "data/TEXTURE/CONNECTMODE/mode_remove.png" },				// モード(解除)
+	{ "data/TEXTURE/CONNECTMODE/mode_solve.png" },				// モード(解読)
+	{ "data/TEXTURE/CONNECTMODE/selecting.png" },				// ゲストの選択中
+	{ "data/TEXTURE/CONNECTMODE/selected.png" },				// ゲストの選択
+
 
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
