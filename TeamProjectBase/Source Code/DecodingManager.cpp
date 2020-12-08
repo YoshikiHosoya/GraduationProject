@@ -25,7 +25,7 @@
 // 静的メンバの初期化
 //-------------------------------------------------------------------------------------------------------------
 CHash *            CDecodingManager::m_pHash = nullptr;								// ハッシュポインタ
-LPDIRECT3DTEXTURE9 CDecodingManager::m_pTexture[TEX_MAX] = Mybfunc_array(nullptr);	// テクスチャ情報
+LPDIRECT3DTEXTURE9 CDecodingManager::m_pTexture[TEX_MAX] = Mlf_array(nullptr);	// テクスチャ情報
 SETINGINFO         CDecodingManager::m_Seting[UI_MAX];								// 設定情報
 WINDOW_SETING      CDecodingManager::m_WindSeting[WIND_MAX];						// ウィンドウの設定情報
 
@@ -210,10 +210,10 @@ void CDecodingManager::Update()
 	// モード別の処理
 	switch (m_mode)
 	{
-		MLB_CASE(CDecodingManager::MODE_SELECT) UpdateSelect();
-		MLB_CASE(CDecodingManager::MODE_CONNECT)UpdateConnect();
-		MLB_CASE(CDecodingManager::MODE_SHOW)   UpdateShow();
-		MLB_CASEEND;
+		ML_CASE(CDecodingManager::MODE_SELECT)  UpdateSelect();		// 選択モード
+		ML_CASE(CDecodingManager::MODE_CONNECT) UpdateConnect();	// 接続モード
+		ML_CASE(CDecodingManager::MODE_SHOW)    UpdateShow();		// 表示モード
+		ML_CASEEND;
 	}
 }
 
@@ -229,10 +229,16 @@ void CDecodingManager::Draw()
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::SstMode(MODE mode)
 {
-	m_mode = CDecodingManager::MODE_CONNECT;
-	m_modeNext = mode;
-	// 接続モードの初期化
-	InitConnect();
+	// 最大から接続モードの範囲内の時
+	if (Mlf_InRange(mode, MODE_MAX, MODE_CONNECT))
+	{
+		// 接続モードに設定
+		m_mode = CDecodingManager::MODE_CONNECT;
+		// 引数のモードに設定
+		m_modeNext = mode;
+		// 接続モードの初期化
+		InitConnect();
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -241,8 +247,7 @@ void CDecodingManager::SstMode(MODE mode)
 void CDecodingManager::CreateUi(void)
 {
 	for (int nCntUI = 0; nCntUI < UI_MAX; nCntUI++)
-	{
-		// UIの生成
+	{// UIの生成
 		m_pUi[nCntUI] = CDecodingUI::Create(m_Seting[nCntUI]);
 		// テクスチャの連結
 		m_pUi[nCntUI]->BindTexture(m_pTexture[nCntUI]);
@@ -254,10 +259,11 @@ void CDecodingManager::CreateUi(void)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingManager::CreateWind(void)
 {
+	// ウィンドウのスケールの最大の設定
 	CDecodingWindow::SetScalMax(1.0f);
 
 	for (int nCntWind = 0; nCntWind < WIND_MAX; nCntWind++)
-	{
+	{// ウィンドウの生成
 		m_pWind[nCntWind] = CDecodingWindow::Create(m_WindSeting[nCntWind]);
 	}
 }
@@ -268,12 +274,16 @@ void CDecodingManager::CreateWind(void)
 void CDecodingManager::SetPosAccordingParent(void)
 {
 	for (int nCntUI = 0; nCntUI < UI_MAX; nCntUI++)
-	{
+	{// 親IDの取得
 		int nParentID = m_Seting[nCntUI].nParentID;
+		// 親IDが設定されていた時
 		if (nParentID != -1)
 		{
-			m_pUi[nCntUI]->SetPos(m_pUi[nParentID]->GetPos() + m_Seting[nCntUI].pos);
+			// 親の設定
 			m_pUi[nCntUI]->SetParent(m_pUi[nParentID].get());
+			// 位置の設定
+			m_pUi[nCntUI]->SetPos(m_pUi[nParentID]->GetPos() + m_pUi[nCntUI]->GetParent()->vecParent);
+			// 頂点位置の更新
 			m_pUi[nCntUI]->UpdateVertex(true);
 		}
 	}
@@ -287,9 +297,9 @@ void CDecodingManager::InitConnect(void)
 	// 符号の設定
 	switch (m_modeNext)
 	{
-		MLB_CASE(CDecodingManager::MODE_SELECT) m_pActiveWind->SetSign(-1);
-		MLB_CASE(CDecodingManager::MODE_SHOW)   m_pActiveWind->SetSign(1);
-		MLB_CASEEND;
+		ML_CASE(CDecodingManager::MODE_SELECT) m_pActiveWind->SetSign(-1);
+		ML_CASE(CDecodingManager::MODE_SHOW)   m_pActiveWind->SetSign(1);
+		ML_CASEEND;
 	}
 
 	// 出現情報の初期化
@@ -355,21 +365,25 @@ void CDecodingManager::UpdateConnect(void)
 {
 	switch (m_modeNext)
 	{
-		MLB_CASE(CDecodingManager::MODE_SELECT);
-		if (m_pActiveWind->Disappearance() == true)
+		ML_CASE(CDecodingManager::MODE_SELECT)
 		{
-			// 次のモードに設定
-			m_mode = m_modeNext;
-			// アクティブなウィンドウのポインタを初期化
-			m_pActiveWind = nullptr;
+			if (m_pActiveWind->Disappearance() == true)
+			{
+				// 次のモードに設定
+				m_mode = m_modeNext;
+				// アクティブなウィンドウのポインタを初期化
+				m_pActiveWind = nullptr;
+			}
 		}
-		MLB_CASE(CDecodingManager::MODE_SHOW);
-		if (m_pActiveWind->Appearance() == true)
+		ML_CASE(CDecodingManager::MODE_SHOW)
 		{
-			// 次のモードに設定
-			m_mode = m_modeNext;
+			if (m_pActiveWind->Appearance() == true)
+			{
+				// 次のモードに設定
+				m_mode = m_modeNext;
+			}
 		}
-		MLB_CASEEND;
+		ML_CASEEND;
 	}
 }
 
@@ -405,7 +419,7 @@ void CDecodingManager::UiInfoReadFromLine(CONST_STRING cnpLine, CONST_STRING cnp
 	D3DXCOLOR   col                     = MYLIB_D3DXCOR_SET;				// 色
 	float       fData                   = MYLIB_FLOAT_UNSET;				// float型のデータ
 	int         nData                   = MYLIB_INT_UNSET;					// int型のデータ
-	char        sData[MYLIB_STRINGSIZE] = Mybfunc_array(MYLIB_CHAR_UNSET);	// 文字情報のデータ
+	char        sData[MYLIB_STRINGSIZE] = Mlf_array(MYLIB_CHAR_UNSET);	// 文字情報のデータ
 	SETINGINFO* pSet                    = nullptr;							// 設定情報のポインタ
 
 	pSet = &m_Seting[atoi(m_pHash->Search((char*)cnpEntryType))];
@@ -450,7 +464,7 @@ void CDecodingManager::WindInfoReadFromLine(CONST_STRING cnpLine, CONST_STRING c
 	D3DXCOLOR      col                     = MYLIB_D3DXCOR_SET;									// 色
 	float          fData                   = MYLIB_FLOAT_UNSET;									// float型のデータ
 	int            nData                   = MYLIB_INT_UNSET;									// int型のデータ
-	char           sData[MYLIB_STRINGSIZE] = Mybfunc_array(MYLIB_CHAR_UNSET);					// 文字情報のデータ
+	char           sData[MYLIB_STRINGSIZE] = Mlf_array(MYLIB_CHAR_UNSET);					// 文字情報のデータ
 	WINDOW_SETING* pSet                    = nullptr;											// 設定情報のポインタ
 
 	pSet = &m_WindSeting[atoi(m_pHash->Search((char*)cnpEntryType))];

@@ -138,32 +138,40 @@
 // マクロ関数
 //-------------------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
-#define Mybfunc_Debug_brackets_L		std::cout << MYLIB_BRACKETS_L						// 区切りの括弧(大)の出力
-#define Mybfunc_Debug_brackets_M		std::cout << MYLIB_BRACKETS_M						// 区切りの括弧(中)の出力
-#define Mybfunc_Debug_brackets_S		std::cout << MYLIB_BRACKETS_S						// 区切りの括弧(小)の出力
-#define Mybfunc_Debug_start(str)		std::cout << str << " == start!!\n"					// 開始(start!!)の出力
-#define Mybfunc_Debug_end(str)			std::cout << str << " == end!!\n"					// 終了(end!!)の出力
-#define Mybfunc_Debug_open(str)			std::cout << str << " == open!!\n"					// 開いた(open!!)の出力
-#define Mybfunc_Debug_openfailed(str)	std::cout << str << " == open failed!!\n"			// 開くの失敗(open failed!!)の出力
-#define Mybfunc_Debug_close(str)		std::cout << str << " == close!!\n"					// 閉じる(close!!)の出力
-#define Mybfunc_Debug_error(str)		std::cout << "<<<<<"<< str << ">>>>>\n"				// エラーの出力
-#define Mybfunc_ErrorMessa(title,str)	MessageBox(NULL,title,str "\nどのボタン押しても無視されます",MB_ABORTRETRYIGNORE|MB_ICONERROR)
+#define Mlf_Debug_brackets_L			std::cout << MYLIB_BRACKETS_L						// 区切りの括弧(大)の出力
+#define Mlf_Debug_brackets_M			std::cout << MYLIB_BRACKETS_M						// 区切りの括弧(中)の出力
+#define Mlf_Debug_brackets_S			std::cout << MYLIB_BRACKETS_S						// 区切りの括弧(小)の出力
+#define Mlf_Debug_start(str)			std::cout << str << " == start!!\n"					// 開始(start!!)の出力
+#define Mlf_Debug_end(str)				std::cout << str << " == end!!\n"					// 終了(end!!)の出力
+#define Mlf_Debug_open(str)				std::cout << str << " == open!!\n"					// 開いた(open!!)の出力
+#define Mlf_Debug_openfailed(str)		std::cout << str << " == open failed!!\n"			// 開くの失敗(open failed!!)の出力
+#define Mlf_Debug_close(str)			std::cout << str << " == close!!\n"					// 閉じる(close!!)の出力
+#define Mlf_Debug_error(str)			std::cout << "<<<<<"<< str << ">>>>>\n"				// エラーの出力
+#define Mlf_ErrorMessa(title,str)		MessageBox(NULL,title,str "\nどのボタン押しても無視されます",MB_ABORTRETRYIGNORE|MB_ICONERROR)
 #endif
-#define Mybfunc_gate(b)					if(b)												// 扉:真の時 ※使わない
-#define Mybfunc_iif(b)					(b == true) ? true: false							// 条件文から真偽を返す
-#define Mybfunc_iifEx(b ,t ,f)			(b == true) ? t: f									// 条件文から真偽を返す(真偽引数)
-#define Mybfunc_WhenBiggerSet(o ,src)	if(o > src) {o = src;}								// srcよりoが大きいとき設定する
-#define Mybfunc_WhenSmallerSet(o ,src)	if(o < src) {o = src;}								// srcよりoが小さいとき設定する
-#define Mybfunc_swap(lhs,rhs,tmp)		do{tmp = rhs; rhs = lhs; lhs = tmp;}while(false);	// 交換
-#define Mybfunc_bit_clear(lhs,rhs)		(lhs &= ~(1 << rhs))								// ビットを消す
-#define Mybfunc_bit_set(lhs,rhs)		(lhs |= (1 << rhs))									// ビットを立てる
-#define Mybfunc_bit_comp(lhs,rhs)		(lhs & (1 << rhs))									// ビットを比較
-#define Mybfunc_array(data)				{ data }											// 配列の初期化
+#define Mlf_gate(b)						if(b)												// 扉:真の時 ※使わない
+#define Mlf_iif(b)						(b == true) ? true: false							// 条件文から真偽を返す
+#define Mlf_iifEx(b ,t ,f)				(b == true) ? t: f									// 条件文から真偽を返す(真偽引数)
+#define Mlf_swap(lhs,rhs,tmp)			do{tmp = rhs; rhs = lhs; lhs = tmp;}while(false);	// 交換
+#define Mlf_bit_clear(lhs,rhs)			(lhs &= ~(1 << rhs))								// ビットを消す
+#define Mlf_bit_set(lhs,rhs)			(lhs |= (1 << rhs))									// ビットを立てる
+#define Mlf_bit_comp(lhs,rhs)			(lhs & (1 << rhs))									// ビットを比較
+#define Mlf_array(data)					{ data }											// 配列の初期化
+#define Mlf_gt(data,hrs)				( data > hrs )										// 大なり
+#define Mlf_ge(data,hrs)				( data >= hrs )										// 大なりイコール
+#define Mlf_lt(data,hrs)				( data < hrs )										// 小なり
+#define Mlf_le(data,hrs)				( data <= hrs )										// 小なりイコール
+#define Mlf_OutRange(data, Max, Min)	( Mlf_gt(data, Max) || Mlf_lt(data, Min) )			// 範囲外
+#define Mlf_OutIncRange(data, Max, Min)	( Mlf_ge(data, Max) || Mlf_le(data, Min) )			// 範囲外またはデータを含んだ
+#define Mlf_InRange(data, Max, Min)		( Mlf_lt(data, Max) && Mlf_gt(data, Min) )			// 範囲内
+#define Mlf_InIncRange(data, Max, Min)	( Mlf_le(data, Max) && Mlf_ge(data, Min) )			// 範囲内またはデータを含んだ
 
+#define Mlf_GtSet(o ,src)				if(o > src) {o = src;}								// srcよりoが大きいとき設定する
+#define Mlf_LtSet(o ,src)				if(o < src) {o = src;}								// srcよりoが小さいとき設定する
 /* マクロキーワード */
-#define MLB_CASE(t)						break;case (t):										// ケース 条件
-#define MLB_DEFAULT						break;default:										// Switch文 それ以外
-#define MLB_CASEEND						break;default:break;								// ケース 最後
+#define ML_CASE(t)						break;case (t):										// ケース 条件
+#define ML_DEFAULT						break;default:										// Switch文 それ以外
+#define ML_CASEEND						break;default:break;								// ケース 最後
 
 //-------------------------------------------------------------------------------------------------------------
 // 列挙型定義
