@@ -6,6 +6,13 @@
 [Tablet][Parameter]
 pos = 300.0 300.0 0.0
 MoveCoeff = 0.25
+FrameDest = 4
+
+GamePosDest = 0.0f 0.0f 0.0f
+GameNeutralPosDest = 300.0f 300.0f 0.0f
+DecodingPosDest = 0.0f 0.0f 0.0f
+DecodingNeutralPosDest = 300.0f 300.0f 0.0f
+
 PenButtonPos = 100.0 0.0 -8.0
 EraserButtonPos = 100.0 -30.0 -8.0
 SendButtonPos = 100.0 -60.0 -8.0
@@ -14,9 +21,11 @@ SendButtonPos = 100.0 -60.0 -8.0
 PressedPos = -1.0
 UnPressedPos = -8.0
 
+
 [Pen][Parameter]
 PenSize = 1.5
 EraserSize = 3.0
+
 
 [Picture][Parameter]
 pos = -101.5 90.0 -4.3

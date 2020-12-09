@@ -45,9 +45,16 @@ public:
 		SEND_MAX
 	} SENDINFO;
 
+	typedef struct
+	{	// ソケット情報
+		char ip_Addr[64];	// IPアドレス
+		u_short port;		// ポート番号
+	} SOCKINFO;
+
 	CClient() {};	// コンストラクタ
 	~CClient() {};		// デストラクタ
 
+	static HRESULT LoadIP(void);		// IPアドレスのロード
 	static int ConnectServer(void);		// サーバー接続処理
 	static void WaitRecieve(void);		// 受信待ち処理
 	static HRESULT InitClient(void);	// 初期化
@@ -70,6 +77,7 @@ private:
 	static CLIENTSTATE m_state;			// クライアントの状態
 	static bool m_bConnecting;			// クライアント受け入れのフラグ
 	static SOCKET m_socket;				// 通信に使うソケット
+	static SOCKINFO m_sockInfo;			// ソケットの情報
 };
 
 #endif

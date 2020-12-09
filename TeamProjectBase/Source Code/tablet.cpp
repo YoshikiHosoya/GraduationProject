@@ -21,18 +21,15 @@
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
 //-------------------------------------------------------------------------------------------------------------
-// 定数
-#define TABLET_INIMOVECOFF (0.25f)		// 移動係数の初期値
 #define TABLET_FILENAME    "data/TEXT/TabletInfo.txt"
-
-// 関数
-#define TabletButtonSetPos(cnt) D3DXVECTOR3(100.0f, 0.0f - 30.0f * cnt, -8.0f)
 
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-D3DXVECTOR3 CTablet::m_aSetingPos[POS_MAX] = Mybfunc_array(MYLIB_VEC3_UNSET);	// 設定用の位置
-float       CTablet::m_fMoveCoeff          = MYLIB_FLOAT_UNSET;					// 移動慣性
+D3DXVECTOR3 CTablet::m_aSetingModelPos[POS_MAX] = Mlf_array(MYLIB_VEC3_UNSET);		// 設定用の位置
+D3DXVECTOR3 CTablet::m_aSetingPosDest[SET_MAX]  = Mlf_array(MYLIB_VEC3_UNSET);		// 設定用の目的地
+float       CTablet::m_fMoveCoeff               = MYLIB_FLOAT_UNSET;					// 移動慣性
+int         CTablet::m_nDestFrame               = MYLIB_INT_UNSET;						// 目的地までのフレーム
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -101,7 +98,7 @@ HRESULT CTablet::Init()
 	m_Button.reserve(CTabletButton::TYPE_MAX);
 
 	// ボタン位置の取得
-	D3DXVECTOR3 *pButtonPos = &m_aSetingPos[CTablet::POS_PEN];
+	D3DXVECTOR3 *pButtonPos = &m_aSetingModelPos[CTablet::POS_PEN];
 
 	// タイプ数分ループ
 	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
@@ -129,9 +126,9 @@ void CTablet::Update()
 	// モード別の処理
 	switch (m_mode)
 	{
-		MLB_CASE(MODE_NORMAL)  NormalProc();	// 通常処理
-		MLB_CASE(MODE_MOVEING) MoveingProc();	// 移動処理
-		MLB_CASEEND;							// ケース終了
+		ML_CASE(MODE_NORMAL)  NormalProc();		// 通常処理
+		ML_CASE(MODE_MOVEING) MoveingProc();	// 移動処理
+		ML_CASEEND;								// ケース終了
 	}
 
 	//if (CManager::GetKeyboard()->GetTrigger(DIK_M))
@@ -179,7 +176,6 @@ bool CTablet::ItIsPressingButtons(void)
 void CTablet::InitMemberVariables(void)
 {
 	m_mode           = MODE_NORMAL;				// モード
-	m_fMoveCoeff     = TABLET_INIMOVECOFF;		// 移動係数
 	m_posDest        = this->GetPos();			// 目的地
 	m_bConstVelocity = false;					// 等速フラグ
 	m_move           = MYLIB_VEC3_UNSET;		// 移動量
@@ -244,8 +240,8 @@ void CTablet::MoveingProc(void)
 {
 	// 等速フラグ分岐処理
 	switch (m_bConstVelocity) {
-		MLB_CASE(true) ConstantVelocityProc();		// 等速処理
-		MLB_DEFAULT    NonConstantVelocityProc();	// 不等速処理
+		ML_CASE(true) ConstantVelocityProc();		// 等速処理
+		ML_DEFAULT    NonConstantVelocityProc();	// 不等速処理
 	}
 }
 
@@ -300,7 +296,7 @@ std::shared_ptr<CTablet> CTablet::Create(void)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CTablet> pTablet = std::make_shared<CTablet>();
-	pTablet->SetPos(m_aSetingPos[CTablet::POS_TABLET]);
+	pTablet->SetPos(m_aSetingModelPos[CTablet::POS_TABLET]);
 	pTablet->Init();
 
 	//Sceneで管理
@@ -312,7 +308,7 @@ std::shared_ptr<CTablet> CTablet::Create(void)
 //-------------------------------------------------------------------------------------------------------------
 // 等速処理の設定 （目的地を設定する前）
 //-------------------------------------------------------------------------------------------------------------
-void CTablet::SetConstVelocityProc(const bool bConstVelocity, const int nDestFrame)
+void CTablet::SetConstVelocityProc(const bool bConstVelocity)
 {
 	// 通常時以外の時は設定できない
 	if (m_mode != MODE_NORMAL) {
@@ -320,8 +316,6 @@ void CTablet::SetConstVelocityProc(const bool bConstVelocity, const int nDestFra
 	}
 	// 等速フラグの設定
 	SetConstVelocity(bConstVelocity);
-	// 目的地までのフレームの設定
-	SetDestFrame(nDestFrame);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -384,31 +378,56 @@ void CTablet::ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONS
 void CTablet::SetFromString(CONST_STRING str)
 {
 	// 変数宣言
-	float       fData;
+	float       fData  = MYLIB_FLOAT_UNSET;
+	int         nData  = MYLIB_INT_UNSET;
 	D3DXVECTOR3 F3Data = MYLIB_2DVECTOR_ZERO;
 	// 位置
 	if (sscanf(str, "pos = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
 	{
-		m_aSetingPos[CTablet::POS_TABLET] = F3Data;
+		m_aSetingModelPos[CTablet::POS_TABLET] = F3Data;
 	}
 	// 移動係数
 	else if (sscanf(str, "MoveCoeff = %f", &fData) == 1)
 	{
 		m_fMoveCoeff = fData;
 	}
+	else if (sscanf(str, "FrameDest = %d", &nData) == 1)
+	{
+		m_nDestFrame = nData;
+	}
+	// ゲーム時の目的地
+	else if (sscanf(str, "GamePosDest = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
+	{
+		m_aSetingPosDest[SET_GAME] = F3Data;
+	}
+	// ゲームのニュートラル時の目的地
+	else if (sscanf(str, "GameNeutralPosDest = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
+	{
+		m_aSetingPosDest[SET_GAME_NEUT] = F3Data;
+	}
+	// 解読者側時のの目的地
+	else if (sscanf(str, "DecodingPosDest = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
+	{
+		m_aSetingPosDest[SET_DECODING] = F3Data;
+	}
+	// 解読者側のニュートラル時の目的地
+	else if (sscanf(str, "DecodingNeutralPosDest = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
+	{
+		m_aSetingPosDest[SET_DECODING_NEUT] = F3Data;
+	}
 	// ペンボタンの位置
 	else if (sscanf(str, "PenButtonPos = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
 	{
-		m_aSetingPos[CTablet::POS_PEN] = F3Data;
+		m_aSetingModelPos[CTablet::POS_PEN] = F3Data;
 	}
 	// 消しゴムボタンの位置
 	else if (sscanf(str, "EraserButtonPos = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
 	{
-		m_aSetingPos[CTablet::POS_ERASER] = F3Data;
+		m_aSetingModelPos[CTablet::POS_ERASER] = F3Data;
 	}
 	// 送信ボタンの位置
 	else if (sscanf(str, "SendButtonPos = %f %f %f", &F3Data.x, &F3Data.y, &F3Data.z) == 3)
 	{
-		m_aSetingPos[CTablet::POS_SEND] = F3Data;
+		m_aSetingModelPos[CTablet::POS_SEND] = F3Data;
 	}
 }

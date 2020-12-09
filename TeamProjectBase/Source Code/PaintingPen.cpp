@@ -21,7 +21,7 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-float CPaintingPen::m_aSetingRadius[CPaintingPen::MODE_MAX] = Mybfunc_array(0.0f);	// 設定用半径
+float CPaintingPen::m_aSetingRadius[CPaintingPen::MODE_MAX] = Mlf_array(0.0f);	// 設定用半径
 
 //-------------------------------------------------------------------------------------------------------------
 // 読み込み
@@ -40,7 +40,7 @@ HRESULT CPaintingPen::LoadError(void)
 		if (m_aSetingRadius[nCntMode] <= MYLIB_OX_EPSILON)
 		{
 #ifdef _DEBUG
-			Mybfunc_Debug_error("ペンの大きさが小さすぎます。");
+			Mlf_Debug_error("ペンの大きさが小さすぎます。");
 #endif
 			return E_FAIL;
 		}
@@ -93,9 +93,9 @@ void CPaintingPen::PaintCol(D3DXCOLOR * pCol)
 	// モード別処理
 	switch (m_mode)
 	{
-		MLB_CASE(MODE_BRUSH) PaintBrush(pCol);	// ブラシで塗る
-		MLB_CASE(MODE_ERASER)PaintEraser(pCol);	// 消しゴムで塗る
-		MLB_CASEEND;							// ケース終了
+		ML_CASE(MODE_BRUSH) PaintBrush(pCol);	// ブラシで塗る
+		ML_CASE(MODE_ERASER)PaintEraser(pCol);	// 消しゴムで塗る
+		ML_CASEEND;								// ケース終了
 	}
 }
 
@@ -172,9 +172,9 @@ int CPaintingPen::ConvModeToCursorType(MODE& mode)
 {
 	switch (mode)
 	{
-		MLB_CASE(MODE_BRUSH)  return CMouse::CUR_PEN;		// ペンタイプ
-		MLB_CASE(MODE_ERASER) return CMouse::CUR_ERASER;	// 消しゴム
-		MLB_DEFAULT           return CMouse::CUR_NONE;		// 無し
+		ML_CASE(MODE_BRUSH)  return CMouse::CUR_PEN;		// ペンタイプ
+		ML_CASE(MODE_ERASER) return CMouse::CUR_ERASER;	// 消しゴム
+		ML_DEFAULT           return CMouse::CUR_NONE;		// 無し
 	}
 }
 
