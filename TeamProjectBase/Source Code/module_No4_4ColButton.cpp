@@ -122,12 +122,16 @@ void CModule_No4_4ColButton::Update()
 	switch (m_buttonState)
 	{
 	case CModule_No4_4ColButton::STATE::READY:
-		if (CManager::GetGame()->GetState() == CGame::STATE::STATE_NORMAL)
-		{
-			//次のボタン設定
-			NextButtonSet();
 
-			SetButtonState(STATE::START);
+		if (CManager::GetMode() == CManager::MODE_GAME)
+		{
+			if (CManager::GetGame()->GetState() == CGame::STATE::STATE_NORMAL)
+			{
+				//次のボタン設定
+				NextButtonSet();
+
+				SetButtonState(STATE::START);
+			}
 		}
 		break;
 

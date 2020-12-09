@@ -28,9 +28,9 @@ public:
 		NO0_SYMBOL,				//記号
 		NO1_SHAPE,				//図形
 		NO2_WIRE,				//ワイヤー
+		NO3_PASSWORD,			//パスワード
 		NO4_4COLBUTTON,			//4色ボタン
 		MAX,
-
 	};
 
 	CModule_Base();																		//コンストラクタ

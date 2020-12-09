@@ -33,6 +33,5 @@ protected:
 private:
 
 	static void CreateField(D3DXVECTOR3 size, INTEGER2 BlockNum);
-	static void CreateWall(INTEGER2 BlockNum);
 };
 #endif

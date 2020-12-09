@@ -297,7 +297,7 @@ void DispConsol()
 	GetWindowRect(ConsoleWindow, &WindowRect);
 
 	// ウインドウの座標設定
-	MoveWindow(ConsoleWindow, 0, 0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top, TRUE);
+	MoveWindow(ConsoleWindow, 0, 0, WindowRect.right - WindowRect.left + 100, WindowRect.bottom - WindowRect.top, TRUE);
 }
 
 //------------------------------------------------------------------------------

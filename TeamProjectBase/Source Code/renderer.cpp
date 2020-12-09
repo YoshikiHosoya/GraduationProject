@@ -25,7 +25,7 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define BACK_COLOR (D3DCOLOR_RGBA(50, 50, 100, 0))
-#define FOG_COLOR (D3DCOLOR_RGBA(45, 45, 45, 0))
+#define FOG_COLOR (D3DCOLOR_RGBA(0,0,0,0))
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -163,8 +163,8 @@ HRESULT CRenderer::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
 	//フォグの設定
-	float fStart = 1000.0f;
-	float fEnd = 3500.0f;
+	float fStart = 300.0f;
+	float fEnd = 800.0f;
 	m_pD3DDevice->SetRenderState(D3DRS_FOGCOLOR, FOG_COLOR);					// カラー設定
 	m_pD3DDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE);				// 頂点モード
 	m_pD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);			// テーブルモード

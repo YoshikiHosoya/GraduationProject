@@ -44,7 +44,7 @@ CResult::~CResult()
 HRESULT CResult::Init(HWND hWnd)
 {
 	//ÉJÉÅÉâç¿ïWê›íË
-	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_FIXED);
+	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//É|ÉäÉSÉìê∂ê¨
 	CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(D3DXVECTOR3(640.0f, 200.0f, 0.0f), D3DXVECTOR3(850.0f, 300.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT), CScene::OBJTYPE_UI);

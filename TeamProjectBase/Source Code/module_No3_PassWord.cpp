@@ -261,6 +261,9 @@ void CModule_No3_PassWord::CreateDisplayNum()
 		//UV座標設定
 		m_pDisplayNum[nCnt]->SetAnimation(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(0.1f, 1.0f));
 
+		//ライティングoff
+		m_pDisplayNum[nCnt]->SetLighting(false);
+
 	}
 }
 

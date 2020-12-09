@@ -33,9 +33,9 @@
 #define KEYPAD_NUM						(4)									//パッドの総数
 #define KEYPAD_INTERVAL					(D3DXVECTOR3(25.0f,0.0f,0.0f))		//パッドの間隔
 #define KEYPAD_OFFSET					(D3DXVECTOR3(1.0f,-15.0f,-25.0f))	//パッドのオフセット座標
-#define DISPLAY_SHAPE_OFFSET			(D3DXVECTOR3(-18.0f,18.0f,-25.0f))	//ディスプレイの記号のオフセット間隔
+#define DISPLAY_SHAPE_OFFSET			(D3DXVECTOR3(-18.0f,18.0f,-22.0f))	//ディスプレイの記号のオフセット間隔
 #define DISPLAY_SHAPE_SIZE				(D3DXVECTOR3(20.0f,20.0f,0.0f))		//ディスプレイの記号のサイズ
-#define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(29.0f,7.0f,-25.0f))	//進捗度ランプのオフセット
+#define PROGRESS_LAMP_OFFSET			(D3DXVECTOR3(29.0f,7.0f,-22.0f))	//進捗度ランプのオフセット
 
 #define QUESTION_CHANGE_TIME			(40)								//問題変更時にかかる時間
 

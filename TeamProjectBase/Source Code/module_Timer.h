@@ -29,12 +29,12 @@ public:
 	virtual void ShowDebugInfo()	override;				//デバッグ情報表記
 
 	bool MissCountUp();										//ミスカウンターカウントアップ
+	CTimer *GetTimerPtr() { return m_pTimer.get(); };		//タイマーのポインタ取得
 
 private:
 	U_ptr<CTimer> m_pTimer;									//タイマーのポインタ
 	Vec<S_ptr<CScene3D>> m_pMissCounter;					//ミスカウンターのポインタ
 
 	int m_nMissCount;										//ミスカウント
-
 };
 #endif

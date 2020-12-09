@@ -22,6 +22,7 @@
 //------------------------------------------------------------------------------
 class CModule_Base;
 class CBomb_Exterior;
+class CModule_Timer;
 
 class CBomb : public CSceneX , public std::enable_shared_from_this<CBomb>
 {
@@ -30,6 +31,7 @@ public:
 	//難易度
 	enum DIFFICULTY
 	{
+		TITLE,
 		EASY,
 		NORMAL,
 		HARD,
@@ -51,6 +53,8 @@ public:
 
 	void ModuleClearCheck();													//クリアしたかチェック
 	void ModuleMiss();															//モジュールミスった
+
+	CModule_Timer *GetModuleTimerPtr();											//タイマーモジュールのポインタ取得
 
 	CBomb_Exterior *GetBombExterior() { return m_pBombExterior.get(); };		//モジュール外装のポインタ取得
 private:

@@ -36,6 +36,7 @@ public:
 	static std::unique_ptr<CTimer> Create(D3DXVECTOR3 const &TimerCenterPos,int const nTimer,D3DXMATRIX *pMtx);			//生成処理
 
 	void SetStop(bool bStop) { m_bStop = bStop; };								//タイマーストップ
+	bool GetStop() { return m_bStop; };											//タイマーストップしてるかどうか
 private:
 	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;									//ナンバーのポインタ
 	int m_nCntFlame;															//カウント フレーム

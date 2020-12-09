@@ -20,6 +20,7 @@
 //クラス定義
 //------------------------------------------------------------------------------
 class CScene2D;
+class CBomb;
 
 class CTitle : public CBaseMode
 {
@@ -30,6 +31,7 @@ public:
 		STATE_NONE = -1,				//無し
 		STATE_START,					//最初の演出
 		STATE_NORMAL,					//通常画面
+		STATE_BLACKOUT,					//暗転
 		STATE_FADE,						//フェード
 	};
 	CTitle();							//コンストラクタ
@@ -39,9 +41,18 @@ public:
 	void Update();						//更新
 	void Draw();						//描画
 	void ShowDebugInfo(){};				//デバッグ情報表記
+
+	void StateUpdate();					//ステート更新
+	void SetState(STATE state);			//ステート切り替え
+
 private:
 	STATE m_titlestate;					//ステート
 	int m_nCntState;					//ステートのカウント
+
+
+	S_ptr<CBomb>     m_pBomb;			//ボムのポインタ
+
+
 };
 
 #endif

@@ -88,6 +88,7 @@ using FILENAME_LIST = std::vector<std::string>;		//ファイル名のリスト
 class CKeyboard;
 class CPad_XInput;
 class CModelInfo;
+class CScene2D;
 
 
 class CHossoLibrary
@@ -148,6 +149,7 @@ public:
 
 	static float CalcEvenPosition(int nMaxNum, int nNowNum, float fInterVal);			//複数個のオブジェクトを並べる時に均等になるように座標計算
 
+	static bool Collision_MouseTo2DPolygon(CScene2D *pScene2D):
 
 	static bool Selecting(int &nSelectNum, int const &nSelectNumOld, int const nNumX, int const nNumY);
 	static D3DXVECTOR2 CalcUV_StaticFunc(int nNumUV, int tex);

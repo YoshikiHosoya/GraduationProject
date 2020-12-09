@@ -49,9 +49,12 @@ CTimer::~CTimer()
 void CTimer::UpdateTimer()
 {
 	//ゲームが進行してない時はreturn
-	if (CManager::GetGame()->GetState() != CGame::STATE_NORMAL)
+	if (CManager::GetMode() == CManager::MODE_GAME)
 	{
-		return;
+		if (CManager::GetGame()->GetState() != CGame::STATE_NORMAL)
+		{
+			return;
+		}
 	}
 
 	//タイマーが動いている時

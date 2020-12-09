@@ -22,8 +22,8 @@ class CCamera
 public:
 	typedef enum
 	{
-		CAMERA_FIXED = 0,			//カメラ固定
-		CAMERA_PLAYER_FOLLOWING,	//プレイヤー追従
+		CAMERA_TITLE,				//タイトル画面
+		CAMERA_GAME,				//ゲーム画面
 		CAMERA_DEBUG				//デバッグモード
 	} CAMERA_STATE;
 
@@ -34,7 +34,7 @@ public:
 	void SetCamera();														//カメラ設定
 
 	void ShowCameraInfo();													//カメラ情報表示
-	void SetState(CAMERA_STATE state) { m_CameraState = state; };			//カメラの状態切り替え
+	void SetState(CAMERA_STATE state);										//カメラの状態切り替え
 	void ResetCamera();														//カメラリセット
 	void ApproachCamera(D3DXVECTOR3 posRDest);								//カメラを近づける処理
 	void LeaveCamera();														//カメラを離れる
@@ -76,13 +76,11 @@ private:
 	CAMERA_STATE	m_CameraState;					//カメラの状態
 
 	bool m_bApproach;								//カメラが接近してるかどうか
+	void CalcRotationCamera();						//カメラ回転処理
+
 
 	void MoveCameraDebug();							//カメラ移動処理
-	void RotCameraDebug();							//カメラ回転処理
-
-	void MoveCameraGame();							//カメラ移動処理
-	void RotCameraGame();							//カメラ回転処理
-
+	void TitleCamera();								//タイトルのカメラ処理
 };
 
 #endif

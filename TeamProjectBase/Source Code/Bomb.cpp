@@ -26,6 +26,7 @@
 #include "module_No3_PassWord.h"
 #include "module_No4_4ColButton.h"
 #include "sound.h"
+#include "timer.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -40,6 +41,7 @@ bool CBomb::m_bCanExplosion = false;
 #define MODULE_NUM_EASY		(2)
 #define MODULE_NUM_NORMAL	(3)
 #define MODULE_NUM_HARD		(5)
+#define MAX_MODULE_NUM		(11)
 
 
 //------------------------------------------------------------------------------
@@ -78,6 +80,12 @@ HRESULT CBomb::Init()
 void CBomb::Update()
 {
 	CSceneX::Update();
+
+	if (CManager::GetMode() != CManager::MODE::MODE_GAME)
+	{
+		return;
+	}
+
 
 	fabsf(GetRot().y) >= D3DX_PI * 0.5f ?
 		m_bCameraDir = true :
@@ -373,6 +381,10 @@ void CBomb::Operation_Camera()
 	//ちょっとづつ回転
 	GetRot() += (rotDiff * 0.15f);
 
+	//3.14の中に収める
+	CHossoLibrary::CalcRotation_XYZ(GetRot());
+
+
 }
 
 //------------------------------------------------------------------------------
@@ -395,9 +407,30 @@ void CBomb::ModuleClearCheck()
 void CBomb::ModuleMiss()
 {
 #ifdef _DEBUG
+	//爆発しない状態のときはreturn
 	if (!m_bCanExplosion) return;
 #endif // _DEBUG
 
+
+	//ミスカウントアップ
+	//全部ミスしたとき
+	if (GetModuleTimerPtr()->MissCountUp())
+	{
+		//ゲームオーバー
+		CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
+	}
+	else
+	{
+		//音再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
+	}
+}
+
+//------------------------------------------------------------------------------
+//モジュール生成
+//------------------------------------------------------------------------------
+CModule_Timer * CBomb::GetModuleTimerPtr()
+{
 	//タイマーのクラスのイテレータ取得
 	auto itr = std::find_if(m_pModuleList.begin(), m_pModuleList.end(),
 		[](S_ptr<CModule_Base> const ptr) {return typeid(*ptr.get()) == typeid(CModule_Timer); });
@@ -408,19 +441,10 @@ void CBomb::ModuleMiss()
 		//タイマー型に変換
 		CModule_Timer *pTimer = dynamic_cast<CModule_Timer*>(itr->get());  // ダイナミックキャスト
 
-		//ミスカウントアップ
-		//全部ミスしたとき
-		if (pTimer->MissCountUp())
-		{
-			//ゲームオーバー
-			CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
-		}
-		else
-		{
-			//音再生
-			CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
-		}
+		return pTimer;
 	}
+
+	return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -433,11 +457,11 @@ void CBomb::CreateModule()
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
 	//モジュールランダム生成
-	//CreateModule_Random();
+	CreateModule_Random();
 
 //Debug用
 #ifdef _DEBUG
-	CreateModuleDebug();
+	//CreateModuleDebug();
 #endif //_DEBUG
 
 
@@ -488,7 +512,6 @@ void CBomb::CreateModule()
 //------------------------------------------------------------------------------
 void CBomb::CreateModule_Random()
 {
-
 	//ローカルのリスト
 	Vec<CModule_Base::MODULE_TYPE> LocalList = {};
 
@@ -497,21 +520,31 @@ void CBomb::CreateModule_Random()
 
 	switch (m_difficulty)
 	{
+		//タイトル
+	case CBomb::TITLE:
+		m_nModuleNum = MAX_MODULE_NUM;
+		GetModuleTimerPtr()->GetTimerPtr()->SetStop(true);
+		break;
+
+		//イージー
 	case CBomb::EASY:
 		m_nModuleNum = MODULE_NUM_EASY;
-		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NO0_SYMBOL);
 		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NO1_SHAPE);
+		LocalList.emplace_back(CModule_Base::MODULE_TYPE::NO3_PASSWORD);
 
 		break;
 
+		//ノーマル
 	case CBomb::NORMAL:
 		m_nModuleNum = MODULE_NUM_NORMAL;
 
 		break;
 
+		//ハード
 	case CBomb::HARD:
 		m_nModuleNum = MODULE_NUM_HARD;
 		break;
+
 	}
 
 	//モジュール数に達するまでランダムでモジュール設定
@@ -557,6 +590,12 @@ void CBomb::CreateModule_Random()
 			//ワイヤー
 		case CModule_Base::MODULE_TYPE::NO2_WIRE:
 			CBomb::CreateModuleOne<CModule_No2_LampAndWire>();
+
+			break;
+
+			//パスワード
+		case CModule_Base::MODULE_TYPE::NO3_PASSWORD:
+			CBomb::CreateModuleOne<CModule_No3_PassWord>();
 
 			break;
 
