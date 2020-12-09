@@ -41,7 +41,7 @@ bool CBomb::m_bCanExplosion = false;
 #define MODULE_NUM_EASY		(2)
 #define MODULE_NUM_NORMAL	(3)
 #define MODULE_NUM_HARD		(5)
-#define MAX_MODULE_NUM		(11)
+#define MODULE_NUM_TITLE	(11)
 
 
 //------------------------------------------------------------------------------
@@ -522,7 +522,7 @@ void CBomb::CreateModule_Random()
 	{
 		//ƒ^ƒCƒgƒ‹
 	case CBomb::TITLE:
-		m_nModuleNum = MAX_MODULE_NUM;
+		m_nModuleNum = MODULE_NUM_TITLE;
 		GetModuleTimerPtr()->GetTimerPtr()->SetStop(true);
 		break;
 

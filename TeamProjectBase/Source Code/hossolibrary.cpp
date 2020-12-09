@@ -537,6 +537,11 @@ float CHossoLibrary::CalcEvenPosition(int nMaxNum, int nNowNum, float fInterVal)
 	return fValue;
 }
 
+bool CHossoLibrary::Collision_MouseTo2DPolygon(CScene2D * pScene2D)
+{
+	return false;
+}
+
 //------------------------------------------------------------------------------
 //‘I‘ð
 //------------------------------------------------------------------------------
