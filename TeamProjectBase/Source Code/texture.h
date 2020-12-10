@@ -58,8 +58,24 @@ public:
 		TEX_CONNECT_GUEST_SELECTED,				// ゲストの選択
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
-		TEX_UI_TITLE,							//UI タイトル
-		TEX_UI_RESULT,							//UI リザルト
+
+		TEX_UI_TITLE_LOGO,						//UI タイトルロゴ
+		TEX_UI_TITLE_START,						//UI タイトル　スタート
+		TEX_UI_TITLE_END,						//UI タイトル　エンド
+
+		TEX_UI_RESULT_LOGO,						//UI リザルトロゴ
+		TEX_UI_RESULT_TIMER,					//UI リザルト　タイム
+		TEX_UI_RESULT_CLEAR,					//UI リザルト　クリア
+		TEX_UI_RESULT_FAILED,					//UI リザルト　失敗
+		TEX_UI_RESULT_BAR,						//UI リザルト　バー
+		TEX_UI_RESULT_RETRY,					//UI リザルト　リトライ
+		TEX_UI_RESULT_END,						//UI リザルト　終了
+		TEX_UI_RESULT_COMMA,					//UI リザルト　コンマ
+		TEX_UI_RESULT_SEMICOLON,				//UI リザルト　セミコロン
+
+
+
+
 
 		TEX_UI_BRUSHCURSOR,						// ブラシカーソル
 		TEX_UI_ERASERCURSOR,					// 消しゴムカーソル
@@ -97,6 +113,7 @@ public:
 
 		//UI
 		SEPARATE_TEX_UI_NUMBER,								//ナンバー
+		SEPARATE_TEX_UI_RESULT_NUMBER,						//ナンバー リザルト用
 
 		//エフェクト
 		SEPARATE_TEX_EFFECT_EXPLOSION00,					//爆発

@@ -47,8 +47,20 @@ FILENAME_LIST CTexture::m_aTexFileName =
 
 
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
-	{ "data/TEXTURE/UI/Title.png" },							//UI タイトル
-	{ "data/TEXTURE/UI/Result.png" },							//UI リザルト
+
+	{ "data/TEXTURE/UI/Title/Title.png" },						//UI タイトル
+	{ "data/TEXTURE/UI/Title/Start.png" },						//UI タイトル
+	{ "data/TEXTURE/UI/Title/End.png" },						//UI タイトル
+
+	{ "data/TEXTURE/UI/Result/Result.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/PlayTime.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/Success.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/Failed.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/PlaytimeBar.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/Retry.png" },						//UI リザルト
+	{ "data/TEXTURE/UI/Result/End.png" },						//UI リザルト
+	{ "data/TEXTURE/UI/Result/Comma.png" },						//UI リザルト
+	{ "data/TEXTURE/UI/Result/Comma2.png" },					//UI リザルト
 
 	{ "data/TEXTURE/UI/Paint/Pen.png" },						// ブラシカーソル
 	{ "data/TEXTURE/UI/Paint/Eraser.png" },						// 消しゴムカーソル
@@ -82,6 +94,8 @@ FILENAME_LIST CTexture::m_aSeparateTexFileNameList =
 	{ "data/TEXTURE/other/TexNone.png"},						//白紙
 
 	{ "data/TEXTURE/other/Number.png" },						//ナンバー
+	{ "data/TEXTURE/UI/Result/Time.png" },						//リザルト用ナンバー
+
 	{ "data/TEXTURE/Effect/Explosion00.png" },					//爆発
 
 	{ "data/TEXTURE/ModuleParts/Icon_Module00.png" },					//爆発
@@ -99,6 +113,7 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 	{ nullptr, CTexture::SEPARATE_TEX_NONE,								D3DXVECTOR2(1,1),	ZeroVector2 },		//白紙
 	{ nullptr, CTexture::SEPARATE_TEX_EFFECT_EXPLOSION00,				D3DXVECTOR2(4,2),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_UI_NUMBER,						D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_UI_RESULT_NUMBER,					D3DXVECTOR2(10,1),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00,				D3DXVECTOR2(12,2),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01,				D3DXVECTOR2(4,1),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03,				D3DXVECTOR2(6,1),	ZeroVector2 },		//爆発
