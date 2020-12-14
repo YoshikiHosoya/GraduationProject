@@ -265,6 +265,8 @@ void CDecodingManager::CreateWind(void)
 	for (int nCntWind = 0; nCntWind < WIND_MAX; nCntWind++)
 	{// ウィンドウの生成
 		m_pWind[nCntWind] = CDecodingWindow::Create(m_WindSeting[nCntWind]);
+		// ウィンドウテクスチャの設定
+		m_pWind[nCntWind]->SetWindowTexture(nCntWind);
 	}
 }
 
@@ -342,7 +344,7 @@ void CDecodingManager::UpdateSelect(void)
 			m_nSelectIndex == nCntUi)
 		{
 			m_pActiveWind = m_pWind[nCntUi - 1].get();
-			m_pActiveWind->PreparingAppear(nCntUi);
+			m_pActiveWind->PreparingAppear();
 			SstMode(MODE_SHOW);
 		}
 	}
@@ -350,6 +352,7 @@ void CDecodingManager::UpdateSelect(void)
 	if (bOverlap == false)
 	{// 描画フラグを消す
 		m_pUi[UI_BACKLIGHT]->SetDispFlag(false);
+		m_nSelectIndex = -1;
 		// マウスが押されていない時
 		if (!pMouse->GetPress(0))
 		{

@@ -4,40 +4,40 @@
 //
 //*************************************************************************************************************
 [TellThePicture][Parameter]
-pos = 275 175
-size = 385 150
+pos = 210 150
+size = 400 110
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
 disp = 1
 
 [ShapeMemorization][Parameter]
-pos = 275 350
-size = 385 150
+pos = 210 272.5
+size = 400 110
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
 disp = 1
 
 [CordCutting][Parameter]
-pos = 275 525
-size = 385 150
+pos = 210 395
+size = 400 110
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
 disp = 1
 
 [Maze][Parameter]
-pos = 700 175
-size = 385 150
+pos = 210 517.5
+size = 400 110
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
 disp = 1
 
 [Simon][Parameter]
-pos = 700 350
-size = 385 150
+pos = 210 640
+size = 400 110
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
@@ -46,7 +46,7 @@ disp = 1
 
 [Backlight][Parameter]
 pos = 275 175
-size = 385 150
+size = 400 135
 col = 1.0 1.0 1.0 1.0
 angle = 0.0
 originType = 15
