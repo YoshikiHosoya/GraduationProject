@@ -64,6 +64,8 @@ public:
 	CBomb *GetBombPtr() { return m_pBomb.get(); };			//ボムのポインタ取得
 	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
+
+	static bool GetClearFlag() { return m_bClear; };			//クリアフラグ取得
 protected:
 
 private:
@@ -74,6 +76,8 @@ private:
 	S_ptr<CChatBase> m_pChatBase;							// チャットのポインタ
 	S_ptr<CPicture>  m_pPicture;							// ピクチャポインタ
 	S_ptr<CTablet>   m_pTablet;								// タブレットポインタ
+
+	static bool m_bClear;									//クリアフラグ
 };
 
 #endif

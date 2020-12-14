@@ -27,15 +27,17 @@ class CMouse;
 class CDecodingWindow
 {
 public:
+	/* 列挙型定義 */
 	// UIタイプ
-	enum
+	typedef enum
 	{
-		TYPE_WINDOW = 0,			// ウィンドウ
+		TYPE_NONE = -1,				// 無し
+		TYPE_WINDOW ,				// ウィンドウ
 		TYPE_CLOSEBUTTON,			// 閉じるボタン
 		TYPE_SCROLLBAR,				// スクロールバー
 		TYPE_SCROLLHANDLE,			// スクロールハンドル
 		TYPE_MAX					// 最大
-	};
+	}TYPE;
 	// UIのテクスチャ
 	enum
 	{
@@ -57,7 +59,20 @@ public:
 		TEX_W_NOWMAKING,			// 製作中
 		TEX_W_MAX					// 最大
 	};
+	/* [mome]
+	CB -> CLOSEBUTTON
+	SH -> SCROLLHANDLE
+	*/
+	enum
+	{
+		CHGCOL_NONE = -1,			// 無し
+		CHGCOL_CB_PUSH,				// 閉じるボタンを押した時
+		CHGCOL_SH_PINCH,			// スクロールハンドルをつまんだ時
+		CHGCOL_SH_OVERLAP,			// スクロールハンドルと重なった時
+		CHGCOL_MAX					// 最大
+	};
 
+	/* メンバ関数 */
 	CDecodingWindow();																								// コンストラクタ
 	~CDecodingWindow();																								// デストラクタ
 
@@ -73,8 +88,8 @@ public:
 	void               Draw();																						//描画
 	void               InitAppearInfo(void);																		// 出現情報の初期化
 	void               InitDocumentUVInfo(WINDOW_SETING &Seting);													// ドキュメントのUV情報の初期化
-	
-	void               PreparingAppear(int nCntUi);																	// 出現準備
+
+	void               PreparingAppear(void);																		// 出現準備
 	bool               Appearance(void);																			// 出現
 	bool               Disappearance(void);																			// 消滅
 	void               Display(void);																				// 表示させる
@@ -83,11 +98,13 @@ public:
 	inline void        SetSign(int nSign) { if (nSign != 0)m_nSign = abs(nSign) / nSign; }							// 符号の設定
 	inline void        SetScal(float fScal) { m_fScal = fScal; }													// スケールの設定
 	inline static void SetScalMax(float fScal) { m_fSclaMax = fScal; }												// 最大スケールの設定
+	void               SetWindowTexture(int nIndex);																// ウィンドウテクスチャの設定
 	bool               CloseButtonProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos);										// 閉じるボタンの処理
 	void               ScrollProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos);											// スクロール処理
 	void               MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos);									// スクロールハンドルを動かす
 	void               MouseWheelScroll(D3DXVECTOR2 * pMousePos);													// マウスホイールスクロール
-	float              ScrollClamp(D3DXVECTOR2 *pMousePos, float fPosY);											// スクロールのクランプ
+	void               ScrollHandleMove(D3DXVECTOR2 *pMousePos, float fPosY);										// スクロールハンドルを動かす
+	float              ScrollClamp(D3DXVECTOR2 *pMousePos, float& fPosY);											// スクロールのクランプ
 	void               ScrollScreen(void);																			// 画面のスクロール
 
 private:
@@ -95,6 +112,8 @@ private:
 	void               InitSeting(WINDOW_SETING &Seting);															// 設定の初期化
 	void               MakeUI(void);																				// UIの作成
 	void               SetPosAccordingParent(void);																	// 親に従って位置を設定する
+	void               UpdateAppear(void);																			// 出現の更新
+	bool               UpdateFrame(void);																			// フレームの更新
 	void               ChangeColor(CDecodingUI *pUi, D3DXCOLOR &col);												// 色を変更
 	static void        ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);	// 1行から情報を読み取る
 
@@ -105,22 +124,22 @@ private:
 	static CHash *               m_pHash;																			// ハッシュのポインタ
 	static int                   m_nFrameMax;																		// 最大フレーム
 	static float                 m_fSclaMax;																		// スケールの最大
+	static D3DXCOLOR             m_aChgCol[CHGCOL_MAX];																// 変更色
+	static float                 m_fWheelForth;																		// マウスホイールの動かす力
 
 	std::shared_ptr<CDecodingUI> m_pUi[TYPE_MAX];																	// UI
 	SETINGINFO                   m_Seting[TYPE_MAX];																// 設定情報
-	int                          m_nSelectIndex;																	// 選択している番号
+	TYPE                         m_nSelectIndex;																	// 選択している番号
 	int                          m_nFrame;																			// フレーム
 	int                          m_nSign;																			// 符号
 	float                        m_fScalValue;																		// スケール変化値
 	float                        m_fScal;																			// スケール
-	bool                         m_bActive;																			// アクティブフラグ
 
 	// スクロール
 	VEC2                         m_VecPinch_Center;																	// つまんだ点から中心へのベクトル
 	float                        m_fScrInitPos;																		// スクロール初期位置
 	CRange<float>                m_ScrollRange;																		// スクロールの可動領域
 	float                        m_fScrollRangeValue;																// スクロールの可動域値
-
 	// UV
 	FLOAT2                       m_AspectRatio;																		// UVのアスペクト比
 	FLOAT2                       m_SizeScal;																		// UVのサイズスケール

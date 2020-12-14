@@ -17,6 +17,7 @@
 #include "scene.h"
 #include "scene2D.h"
 #include "scene3D.h"
+#include "mouse.h"
 #include "particle.h"
 #include "modelinfo.h"
 #include "Pad_XInput.h"
@@ -537,8 +538,23 @@ float CHossoLibrary::CalcEvenPosition(int nMaxNum, int nNowNum, float fInterVal)
 	return fValue;
 }
 
-bool CHossoLibrary::Collision_MouseTo2DPolygon(CScene2D * pScene2D)
+
+//------------------------------------------------------------------------------
+//マウスと2Dポリゴンの判定
+//------------------------------------------------------------------------------
+bool CHossoLibrary::Collision_PointTo2DPolygon(D3DXVECTOR3 pos, CScene2D * pScene2D)
 {
+	const D3DXVECTOR3 &rPos = pScene2D->GetPos();
+	const D3DXVECTOR3 &rSize = pScene2D->GetSize();
+
+	if (rPos.x - (rSize.x * 0.5f) < pos.x &&
+		rPos.x + (rSize.x * 0.5f) > pos.x &&
+		rPos.y - (rSize.y * 0.5f) < pos.y &&
+		rPos.y + (rSize.y * 0.5f) > pos.y)
+	{
+		return true;
+	}
+
 	return false;
 }
 

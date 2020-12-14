@@ -398,6 +398,9 @@ void CBomb::ModuleClearCheck()
 	{
 		//ゲームクリア
 		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
+
+		//クリアタイム設定
+		//GetModuleTimerPtr()->GetTimerPtr()->
 	}
 }
 

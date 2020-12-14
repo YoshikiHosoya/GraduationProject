@@ -18,6 +18,9 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
+class CScene2D;
+class CTimer;
+
 class CResult : public CBaseMode
 {
 public:
@@ -31,6 +34,13 @@ public:
 
 private:
 	int m_nCntResult;	//カウンタ
+
+
+	//S_ptr<CScene2D> m_pResultLogo;
+	//S_ptr<CScene2D> m_pResultLogo;
+
+
+
 };
 
 #endif

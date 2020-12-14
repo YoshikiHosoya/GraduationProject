@@ -19,6 +19,7 @@
 #include "ParticleManager.h"
 #include "scene2D.h"
 #include "module_Timer.h"
+#include "mouse.h"
 #include "timer.h"
 //------------------------------------------------------------------------------
 //マクロ
@@ -36,7 +37,8 @@ CTitle::CTitle()
 
 	m_nCntState = 0;
 	m_titlestate = STATE_NORMAL;
-
+	m_pStart.reset();
+	m_pEnd.reset();
 }
 
 //------------------------------------------------------------------------------
@@ -44,7 +46,8 @@ CTitle::CTitle()
 //------------------------------------------------------------------------------
 CTitle::~CTitle()
 {
-
+	m_pStart.reset();
+	m_pEnd.reset();
 }
 
 //------------------------------------------------------------------------------
@@ -61,8 +64,13 @@ HRESULT CTitle::Init(HWND hWnd)
 
 
 	//ポリゴン生成
-	CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(D3DXVECTOR3(640.0f, 170.0f, 0.0f), D3DXVECTOR3(850.0f, 200.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_TITLE), CScene::OBJTYPE_UI);
-	CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR3(800.0f, 100.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_PRESSBUTTON), CScene::OBJTYPE_UI);
+	CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(D3DXVECTOR3(640.0f, 170.0f, 0.0f), D3DXVECTOR3(850.0f, 200.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_TITLE_LOGO), CScene::OBJTYPE_UI);
+	//CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(D3DXVECTOR3(640.0f, 600.0f, 0.0f), D3DXVECTOR3(800.0f, 100.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_PRESSBUTTON), CScene::OBJTYPE_UI);
+
+	m_pStart = CSceneBase::ScenePolygonCreateShared<CScene2D>(D3DXVECTOR3(1000.0f, 450.0f, 0.0f), D3DXVECTOR3(250.0f, 80.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_TITLE_START), CScene::OBJTYPE_UI);
+	m_pEnd = CSceneBase::ScenePolygonCreateShared<CScene2D>(D3DXVECTOR3(1000.0f, 600.0f, 0.0f), D3DXVECTOR3(250.0f, 80.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_TITLE_END), CScene::OBJTYPE_UI);
+
+
 
 	//爆弾生成
 	m_pBomb = CBomb::CreateBomb(D3DXVECTOR3(0.0f, 200.0f, 0.0f), ZeroVector3, CBomb::TITLE);
@@ -85,7 +93,6 @@ void CTitle::Update()
 {
 
 	StateUpdate();
-
 }
 
 //------------------------------------------------------------------------------
@@ -93,6 +100,33 @@ void CTitle::Update()
 //------------------------------------------------------------------------------
 void CTitle::Draw()
 {
+}
+
+//------------------------------------------------------------------------------
+//当たり判定処理
+//------------------------------------------------------------------------------
+void CTitle::Collision()
+{
+	CMouse *pMouse = CManager::GetMouse();
+	D3DXVECTOR3 pos = pMouse->GetMousePos();
+
+	//クリック時
+	if (pMouse->GetTrigger(0))
+	{
+		//マウスとポリゴンの判定
+		if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pStart.get()))
+		{
+			//暗転
+			SetState(STATE_BLACKOUT);
+		}
+		//マウスとポリゴンの判定
+		if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pEnd.get()))
+		{
+			//ゲーム終了
+			SetState(STATE_GAMEEND);
+		}
+	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -110,11 +144,9 @@ void CTitle::StateUpdate()
 	case CTitle::STATE_START:
 		break;
 	case CTitle::STATE_NORMAL:
-		//なんかボタン押されたとき
-		if (CHossoLibrary::CheckAnyButton())
-		{
-			SetState(STATE_BLACKOUT);
-		}
+		//当たり判定処理
+		Collision();
+
 		break;
 
 	case CTitle::STATE_BLACKOUT:
@@ -157,6 +189,10 @@ void CTitle::SetState(STATE state)
 		//チュートリアルに遷移
 		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
 		SetState(STATE_NONE);
+		break;
+
+	case CTitle::STATE_GAMEEND:
+		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_END);
 		break;
 	default:
 		break;

@@ -232,7 +232,7 @@ void CHash::HashCellFree(HASHCELL *pCell)
 int CHash::GetHashValue(char *pKey)
 {
 	// 変数宣言
-	int nHashval = 0;	// ハッシュ値
+	int nHashval = MYLIB_INT_UNSET;	// ハッシュ値
 #ifdef HASHVALUE_BASE_PRIME
 	int nCntKey;		// キーカウント
 	for (nCntKey = 0; pKey[nCntKey] != '\0'; nCntKey++)
@@ -240,15 +240,12 @@ int CHash::GetHashValue(char *pKey)
 		nHashval = (nHashval * HASHVALUE_BASE_PRIME + (pKey[nCntKey] & 0xff)) % MYHASH_BUCKET_SIZE;
 	}
 	return nHashval;
-#else 
-	// キーポインタがNULLになるまで
-	while (*pKey != MYLIB_CHAR_UNSET)
+#else
+	for (; *pKey != '\0'; pKey++)
 	{
-		// ハッシュ値に代入
-		nHashval += *pKey;
-		// ポインタを進める
-		*pKey++;
+		nHashval = (int)*pKey;
 	}
+
 	// ハッシュ値をサイズの余剰を返す
 	return nHashval % MYHASH_BUCKET_SIZE;
 #endif
@@ -277,7 +274,7 @@ int CHash::StrAllocAndCopy(char **pOut, char *pSource)
 		return MYLIB_FAILURE;
 	}
 	// 文字列のコピー(失敗した時エラーを返す)
-	if (strncpy(*pOut, pSource, nLength) == nullptr)
+	if (strncpy(*pOut, pSource, nLength) == NULL)
 	{
 		return MYLIB_FAILURE;
 	}
