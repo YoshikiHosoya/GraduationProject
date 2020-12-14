@@ -22,12 +22,14 @@
 //-------------------------------------------------------------------------------------------------------------
 // 静的メンバ変数の初期化
 //-------------------------------------------------------------------------------------------------------------
-LPDIRECT3DTEXTURE9 CDecodingWindow::m_pTexture[TEX_MAX]      = Mlf_array(nullptr);
-LPDIRECT3DTEXTURE9 CDecodingWindow::m_pDocTexture[TEX_W_MAX] = Mlf_array(nullptr);
-CHash *            CDecodingWindow::m_pHash	                 = nullptr;
-SETINGINFO         CDecodingWindow::m_InitSeting[TYPE_MAX];
-int                CDecodingWindow::m_nFrameMax              = MYLIB_INT_UNSET;
-float              CDecodingWindow::m_fSclaMax               = 1.0f;
+LPDIRECT3DTEXTURE9 CDecodingWindow::m_pTexture[TEX_MAX]      = Mlf_array(nullptr);				// テクスチャ情報
+LPDIRECT3DTEXTURE9 CDecodingWindow::m_pDocTexture[TEX_W_MAX] = Mlf_array(nullptr);				// ドキュメントのテクスチャ情報
+CHash *            CDecodingWindow::m_pHash	                 = nullptr;							// ハッシュポインタ
+SETINGINFO         CDecodingWindow::m_InitSeting[TYPE_MAX];										// 初期化設定
+int                CDecodingWindow::m_nFrameMax              = MYLIB_INT_UNSET;					// 最大フレーム
+float              CDecodingWindow::m_fSclaMax               = 1.0f;							// スケールの最大
+D3DXCOLOR          CDecodingWindow::m_aChgCol[CHGCOL_MAX]    = Mlf_array(MYLIB_D3DXCOR_SET);	// 変更色
+float              CDecodingWindow::m_fWheelForth            = MYLIB_FLOAT_UNSET;				// マウスホイールの動かす力
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -186,7 +188,7 @@ HRESULT CDecodingWindow::Init(WINDOW_SETING &Seting)
 	// 出現情報の初期化
 	InitAppearInfo();
 
-	m_nSelectIndex = MYLIB_INT_UNSET;
+	m_nSelectIndex = TYPE_NONE;
 	return S_OK;
 }
 
@@ -209,18 +211,19 @@ void CDecodingWindow::Draw()
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::InitAppearInfo(void)
 {
-	m_nFrame = 0;
+	// フレームを初期化
+	m_nFrame = MYLIB_INT_UNSET;
+	// スケール変化値を設定
 	m_fScalValue = (m_fSclaMax / (m_nFrameMax + 1) * m_nSign);
-
+	// 符号が0未満の時
 	if (m_nSign > 0)
-	{
-		m_fScal = 0.0f;
+	{// スケールを設定を無し設定
+		m_fScal = MYLIB_FLOAT_UNSET;
 	}
 	else
-	{
+	{// スケールを最大に設定
 		m_fScal = m_fSclaMax;
 	}
-
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -243,8 +246,8 @@ void CDecodingWindow::InitDocumentUVInfo(WINDOW_SETING &Seting)
 	SetingTex.size.u = m_SizeScal.x * (fBaseRat / m_AspectRatio.x);
 	SetingTex.size.v = m_SizeScal.y * (fBaseRat / m_AspectRatio.y);
 	// UV座標の初期位置を算出(*0.5は大きさを中央にするため)
-	SetingTex.pos.u  = SetingTex.size.u * 0.5f;
-	SetingTex.pos.v  = SetingTex.size.v * 0.5f;
+	SetingTex.pos.u  = SetingTex.size.u * MYLIB_HALF_SIZE;
+	SetingTex.pos.v  = SetingTex.size.v * MYLIB_HALF_SIZE;
 	// 頂点情報の更新
 	m_pUi[TYPE_WINDOW]->UpdateVertex(NULL, NULL, NULL, &SetingTex);
 
@@ -255,18 +258,18 @@ void CDecodingWindow::InitDocumentUVInfo(WINDOW_SETING &Seting)
 //-------------------------------------------------------------------------------------------------------------
 // 出現準備
 //-------------------------------------------------------------------------------------------------------------
-void CDecodingWindow::PreparingAppear(int nCntUi)
+void CDecodingWindow::PreparingAppear(void)
 {
-	m_pUi[TYPE_WINDOW]->BindTexture(m_pDocTexture[nCntUi - 1]);
+	// テクスチャを設定
 	m_pUi[TYPE_WINDOW]->SetDispFlag(true);
-	m_pUi[TYPE_WINDOW]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
+	m_pUi[TYPE_WINDOW]->SetSize(MYLIB_VEC2_UNSET);
 	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
 
 	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
 	{
 		m_pUi[nCntUi]->SetDispFlag(true);
 		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos());
-		m_pUi[nCntUi]->SetSize(D3DXVECTOR2(0.0f, 0.0f));
+		m_pUi[nCntUi]->SetSize(MYLIB_VEC2_UNSET);
 		m_pUi[nCntUi]->UpdateVertex(true);
 	}
 }
@@ -276,29 +279,14 @@ void CDecodingWindow::PreparingAppear(int nCntUi)
 //-------------------------------------------------------------------------------------------------------------
 bool CDecodingWindow::Appearance(void)
 {
-	// フレームカウントを加算
-	m_nFrame++;
-	// フレームが最大以上の時
-	if (m_nFrame > m_nFrameMax)
-	{// フレームの初期化
-		m_nFrame = 0;
-		// 前面を表示
+	// フレームの更新
+	if (UpdateFrame())
+	{// 前面を表示
 		Display();
 		return true;
 	}
-
-	// 拡大値を加算
-	m_fScal += m_fScalValue;
-	// ウィンドウの更新
-	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size *m_fScal);
-	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
-	// そのほかの更新
-	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
-	{
-		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
-		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
-		m_pUi[nCntUi]->UpdateVertex(true);
-	}
+	// 出現の更新
+	UpdateAppear();
 
 	return false;
 }
@@ -308,29 +296,15 @@ bool CDecodingWindow::Appearance(void)
 //-------------------------------------------------------------------------------------------------------------
 bool CDecodingWindow::Disappearance(void)
 {
-	// フレームカウントを加算
-	m_nFrame++;
-	// フレームが最大以上の時
-	if (m_nFrame > m_nFrameMax)
-	{// フレームの初期化
-		m_nFrame = 0;
-		// 前面を表示させない
+	// フレームの更新
+	if (UpdateFrame())
+	{// 前面を表示させない
 		DoNotDisplay();
 		return true;
 	}
+	// 出現の更新
+	UpdateAppear();
 
-	// 拡大値を加算
-	m_fScal += m_fScalValue;
-	// ウィンドウの更新
-	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size *m_fScal);
-	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
-	// そのほかの更新
-	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
-	{
-		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
-		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
-		m_pUi[nCntUi]->UpdateVertex(true);
-	}
 	return false;
 }
 
@@ -366,38 +340,54 @@ void CDecodingWindow::DoNotDisplay(void)
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// ウィンドウテクスチャの設定
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::SetWindowTexture(int nIndex)
+{
+	// テクスチャが範囲内の時
+	if (Mlf_InRange(nIndex, TEX_W_MAX, TEX_W_NONE))
+	{
+		m_pUi[TYPE_WINDOW]->BindTexture(m_pDocTexture[nIndex]);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // 閉じるボタンの処理
 //-------------------------------------------------------------------------------------------------------------
 bool CDecodingWindow::CloseButtonProc(CMouse *pMouse, D3DXVECTOR2 *pMousePos)
 {
+	//閉じるボタンの取得
+	CDecodingUI *pCloseButton = m_pUi[TYPE_CLOSEBUTTON].get();
+
 	// 2Dの衝突判定
-	if (m_pUi[TYPE_CLOSEBUTTON]->Collision2D(*pMousePos) == false)
-	{
-		if (m_nSelectIndex != TYPE_SCROLLHANDLE)
-		{
-			m_nSelectIndex = -1;
-		}
-		// 右クリックを離した時
-		if (pMouse->GetRelease(0))
-		{
-			ChangeColor(m_pUi[TYPE_CLOSEBUTTON].get(), m_Seting[TYPE_CLOSEBUTTON].col);
-			return false;
-		}
-	}
-	else
+	if (pCloseButton->Collision2D(*pMousePos) == true)
 	{
 		// マウスを押したとき
 		if (pMouse->GetTrigger(0))
 		{
-			ChangeColor(m_pUi[TYPE_CLOSEBUTTON].get(), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+			// 色を変更
+			ChangeColor(pCloseButton, m_aChgCol[CHGCOL_CB_PUSH]);
+			// 選択されている番号を閉じるボタンにする
 			m_nSelectIndex = TYPE_CLOSEBUTTON;
 		}
+
 		// 右クリックを離した時かつ選択された番号と同じとき
 		if (pMouse->GetRelease(0) &&
 			m_nSelectIndex == TYPE_CLOSEBUTTON)
-		{
-			ChangeColor(m_pUi[TYPE_CLOSEBUTTON].get(), m_Seting[TYPE_CLOSEBUTTON].col);
+		{// 色を変更
+			ChangeColor(pCloseButton, m_Seting[TYPE_CLOSEBUTTON].col);
+			m_nSelectIndex = TYPE_NONE;
 			return true;
+		}
+	}
+	else
+	{
+		// 右クリックを離した時
+		if (pMouse->GetRelease(0))
+		{// 色を変更
+			ChangeColor(pCloseButton, m_Seting[TYPE_CLOSEBUTTON].col);
+			m_nSelectIndex = TYPE_NONE;
+			return false;
 		}
 	}
 
@@ -420,8 +410,11 @@ void CDecodingWindow::ScrollProc(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 {
+	// スクロールハンドルの取得
+	CDecodingUI *pScrollHandle = m_pUi[TYPE_SCROLLHANDLE].get();
+
 	// マウスがハンドルに接触しているかどうか
-	if (m_pUi[TYPE_SCROLLHANDLE]->Collision2D(*pMousePos) == true)
+	if (pScrollHandle->Collision2D(*pMousePos) == true)
 	{
 		// マウスが押されたとき
 		if (pMouse->GetTrigger(0))
@@ -429,50 +422,52 @@ void CDecodingWindow::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 			// 選択されている番号に代入
 			m_nSelectIndex = TYPE_SCROLLHANDLE;
 			// 色を変更
-			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), m_Seting[TYPE_SCROLLHANDLE].col);
-			m_VecPinch_Center = VEC2(m_pUi[TYPE_SCROLLHANDLE]->GetPos().x - pMousePos->x, m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - pMousePos->y);
+			ChangeColor(pScrollHandle, m_aChgCol[CHGCOL_SH_PINCH]);
+			// つまんだ点から中心へのベクトル
+			m_VecPinch_Center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, pScrollHandle->GetPos().y - pMousePos->y);
 		}
 		// それ以外
-		else if (m_nSelectIndex != TYPE_SCROLLHANDLE)
+		else if (m_nSelectIndex == TYPE_NONE)
 		{
-			if (m_pUi[TYPE_SCROLLHANDLE]->GetStateSwitchFlag() == true)
+			// 状態が切り替わったとき
+			if (pScrollHandle->GetStateSwitchFlag() == true)
 			{
 				// 色を変更
-				ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f));
+				ChangeColor(pScrollHandle, m_aChgCol[CHGCOL_SH_OVERLAP]);
 			}
 		}
 	}
 
-
 	// マウスが押されている時かつ選択されている番号がハンドルの時
 	if (pMouse->GetPress(0) && m_nSelectIndex == TYPE_SCROLLHANDLE)
 	{
-		m_pUi[TYPE_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, pMousePos->y + m_VecPinch_Center.y));
-		m_pUi[TYPE_SCROLLHANDLE]->SetParent(m_pUi[TYPE_SCROLLHANDLE].get());
-		m_pUi[TYPE_SCROLLHANDLE]->UpdateVertex(true);
+		// スクロールハンドルを動かす
+		ScrollHandleMove(pMousePos, pMousePos->y + m_VecPinch_Center.y);
 		// ドキュメントをスクロールする
 		ScrollScreen();
 	}
 	// 選択されている番号がハンドルの時
-	else if (pMouse->GetRelease(0) && m_nSelectIndex == TYPE_SCROLLHANDLE)
+	else if (pMouse->GetRelease(0))
 	{
-		if (m_pUi[TYPE_SCROLLHANDLE]->GetState() == CDecodingUI::STATE_OVERLAP)
+		if (pScrollHandle->GetState() == CDecodingUI::STATE_OVERLAP)
 		{
 			// 色を変更
-			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f));
+			ChangeColor(pScrollHandle, m_aChgCol[CHGCOL_SH_OVERLAP]);
 		}
 		else
 		{
-			// 色を変更
-			ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+			// 通常色に戻す
+			ChangeColor(pScrollHandle, m_Seting[TYPE_SCROLLHANDLE].col);
 		}
-		m_nSelectIndex = -1;
+		// 選択されている番号を初期化
+		m_nSelectIndex = TYPE_NONE;
 	}
-	else if(m_pUi[TYPE_SCROLLHANDLE]->GetState() == CDecodingUI::STATE_NORMAL &&
-		m_pUi[TYPE_SCROLLHANDLE]->GetStateSwitchFlag() == true)
+	// 状態が通常の時かつ状態が切り替わった時
+	else if(pScrollHandle->GetState() == CDecodingUI::STATE_NORMAL &&
+		pScrollHandle->GetStateSwitchFlag() == true)
 	{
-		// 色を変更
-		ChangeColor(m_pUi[TYPE_SCROLLHANDLE].get(), D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+		// 通常色に戻す
+		ChangeColor(pScrollHandle, m_Seting[TYPE_SCROLLHANDLE].col);
 	}
 }
 
@@ -481,30 +476,45 @@ void CDecodingWindow::MoveScrollHandle(CMouse * pMouse, D3DXVECTOR2 * pMousePos)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::MouseWheelScroll(D3DXVECTOR2 * pMousePos)
 {
-	if (m_nSelectIndex != -1)
-	{
+	// 選択されていない時
+	if (m_nSelectIndex != TYPE_NONE)
+	{// 処理を抜ける
 		return;
 	}
-
+	// スクロール値を取得
 	int nScrollValu = CMouse::GetScrollValue();
+	// スクロールされていない時
 	if (nScrollValu == 0)
-	{
+	{// 処理を抜ける
 		return;
 	}
-	m_pUi[TYPE_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, m_pUi[TYPE_SCROLLHANDLE]->GetPos().y -= nScrollValu *30.0f));
-	m_pUi[TYPE_SCROLLHANDLE]->SetParent(m_pUi[TYPE_SCROLLHANDLE].get());
-	m_pUi[TYPE_SCROLLHANDLE]->UpdateVertex(true);
+	// スクロールハンドルを動かす
+	ScrollHandleMove(pMousePos, m_pUi[TYPE_SCROLLHANDLE]->GetPos().y -= nScrollValu * m_fWheelForth);
 	// ドキュメントをスクロールする
 	ScrollScreen();
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// スクロールハンドルを動かす
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::ScrollHandleMove(D3DXVECTOR2 * pMousePos, float fPosY)
+{
+	// 範囲内の値を設定
+	m_pUi[TYPE_SCROLLHANDLE]->SetPosY(ScrollClamp(pMousePos, fPosY));
+	// 親情報を再設定
+	m_pUi[TYPE_SCROLLHANDLE]->SetParent(m_pUi[TYPE_SCROLLHANDLE]->GetParent()->pParent);
+	// 頂点情報の更新
+	m_pUi[TYPE_SCROLLHANDLE]->UpdateVertex(true);
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // スクロールのクランプ
 //-------------------------------------------------------------------------------------------------------------
-float CDecodingWindow::ScrollClamp(D3DXVECTOR2 * pMousePos, float fPosY)
+float CDecodingWindow::ScrollClamp(D3DXVECTOR2 * pMousePos, float& fPosY)
 {
-	// 変数宣言
-	CDecodingUI * pScrollBar = m_pUi[TYPE_SCROLLBAR].get();
+	// スクロールバーの取得
+	CDecodingUI * pScrollBar    = m_pUi[TYPE_SCROLLBAR].get();
+	// スクロールハンドルの取得
 	CDecodingUI * pScrollHandle = m_pUi[TYPE_SCROLLHANDLE].get();
 
 	// 枠内に収める
@@ -518,6 +528,7 @@ float CDecodingWindow::ScrollClamp(D3DXVECTOR2 * pMousePos, float fPosY)
 		fPosY = (pScrollBar->GetPos().y - pScrollBar->GetSize().y*MYLIB_HALF_SIZE + (pScrollHandle->GetSize().y*MYLIB_HALF_SIZE));
 		m_VecPinch_Center = VEC2(pScrollHandle->GetPos().x - pMousePos->x, fPosY - pMousePos->y);
 	}
+
 	return fPosY;
 }
 
@@ -529,11 +540,11 @@ void CDecodingWindow::ScrollScreen(void)
 	// テクスチャUV情報を取得
 	POLYVERTEXSUVINFO *pTex = m_pUi[TYPE_WINDOW]->GetTex();
 	// ベクトルを計算
-	float fVec              = m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - (m_pUi[TYPE_SCROLLBAR]->GetPos().y + m_ScrollRange.min);
+	float fVec = m_pUi[TYPE_SCROLLHANDLE]->GetPos().y - (m_pUi[TYPE_SCROLLBAR]->GetPos().y + m_ScrollRange.min);
 	// スケールを計算
-	float fScal             = 1.0f - (m_fScrInitPos + m_fScrInitPos);
+	float fScal = 1.0f - (m_fScrInitPos + m_fScrInitPos);
 	// UV位置を設定
-	pTex->pos.v             = m_fScrInitPos + (fScal *  (fVec / m_fScrollRangeValue));
+	pTex->pos.v = m_fScrInitPos + (fScal *  (fVec / m_fScrollRangeValue));
 	// 頂点情報の更新
 	m_pUi[TYPE_WINDOW]->UpdateVertex(false, false, true);
 }
@@ -547,7 +558,8 @@ void CDecodingWindow::InitSeting(WINDOW_SETING &Seting)
 	SETINGINFO *pInit = &m_InitSeting[0];		// 初期設定情報のポインタ
 	SETINGINFO *pSet  = &m_Seting[0];			// 設定情報のポインタ
 
-	pSet[TYPE_WINDOW] = Seting;
+	pSet[TYPE_WINDOW] = pInit[TYPE_WINDOW];		// 初期設定
+	pSet[TYPE_WINDOW] = Seting;					// ウィンドウの設定を反映
 
 	for (int nCntType = TYPE_CLOSEBUTTON; nCntType < TYPE_MAX; nCntType++)
 	{
@@ -560,6 +572,7 @@ void CDecodingWindow::InitSeting(WINDOW_SETING &Seting)
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::MakeUI(void)
 {
+	// ウィンドウのUIの生成
 	m_pUi[TYPE_WINDOW] = CDecodingUI::Create(m_Seting[TYPE_WINDOW]);
 	m_pUi[TYPE_WINDOW]->BindTexture(m_pDocTexture[TEX_W_TELLTHEPICTURE]);
 	// ループ
@@ -594,6 +607,44 @@ void CDecodingWindow::SetPosAccordingParent(void)
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// 出現の更新
+//-------------------------------------------------------------------------------------------------------------
+void CDecodingWindow::UpdateAppear(void)
+{
+	// 拡大値を加算
+	m_fScal += m_fScalValue;
+	// ウィンドウの更新
+	m_pUi[TYPE_WINDOW]->SetSize(m_Seting[TYPE_WINDOW].size *m_fScal);
+	// 頂点の更新
+	m_pUi[TYPE_WINDOW]->UpdateVertex(true);
+	// そのほかの更新
+	for (int nCntUi = TYPE_CLOSEBUTTON; nCntUi < TYPE_MAX; nCntUi++)
+	{// 位置を設定
+		m_pUi[nCntUi]->SetPos(m_pUi[nCntUi]->GetParent()->pParent->GetPos() + m_pUi[nCntUi]->GetParent()->vecParent * m_fScal);
+		// 大きさの設定
+		m_pUi[nCntUi]->SetSize(m_Seting[nCntUi].size *m_fScal);
+		// 頂点の更新
+		m_pUi[nCntUi]->UpdateVertex(true);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// フレームの更新
+//-------------------------------------------------------------------------------------------------------------
+bool CDecodingWindow::UpdateFrame(void)
+{
+	// フレームカウントを加算
+	m_nFrame++;
+	// フレームが最大以上の時
+	if (m_nFrame > m_nFrameMax)
+	{// フレームの初期化
+		m_nFrame = MYLIB_INT_UNSET;
+		return true;
+	}
+	return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // 色を変更
 //-------------------------------------------------------------------------------------------------------------
 void CDecodingWindow::ChangeColor(CDecodingUI * pUi, D3DXCOLOR & col)
@@ -621,6 +672,22 @@ void CDecodingWindow::ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryTy
 		if (sscanf(cnpLine, "ModeCount = %d", &nData) == 1)
 		{
 			m_nFrameMax = nData;
+		}
+		else if (sscanf(cnpLine, "CloseButtonPush = %f %f %f %f", &col.r, &col.g, &col.b, &col.a) == 4)
+		{
+			m_aChgCol[CHGCOL_CB_PUSH] = col;
+		}
+		else if (sscanf(cnpLine, "ScrollHandlePitch = %f %f %f %f", &col.r, &col.g, &col.b, &col.a) == 4)
+		{
+			m_aChgCol[CHGCOL_SH_PINCH] = col;
+		}
+		else if (sscanf(cnpLine, "ScrollHandleOverlap = %f %f %f %f", &col.r, &col.g, &col.b, &col.a) == 4)
+		{
+			m_aChgCol[CHGCOL_SH_OVERLAP] = col;
+		}
+		else if (sscanf(cnpLine, "WheelForth = %f", &fData) == 1)
+		{
+			m_fWheelForth = fData;
 		}
 	}
 	else

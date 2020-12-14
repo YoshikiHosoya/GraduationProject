@@ -8,10 +8,10 @@ pos = 300.0 300.0 0.0
 MoveCoeff = 0.25
 FrameDest = 4
 
-GamePosDest = 0.0f 0.0f 0.0f
-GameNeutralPosDest = 300.0f 300.0f 0.0f
-DecodingPosDest = 0.0f 0.0f 0.0f
-DecodingNeutralPosDest = 300.0f 300.0f 0.0f
+GamePosDest = 0.0 0.0 0.0
+GameNeutralPosDest = 300.0 300.0 0.0
+DecodingPosDest = 0.0 0.0 0.0
+DecodingNeutralPosDest = 0.0 0.0 0.0
 
 PenButtonPos = 100.0 0.0 -8.0
 EraserButtonPos = 100.0 -30.0 -8.0

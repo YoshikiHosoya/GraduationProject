@@ -90,6 +90,9 @@ HRESULT CTablet::LoadError(void)
 //-------------------------------------------------------------------------------------------------------------
 HRESULT CTablet::Init()
 {
+	// 位置の設定
+	SetPos(m_aSetingPosDest[CManager::GetMode() == CManager::MODE_GAME ? SET_GAME_NEUT : SET_DECODING_NEUT]);
+
 	//モデル情報設定
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TABLET));
 	CSceneX::Init();
@@ -135,9 +138,6 @@ void CTablet::Update()
 	//{
 	//	this->SetDestinationProc(D3DXVECTOR3(0.0f, 0.0f, -300.0f));
 	//}
-	//// 変数宣言
-	//FLOAT3* pPos = (FLOAT3 *)this->GetPosPtr();
-	//CDebugProc::Print(CDebugProc::PLACE_LEFT, "現在位置 == [%.5f][%.5f][%.5f]\n", pPos->x, pPos->y, pPos->z);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -296,7 +296,6 @@ std::shared_ptr<CTablet> CTablet::Create(void)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CTablet> pTablet = std::make_shared<CTablet>();
-	pTablet->SetPos(m_aSetingModelPos[CTablet::POS_TABLET]);
 	pTablet->Init();
 
 	//Sceneで管理
