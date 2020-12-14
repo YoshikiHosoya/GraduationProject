@@ -16,6 +16,7 @@
 #include "chatText.h"
 #include "picture.h"
 #include <sys/stat.h>
+#include "connectUI.h"
 
 // ===================================================================
 // マクロ定義
@@ -37,9 +38,10 @@
 // ===================================================================
 // 静的メンバ変数の初期化
 // ===================================================================
-bool CClient::m_bConnecting = false;
-SOCKET CClient::m_socket = NULL;
-CClient::SOCKINFO CClient::m_sockInfo = {};
+bool CClient::m_bAccept					= false;
+bool CClient::m_bAcceptOther			= false;
+SOCKET CClient::m_socket				= NULL;
+CClient::SOCKINFO CClient::m_sockInfo	= {};
 
 // ===================================================================
 // IPアドレスのロード
@@ -49,9 +51,9 @@ HRESULT CClient::LoadIP(void)
 	// 変数宣言
 	FILE *pFile;
 	char cReadText[MAX_TEXT];
-	char cHeadText[MAX_TEXT];
-	char cAddress[64];
-	u_short port;
+	char cHeadText[MAX_TEXT] = "\0";
+	char cAddress[64] = "\0";
+	u_short port = 0;
 
 	// ファイルを開く
 	pFile = fopen(LINK_IPADDRESS, "r");
@@ -139,7 +141,7 @@ int CClient::ConnectServer(void)
 	server.sin_port = htons(m_sockInfo.port);
 	server.sin_addr.S_un.S_addr = inet_addr(m_sockInfo.ip_Addr);
 
-	while (!m_bConnecting)
+	while (!m_bAccept)
 	{
 		// 接続
 		err = connect(m_socket, (struct sockaddr *)&server, sizeof(server));
@@ -158,7 +160,7 @@ int CClient::ConnectServer(void)
 #ifdef _DEBUG
 		printf("接続完了\n");
 #endif
-		m_bConnecting = true;
+		m_bAccept = true;
 	}
 
 	return 0;
@@ -172,7 +174,7 @@ void CClient::WaitRecieve(void)
 	while (1)
 	{
 		// 接続しない
-		if (!m_bConnecting)
+		if (!m_bAccept)
 		{
 			break;
 		}
@@ -196,6 +198,11 @@ void CClient::WaitRecieve(void)
 		if (cData[0] == ORDER_SENDPICTURE)
 		{
 			RecvPicture(cData);
+		}
+		// 待ち状態受信
+		if (cData[0] == ORDER_SENDWAIT)
+		{
+			RecvWait();
 		}
 	}
 }
@@ -234,8 +241,8 @@ HRESULT CClient::InitClient(void)
 void CClient::UninitClient(void)
 {
 	// 接続終了
-	if (m_bConnecting)
-		m_bConnecting = false;
+	if (m_bAccept)
+		m_bAccept = false;
 	// winsock2の終了処理
 	WSACleanup();
 }
@@ -245,7 +252,7 @@ void CClient::UninitClient(void)
 // ===================================================================
 void CClient::SendText(void)
 {
-	if (!m_bConnecting)
+	if (!m_bAccept)
 	{
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
@@ -253,16 +260,16 @@ void CClient::SendText(void)
 		//return;
 	}
 	
-	FILE *fp;
+	FILE *fp = fopen(LINK_SENDTEXT, "wb");
 	char *buffer;
 	struct stat stbuf;
-	int fd;
 
 	// ファイルを開く
-	if ((fp = fopen(LINK_SENDTEXT, "wb")) == NULL)
+	if (!fp)
 	{
 		// エラー
 		printf("テキスト読み込みエラー\n");
+		return;
 	}
 
 	// ファイルにデータを書き込み
@@ -275,17 +282,19 @@ void CClient::SendText(void)
 	fclose(fp);
 
 	// ファイルサイズの取得
-	fd = stat(LINK_SENDTEXT, &stbuf);
+	stat(LINK_SENDTEXT, &stbuf);
 	printf("ファイルサイズ : %.1f byte (%d bit) \n", (float)stbuf.st_size / 8, (int)stbuf.st_size);
 
 	// 文字列 + 命令 + サイズ + null文字 のメモリ数分格納
 	buffer = new char[stbuf.st_size + 5 + 1];
 
+	fp = fopen(LINK_SENDTEXT, "rb");
 	// ファイルを開く
-	if ((fp = fopen(LINK_SENDTEXT, "rb")) == NULL)
+	if (!fp)
 	{
 		// エラー
 		printf("テキスト読み込みエラー\n");
+		return;
 	}
 
 	// 文字列のアドレスを取得
@@ -323,7 +332,7 @@ void CClient::SendText(void)
 // ===================================================================
 void CClient::SendPicture(void)
 {
-	if (!m_bConnecting)
+	if (!m_bAccept)
 	{
 #ifdef _DEBUG
 		printf("サーバーに接続されていません\n");
@@ -334,20 +343,21 @@ void CClient::SendPicture(void)
 	FILE *fp;
 	char *buffer;
 	struct stat stbuf;
-	int fd;
 
 	// ファイルサイズの取得
-	fd = stat(LINK_SENDPICTURE, &stbuf);
+	stat(LINK_SENDPICTURE, &stbuf);
 	printf("ファイルサイズ : %.1f byte (%d bit) \n", (float)stbuf.st_size / 8, (int)stbuf.st_size);
 
 	// 文字列 + 命令 + サイズ + null文字 のメモリ数分格納
 	buffer = new char[stbuf.st_size + 5 + 1];
 
+	fp = fopen(LINK_SENDPICTURE, "rb");
 	// ファイルを開く
-	if ((fp = fopen(LINK_SENDPICTURE, "rb")) == NULL)
+	if (!fp)
 	{
 		// エラー
 		printf("テキスト読み込みエラー\n");
+		return;
 	}
 
 	// 文字列のアドレスを取得
@@ -400,13 +410,14 @@ void CClient::RecvText(char *data)
 	memcpy(cTextData, &data[5], *pSize);
 	cTextData[*pSize] = '\0';
 
-	FILE *fp;
+	FILE *fp = fopen(LINK_RECVTEXT, "wb");
 
 	// ファイルを開く
-	if ((fp = fopen(LINK_RECVTEXT, "wb")) == NULL)
+	if (!fp)
 	{
 		// エラー
 		printf("テキスト読み込みエラー\n");
+		return;
 	}
 
 	fwrite(cTextData, *pSize, 1, fp);
@@ -436,13 +447,14 @@ void CClient::RecvPicture(char *data)
 	memcpy(cPicData, &data[5], *pSize);
 	cPicData[*pSize] = '\0';
 
-	FILE *fp;
+	FILE *fp = fopen(LINK_RECVPICTURE, "wb");
 
 	// ファイルを開く
-	if ((fp = fopen(LINK_RECVPICTURE, "wb")) == NULL)
+	if (!fp)
 	{
 		// エラー
 		printf("テキスト読み込みエラー\n");
+		return;
 	}
 
 	fwrite(cPicData, *pSize, 1, fp);
@@ -471,6 +483,39 @@ void CClient::RecvPicture(char *data)
 	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
 
 	delete[] cPicData;
+}
+
+// ===================================================================
+// 待ち状態の送信
+// ===================================================================
+void CClient::SendWait(void)
+{
+	char buffer[1];
+
+	// 待ち状態命令
+	buffer[0] = ORDER_SENDWAIT;
+
+#ifdef _DEBUG
+	// 送信をデバッグで表示
+	printf("待ち状態を送信\n");
+#endif
+
+	// 送信
+	send(m_socket, buffer, 1, 0);
+}
+
+// ===================================================================
+// 待ち状態の受信
+// ===================================================================
+void CClient::RecvWait(void)
+{
+#ifdef _DEBUG
+	// 受信をデバッグで表示
+	printf("待ち状態を受信\n");
+#endif
+
+	// 待ち状態を有効にする
+	CConnectUI::EnableGuestWait();
 }
 
 #ifdef _DEBUG

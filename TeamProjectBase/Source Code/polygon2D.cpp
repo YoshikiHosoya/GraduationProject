@@ -207,13 +207,13 @@ bool CPolygon2D::ReturnHit(D3DXVECTOR2 & pos)
 	bool bHit = false;
 
 	// ¶‰Eã‰º‚ÌŠO‚É‚¢‚½‚çA“–‚½‚Á‚Ä‚¢‚È‚¢
-	if (m_pos.x + m_size.x < pos.x)
+	if (m_pos.x + m_size.x / 2 < pos.x)
 		return bHit;
-	if (m_pos.x - m_size.x > pos.x)
+	if (m_pos.x - m_size.x / 2 > pos.x)
 		return bHit;
-	if (m_pos.y + m_size.y < pos.y)
+	if (m_pos.y + m_size.y / 2 < pos.y)
 		return bHit;
-	if (m_pos.y - m_size.y > pos.y)
+	if (m_pos.y - m_size.y / 2 > pos.y)
 		return bHit;
 	// “–‚½‚Á‚Ä‚¢‚é
 	bHit = true;
