@@ -159,7 +159,17 @@ void CChatTab::ClickTab(void)
 //=============================================================================
 void CChatTab::ClickTabletTab(void)
 {
-	if (CManager::GetMouse()->GetTrigger(0))
+	CMouse *pMouse = CManager::GetMouse();
+	D3DXVECTOR2 mousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
+
+	// カラー更新
+	if (m_pChatPoly[POLY_TABLET]->GetCol() != WhiteColor)
+		m_pChatPoly[POLY_TABLET]->SetCol(WhiteColor);
+	//	フラグ解除
+	if (m_bClickTab)
+		m_bClickTab = false;
+
+	if (pMouse->GetTrigger(0) && m_pChatPoly[POLY_TABLET]->ReturnHit(mousePos))
 	{
 		// カラー更新
 		m_pChatPoly[POLY_TABLET]->SetCol(COLOR_TABCLICK);
@@ -170,15 +180,6 @@ void CChatTab::ClickTabletTab(void)
 
 		// フラグon
 		m_bClickTab = true;
-	}
-	else if (!CManager::GetMouse()->GetTrigger(0))
-	{
-		// カラー更新
-		if (m_pChatPoly[POLY_TABLET]->GetCol() != WhiteColor)
-			m_pChatPoly[POLY_TABLET]->SetCol(WhiteColor);
-		//	フラグ解除
-		if (m_bClickTab)
-			m_bClickTab = false;
 	}
 }
 
@@ -337,8 +338,7 @@ void CChatTab::Update(void)
 		CManager::GetKeyboard()->GetTrigger(DIK_F5))
 		ClickTab();
 
-	if (m_pChatPoly[POLY_TABLET]->ReturnHit(mousePos))
-		ClickTabletTab();
+	ClickTabletTab();
 
 	// マウスによるタブスクロール
 	CMouse::MOUSE_SCROLL scroll = CMouse::GetScroll();
