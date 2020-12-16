@@ -10,7 +10,7 @@ FrameDest = 4
 
 GamePosDest = 0.0 0.0 0.0
 GameNeutralPosDest = 300.0 300.0 0.0
-DecodingPosDest = 0.0 0.0 0.0
+DecodingPosDest = 0.0 100.0 0.0
 DecodingNeutralPosDest = 0.0 0.0 0.0
 
 PenButtonPos = 100.0 0.0 -8.0

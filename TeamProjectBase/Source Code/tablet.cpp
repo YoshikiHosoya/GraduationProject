@@ -17,6 +17,7 @@
 #include "game.h"
 #include "keyboard.h"
 #include "PaintingPen.h"
+#include "chatTab.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -126,12 +127,49 @@ HRESULT CTablet::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CTablet::Update()
 {
+	// ゲームモードの取得
+	CManager::MODE ManaMode = CManager::GetMode();
+
+	switch (ManaMode)
+	{
+		ML_CASE(CManager::MODE_DECODING)
+		{
+			if (CChatTab::GetTabClick())
+			{
+				if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+				{
+					this->SetDestinationProc(m_aSetingPosDest[SET_DECODING_NEUT]);
+				}
+				else
+				{
+					this->SetDestinationProc(m_aSetingPosDest[SET_DECODING]);
+				}
+			}
+		}
+		ML_CASE(CManager::MODE_GAME)
+		{
+			if (CChatTab::GetTabClick())
+			{
+				if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+				{
+					this->SetDestinationProc(m_aSetingPosDest[SET_GAME_NEUT]);
+				}
+				else
+				{
+					this->SetDestinationProc(m_aSetingPosDest[SET_GAME]);
+				}
+			}
+		}
+		ML_CASEEND
+	}
+	
+
 	// モード別の処理
 	switch (m_mode)
 	{
 		ML_CASE(MODE_NORMAL)  NormalProc();		// 通常処理
 		ML_CASE(MODE_MOVEING) MoveingProc();	// 移動処理
-		ML_CASEEND;								// ケース終了
+		ML_CASEEND								// ケース終了
 	}
 
 	//if (CManager::GetKeyboard()->GetTrigger(DIK_M))
@@ -262,8 +300,8 @@ void CTablet::ConstantVelocityProc(void)
 		m_nCntFrame = MYLIB_INT_UNSET;
 		// 位置を目的地に設定
 		*pPos = m_posDest;
-		// 通常モードに設定
-		m_mode = MODE_NORMAL;
+		// 等速処理のモード切替
+		VelocityProcModeChange();
 	}
 }
 
@@ -281,12 +319,29 @@ void CTablet::NonConstantVelocityProc(void)
 	if (posDiff.LengthSq() < MYLIB_OX_EPSILON)
 	{// 位置を目的地に設定
 		*pPos = m_posDest;
-		// 通常モードに設定
-		m_mode = MODE_NORMAL;
+		// 等速処理のモード切替
+		VelocityProcModeChange();
 		return;
 	}
 	// 位置の更新
 	*pPos += posDiff* m_fMoveCoeff;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 等速処理のモードチェンジ
+//-------------------------------------------------------------------------------------------------------------
+void CTablet::VelocityProcModeChange(void)
+{
+	if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+	{
+		// ニュートラルモードに設定
+		m_mode = MODE_NEUTRAL;
+	}
+	else
+	{
+		// 通常モードに設定
+		m_mode = MODE_NORMAL;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -324,12 +379,6 @@ void CTablet::SetDestinationProc(CONST D3DXVECTOR3 & posDest)
 {
 	// 変数宣言
 	FLOAT3 &pos = (FLOAT3 &)this->GetPos();
-
-	// 距離と位置が同じとき
-	if (VEC3(posDest - pos).LengthSq() < MYLIB_OX_EPSILON)
-	{// 処理を抜ける
-		return;
-	}
 
 	// 移動モードに設定
 	m_mode = CTablet::MODE_MOVEING;
