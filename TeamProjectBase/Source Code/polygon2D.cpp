@@ -206,15 +206,30 @@ bool CPolygon2D::ReturnHit(D3DXVECTOR2 & pos)
 {
 	bool bHit = false;
 
-	// 左右上下の外にいたら、当たっていない
-	if (m_pos.x + m_size.x / 2 < pos.x)
-		return bHit;
-	if (m_pos.x - m_size.x / 2 > pos.x)
-		return bHit;
-	if (m_pos.y + m_size.y / 2 < pos.y)
-		return bHit;
-	if (m_pos.y - m_size.y / 2 > pos.y)
-		return bHit;
+	if (m_posStart == POSSTART_CENTRAL_CENTRAL)
+	{
+		// 左右上下の外にいたら、当たっていない
+		if (m_pos.x + m_size.x / 2 < pos.x)
+			return bHit;
+		if (m_pos.x - m_size.x / 2 > pos.x)
+			return bHit;
+		if (m_pos.y + m_size.y / 2 < pos.y)
+			return bHit;
+		if (m_pos.y - m_size.y / 2 > pos.y)
+			return bHit;
+	}
+	else if (m_posStart == POSSTART_BOTTOM_RIGHT)
+	{
+		// 左右上下の外にいたら、当たっていない
+		if (m_pos.x + m_size.x < pos.x)
+			return bHit;
+		if (m_pos.x - m_size.x > pos.x)
+			return bHit;
+		if (m_pos.y + m_size.y < pos.y)
+			return bHit;
+		if (m_pos.y - m_size.y > pos.y)
+			return bHit;
+	}
 	// 当たっている
 	bHit = true;
 	return bHit;

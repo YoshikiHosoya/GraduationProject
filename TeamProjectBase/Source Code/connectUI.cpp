@@ -722,11 +722,11 @@ void CConnectUI::SelectLevel(void)
 				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = CreateOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
 				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_DECIDE));
 				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			}
 
-			// 決定ボタンを破棄
-			if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL])
-				DeleteOnlyUI(CONNECTUI_ONLY_CAUTION_LEVEL);
+				// 決定ボタンを破棄
+				if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL])
+					DeleteOnlyUI(CONNECTUI_ONLY_CAUTION_LEVEL);
+			}
 		}
 	}
 
@@ -1074,8 +1074,21 @@ void CConnectUI::Wait(CONNECTFLOW_TYPE flow)
 		}
 		else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
 		{
-			if (m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE)
+			if (m_bGuestWait && m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE)
 				m_state = FLOWSTATE_END;
+
+#ifdef _DEBUG
+			else if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
+				CManager::GetKeyboard()->GetTrigger(DIK_4))
+			{
+				// 強制書き換え
+				m_nSelectMode[PLAYER_TWO] == SELECTMODE_SOLVE ?
+					m_nSelectMode[PLAYER_TWO] = SELECTMODE_REMOVE :
+					m_nSelectMode[PLAYER_TWO] = SELECTMODE_SOLVE;
+				// 次へ
+				m_state = FLOWSTATE_END;
+			}
+#endif
 		}
 		break;
 	}
@@ -1205,6 +1218,10 @@ void CConnectUI::ClickDecide(CMouse *pMouse)
 	{
 		// ゲストを待つ状態へ
 		m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
+		// サーバーへ待ち状態を送信
+		if (m_state != FLOWSTATE_WAIT)
+			//CClient::SendWait();
+		// 待ち状態へ
 		m_state = FLOWSTATE_WAIT;
 	}
 }
