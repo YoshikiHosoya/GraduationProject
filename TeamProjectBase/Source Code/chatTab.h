@@ -34,6 +34,7 @@ public:
 		POLY_TITLE,			// タイトル
 		POLY_WRITEWINDOW,	// 書き込みウィンドウ
 		POLY_TAB,			// 開閉タブ
+		POLY_TABLET,		// タブレットの開閉タブ
 		POLY_MAX
 	} POLYTYPE;
 
@@ -74,6 +75,8 @@ public:
 
 	static D3DXVECTOR2	&GetTabPos(void)			{ return m_TabPos; }						// タブ座標の取得
 	static TABSTATE		&GetTabState(void)			{ return m_tabState; }						// タブの状態の取得
+	static TABSTATE		&GetTabletState(void)		{ return m_tabletState; }					// タブレットの状態取得
+	static bool			&GetTabClick(void)			{ return m_bClickTab; }						// タブクリックのフラグを取得
 	static CHATKEEP		*GetChatKeep(int nIndex)	{ return &m_chatKeep[nIndex]; }				// テキストの背景ポリゴン取得
 	static CChatText	*GetSendText(void)			{ return m_SendText; }						// テキストの背景ポリゴン取得
 	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }							// タブ座標の設定
@@ -86,6 +89,7 @@ public:
 
 private:
 	void		ClickTab(void);											// タブクリック
+	void		ClickTabletTab(void);									// タブクリック
 	void		SlideTab(void);											// タブスライド
 	void		InputText(void);										// キー入力の総括
 	void		PressKey(int nKeyID, bool bShift);						// キー入力
@@ -103,6 +107,8 @@ private:
 	CPolygon2D						*m_pChatPoly[POLY_MAX];				// チャット用画像のポリゴン
 	int								m_nCntState;						// 状態管理のカウンタ
 	D3DXVECTOR2						m_moveDest;							// タブ移動の量
+	static TABSTATE					m_tabletState;						// タブレットの状態
+	static bool						m_bClickTab;						// タブクリックのフラグ
 };
 
 #endif

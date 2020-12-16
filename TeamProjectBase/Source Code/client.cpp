@@ -488,12 +488,13 @@ void CClient::RecvPicture(char *data)
 // ===================================================================
 // 待ち状態の送信
 // ===================================================================
-void CClient::SendWait(void)
+void CClient::SendWait(int nSelect)
 {
-	char buffer[1];
+	char buffer[2];
 
 	// 待ち状態命令
 	buffer[0] = ORDER_SENDWAIT;
+	buffer[1] = nSelect;
 
 #ifdef _DEBUG
 	// 送信をデバッグで表示
@@ -501,7 +502,7 @@ void CClient::SendWait(void)
 #endif
 
 	// 送信
-	send(m_socket, buffer, 1, 0);
+	send(m_socket, buffer, 2, 0);
 }
 
 // ===================================================================

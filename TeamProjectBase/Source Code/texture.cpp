@@ -29,6 +29,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CHAT/chatTab_writeWindow.png" },			// チャットタブの書き込みウィンドウ
 	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
 	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
+	{ "data/TEXTURE/CHAT/chatTab_TabOpen.png" },				// タブレット (開く)
+	{ "data/TEXTURE/CHAT/chatTab_TabClose.png" },				// タブレット (閉じる)
 	{ "data/TEXTURE/CHAT/chatBox00.png" },						// チャットボックス00
 	{ "data/TEXTURE/CHAT/chatBox01.png" },						// チャットボックス01
 	{ "data/TEXTURE/CHAT/chatBox02.png" },						// チャットボックス02

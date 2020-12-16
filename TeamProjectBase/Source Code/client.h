@@ -75,7 +75,7 @@ public:
 	static void SendPicture(void);												// ピクチャの送信
 	static void RecvText(char *data);											// 文章の受信
 	static void RecvPicture(char *data);										// ピクチャの受信
-	static void SendWait(void);													// 待ち状態の送信
+	static void SendWait(int nSelect);											// 待ち状態の送信
 	static void RecvWait(void);													// 待ち状態の受信
 
 private:
