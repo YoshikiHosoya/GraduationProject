@@ -165,8 +165,8 @@ void CChatTab::ClickTabletTab(void)
 		m_pChatPoly[POLY_TABLET]->SetCol(COLOR_TABCLICK);
 
 		m_tabletState == TABSTATE_OPENED ?
-			m_tabState = TABSTATE_CLOSED :
-			m_tabState = TABSTATE_OPENED;
+			m_tabletState = TABSTATE_CLOSED :
+			m_tabletState = TABSTATE_OPENED;
 
 		// ƒtƒ‰ƒOon
 		m_bClickTab = true;
