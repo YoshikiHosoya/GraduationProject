@@ -17,6 +17,7 @@
 // クラス定義
 //-------------------------------------------------------------------------------------------------------------
 class CPaintingPen;
+class CTablet;
 class CPicture : public CScene
 {
 public:
@@ -67,6 +68,8 @@ public:
 	// 取得関数
 	inline UVSHORT*         GetFlag(void) { return &m_Flags.data; }															// フラグの取得
 	inline CPaintingPen*    GetPaintPen(void) { return m_pPen; }														// ペンの取得
+	CTablet*                GetTablet(void);
+
 	// クリエイト関数
 	static std::shared_ptr<CPicture>Create(D3DMATRIX *pMtxParent);															// 生成
 	static HRESULT          MakeTexture(LPDIRECT3DDEVICE9 pDevice, CONST_STRING TextureFile , LPDIRECT3DTEXTURE9 *ppTexture);// テクスチャの作成
