@@ -18,10 +18,12 @@
 //------------------------------------------------------------------------------
 //マクロ定義
 //------------------------------------------------------------------------------
-#define DEFAULT_TIMER (300)
-#define TIMER_SIZE					(D3DXVECTOR3(10.0f,20.0f,0.0f))
-#define TIMER_H_M_S_INTERVAL_X		(12.0f)
-#define TIMER_H_M_S_INTERVAL_Z		(-10.0f)
+#define DEFAULT_TIMER						(300)
+#define TIMER_SIZE							(D3DXVECTOR3(10.0f,20.0f,0.0f))
+#define TIMER_H_M_S_INTERVAL_X				(12.0f)
+
+#define RESULT_TIMER_SIZE					(D3DXVECTOR3(30.0f,60.0f,0.0f))
+#define RESULT_TIMER_H_M_S_INTERVAL_X		(80.0f)
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -106,21 +108,34 @@ void CTimer::ShowDebugInfo()
 //------------------------------------------------------------------------------
 //生成処理
 //------------------------------------------------------------------------------
-std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, int const nTimer, D3DXMATRIX * pMtx)
+std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, D3DXMATRIX * pMtx,bool bGame)
 {
 	//メモリ確保
 	std::unique_ptr<CTimer>pTimer(new CTimer);
 
 	for (int nCnt = 0; nCnt < CTimer::TIMER_TYPE::MAX; nCnt++)
 	{
-		//生成
-		pTimer->m_pMultiNumber.emplace_back(
-			CMultiNumber::Create(TimerCenterPos + D3DXVECTOR3(-TIMER_H_M_S_INTERVAL_X + TIMER_H_M_S_INTERVAL_X * nCnt, 0.0f, TIMER_H_M_S_INTERVAL_Z),
-								TIMER_SIZE, nTimer, 2, CMultiNumber::NUMBER_TYPE::NUMBER_3D, CScene::OBJTYPE_UI));
+		if (bGame)
+		{
+			//生成
+			pTimer->m_pMultiNumber.emplace_back(
+				CMultiNumber::Create(TimerCenterPos + D3DXVECTOR3(-TIMER_H_M_S_INTERVAL_X + TIMER_H_M_S_INTERVAL_X * nCnt, 0.0f, 0.0f),
+					TIMER_SIZE, 0, 2, CMultiNumber::NUMBER_TYPE::NUMBER_3D, CScene::OBJTYPE_UI));
 
 
-		pTimer->m_pMultiNumber[nCnt]->SetParentMtxPtr(pMtx);
-		pTimer->m_pMultiNumber[nCnt]->SetColor(RedColor);
+			pTimer->m_pMultiNumber[nCnt]->SetParentMtxPtr(pMtx);
+			pTimer->m_pMultiNumber[nCnt]->SetColor(RedColor);
+		}
+		else
+		{
+			//生成
+			pTimer->m_pMultiNumber.emplace_back(
+				CMultiNumber::Create(TimerCenterPos + D3DXVECTOR3(-RESULT_TIMER_H_M_S_INTERVAL_X + RESULT_TIMER_H_M_S_INTERVAL_X * nCnt, 0.0f, 0.0f),
+					RESULT_TIMER_SIZE, 0, 2, CMultiNumber::NUMBER_TYPE::NUMBER_2D, CScene::OBJTYPE_UI));
+
+			pTimer->m_nCntFlame = m_nClearFlame;
+
+		}
 	}
 
 	pTimer->ChangeNumber();
@@ -128,4 +143,14 @@ std::unique_ptr<CTimer> CTimer::Create(D3DXVECTOR3 const & TimerCenterPos, int c
 
 	//リターン
 	return pTimer;
+}
+
+//------------------------------------------------------------------------------
+//クリアタイム保存
+//------------------------------------------------------------------------------
+void CTimer::SaveClearTime()
+{
+	m_nClearFlame = (DEFAULT_TIMER * 60) - m_nCntFlame;
+
+
 }

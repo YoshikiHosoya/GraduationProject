@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
-#define TIMER_OFFSET_POS			(D3DXVECTOR3(0.0f,-11.0f,0.0f))
+#define TIMER_OFFSET_POS			(D3DXVECTOR3(0.0f,-11.0f,-10.0f))
 #define MISSCOUNTER_OFFSET_POS		(D3DXVECTOR3(-12.0f,15.0f,-20.0f))
 #define MISSCOUNTER_SIZE			(D3DXVECTOR3(10.0f,10.0f,0.0f))
 #define MISSCOUNTER_INTERVAL		(D3DXVECTOR3(18.0f,0.0f,0.0f))
@@ -58,7 +58,7 @@ HRESULT CModule_Timer::Init()
 	CModule_Base::SetCanModuleSelect(false);
 
 	//タイマーの生成
-	m_pTimer = CTimer::Create(TIMER_OFFSET_POS, 360, GetMtxWorldPtr());
+	m_pTimer = CTimer::Create(TIMER_OFFSET_POS, GetMtxWorldPtr(),true);
 
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{

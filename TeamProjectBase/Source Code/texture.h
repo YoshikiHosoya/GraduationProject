@@ -68,6 +68,7 @@ public:
 		TEX_UI_RESULT_CLEAR,					//UI リザルト　クリア
 		TEX_UI_RESULT_FAILED,					//UI リザルト　失敗
 		TEX_UI_RESULT_BAR,						//UI リザルト　バー
+		TEX_UI_RESULT_WINDOW,					//UI リザルト　バー
 		TEX_UI_RESULT_RETRY,					//UI リザルト　リトライ
 		TEX_UI_RESULT_END,						//UI リザルト　終了
 		TEX_UI_RESULT_COMMA,					//UI リザルト　コンマ

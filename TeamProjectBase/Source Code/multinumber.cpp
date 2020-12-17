@@ -174,7 +174,9 @@ S_ptr<CMultiNumber> CMultiNumber::Create(D3DXVECTOR3 const & pos, D3DXVECTOR3 co
 			{
 				//”z—ñ‚É’Ç‰Á
 				//”’l‚Ì•À‚Ô’†S‚ðpos‚Æ‚·‚é
-				//pMultiNumber->m_pNumberList.emplace_back(CScene2D::Create_SelfManagement(pos + D3DXVECTOR3(-onesize.x * (nDigits - 1) * 0.5f + onesize.x * nCnt, 0.0f, 0.0f), onesize, WhiteColor));
+				pMultiNumber->m_pNumberList.emplace_back(CScene3D::ScenePolygonCreateSelfManagement<CScene2D>
+					(D3DXVECTOR3(CHossoLibrary::CalcEvenPosition(nDigits, nCnt, onesize.x), 0.0f, 0.0f), onesize, WhiteColor, CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_NUMBER)));
+				pMultiNumber->m_pNumberList[pMultiNumber->m_pNumberList.size() - 1]->BindTexture(CTexture::GetSeparateTexture(CTexture::SEPARATE_TEX_UI_RESULT_NUMBER));
 			}
 			else if (type == CMultiNumber::NUMBER_TYPE::NUMBER_3D)
 			{

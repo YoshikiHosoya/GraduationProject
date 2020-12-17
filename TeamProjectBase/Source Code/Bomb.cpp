@@ -400,7 +400,7 @@ void CBomb::ModuleClearCheck()
 		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
 
 		//クリアタイム設定
-		//GetModuleTimerPtr()->GetTimerPtr()->
+		GetModuleTimerPtr()->GetTimerPtr()->SaveClearTime();
 	}
 }
 

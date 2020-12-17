@@ -33,11 +33,12 @@ public:
 	void UpdateTimer();															//更新
 	void ChangeNumber();														//ディスプレイの数値更新
 	void ShowDebugInfo();														//デバッグ情報表記
-	static std::unique_ptr<CTimer> Create(D3DXVECTOR3 const &TimerCenterPos,int const nTimer,D3DXMATRIX *pMtx);			//生成処理
+	static std::unique_ptr<CTimer> Create(D3DXVECTOR3 const &TimerCenterPos,D3DXMATRIX *pMtx, bool bGame);			//生成処理
 
 	void SetStop(bool bStop) { m_bStop = bStop; };								//タイマーストップ
-	bool GetStop() { return m_bStop; };											//タイマーストップしてるかどうか
+	void SaveClearTime();														//クリアのフレーム設定
 
+	bool GetStop() { return m_bStop; };											//タイマーストップしてるかどうか
 	static int GetClearFlame() { return m_nClearFlame; };						//クリアタイム
 private:
 	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;									//ナンバーのポインタ

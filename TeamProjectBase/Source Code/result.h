@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 //クラス定義
 //------------------------------------------------------------------------------
-class CScene2D;
+class CUI_Base;
 class CTimer;
 
 class CResult : public CBaseMode
@@ -27,20 +27,53 @@ public:
 	CResult();
 	~CResult();
 
+	enum RESULT_STATE
+	{
+		UP_BAR_IN,
+		RESULT_DISP,
+		UNDER_BAR_IN,
+
+		STAY,
+		SELECT,
+		FADE,
+	};
+
+
+	enum RESULT_POLYGON_TYPE
+	{
+		LOGO = 0,
+		UP_BAR,
+		JUDGE,
+
+		PLAYTIME,
+		SEMICOLON,
+		COMMMA,
+		UNDER_BAR,
+
+		SELECTION_WINDOW,
+		RETRY,
+		END,
+		MAX,
+	};
+
+
+
 	HRESULT Init(HWND hWnd);			//初期化
 	void Update();						//更新
 	void Draw();						//描画
 	void ShowDebugInfo() {};			//デバッグ情報表記
 
+	void UpdateState();
+	void Collision();
+	void SetState(RESULT_STATE state);
+
 private:
-	int m_nCntResult;	//カウンタ
+	int m_nCntState;	//カウンタ
 
+	S_ptr<CTimer> m_pTimer;
+	RESULT_STATE m_state;
 
-	//S_ptr<CScene2D> m_pResultLogo;
-	//S_ptr<CScene2D> m_pResultLogo;
-
-
-
+	Vec<S_ptr<CUI_Base>> m_pPolygonList;
 };
 
 #endif
