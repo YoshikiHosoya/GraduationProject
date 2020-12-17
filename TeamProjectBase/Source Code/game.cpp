@@ -29,6 +29,7 @@
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
 bool CGame::m_bClear = false;
+CBomb::DIFFICULTY CGame::m_bDifficulty = CBomb::EASY;
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -74,7 +75,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CParticleManager::Create();
 
 	//爆弾生成
-	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,200.0f,0.0f), ZeroVector3, CBomb::EASY);
+	m_pBomb	= CBomb::CreateBomb(D3DXVECTOR3(0.0f,200.0f,0.0f), ZeroVector3, m_bDifficulty);
 
 	//モジュール生成
 	m_pBomb->CreateModule();
@@ -94,9 +95,6 @@ HRESULT CGame::Init(HWND hWnd)
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
-	// 受信待ち
-	std::thread threadRecv(CClient::WaitRecieve);
-	threadRecv.detach();
 
 	return S_OK;
 }

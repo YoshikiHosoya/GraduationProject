@@ -70,6 +70,8 @@ int					CChatTab::m_nPressKey = 0;
 CChatText			*CChatTab::m_SendText = nullptr;
 CChatText			*CChatTab::m_leftText = nullptr;
 std::vector<CChatTab::CHATKEEP>	CChatTab::m_chatKeep = {};	// 保持できるテキスト
+CChatTab::TABSTATE	CChatTab::m_tabletState = CChatTab::TABSTATE_CLOSED;
+bool				CChatTab::m_bClickTab = false;
 
 //=============================================================================
 // コンストラクタ
@@ -153,6 +155,35 @@ void CChatTab::ClickTab(void)
 }
 
 //=============================================================================
+// タブレット開閉タブのクリック
+//=============================================================================
+void CChatTab::ClickTabletTab(void)
+{
+	CMouse *pMouse = CManager::GetMouse();
+	D3DXVECTOR2 mousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
+
+	// カラー更新
+	if (m_pChatPoly[POLY_TABLET]->GetCol() != WhiteColor)
+		m_pChatPoly[POLY_TABLET]->SetCol(WhiteColor);
+	//	フラグ解除
+	if (m_bClickTab)
+		m_bClickTab = false;
+
+	if (pMouse->GetTrigger(0) && m_pChatPoly[POLY_TABLET]->ReturnHit(mousePos))
+	{
+		// カラー更新
+		m_pChatPoly[POLY_TABLET]->SetCol(COLOR_TABCLICK);
+
+		m_tabletState == TABSTATE_OPENED ?
+			m_tabletState = TABSTATE_CLOSED :
+			m_tabletState = TABSTATE_OPENED;
+
+		// フラグon
+		m_bClickTab = true;
+	}
+}
+
+//=============================================================================
 // チャットタブのスライド
 //=============================================================================
 void CChatTab::SlideTab(void)
@@ -203,6 +234,7 @@ void CChatTab::SlideTab(void)
 	m_TabPos += m_moveDest;
 	m_pChatPoly[POLY_BACK]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y));
 	m_pChatPoly[POLY_TAB]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y));
+	m_pChatPoly[POLY_TABLET]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y - 100.0f));
 	m_pChatPoly[POLY_TITLE]->SetPos(D3DXVECTOR2(m_TabPos.x, 0.0f));
 	m_pChatPoly[POLY_WRITEWINDOW]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y));
 
@@ -238,7 +270,9 @@ HRESULT CChatTab::Init(void)
 	m_fScrollPosY = 0.0f;
 	m_moveDest = ZeroVector2;
 	m_tabState = TABSTATE_CLOSED;
+	m_tabletState = TABSTATE_CLOSED;
 	m_nCntState = 0;
+	m_bClickTab = false;
 
 	// 背景の生成
 	m_pChatPoly[POLY_BACK] = CPolygon2D::Create();
@@ -266,6 +300,13 @@ HRESULT CChatTab::Init(void)
 	m_pChatPoly[POLY_TAB]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
 	m_pChatPoly[POLY_TAB]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
 	
+	// タブレット開閉の生成
+	m_pChatPoly[POLY_TABLET] = CPolygon2D::Create();
+	m_pChatPoly[POLY_TABLET]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y - 100.0f));
+	m_pChatPoly[POLY_TABLET]->SetSize(SIZE_TABBUTTON);
+	m_pChatPoly[POLY_TABLET]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
+	m_pChatPoly[POLY_TABLET]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABLETOPEN));
+
 	// 送信用テキストの生成
 	m_SendText = CChatText::Create();
 	m_SendText->SetKeepRectBegin(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_SENDTEXT, m_TabPos.y - DIFPOS_Y_SENDTEXT));
@@ -296,6 +337,8 @@ void CChatTab::Update(void)
 	if ((pMouse->GetTrigger(0) && m_pChatPoly[POLY_TAB]->ReturnHit(mousePos)) ||
 		CManager::GetKeyboard()->GetTrigger(DIK_F5))
 		ClickTab();
+
+	ClickTabletTab();
 
 	// マウスによるタブスクロール
 	CMouse::MOUSE_SCROLL scroll = CMouse::GetScroll();
@@ -368,6 +411,9 @@ void CChatTab::Draw(void)
 {
 	if (m_pChatPoly[POLY_TAB])
 		m_pChatPoly[POLY_TAB]->Draw();
+
+	if (m_pChatPoly[POLY_TABLET])
+		m_pChatPoly[POLY_TABLET]->Draw();
 
 	if (m_pChatPoly[POLY_BACK])
 		m_pChatPoly[POLY_BACK]->Draw();

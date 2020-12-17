@@ -41,6 +41,8 @@ public:
 		TEX_CHAT_WRITEWINDOW,					// チャットタブの書き込みウィンドウ
 		TEX_CHAT_TABOPEN,						// チャットタブ (開く)
 		TEX_CHAT_TABCLOSE,						// チャットタブ (閉じる)
+		TEX_CHAT_TABLETOPEN,					// タブレット (開く)
+		TEX_CHAT_TABLETCLOSE,					// タブレット (閉じる)
 		TEX_CHAT_BOX_00,						// チャットボックス00
 		TEX_CHAT_BOX_01,						// チャットボックス01
 		TEX_CHAT_BOX_02,						// チャットボックス02
@@ -52,10 +54,22 @@ public:
 		TEX_CONNECT_CONNECTING,					// 接続中の表記
 		TEX_CONNECT_CONNECTED,					// 接続完了の表記
 		TEX_CONNECT_SELECT_MODE,				// モード選択
+		TEX_CONNECT_SELECT_LEVEL,				// レベル選択
 		TEX_CONNECT_SELECT_REMOVE,				// モード(解除)
-		TEX_CONNECT_SLECT_SOLVE,				// モード(解読)
+		TEX_CONNECT_SELECT_SOLVE,				// モード(解読)
+		TEX_CONNECT_SELECT_EASY,				// イージー
+		TEX_CONNECT_SELECT_NORMAL,				// ノーマル
+		TEX_CONNECT_SELECT_HARD,				// ハード
 		TEX_CONNECT_GUEST_SELECTING,			// ゲストの選択中
 		TEX_CONNECT_GUEST_SELECTED,				// ゲストの選択
+		TEX_CONNECT_DECIDE,						// 決定
+		TEX_CONNECT_COMMENT_REMOVE,				// 解除の説明
+		TEX_CONNECT_COMMENT_SOLVE,				// 解読の説明
+		TEX_CONNECT_COMMENT_EASY,				// イージーの説明
+		TEX_CONNECT_COMMENT_NORMAL,				// ノーマル野説明
+		TEX_CONNECT_COMMENT_HARD,				// ハードの説明
+		TEX_CONNECT_CAUTION_MODE,				// モード選択時の注意
+		TEX_CONNECT_CAUTION_LEVEL,				// レベル選択時の注意
 
 		TEX_UI_PRESSBUTTON,						//UI プレス
 

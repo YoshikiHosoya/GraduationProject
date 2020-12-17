@@ -243,7 +243,8 @@ int CHash::GetHashValue(char *pKey)
 #else
 	for (; *pKey != '\0'; pKey++)
 	{
-		nHashval = (int)*pKey;
+		// ハッシュ値に代入
+		nHashval += *pKey;
 	}
 
 	// ハッシュ値をサイズの余剰を返す
@@ -274,7 +275,7 @@ int CHash::StrAllocAndCopy(char **pOut, char *pSource)
 		return MYLIB_FAILURE;
 	}
 	// 文字列のコピー(失敗した時エラーを返す)
-	if (strncpy(*pOut, pSource, nLength) == NULL)
+	if (strcmp(pSource, strncpy(*pOut, pSource, nLength)) != 0)
 	{
 		return MYLIB_FAILURE;
 	}

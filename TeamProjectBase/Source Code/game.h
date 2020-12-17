@@ -11,6 +11,8 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "basemode.h"
+#include "Bomb.h"
+
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
@@ -66,6 +68,7 @@ public:
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
 
 	static bool GetClearFlag() { return m_bClear; };			//クリアフラグ取得
+	static void SetDifficulty(CBomb::DIFFICULTY Diff) { m_bDifficulty = Diff; }	// 難易度の設定
 protected:
 
 private:
@@ -78,6 +81,7 @@ private:
 	S_ptr<CTablet>   m_pTablet;								// タブレットポインタ
 
 	static bool m_bClear;									//クリアフラグ
+	static CBomb::DIFFICULTY m_bDifficulty;					// ゲームの難易度
 };
 
 #endif

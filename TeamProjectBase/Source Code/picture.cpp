@@ -213,6 +213,27 @@ void CPicture::Draw()
 }
 
 //-------------------------------------------------------------------------------------------------------------
+// タブレットの取得
+//-------------------------------------------------------------------------------------------------------------
+CTablet * CPicture::GetTablet(void)
+{
+	// 変数宣言
+	CGame *pGame = CManager::GetGame();				// ゲームの取得
+	CDecoding *pDecoding = CManager::GetDecoding();	// 解読の取得
+
+	if (pGame)
+	{
+		return pGame->GetTablet();
+	}
+	else if (pDecoding)
+	{
+		return pDecoding->GetTablet();
+	}
+
+	return nullptr;
+}
+
+//-------------------------------------------------------------------------------------------------------------
 // 生成
 //-------------------------------------------------------------------------------------------------------------
 std::shared_ptr<CPicture> CPicture::Create(D3DMATRIX *pMtxParent)
@@ -417,6 +438,12 @@ void CPicture::ReleasePen(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::PaintProc(void)
 {
+	// タブレットが通常状態じゃない時
+	if (this->GetTablet()->GetMode() != CTablet::MODE_NORMAL)
+	{// 処理を抜ける
+		return;
+	}
+
 	// 絵上の位置の取得
 	if (GetMousePosOnPicture() == false)
 	{// 取得失敗

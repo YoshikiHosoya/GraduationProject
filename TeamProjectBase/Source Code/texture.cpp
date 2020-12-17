@@ -29,6 +29,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CHAT/chatTab_writeWindow.png" },			// チャットタブの書き込みウィンドウ
 	{ "data/TEXTURE/CHAT/chatTab_open.png" },					// チャットタブ (開く)
 	{ "data/TEXTURE/CHAT/chatTab_close.png" },					// チャットタブ (閉じる)
+	{ "data/TEXTURE/CHAT/chatTab_TabOpen.png" },				// タブレット (開く)
+	{ "data/TEXTURE/CHAT/chatTab_TabClose.png" },				// タブレット (閉じる)
 	{ "data/TEXTURE/CHAT/chatBox00.png" },						// チャットボックス00
 	{ "data/TEXTURE/CHAT/chatBox01.png" },						// チャットボックス01
 	{ "data/TEXTURE/CHAT/chatBox02.png" },						// チャットボックス02
@@ -40,11 +42,22 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CONNECTMODE/connecting.png" },				// 接続中の表記
 	{ "data/TEXTURE/CONNECTMODE/connected.png" },				// 接続完了の表記
 	{ "data/TEXTURE/CONNECTMODE/select_mode.png" },				// モード選択
+	{ "data/TEXTURE/CONNECTMODE/select_level.png" },			// レベル選択
 	{ "data/TEXTURE/CONNECTMODE/mode_remove.png" },				// モード(解除)
 	{ "data/TEXTURE/CONNECTMODE/mode_solve.png" },				// モード(解読)
+	{ "data/TEXTURE/CONNECTMODE/level_easy.png" },				// レベル(イージー)
+	{ "data/TEXTURE/CONNECTMODE/level_normal.png" },			// レベル(ノーマル)
+	{ "data/TEXTURE/CONNECTMODE/level_hard.png" },				// レベル(ハード)
 	{ "data/TEXTURE/CONNECTMODE/selecting.png" },				// ゲストの選択中
 	{ "data/TEXTURE/CONNECTMODE/selected.png" },				// ゲストの選択
-
+	{ "data/TEXTURE/CONNECTMODE/decide.png" },					// 決定
+	{ "data/TEXTURE/CONNECTMODE/comment_remove.png" },			// 解除の説明
+	{ "data/TEXTURE/CONNECTMODE/comment_solve.png" },			// 解読の説明
+	{ "data/TEXTURE/CONNECTMODE/comment_easy.png" },			// イージーの説明
+	{ "data/TEXTURE/CONNECTMODE/comment_normal.png" },			// ノーマル野説明
+	{ "data/TEXTURE/CONNECTMODE/comment_hard.png" },			// ハードの説明
+	{ "data/TEXTURE/CONNECTMODE/caution_mode.png" },			// モード選択時の注意
+	{ "data/TEXTURE/CONNECTMODE/caution_level.png" },			// レベル選択時の注意
 
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 

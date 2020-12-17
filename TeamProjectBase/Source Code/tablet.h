@@ -24,6 +24,7 @@ public:
 	typedef enum
 	{
 		MODE_NONE = -1,				// 無し
+		MODE_NEUTRAL,				// ニュートラル状態
 		MODE_NORMAL,				// 通常
 		MODE_MOVEING,				// 移動
 		MODE_MAX					// 最大
@@ -66,6 +67,7 @@ public:
 	void                 MoveingProc(void);																							// 移動処理
 	void                 ConstantVelocityProc(void);																				// 等速処理
 	void                 NonConstantVelocityProc(void);																				// 不等速処理
+	void                 VelocityProcModeChange(void);																				// モードチェンジ
 
 	// 生成
 	static std::shared_ptr<CTablet> Create(void);																					// 生成
@@ -91,6 +93,7 @@ public:
 	inline D3DXVECTOR3 * GetSetingPosDestPtr(const int nIndex) { return (nIndex <= -1) ? &m_aSetingPosDest[nIndex] : nullptr; }
 private:
 	/* メンバ関数 */
+	void                 SetPosFromChattabInfo(void);																				// チャットタブの情報から位置を設定する
 	static void          ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);					// 一行から読み込む
 	static void          SetFromString(CONST_STRING str);																			// 文字列から設定する
 
