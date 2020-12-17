@@ -299,7 +299,7 @@ HRESULT CChatTab::Init(void)
 	m_pChatPoly[POLY_TAB]->SetSize(SIZE_TABBUTTON);
 	m_pChatPoly[POLY_TAB]->SetPosStart(CPolygon2D::POSSTART_BOTTOM_RIGHT);
 	m_pChatPoly[POLY_TAB]->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_TABOPEN));
-	
+
 	// タブレット開閉の生成
 	m_pChatPoly[POLY_TABLET] = CPolygon2D::Create();
 	m_pChatPoly[POLY_TABLET]->SetPos(D3DXVECTOR2(m_TabPos.x, m_TabPos.y - 100.0f));
@@ -325,7 +325,7 @@ HRESULT CChatTab::Init(void)
 //=============================================================================
 void CChatTab::Update(void)
 {
-	CMouse *pMouse = CManager::GetMouse();	
+	CMouse *pMouse = CManager::GetMouse();
 	CKeyboard *pKey = CManager::GetKeyboard();
 	D3DXVECTOR2 mousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
 
@@ -334,7 +334,7 @@ void CChatTab::Update(void)
 		SlideTab();
 
 	// 左クリックかF5でタブの開閉処理
-	if ((pMouse->GetTrigger(0) && m_pChatPoly[POLY_TAB]->ReturnHit(mousePos)) ||
+	if ((pMouse->GetTrigger(0) && CheckMouseHit(POLY_TAB))  ||
 		CManager::GetKeyboard()->GetTrigger(DIK_F5))
 		ClickTab();
 
@@ -353,7 +353,7 @@ void CChatTab::Update(void)
 		if (m_pChatPoly[nCnt])
 			m_pChatPoly[nCnt]->Update();
 	}
-	
+
 	float fAllChatSize = DIFPOS_Y_TEXTBOX;
 
 	// チャット履歴の更新
@@ -481,7 +481,7 @@ void CChatTab::InputText(void)
 	}
 
 	// 文字列の送信
-	if ((pKey->GetTrigger(DIK_RETURN) || pKey->GetTrigger(DIK_NUMPADENTER)) && 
+	if ((pKey->GetTrigger(DIK_RETURN) || pKey->GetTrigger(DIK_NUMPADENTER)) &&
 		m_SendText->GetChatText().size() > 0)
 	{
 		SendChatText();
@@ -659,6 +659,15 @@ void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 	// 古いほうから削除
 	if (nNumber >= MAX_KEEPTEXT)
 		m_chatKeep.erase(m_chatKeep.begin());
+}
+
+//==========================================================================================================================================================
+// マウスに当たったかどうかチェック
+//==========================================================================================================================================================
+bool CChatTab::CheckMouseHit(POLYTYPE polygon)
+{
+	return 	m_pChatPoly[polygon]->ReturnHit(CManager::GetMouse()->GetMousePos());
+
 }
 
 //==========================================================================================================================================================

@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "keyboard.h"
 #include "game.h"
+#include "chatTab.h"
 #include "Map.h"
 #include "mouse.h"
 //-----------------------------------------------------------------------------
@@ -19,6 +20,7 @@
 #define CAMERA_VERTICAL_ROTATION	(0.02f)			//カメラの縦回転
 #define DEFAULT_POS_R				(D3DXVECTOR3(0.0f,200.0f,0.0f))
 
+#define SLIDE_POS_VALUE				(D3DXVECTOR3(120.0f,0.0f,0.0f))
 
 #define DEFAULT_DISTANCE			(500.0f)		//カメラの距離
 #define APPROACH_DISTANCE			(300.0f)		//カメラの距離
@@ -298,12 +300,29 @@ void CCamera::CalcRotationCamera()
 	//	注視点の更新
 	---------------------------------------------*/
 	// 注視点の行く先の更新
-	m_posRDest.x;
-	m_posRDest.y;
-	m_posRDest.z;
+
+	//横にずれる座標
+	D3DXVECTOR3 LocalPos = m_posRDest;
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "TabState >> %d\n", CChatTab::GetTabState());
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "TabletState >> %d\n", CChatTab::GetTabletState());
+
+
+	if (CManager::GetMode() == CManager::MODE_GAME)
+	{
+		//チャットかタブレットを開いている時
+		if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED ||
+			CChatTab::GetTabState() == CChatTab::TABSTATE_OPENED ||
+			CChatTab::GetTabState() == CChatTab::TABSTATE_OPENNING)
+
+		{
+			//スライド座標
+			LocalPos += SLIDE_POS_VALUE;
+		}
+	}
 
 	// 注視点の更新
-	m_posR += (m_posRDest - m_posR) * 0.15f;
+	m_posR += (LocalPos - m_posR) * 0.15f;
 }
 
 //-----------------------------------------------------------------------------

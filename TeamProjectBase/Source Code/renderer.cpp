@@ -438,6 +438,9 @@ void CRenderer::ResetRenderer()
 	//シーンの一時停止とか解除
 	CScene::SetStop(false);
 
+	//デフォルトのライト設定
+	m_pLight->SetDefaultLight();
+
 	//レンダラー設定
 	SetRendererCommand(CRenderer::RENDERER_LIGHTING_ON);
 	SetRendererCommand(CRenderer::RENDERER_CULLING_CCW);

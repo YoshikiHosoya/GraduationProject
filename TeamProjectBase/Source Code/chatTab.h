@@ -87,6 +87,9 @@ public:
 	static void			ScrollDown(void);														// チャット履歴の下スクロール
 	static void			CreateKeep(CChatBase::TEXTOWNER owner, char *cText);					// チャットキープの生成
 
+	CPolygon2D *GetChatPly(POLYTYPE polygon) { m_pChatPoly[polygon]; };
+	bool CheckMouseHit(POLYTYPE polygon);
+
 private:
 	void		ClickTab(void);											// タブクリック
 	void		ClickTabletTab(void);									// タブクリック

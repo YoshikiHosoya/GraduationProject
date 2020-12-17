@@ -66,6 +66,7 @@ public:
 	CBomb *GetBombPtr() { return m_pBomb.get(); };			//ボムのポインタ取得
 	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
+	CChatBase *GetChatBase() { return m_pChatBase.get(); };	// チャットベースポインタ取得
 
 	static bool GetClearFlag() { return m_bClear; };			//クリアフラグ取得
 	static void SetDifficulty(CBomb::DIFFICULTY Diff) { m_bDifficulty = Diff; }	// 難易度の設定

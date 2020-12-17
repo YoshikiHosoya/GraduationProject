@@ -44,6 +44,7 @@ public:
 	virtual void ShowDebugInfo() {};		//デバッグ情報表記
 
 	static std::shared_ptr<CChatBase> Create(void);	// 生成
+	CChatTab *GetTabPtr() { return m_pTab; };
 
 private:
 	CChatTab *m_pTab;	// タブのポインタ

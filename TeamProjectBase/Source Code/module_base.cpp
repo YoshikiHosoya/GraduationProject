@@ -19,6 +19,7 @@
 #include "Bomb.h"
 #include "game.h"
 #include "sound.h"
+#include "chatTab.h"
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
@@ -90,11 +91,16 @@ void CModule_Base::Operation_Mouse()
 		//もしモジュール内をクリックしていなかった場合
 		if (!CHossoLibrary::MouseRayCollision_Boolean(GetMtxWorldPtr(), GetModelInfo()->GetMesh()))
 		{
-			//モジュールの選択解除
-			ModuleCancel();
+			//チャットタブらへんをクリックしていない時
+			if (!(CManager::GetGame()->GetChatBase()->GetTabPtr()->CheckMouseHit(CChatTab::POLY_TABLET) ||
+				CManager::GetGame()->GetChatBase()->GetTabPtr()->CheckMouseHit(CChatTab::POLY_TAB)))
+			{
+				//モジュールの選択解除
+				ModuleCancel();
 
-			//ゲームの視点変更
-			CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+				//ゲームの視点変更
+				CManager::GetGame()->SetGaze(CGame::GAZE_BOMB);
+			}
 		}
 	}
 

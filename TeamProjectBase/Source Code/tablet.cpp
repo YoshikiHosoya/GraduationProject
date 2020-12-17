@@ -394,7 +394,7 @@ void CTablet::SetPosFromChattabInfo(void)
 			}
 			else
 			{
-				
+
 				this->SetDestinationProc(m_aSetingPosDest[SET_GAME] + CManager::GetRenderer()->GetCamera()->GetCameraPosV());
 			}
 		ML_CASEEND;
