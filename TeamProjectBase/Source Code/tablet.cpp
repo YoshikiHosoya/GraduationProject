@@ -127,55 +127,16 @@ HRESULT CTablet::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CTablet::Update()
 {
-	// ゲームモードの取得
-	CManager::MODE ManaMode = CManager::GetMode();
-
-	switch (ManaMode)
-	{
-		ML_CASE(CManager::MODE_DECODING)
-		{
-			if (CChatTab::GetTabClick())
-			{
-				if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
-				{
-					this->SetDestinationProc(m_aSetingPosDest[SET_DECODING_NEUT]);
-				}
-				else
-				{
-					this->SetDestinationProc(m_aSetingPosDest[SET_DECODING]);
-				}
-			}
-		}
-		ML_CASE(CManager::MODE_GAME)
-		{
-			if (CChatTab::GetTabClick())
-			{
-				if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
-				{
-					this->SetDestinationProc(m_aSetingPosDest[SET_GAME_NEUT]);
-				}
-				else
-				{
-					this->SetDestinationProc(m_aSetingPosDest[SET_GAME]);
-				}
-			}
-		}
-		ML_CASEEND
-	}
-	
+	// チャットタブから位置を設定する
+	SetPosFromChattabInfo();
 
 	// モード別の処理
 	switch (m_mode)
 	{
 		ML_CASE(MODE_NORMAL)  NormalProc();		// 通常処理
 		ML_CASE(MODE_MOVEING) MoveingProc();	// 移動処理
-		ML_CASEEND								// ケース終了
+		ML_CASEEND;								// ケース終了
 	}
-
-	//if (CManager::GetKeyboard()->GetTrigger(DIK_M))
-	//{
-	//	this->SetDestinationProc(D3DXVECTOR3(0.0f, 0.0f, -300.0f));
-	//}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -395,6 +356,49 @@ void CTablet::SetDestinationProc(CONST D3DXVECTOR3 & posDest)
 	}
 	// 移動量を設定
 	m_move = (m_posDest - pos) / (float)m_nDestFrame;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// チャットタブの情報から位置を設定する
+//-------------------------------------------------------------------------------------------------------------
+void CTablet::SetPosFromChattabInfo(void)
+{
+	// ゲームモードの取得
+	CManager::MODE ManaMode = CManager::GetMode();
+
+	// クリックされたとき
+	if (!CChatTab::GetTabClick())
+	{
+		return;
+	}
+	// ゲームモー別
+	switch (ManaMode)
+	{
+		// 解読側の時
+		ML_CASE(CManager::MODE_DECODING)
+			// 閉じている時
+			if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+			{
+				this->SetDestinationProc(m_aSetingPosDest[SET_DECODING_NEUT]);
+			}
+			else
+			{
+				this->SetDestinationProc(m_aSetingPosDest[SET_DECODING]);
+			}
+		// ゲームの時
+		ML_CASE(CManager::MODE_GAME)
+			// 閉じている時
+			if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+			{
+				this->SetDestinationProc(m_aSetingPosDest[SET_GAME_NEUT]);
+			}
+			else
+			{
+				
+				this->SetDestinationProc(m_aSetingPosDest[SET_GAME] + CManager::GetRenderer()->GetCamera()->GetCameraPosV());
+			}
+		ML_CASEEND;
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------

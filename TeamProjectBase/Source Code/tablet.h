@@ -93,6 +93,7 @@ public:
 	inline D3DXVECTOR3 * GetSetingPosDestPtr(const int nIndex) { return (nIndex <= -1) ? &m_aSetingPosDest[nIndex] : nullptr; }
 private:
 	/* メンバ関数 */
+	void                 SetPosFromChattabInfo(void);																				// チャットタブの情報から位置を設定する
 	static void          ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);					// 一行から読み込む
 	static void          SetFromString(CONST_STRING str);																			// 文字列から設定する
 
