@@ -187,7 +187,7 @@ void CTitle::SetState(STATE state)
 		break;
 	case CTitle::STATE_FADE:
 		//チュートリアルに遷移
-		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
+		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_CONNECT_SERVER);
 		SetState(STATE_NONE);
 		break;
 
