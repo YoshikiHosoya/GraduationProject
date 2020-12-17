@@ -37,6 +37,7 @@ public:
 
 	void DrawMesh_SetMaterial(D3DXCOLOR col, bool bAllCol, Vec<int> const&ChangeColMatNum = {});	//引数の色に応じたマテリアルで描画
 
+	void SetTextureNum(Vec<int> const &TexNumVec) { m_TexNumber = TexNumVec; };			//テクスチャ番号設定
 
 	void SetSelect(bool Select) { m_bSelecting = Select; };								//選択しているか設定
 	void SetCanModuleSelect(bool bSelect) { m_bCanSelect = bSelect; };					//選択可能かどうか
@@ -57,5 +58,7 @@ private:
 	bool m_bCanSelect;																	//選択可能かどうか
 
 	bool m_bEmissive;																	//自発光がＯＮかどうか
+
+	Vec<int> m_TexNumber;																//テクスチャ番号
 };
 #endif

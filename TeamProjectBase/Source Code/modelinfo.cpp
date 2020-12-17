@@ -48,7 +48,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/Tablet/TabletButton.x" ,									MODEL_TABLET_BUTTON },								// タブレットボタン
 
 	//背景
-	{ "data/MODEL/Tablet/TabletButton.x" ,									MODEL_BACKGROUND },									// タブレットボタン
+	{ "data/MODEL/BackGround/Bg.x" ,										MODEL_BG },									// タブレットボタン
+	{ "data/MODEL/BackGround/Bg_Desk.x" ,										MODEL_BG_TABLE },									// タブレットボタン
 
 };
 

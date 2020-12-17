@@ -113,10 +113,10 @@ void CResult::UpdateState()
 	case CResult::RESULT_DISP:
 		if (m_nCntState < 0)
 		{
-			SetState(UNDER_BAR_IN);
+			SetState(PLAYTIME_DISP);
 		}
 		break;
-	case CResult::UNDER_BAR_IN:
+	case CResult::PLAYTIME_DISP:
 		if (m_nCntState < 0)
 		{
 			SetState(STAY);
@@ -184,6 +184,11 @@ void CResult::SetState(RESULT_STATE state)
 			CUI_Base::Create(D3DXVECTOR3(640.0f, 150.0f, 0.0f), D3DXVECTOR3(1300.0f, 5.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_BAR), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::RIGHT_TO_CENTER, 60));
 		m_nCntState = 60;
 
+		//バー
+		m_pPolygonList.emplace_back(
+			CUI_Base::Create(D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR3(1300.0f, 5.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_BAR), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::RIGHT_TO_CENTER, 60));
+		m_nCntState = 60;
+
 		break;
 	case CResult::RESULT_DISP:
 		//クリアしたか
@@ -195,48 +200,47 @@ void CResult::SetState(RESULT_STATE state)
 
 
 		break;
-	case CResult::UNDER_BAR_IN:
-		//バー
-		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR3(1300.0f, 5.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_BAR), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::RIGHT_TO_CENTER, 60));
+
+	case CResult::PLAYTIME_DISP:
 		m_nCntState = 60;
 
-		break;
-	case CResult::STAY:
 		//プレイタイム
 		m_pPolygonList.emplace_back(
 			CUI_Base::Create(D3DXVECTOR3(450.0f, 500.0f, 0.0f), D3DXVECTOR3(300.0f, 100.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_TIMER), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+
+		break;
+
+
+	case CResult::STAY:
+		//タイマー
 		m_pTimer = CTimer::Create(D3DXVECTOR3(900.0f, 500.0f, 0.0f), nullptr, false);
 
 		//セミコロン
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(855.0f, 500.0f, 0.0f), D3DXVECTOR3(40.0f, 55.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_SEMICOLON), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+			CUI_Base::Create(D3DXVECTOR3(855.0f, 500.0f, 0.0f), D3DXVECTOR3(40.0f, 55.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_SEMICOLON), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
 
 		//コンマ
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(930.0f, 520.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_COMMA), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+			CUI_Base::Create(D3DXVECTOR3(930.0f, 520.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_COMMA), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
 
 		break;
 	case CResult::SELECT:
 
 		//ウィンドウ
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(SCREEN_CENTER_POS, D3DXVECTOR3(400.0f, 500.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_WINDOW), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+			CUI_Base::Create(SCREEN_CENTER_POS, D3DXVECTOR3(400.0f, 500.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_WINDOW), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 20));
 
 		//リトライ
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(640.0f, 260.0f, 0.0f), D3DXVECTOR3(300.0f, 150.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_RETRY), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+			CUI_Base::Create(D3DXVECTOR3(640.0f, 260.0f, 0.0f), D3DXVECTOR3(300.0f, 150.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_RETRY), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 20));
 
 		//エンド
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(640.0f, 460.0f, 0.0f), D3DXVECTOR3(300.0f, 150.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_END), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 60));
+			CUI_Base::Create(D3DXVECTOR3(640.0f, 460.0f, 0.0f), D3DXVECTOR3(300.0f, 150.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_END), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::TRANSPARENT_TO_APPEAR, 20));
 
-
-
-
-		break;
 	case CResult::FADE:
 		break;
+
 	default:
 		break;
 	}

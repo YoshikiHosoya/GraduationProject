@@ -31,8 +31,7 @@ public:
 	{
 		UP_BAR_IN,
 		RESULT_DISP,
-		UNDER_BAR_IN,
-
+		PLAYTIME_DISP,
 		STAY,
 		SELECT,
 		FADE,

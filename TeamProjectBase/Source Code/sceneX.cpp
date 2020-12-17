@@ -36,7 +36,7 @@ CSceneX::CSceneX()
 	m_bSelecting = false;
 	m_bEmissive = false;
 	m_bCanSelect = true;
-
+	m_TexNumber = {};
 	//総数加算
 	m_nNumSceneX++;
 }
@@ -126,6 +126,21 @@ void CSceneX::DrawMesh()
 			continue;
 		}
 
+		//テクスチャが無い場合
+		if (!m_TexNumber.empty())
+		{
+			//テクスチャの数とマテリアル数比較
+			if (nCntMat < (int)m_TexNumber.size())
+			{
+				//テクスチャの設定
+				pDevice->SetTexture(0, CTexture::GetTexture(CTexture::TEX_TYPE(m_TexNumber[nCntMat])));
+			}
+		}
+		else
+		{
+			//テクスチャなし
+			pDevice->SetTexture(0, NULL);
+		}
 		// マテリアルの設定
 		pDevice->SetMaterial(&DrawMat);
 
