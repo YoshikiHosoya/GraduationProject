@@ -95,9 +95,6 @@ HRESULT CGame::Init(HWND hWnd)
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();
-	// 受信待ち
-	std::thread threadRecv(CClient::WaitRecieve);
-	threadRecv.detach();
 
 	return S_OK;
 }

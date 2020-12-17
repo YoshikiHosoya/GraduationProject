@@ -162,6 +162,11 @@ int CClient::ConnectServer(void)
 #endif
 		m_bAccept = true;
 	}
+	
+
+	// 受信待ち
+	std::thread threadRecv(CClient::WaitRecieve);
+	threadRecv.detach();
 
 	return 0;
 }
@@ -189,6 +194,11 @@ void CClient::WaitRecieve(void)
 			continue;
 		}
 
+		if (cData[0] == ORDER_GUEST_BE_ACCEPT)
+		{
+			printf("ゲストとの接続を確認\n");
+			m_bAcceptOther = true;
+		}
 		// テキスト受信
 		if (cData[0] == ORDER_SENDTEXT)
 		{
@@ -198,6 +208,11 @@ void CClient::WaitRecieve(void)
 		if (cData[0] == ORDER_SENDPICTURE)
 		{
 			RecvPicture(cData);
+		}
+		// 選択受信
+		if (cData[0] == ORDER_SENDSELECT)
+		{
+			RecvSelect(cData);
 		}
 		// 待ち状態受信
 		if (cData[0] == ORDER_SENDWAIT)
@@ -212,6 +227,9 @@ void CClient::WaitRecieve(void)
 // ===================================================================
 HRESULT CClient::InitClient(void)
 {
+	m_bAccept = false;
+	m_bAcceptOther = false;
+
 	WSADATA wsaData;	// winsockのデータ
 
 	// サーバ・クライアント共通で開始時のみ、必ず行う
@@ -486,23 +504,42 @@ void CClient::RecvPicture(char *data)
 }
 
 // ===================================================================
-// 待ち状態の送信
+// 選択の送信
 // ===================================================================
-void CClient::SendWait(int nSelect)
+void CClient::SendSelect(int nSelect)
 {
 	char buffer[2];
 
-	// 待ち状態命令
-	buffer[0] = ORDER_SENDWAIT;
+	// 選択送信命令
+	buffer[0] = ORDER_SENDSELECT;
 	buffer[1] = nSelect;
-
-#ifdef _DEBUG
-	// 送信をデバッグで表示
-	printf("待ち状態を送信\n");
-#endif
 
 	// 送信
 	send(m_socket, buffer, 2, 0);
+}
+
+// ===================================================================
+// 選択の受信
+// ===================================================================
+void CClient::RecvSelect(char *data)
+{
+	int *pSelect = (int*)&data[1];
+	// 選択を格納
+	CConnectUI::RecvGuestSelect(*pSelect);
+}
+
+// ===================================================================
+// 待ち状態の送信
+// ===================================================================
+void CClient::SendWait(void)
+{
+	char buffer[1];
+
+	// 待ち状態命令
+	buffer[0] = ORDER_SENDWAIT;
+
+	// 送信
+	send(m_socket, buffer, 1, 0);
 }
 
 // ===================================================================
@@ -510,13 +547,7 @@ void CClient::SendWait(int nSelect)
 // ===================================================================
 void CClient::RecvWait(void)
 {
-#ifdef _DEBUG
-	// 受信をデバッグで表示
-	printf("待ち状態を受信\n");
-#endif
-
-	// 待ち状態を有効にする
-	CConnectUI::EnableGuestWait();
+	CConnectUI::RecvGuestWait();
 }
 
 #ifdef _DEBUG

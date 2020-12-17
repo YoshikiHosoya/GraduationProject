@@ -314,6 +314,107 @@ void CConnectUI::SetOnlyInfo(CONST_STRING str, CONST_STRING type)
 	}
 }
 
+#ifdef _DEBUG
+//=============================================================================
+// デバッグコマンド
+//=============================================================================
+void CConnectUI::DebugCommand(void)
+{
+	if (m_flow == CONNECTFLOW_CONNECTING)
+	{
+		// 手動でゲストの接続完了
+		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+		{
+			if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+				m_bConnect[PLAYER_ONE] = true;
+			if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+				m_bConnect[PLAYER_TWO] = true;
+		}
+	}
+	// モード選択
+	if (m_flow == CONNECTFLOW_SELECT_MODE)
+	{
+		// 通常
+		if (m_state == FLOWSTATE_NORMAL)
+		{
+			// 手動でゲストのモード設定
+			if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			{
+				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+					SetGuestMode(SELECTMODE_REMOVE);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+					SetGuestMode(SELECTMODE_SOLVE);
+			}
+		}
+		else if (m_state == FLOWSTATE_WAIT)
+		{
+			// 手動でゲストのモード設定
+			if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			{
+				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+					SetGuestMode(SELECTMODE_REMOVE);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+					SetGuestMode(SELECTMODE_SOLVE);
+			}
+
+			if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
+				CManager::GetKeyboard()->GetTrigger(DIK_3))
+			{
+				// 強制書き換え
+				m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE ?
+					m_nSelectMode[PLAYER_TWO] = SELECTMODE_SOLVE :
+					m_nSelectMode[PLAYER_TWO] = SELECTMODE_REMOVE;
+				// 次へ
+				m_state = FLOWSTATE_END;
+			}
+		}
+	}
+	else if (m_flow == CONNECTFLOW_SELECT_LEVEL)
+	{
+		if (m_state == FLOWSTATE_NORMAL)
+		{
+			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			{
+				// 手動でゲストのモード設定
+				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+					SetGuestLevel(SELECTLEVEL_EASY);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+					SetGuestLevel(SELECTLEVEL_NORMAL);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+					SetGuestLevel(SELECTLEVEL_HARD);
+			}
+			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
+			{
+				// 手動でゲストが承認
+				if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+					m_bGuestWait = true;
+			}
+		}
+		else if (m_state == FLOWSTATE_WAIT)
+		{
+			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			{
+				// 手動でゲストの難易度設定
+				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+					SetGuestLevel(SELECTLEVEL_EASY);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+					SetGuestLevel(SELECTLEVEL_NORMAL);
+				else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+					SetGuestLevel(SELECTLEVEL_HARD);
+				// 難易度が選択されていれば、手動でゲーム開始
+				if (m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE && CManager::GetKeyboard()->GetTrigger(DIK_4))
+					m_state = FLOWSTATE_END;
+			}
+			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
+			{
+				if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+					m_bGuestWait = true;
+			}
+		}
+	}
+}
+#endif
+
 //=============================================================================
 // 1P2P毎に使うUI生成
 //=============================================================================
@@ -386,6 +487,10 @@ void CConnectUI::DeleteOnlyUI(CONNECTUITYPE_ONLY type)
 //=============================================================================
 void CConnectUI::Connecting(void)
 {
+#ifdef _DEBUG
+	DebugCommand();
+#endif
+
 	if (FLOWSTATE_BEGIN == m_state)
 	{
 		// フロー開始
@@ -398,17 +503,6 @@ void CConnectUI::Connecting(void)
 		End(CONNECTFLOW_CONNECTING);
 		return;
 	}
-
-#ifdef _DEBUG
-	// 手動でゲストの接続完了
-	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
-	{
-		if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-			m_bConnect[PLAYER_ONE] = true;
-		if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-			m_bConnect[PLAYER_TWO] = true;
-	}
-#endif
 
 	// 接続されているか確認
 	CheckConnect();
@@ -485,6 +579,9 @@ void CConnectUI::Connected(void)
 //=============================================================================
 void CConnectUI::SelectMode(void)
 {
+#ifdef _DEBUG
+	DebugCommand();
+#endif
 	if (FLOWSTATE_BEGIN == m_state)
 	{
 		// フロー開始
@@ -501,17 +598,6 @@ void CConnectUI::SelectMode(void)
 		Wait(CONNECTFLOW_SELECT_MODE);
 		return;
 	}
-
-#ifdef _DEBUG
-	// 手動でゲストのモード設定
-	if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
-	{
-		if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-			SetGuestMode(SELECTMODE_REMOVE);
-		else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-			SetGuestMode(SELECTMODE_SOLVE);
-	}
-#endif
 
 	// ボタンのアニメーション
 	ButtonAnim();
@@ -535,7 +621,11 @@ void CConnectUI::SelectMode(void)
 			// アニメーションを設定
 			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_nSelectMode[PLAYER_ONE] = SELECTMODE_REMOVE;
+			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_REMOVE)
+			{
+				m_nSelectMode[PLAYER_ONE] = SELECTMODE_REMOVE;
+				CClient::SendSelect(m_nSelectMode[PLAYER_ONE]);
+			}
 		}
 	}
 	else
@@ -559,7 +649,11 @@ void CConnectUI::SelectMode(void)
 		{
 			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_nSelectMode[PLAYER_ONE] = SELECTMODE_SOLVE;
+			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_SOLVE)
+			{
+				m_nSelectMode[PLAYER_ONE] = SELECTMODE_SOLVE;
+				CClient::SendSelect(m_nSelectMode[PLAYER_ONE]);
+			}
 		}
 	}
 	else
@@ -583,6 +677,10 @@ void CConnectUI::SelectMode(void)
 //=============================================================================
 void CConnectUI::SelectLevel(void)
 {
+#ifdef _DEBUG
+	DebugCommand();
+#endif
+
 	if (FLOWSTATE_BEGIN == m_state)
 	{
 		Begin(CONNECTFLOW_SELECT_LEVEL);
@@ -624,7 +722,11 @@ void CConnectUI::SelectLevel(void)
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_EASY;
+				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_EASY)
+				{
+					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_EASY;
+					CClient::SendSelect(m_nSelectLevel[PLAYER_ONE]);
+				}
 			}
 		}
 		else
@@ -649,7 +751,11 @@ void CConnectUI::SelectLevel(void)
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_NORMAL;
+				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_NORMAL)
+				{
+					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_NORMAL;
+					CClient::SendSelect(m_nSelectLevel[PLAYER_ONE]);
+				}
 			}
 		}
 		else
@@ -674,7 +780,11 @@ void CConnectUI::SelectLevel(void)
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
 				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_HARD;
+				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_HARD)
+				{
+					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_HARD;
+					CClient::SendSelect(m_nSelectLevel[PLAYER_ONE]);
+				}
 			}
 		}
 		else
@@ -702,18 +812,6 @@ void CConnectUI::SelectLevel(void)
 	}
 	else
 	{
-#ifdef _DEBUG
-		// 手動でゲストのモード設定
-		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
-		{
-			if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-				SetGuestLevel(SELECTLEVEL_EASY);
-			else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-				SetGuestLevel(SELECTLEVEL_NORMAL);
-			else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
-				SetGuestLevel(SELECTLEVEL_HARD);
-		}
-#endif
 		if (!m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
 		{
 			// 決定ボタンを生成
@@ -844,10 +942,35 @@ void CConnectUI::SetGuestLevel(SELECTLEVEL level)
 }
 
 //=============================================================================
+// ゲストの選択を処理
+//=============================================================================
+void CConnectUI::RecvGuestSelect(int nSelect)
+{
+	printf("ゲストから選択を受信\n");
+	// モード別で選択
+	if (m_flow == CONNECTFLOW_SELECT_MODE)
+		SetGuestMode((SELECTMODE)nSelect);
+	if (m_flow == CONNECTFLOW_SELECT_LEVEL)
+		SetGuestLevel((SELECTLEVEL)nSelect);
+}
+
+//=============================================================================
+// ゲストの待ち状態を処理
+//=============================================================================
+void CConnectUI::RecvGuestWait(void)
+{
+	printf("ゲストから待ち状態を受信\n");
+	// 待ち状態をon
+	m_bGuestWait = true;
+}
+
+//=============================================================================
 // フローごとの開始時の処理
 //=============================================================================
 void CConnectUI::Begin(CONNECTFLOW_TYPE flow)
 {
+	m_bGuestWait = false;
+
 	switch (flow)
 	{
 		// 接続中
@@ -1033,6 +1156,14 @@ void CConnectUI::Wait(CONNECTFLOW_TYPE flow)
 	switch (flow)
 	{
 	case CONNECTFLOW_SELECT_MODE:
+		// 両者とも待ち状態だが、選択が重複した
+		if ((m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE && m_nSelectMode[PLAYER_TWO] == SELECTMODE_REMOVE) ||
+			(m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && m_nSelectMode[PLAYER_TWO] == SELECTMODE_SOLVE))
+		{
+			// 選びなおし
+			m_bGuestWait = false;
+			m_state = FLOWSTATE_NORMAL;
+		}
 		// 両者とも待ち状態で、選択も重複しない
 		if (m_bGuestWait && 
 			((m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE && m_nSelectMode[PLAYER_TWO] == SELECTMODE_SOLVE) ||
@@ -1041,54 +1172,21 @@ void CConnectUI::Wait(CONNECTFLOW_TYPE flow)
 			// 次へ
 			m_state = FLOWSTATE_END;
 		}
-#ifdef _DEBUG
-		else if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
-			CManager::GetKeyboard()->GetTrigger(DIK_3))
-		{
-			// 強制書き換え
-			m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE ?
-				m_nSelectMode[PLAYER_TWO] = SELECTMODE_SOLVE :
-				m_nSelectMode[PLAYER_TWO] = SELECTMODE_REMOVE;
-			// 次へ
-			m_state = FLOWSTATE_END;
-		}
-#endif
 		break;
 	case CONNECTFLOW_SELECT_LEVEL:
+		// 解除側
 		if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
 		{
+			// ゲストの承認を得られれば、ゲーム開始
 			if (m_bGuestWait)
 				m_state = FLOWSTATE_END;
-#ifdef _DEBUG
-			else if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
-				CManager::GetKeyboard()->GetTrigger(DIK_4))
-			{
-				// 強制書き換え
-				m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE ?
-					m_nSelectMode[PLAYER_TWO] = SELECTMODE_SOLVE :
-					m_nSelectMode[PLAYER_TWO] = SELECTMODE_REMOVE;
-				// 次へ
-				m_state = FLOWSTATE_END;
-			}
-#endif
 		}
+		// 解読側
 		else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
 		{
+			// ゲストがモードを選んでいれば、ゲーム開始
 			if (m_bGuestWait && m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE)
 				m_state = FLOWSTATE_END;
-
-#ifdef _DEBUG
-			else if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) &&
-				CManager::GetKeyboard()->GetTrigger(DIK_4))
-			{
-				// 強制書き換え
-				m_nSelectMode[PLAYER_TWO] == SELECTMODE_SOLVE ?
-					m_nSelectMode[PLAYER_TWO] = SELECTMODE_REMOVE :
-					m_nSelectMode[PLAYER_TWO] = SELECTMODE_SOLVE;
-				// 次へ
-				m_state = FLOWSTATE_END;
-			}
-#endif
 		}
 		break;
 	}
@@ -1220,7 +1318,9 @@ void CConnectUI::ClickDecide(CMouse *pMouse)
 		m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
 		// サーバーへ待ち状態を送信
 		if (m_state != FLOWSTATE_WAIT)
-			//CClient::SendWait();
+		{
+			CClient::SendWait();
+		}
 		// 待ち状態へ
 		m_state = FLOWSTATE_WAIT;
 	}
