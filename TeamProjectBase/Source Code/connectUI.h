@@ -121,12 +121,14 @@ public:
 
 	static void SetGuestMode(SELECTMODE mode);
 	static void SetGuestLevel(SELECTLEVEL level);
-	static void EnableGuestWait(void) { m_bGuestWait = true; }
+	static void RecvGuestSelect(int nSelect);
+	static void RecvGuestWait(void);
 
 private:
 	static void ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);
 	static void SetBothInfo(CONST_STRING str, CONST_STRING type);
 	static void SetOnlyInfo(CONST_STRING str, CONST_STRING type);
+	void DebugCommand(void);
 
 	static CPolygon2D *CreateBothUI(int nPlayer, CONNECTUITYPE_BOTH type);
 	CPolygon2D *CreateOnlyUI(CONNECTUITYPE_ONLY type);
