@@ -28,8 +28,10 @@ public:
 	typedef enum
 	{
 		ORDER_NONE = 0,	// 指示なし
-		ORDER_SENDTEXT = 1,		// テキスト送信
+		ORDER_GUEST_BE_ACCEPT,	// 接続完了
+		ORDER_SENDTEXT,			// テキスト送信
 		ORDER_SENDPICTURE,		// ピクチャ送信
+		ORDER_SENDSELECT,		// 選択を送信
 		ORDER_SENDWAIT,			// 待ち状態の送信
 	} SERVER_ORDER;
 
@@ -75,7 +77,9 @@ public:
 	static void SendPicture(void);												// ピクチャの送信
 	static void RecvText(char *data);											// 文章の受信
 	static void RecvPicture(char *data);										// ピクチャの受信
-	static void SendWait(int nSelect);											// 待ち状態の送信
+	static void SendSelect(int nSelect);										// 選択の送信
+	static void RecvSelect(char *data);											// 選択の受信
+	static void SendWait(void);													// 待ち状態の送信
 	static void RecvWait(void);													// 待ち状態の受信
 
 private:
