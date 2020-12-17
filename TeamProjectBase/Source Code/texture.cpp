@@ -22,7 +22,7 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/Material/field001.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/field002.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
-	{ "data/TEXTURE/Material/field004.jpg" },					//マテリアル
+	{ "data/TEXTURE/Material/renga.jpg" },						//マテリアル
 
 	{ "data/TEXTURE/CHAT/chatTab_back.png" },					// チャットタブの背景
 	{ "data/TEXTURE/CHAT/chatTab_title.png" },					// チャットタブのタイトル

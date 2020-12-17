@@ -22,8 +22,8 @@
 #define TIMER_SIZE							(D3DXVECTOR3(10.0f,20.0f,0.0f))
 #define TIMER_H_M_S_INTERVAL_X				(12.0f)
 
-#define RESULT_TIMER_SIZE					(D3DXVECTOR3(30.0f,60.0f,0.0f))
-#define RESULT_TIMER_H_M_S_INTERVAL_X		(80.0f)
+#define RESULT_TIMER_SIZE					(D3DXVECTOR3(50.0f,100.0f,0.0f))
+#define RESULT_TIMER_H_M_S_INTERVAL_X		(120)
 
 //------------------------------------------------------------------------------
 //ê√ìIÉÅÉìÉoïœêîÇÃèâä˙âª

@@ -213,15 +213,15 @@ void CResult::SetState(RESULT_STATE state)
 
 	case CResult::STAY:
 		//タイマー
-		m_pTimer = CTimer::Create(D3DXVECTOR3(900.0f, 500.0f, 0.0f), nullptr, false);
+		m_pTimer = CTimer::Create(D3DXVECTOR3(900.0f, 480.0f, 0.0f), nullptr, false);
 
 		//セミコロン
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(855.0f, 500.0f, 0.0f), D3DXVECTOR3(40.0f, 55.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_SEMICOLON), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
+			CUI_Base::Create(D3DXVECTOR3(847.0f, 490.0f, 0.0f), D3DXVECTOR3(40.0f, 65.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_SEMICOLON), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
 
 		//コンマ
 		m_pPolygonList.emplace_back(
-			CUI_Base::Create(D3DXVECTOR3(930.0f, 520.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_COMMA), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
+			CUI_Base::Create(D3DXVECTOR3(950.0f, 530.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_RESULT_COMMA), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
 
 		break;
 	case CResult::SELECT:
