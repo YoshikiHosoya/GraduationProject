@@ -13,6 +13,9 @@
 #include "mouse.h"
 #include "renderer.h"
 #include "fade.h"
+#include "Debug\debugproc.h"
+#include "game.h"
+#include "Bomb.h"
 
 //=============================================================================
 // マクロ定義
@@ -322,6 +325,9 @@ void CConnectUI::DebugCommand(void)
 {
 	if (m_flow == CONNECTFLOW_CONNECTING)
 	{
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, "1P接続完了 [左Shift + 1]\n");
+		CDebugProc::Print(CDebugProc::PLACE_LEFT, "2P接続完了 [左Shift + 2]\n");
+
 		// 手動でゲストの接続完了
 		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
 		{
@@ -337,6 +343,9 @@ void CConnectUI::DebugCommand(void)
 		// 通常
 		if (m_state == FLOWSTATE_NORMAL)
 		{
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト解除選択 [左Shift + 1]\n");
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト解読選択 [左Shift + 2]\n");
+
 			// 手動でゲストのモード設定
 			if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
 			{
@@ -348,6 +357,10 @@ void CConnectUI::DebugCommand(void)
 		}
 		else if (m_state == FLOWSTATE_WAIT)
 		{
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト解除選択 [左Shift + 1]\n");
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト解読選択 [左Shift + 2]\n");
+			CDebugProc::Print(CDebugProc::PLACE_LEFT, "次のモードへ　 [左Shift + 3]\n");
+
 			// 手動でゲストのモード設定
 			if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
 			{
@@ -373,18 +386,27 @@ void CConnectUI::DebugCommand(void)
 	{
 		if (m_state == FLOWSTATE_NORMAL)
 		{
-			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
 			{
-				// 手動でゲストのモード設定
-				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-					SetGuestLevel(SELECTLEVEL_EASY);
-				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-					SetGuestLevel(SELECTLEVEL_NORMAL);
-				else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
-					SetGuestLevel(SELECTLEVEL_HARD);
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択EASY   [左Shift + 1]\n");
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択NORMAL [左Shift + 2]\n");
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択HARD   [左Shift + 3]\n");
+
+				if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+				{
+					// 手動でゲストのモード設定
+					if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+						SetGuestLevel(SELECTLEVEL_EASY);
+					else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+						SetGuestLevel(SELECTLEVEL_NORMAL);
+					else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+						SetGuestLevel(SELECTLEVEL_HARD);
+				}
 			}
 			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
 			{
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "次のモードへ     [左Shift + 4]\n");
+
 				// 手動でゲストが承認
 				if (CManager::GetKeyboard()->GetTrigger(DIK_4))
 					m_bGuestWait = true;
@@ -392,21 +414,37 @@ void CConnectUI::DebugCommand(void)
 		}
 		else if (m_state == FLOWSTATE_WAIT)
 		{
-			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
 			{
-				// 手動でゲストの難易度設定
-				if (CManager::GetKeyboard()->GetTrigger(DIK_1))
-					SetGuestLevel(SELECTLEVEL_EASY);
-				else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
-					SetGuestLevel(SELECTLEVEL_NORMAL);
-				else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
-					SetGuestLevel(SELECTLEVEL_HARD);
-				// 難易度が選択されていれば、手動でゲーム開始
-				if (m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE && CManager::GetKeyboard()->GetTrigger(DIK_4))
-					m_state = FLOWSTATE_END;
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択EASY   [左Shift + 1]\n");
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択NORMAL [左Shift + 2]\n");
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "ゲスト選択HARD   [左Shift + 3]\n");
+
+				if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT))
+				{
+					// 手動でゲストの難易度設定
+					if (CManager::GetKeyboard()->GetTrigger(DIK_1))
+						SetGuestLevel(SELECTLEVEL_EASY);
+					else if (CManager::GetKeyboard()->GetTrigger(DIK_2))
+						SetGuestLevel(SELECTLEVEL_NORMAL);
+					else if (CManager::GetKeyboard()->GetTrigger(DIK_3))
+						SetGuestLevel(SELECTLEVEL_HARD);
+					// 難易度が選択されていれば、手動でゲーム開始
+					if (m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE)
+					{
+						CDebugProc::Print(CDebugProc::PLACE_LEFT, "次のモードへ     [左Shift + 4]\n");
+
+						if (CManager::GetKeyboard()->GetTrigger(DIK_4))
+						{
+							m_state = FLOWSTATE_END;
+						}
+					}
+				}
 			}
 			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
 			{
+				CDebugProc::Print(CDebugProc::PLACE_LEFT, "次のモードへ     [左Shift + 4]\n");
+
 				if (CManager::GetKeyboard()->GetTrigger(DIK_4))
 					m_bGuestWait = true;
 			}
@@ -1141,6 +1179,10 @@ void CConnectUI::End(CONNECTFLOW_TYPE flow)
 		if (m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
 			DeleteOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
 		m_flow = CONNECTFLOW_END;
+		// 難易度を設定
+		m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE ?
+			CGame::SetDifficulty((CBomb::DIFFICULTY)m_nSelectLevel[PLAYER_ONE]) :
+			CGame::SetDifficulty((CBomb::DIFFICULTY)m_nSelectLevel[PLAYER_TWO]);
 		break;
 	}
 
