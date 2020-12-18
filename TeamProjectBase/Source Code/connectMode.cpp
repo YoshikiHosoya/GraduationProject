@@ -11,6 +11,7 @@
 #include "fade.h"
 #include "camera.h"
 #include "client.h"
+#include "chatBase.h"
 
 //==========================================================================================================================================================
 // マクロ定義
@@ -44,6 +45,8 @@ HRESULT CConnectMode::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	m_pConnectBase = CConnectBase::Create();
+	// チャットの生成
+	m_pChatBase = CChatBase::Create();
 
 	return S_OK;
 }
