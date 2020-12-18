@@ -931,6 +931,34 @@ typedef struct
 //-------------------------------------------------------------------------------------------------------------
 // クラス定義
 //-------------------------------------------------------------------------------------------------------------
+// 矩形クラス
+template <class T>
+class CRect
+{
+public:
+	enum MEM
+	{
+		LEFT = 0,
+		TOP,
+		RIGHT,
+		BOTTOM,
+		MAX
+	};
+	CRect() {}															// コンストラクタ
+	CRect(CONST T Left, CONST T Top, CONST T Right, CONST T Bottom);	// コンストラクタ
+	CRect(CONST T& rhs);												// コンストラクタ
+
+	union {
+		struct {
+			T left;		// 左
+			T top;		// 上
+			T right;	// 右
+			T bottom;	// 下
+		};
+		T m[MAX];			// [enum]
+	};
+};
+
 // 範囲クラス
 template <class T>
 class CRange
@@ -938,9 +966,9 @@ class CRange
 public:
 	enum MEM
 	{
-		M_MIN = 0,	// 最小
-		M_MAX,		// 最大
-		M_NUM,		// 個数
+		MIN = 0,	// 最小
+		MAX,		// 最大
+		NUM,		// 個数
 	};
 
 	CRange() {}														// コンストラクタ
@@ -1000,7 +1028,7 @@ public:
 			T min;			// 最小
 			T max;			// 最大
 		};
-		T m[M_NUM];			// [enum]
+		T m[NUM];			// [enum]
 	};
 };
 

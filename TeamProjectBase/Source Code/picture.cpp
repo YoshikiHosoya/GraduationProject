@@ -438,27 +438,24 @@ void CPicture::ReleasePen(void)
 //-------------------------------------------------------------------------------------------------------------
 void CPicture::PaintProc(void)
 {
-	// タブレットが通常状態じゃない時
-	if (this->GetTablet()->GetMode() != CTablet::MODE_NORMAL)
+	// 塗れるか?
+	if (!CanItBePainted())
 	{// 処理を抜ける
-		return;
-	}
-
-	// 絵上の位置の取得
-	if (GetMousePosOnPicture() == false)
-	{// 取得失敗
-		return;
-	}
-
-	// タブレットのボタンを押しているか
-	if (ItIsPressingButtons() == true)
-	{// 押している
 		return;
 	}
 
 	// カプセルの設定
 	m_pPen->SetCapsule();
 
+	// 色を塗る
+	PaintColor();
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 色を塗る
+//-------------------------------------------------------------------------------------------------------------
+void CPicture::PaintColor(void)
+{
 	// ロックした情報
 	D3DLOCKED_RECT LockRect;
 	// テクスチャリソースの長方形をロックし、ロックした情報を取得
@@ -494,29 +491,25 @@ void CPicture::PaintProc(void)
 	else
 	{
 		// 四角形の情報を算出する
-		float fUpper;
-		float fBottom;
-		float fRight;
-		float fLeft;
-		if (pCap->Segment.pos.y < pCap->Segment.GetEndPoint().y)
-		{
-			fUpper = pCap->Segment.pos.y - fRadius;
-			fBottom = pCap->Segment.GetEndPoint().y + fRadius;
+		CRect<float> rect;
+
+		// 終点のほうが大きいとき
+		if (pCap->Segment.pos.y < pCap->Segment.GetEndPoint().y) {
+			rect.top = pCap->Segment.pos.y - fRadius;
+			rect.bottom = pCap->Segment.GetEndPoint().y + fRadius;
 		}
-		else
-		{
-			fUpper = pCap->Segment.GetEndPoint().y - fRadius;
-			fBottom = pCap->Segment.pos.y + fRadius;
+		else {
+			rect.top = pCap->Segment.GetEndPoint().y - fRadius;
+			rect.bottom = pCap->Segment.pos.y + fRadius;
 		}
-		if (pCap->Segment.pos.x < pCap->Segment.GetEndPoint().x)
-		{
-			fRight = pCap->Segment.pos.x - fRadius;
-			fLeft = pCap->Segment.GetEndPoint().x + fRadius;
+		// 終点のほうが大きいとき
+		if (pCap->Segment.pos.x < pCap->Segment.GetEndPoint().x) {
+			rect.left = pCap->Segment.pos.x - fRadius;
+			rect.right = pCap->Segment.GetEndPoint().x + fRadius;
 		}
-		else
-		{
-			fRight = pCap->Segment.GetEndPoint().x - fRadius;
-			fLeft = pCap->Segment.pos.x + fRadius;
+		else {
+			rect.left = pCap->Segment.GetEndPoint().x - fRadius;
+			rect.right = pCap->Segment.pos.x + fRadius;
 		}
 
 		// 線分の終端を取得
@@ -530,8 +523,9 @@ void CPicture::PaintProc(void)
 				continue;
 			}
 
-			if (Mlf_OutRange(pPixelPos->x, fLeft, fRight) && Mlf_OutRange(pPixelPos->y, fBottom, fUpper))
-			{
+			// 四角形の範囲じゃない時
+			if (Mlf_OutRange(pPixelPos->x, rect.right, rect.left) || Mlf_OutRange(pPixelPos->y,rect.bottom, rect.top))
+			{// 処理を抜ける
 				continue;
 			}
 
@@ -624,6 +618,32 @@ bool CPicture::ItIsPressingButtons(void)
 	}
 
 	return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// 塗れるか?
+//-------------------------------------------------------------------------------------------------------------
+bool CPicture::CanItBePainted(void)
+{
+	// タブレットが通常状態じゃない時
+	if (this->GetTablet()->GetMode() != CTablet::MODE_NORMAL)
+	{// 処理を抜ける
+		return false;
+	}
+
+	// 絵上の位置の取得
+	if (GetMousePosOnPicture() == false)
+	{// 取得失敗
+		return false;
+	}
+
+	// タブレットのボタンを押しているか
+	if (ItIsPressingButtons() == true)
+	{// 押している
+		return false;
+	}
+
+	return true;
 }
 
 //-------------------------------------------------------------------------------------------------------------

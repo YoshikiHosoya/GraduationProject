@@ -1527,6 +1527,24 @@ GAGE_INFO::GAGE_INFO(RANGE SourceRange, int nSourceValue, float fSourceCoefficie
 */
 
 //----------------------------------------------------------------------------------------------------
+// class CRect 矩形クラス
+//----------------------------------------------------------------------------------------------------
+template<class T>
+inline CRect<T>::CRect(CONST T Left, CONST T Top, CONST T Right, CONST T Bottom)
+{
+	this->left = Left;
+	this->top = Top;
+	this->right = Right;
+	this->bottom = Bottom;
+}
+
+template<class T>
+inline CRect<T>::CRect(CONST T& rhs)
+{
+	*this = rhs;
+}
+
+//----------------------------------------------------------------------------------------------------
 // class CRange 範囲クラス
 //----------------------------------------------------------------------------------------------------
 template<class T>

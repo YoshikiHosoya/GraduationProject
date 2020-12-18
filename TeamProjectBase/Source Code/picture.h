@@ -84,8 +84,10 @@ private:
 	static void             ReleasePixelPos(void);																			// ピクセル位置の開放
 	static void             ReleasePen(void);																				// ペンの開放
 	void                    PaintProc(void);																				// 塗る処理
+	void                    PaintColor(void);																				// 色を塗る
 	bool                    GetMousePosOnPicture(void);																		// 絵上のマウス位置の取得
 	bool                    ItIsPressingButtons(void);																		// タブレットのボタンを押しているか
+	bool                    CanItBePainted(void);																			// 塗れるか?
 	/* メンバ変数 */
 	static INTEGER2         m_nNumPixelBlock;																				// ピクセル数
 	static FLOAT2           m_size;																							// 大きさ
