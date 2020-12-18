@@ -82,6 +82,11 @@ void CBaseMode::DebugCommand()
 		{
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
 		}
+		//‰ð“Ç‘¤
+		if (pKeyboard->GetTrigger(DIK_NUMPAD2))
+		{
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
+		}
 		//ƒQ[ƒ€
 		if (pKeyboard->GetTrigger(DIK_NUMPAD3))
 		{
