@@ -37,8 +37,8 @@ void CLight::Init()
 	m_vecDir[2] = D3DXVECTOR3(0.10f, -0.10f, -0.40f);
 
 	//ライトの色設定
-	m_DefaultLightCol[0] = m_LightCol[0] = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_DefaultLightCol[1] = m_LightCol[1] = D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f);
+	m_DefaultLightCol[0] = m_LightCol[0] = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+	m_DefaultLightCol[1] = m_LightCol[1] = D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f);
 	m_DefaultLightCol[2] = m_LightCol[2] = D3DXCOLOR(0.15f, 0.15f, 0.15f, 1.0f);
 
 	// ライトの設定

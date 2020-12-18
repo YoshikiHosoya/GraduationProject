@@ -23,6 +23,7 @@
 // クラス定義
 // ===================================================================
 class CConnectBase;
+class CChatBase;
 
 class CConnectMode : public CBaseMode
 {
@@ -36,6 +37,7 @@ public:
 
 private:
 	std::shared_ptr<CConnectBase> m_pConnectBase;
+	S_ptr<CChatBase> m_pChatBase;							// チャットのポインタ
 };
 
 #endif
