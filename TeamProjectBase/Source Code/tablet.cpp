@@ -29,8 +29,8 @@
 //-------------------------------------------------------------------------------------------------------------
 D3DXVECTOR3 CTablet::m_aSetingModelPos[POS_MAX] = Mlf_array(MYLIB_VEC3_UNSET);		// 設定用の位置
 D3DXVECTOR3 CTablet::m_aSetingPosDest[SET_MAX]  = Mlf_array(MYLIB_VEC3_UNSET);		// 設定用の目的地
-float       CTablet::m_fMoveCoeff               = MYLIB_FLOAT_UNSET;					// 移動慣性
-int         CTablet::m_nDestFrame               = MYLIB_INT_UNSET;						// 目的地までのフレーム
+float       CTablet::m_fMoveCoeff               = MYLIB_FLOAT_UNSET;				// 移動慣性
+int         CTablet::m_nDestFrame               = MYLIB_INT_UNSET;					// 目的地までのフレーム
 
 //-------------------------------------------------------------------------------------------------------------
 // コンストラクタ
@@ -98,24 +98,6 @@ HRESULT CTablet::Init()
 	BindModelInfo(CModelInfo::GetModelInfo(CModelInfo::MODEL_TABLET));
 	CSceneX::Init();
 
-	// 容量を変更
-	m_Button.reserve(CTabletButton::TYPE_MAX);
-
-	// ボタン位置の取得
-	D3DXVECTOR3 *pButtonPos = &m_aSetingModelPos[CTablet::POS_PEN];
-
-	// タイプ数分ループ
-	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
-	{// 新しい要素を末尾に追加
-		m_Button.push_back();
-		// 末尾に生成
-		m_Button.back() =
-			CTabletButton::Create(
-				this->GetMtxWorldPtr(),
-				pButtonPos[nCntTtpe],
-				(CTabletButton::TYPE)nCntTtpe);
-	}
-
 	// メンバ変数の初期化
 	InitMemberVariables();
 
@@ -127,8 +109,11 @@ HRESULT CTablet::Init()
 //-------------------------------------------------------------------------------------------------------------
 void CTablet::Update()
 {
-	// チャットタブから位置を設定する
-	SetPosFromChattabInfo();
+	// クリックされたとき
+	if (CChatTab::GetTabClick())
+	{// チャットタブから位置を設定する
+		SetPosFromChattabInfo();
+	}
 
 	// モード別の処理
 	switch (m_mode)
@@ -152,21 +137,40 @@ void CTablet::Draw()
 //-------------------------------------------------------------------------------------------------------------
 bool CTablet::ItIsPressingButtons(void)
 {
-	// 変数宣言
-	CTabletButton* pButton;	// ボタン情報
-
-	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+	for (auto &itr : m_Button)
 	{
-		// ボタン情報の取得
-		pButton = m_Button[nCntTtpe].get();
 		// 押されたフラグを取得
-		if (pButton->GetChangeFlag() ||
-			pButton->GetInPressFlag())
+		if (itr->GetChangeFlag() ||
+			itr->GetInPressFlag())
 		{
 			return true;
 		}
 	}
 	return false;
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// ボタンの生成
+//-------------------------------------------------------------------------------------------------------------
+void CTablet::CreateButton(void)
+{
+	// 容量を変更
+	m_Button.reserve(CTabletButton::TYPE_MAX);
+
+	// ボタン位置の取得
+	D3DXVECTOR3 *pButtonPos = &m_aSetingModelPos[CTablet::POS_PEN];
+
+	// タイプ数分ループ
+	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+	{// 新しい要素を末尾に追加
+		m_Button.push_back();
+		// 末尾に生成
+		m_Button.back() =
+			CTabletButton::Create(
+				this->GetMtxWorldPtr(),
+				pButtonPos[nCntTtpe],
+				(CTabletButton::TYPE)nCntTtpe);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -195,19 +199,16 @@ void CTablet::NormalProc(void)
 	D3DXVECTOR3    ray;										// レイ
 	D3DXVECTOR3    InvNirePos;								// 算出した近い位置
 	D3DXVECTOR3    InvForePos;								// 算出した遠い位置
-	CTabletButton* pButton;									// ボタン情報
 	LPD3DXMESH     pMesh;									// メッシュ情報
 
-	for (int nCntTtpe = 0; nCntTtpe < CTabletButton::TYPE_MAX; nCntTtpe++)
+	for (auto &itr : m_Button)
 	{
-		// ボタン情報の取得
-		pButton = m_Button[nCntTtpe].get();
 		// メッシュ情報の取得
-		pMesh = pButton->GetModelInfo()->GetMesh();
+		pMesh = itr->GetModelInfo()->GetMesh();
 
 		/* 対処いう物からみたレイに変換する */
 		//	逆行列の取得
-		D3DXMatrixInverse(&invmat, NULL, pButton->GetMtxWorldPtr());
+		D3DXMatrixInverse(&invmat, NULL, itr->GetMtxWorldPtr());
 		//	逆行列を使用し、レイ始点情報を変換　位置と向きで変換する関数が異なるので要注意
 		D3DXVec3TransformCoord(&InvNirePos, pNearPos, &invmat);
 		//	レイ終点情報を変換
@@ -220,14 +221,13 @@ void CTablet::NormalProc(void)
 		// HITしている時
 		if (bHit == 1)
 		{// モードを変更するためのフラグ処理
-			pButton->FlagProcToChangeMode();
-			CDebugProc::Print(CDebugProc::PLACE_LEFT, "[%d]当たったものが存在しました。\n", nCntTtpe);
+			itr->FlagProcToChangeMode();
 		}
 		else
 		{// 押されたフラグを消す設定
-			pButton->SetToOffPressFlag();
+			itr->SetToOffPressFlag();
 			// 変更フラグの設定処理
-			pButton->SetChangeFlagProc();
+			itr->SetChangeFlagProc();
 		}
 	}
 }
@@ -293,7 +293,7 @@ void CTablet::NonConstantVelocityProc(void)
 //-------------------------------------------------------------------------------------------------------------
 void CTablet::VelocityProcModeChange(void)
 {
-	if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+	if (CChatTab::GetTabletState() == CChatTab::TABSTATE_CLOSED)
 	{
 		// ニュートラルモードに設定
 		m_mode = MODE_NEUTRAL;
@@ -312,11 +312,17 @@ std::shared_ptr<CTablet> CTablet::Create(void)
 {
 	// スマートポインタの生成
 	std::shared_ptr<CTablet> pTablet = std::make_shared<CTablet>();
+
+	// 初期化
 	pTablet->Init();
 
 	//Sceneで管理
 	pTablet->SetObjType(OBJTYPE_PICTURE);
 	pTablet->AddSharedList(pTablet);
+
+	// ボタンの生成
+	pTablet->CreateButton();
+
 	return pTablet;
 }
 
@@ -365,19 +371,13 @@ void CTablet::SetPosFromChattabInfo(void)
 {
 	// ゲームモードの取得
 	CManager::MODE ManaMode = CManager::GetMode();
-
-	// クリックされたとき
-	if (!CChatTab::GetTabClick())
-	{
-		return;
-	}
 	// ゲームモー別
 	switch (ManaMode)
 	{
 		// 解読側の時
 		ML_CASE(CManager::MODE_DECODING)
 			// 閉じている時
-			if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+			if (CChatTab::GetTabletState() == CChatTab::TABSTATE_CLOSED)
 			{
 				this->SetDestinationProc(m_aSetingPosDest[SET_DECODING_NEUT]);
 			}
@@ -388,13 +388,12 @@ void CTablet::SetPosFromChattabInfo(void)
 		// ゲームの時
 		ML_CASE(CManager::MODE_GAME)
 			// 閉じている時
-			if (CChatTab::GetTabState() == CChatTab::TABSTATE_CLOSED)
+			if (CChatTab::GetTabletState() == CChatTab::TABSTATE_CLOSED)
 			{
 				this->SetDestinationProc(m_aSetingPosDest[SET_GAME_NEUT]);
 			}
 			else
 			{
-
 				this->SetDestinationProc(m_aSetingPosDest[SET_GAME] + CManager::GetRenderer()->GetCamera()->GetCameraPosV());
 			}
 		ML_CASEEND;

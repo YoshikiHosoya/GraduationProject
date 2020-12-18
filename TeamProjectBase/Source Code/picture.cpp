@@ -420,7 +420,7 @@ void CPicture::ReleasePixelPos(void)
 {
 	if (m_pPixelPos)
 	{
-		delete m_pPixelPos;
+		delete[] m_pPixelPos;
 		m_pPixelPos = nullptr;
 	}
 }
@@ -463,10 +463,11 @@ void CPicture::PaintProc(void)
 	D3DLOCKED_RECT LockRect;
 	// テクスチャリソースの長方形をロックし、ロックした情報を取得
 	m_pTexture->LockRect(0, &LockRect, NULL, 0);
-	
+
 	D3DXCOLOR *pData = (D3DXCOLOR*)LockRect.pBits;				// カラーデータの先頭を取得
 	CAPSULE_2D *pCap = m_pPen->GetCapsule();					// カプセル情報の取得
 	D3DXVECTOR2 *pPixelPos = m_pPixelPos;						// ピクセル位置の取得
+	D3DXVECTOR2 *pPixelPosEnd = &m_pPixelPos[m_nNumDataMax];	// ピクセル位置終了ポインタの取得
 	const float fRadius = pCap->fRadius * pCap->fRadius;		// 比較用の半径を算出
 	const float fSegLeng = pCap->Segment.vec.Length();			// カプセルの線分の長さを取得
 	int nPenMode = m_pPen->GetMode();							// モードの取得
@@ -474,7 +475,7 @@ void CPicture::PaintProc(void)
 	// 線分の長さが許容以下の時
 	if (fSegLeng <= MYLIB_OX_EPSILON)
 	{
-		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pPixelPos++, pData++)
+		for (; pPixelPos != pPixelPosEnd; ++pPixelPos, ++pData)
 		{
 			// (白の時 == 1、黒の時 == 0) == モード(ブラシ == 0、消しゴム == 1)の時
 			if ((pData->r > 0.5f) == nPenMode)
@@ -492,16 +493,48 @@ void CPicture::PaintProc(void)
 	}
 	else
 	{
+		// 四角形の情報を算出する
+		float fUpper;
+		float fBottom;
+		float fRight;
+		float fLeft;
+		if (pCap->Segment.pos.y < pCap->Segment.GetEndPoint().y)
+		{
+			fUpper = pCap->Segment.pos.y - fRadius;
+			fBottom = pCap->Segment.GetEndPoint().y + fRadius;
+		}
+		else
+		{
+			fUpper = pCap->Segment.GetEndPoint().y - fRadius;
+			fBottom = pCap->Segment.pos.y + fRadius;
+		}
+		if (pCap->Segment.pos.x < pCap->Segment.GetEndPoint().x)
+		{
+			fRight = pCap->Segment.pos.x - fRadius;
+			fLeft = pCap->Segment.GetEndPoint().x + fRadius;
+		}
+		else
+		{
+			fRight = pCap->Segment.GetEndPoint().x - fRadius;
+			fLeft = pCap->Segment.pos.x + fRadius;
+		}
+
 		// 線分の終端を取得
 		CONST FLOAT2 SegEndPoint = pCap->Segment.GetEndPoint();
 
-		for (UINT nCntPixel = 0; nCntPixel < m_nNumDataMax; nCntPixel++, pPixelPos++, pData++)
+		for (; pPixelPos != pPixelPosEnd; ++pPixelPos, ++pData)
 		{
 			// (白の時 == 1、黒の時 == 0) == モード(ブラシ == 0、消しゴム == 1)の時
 			if ((pData->r > 0.5f) == nPenMode)
 			{// 処理をスキップする
 				continue;
 			}
+
+			if (Mlf_OutRange(pPixelPos->x, fLeft, fRight) && Mlf_OutRange(pPixelPos->y, fBottom, fUpper))
+			{
+				continue;
+			}
+
 			// 鋭角じゃない時
 			if (CMylibrary::IsSharpAngle(*pPixelPos, pCap->Segment.pos, SegEndPoint) == false)
 			{// 位置の差分を算出
@@ -533,7 +566,7 @@ void CPicture::PaintProc(void)
 			}
 		}
 	}
-	
+
 	// アンロック
 	m_pTexture->UnlockRect(0);
 }
@@ -564,6 +597,8 @@ bool CPicture::GetMousePosOnPicture(void)
 	{
 		CManager::GetMouse()->SetDisp(true);
 	}
+
+	CDebugProc::Print(CDebugProc::PLACE_LEFT, "ペンの位置 == [%f][%f]\n", pCrossPos->x, pCrossPos->y);
 
 	// マウスの左クリックが押されている時
 	return pMouse->GetPress(0);

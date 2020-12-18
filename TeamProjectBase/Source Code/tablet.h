@@ -61,7 +61,7 @@ public:
 	inline void          ShowDebugInfo() {};																						// デバッグ情報表記
 
 	bool                 ItIsPressingButtons(void);																					// ボタンを押しているか
-
+	void                 CreateButton(void);																						// ボタンの生成
 	void                 InitMemberVariables(void);																					// メンバ変数の初期化
 	void                 NormalProc(void);																							// 通常処理
 	void                 MoveingProc(void);																							// 移動処理
