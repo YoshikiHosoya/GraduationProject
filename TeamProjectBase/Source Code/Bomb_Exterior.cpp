@@ -22,11 +22,13 @@
 //マクロ
 //------------------------------------------------------------------------------
 #define EXTERIOR_OFFSET_TOP				(D3DXVECTOR3(145.0f,123.0f,0.0f))			//外装のオフセット 上下のほう
-#define EXTERIOR_OFFSET_SIDE			(D3DXVECTOR3(420.0f,70.0f,0.0f))			//外装のオフセット 左右のほう
+#define EXTERIOR_OFFSET_SIDE			(D3DXVECTOR3(410.0f,70.0f,0.0f))			//外装のオフセット 左右のほう
 
 #define MAX_EXTERIOR_NUM				(10)										//外装の総数
 
-#define MAX_BUTTERY_NUM					(MAX_EXTERIOR_NUM)							//バッテリーの最大数
+#define MAX_BUTTERY_NUM					(4)											//バッテリーの最大数
+#define MAX_USB_NUM						(2)											//USBポートの最大数
+#define MAX_RCA_NUM						(2)											//RCAポートの最大数
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -35,6 +37,9 @@ CBomb_Exterior::CBomb_Exterior()
 {
 	m_pBatteryList.clear();
 	m_ExteriorList.clear();
+	m_pUSB_List.clear();
+	m_pRCA_List.clear();
+
 }
 
 //------------------------------------------------------------------------------
@@ -44,6 +49,9 @@ CBomb_Exterior::~CBomb_Exterior()
 {
 	m_pBatteryList.clear();
 	m_ExteriorList.clear();
+	m_pUSB_List.clear();
+	m_pRCA_List.clear();
+
 }
 
 //------------------------------------------------------------------------------
@@ -91,6 +99,20 @@ void CBomb_Exterior::SetExterior()
 			m_ExteriorList.emplace_back(EXTERIOR_TYPE::BATTERY_BIG);
 	}
 
+	//USB
+	for (int nCnt = 0; nCnt < (rand() % MAX_USB_NUM); nCnt++)
+	{
+		//usbポート追加
+		m_ExteriorList.emplace_back(EXTERIOR_TYPE::USB_PORT);
+	}
+
+	//RCA
+	for (int nCnt = 0; nCnt < (rand() % MAX_RCA_NUM); nCnt++)
+	{
+		//RCAポート追加
+		m_ExteriorList.emplace_back(EXTERIOR_TYPE::RCA_PORT);
+	}
+
 	//最大数になるまで
 	while ((int)m_ExteriorList.size() < MAX_EXTERIOR_NUM)
 	{
@@ -136,6 +158,19 @@ void CBomb_Exterior::Create(D3DXMATRIX * pBombMtx)
 			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
 				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_BATTERY_BIG));
 			break;
+
+		case EXTERIOR_TYPE::RCA_PORT:
+			//大バッテリー生成
+			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
+				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_RCA_PORT));
+			break;
+
+		case EXTERIOR_TYPE::USB_PORT:
+			//大バッテリー生成
+			m_pBatteryList.emplace_back(CSceneX::CreateShared(pos, rot,
+				pBombMtx, CScene::OBJTYPE_BOMB_EXTERIOR, CModelInfo::MODEL_USB_PORT));
+			break;
+
 		}
 	}
 }

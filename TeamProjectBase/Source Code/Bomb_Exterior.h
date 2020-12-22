@@ -25,6 +25,8 @@ public:
 		NONE = 0,			//何もなし
 		BATTERY_SMALL,		//小バッテリー
 		BATTERY_BIG,		//大バッテリー
+		RCA_PORT,			//RCAポート
+		USB_PORT,			//USBピン
 		MAX,				//
 	};
 
@@ -36,12 +38,15 @@ public:
 	int CountExteriorNum(EXTERIOR_TYPE type);
 
 private:
-	Vec<S_ptr<CSceneX>> m_pBatteryList;		//バッテリーのリスト
-	Vec<EXTERIOR_TYPE> m_ExteriorList;		//外装に何をつけるかのリスト
+	Vec<S_ptr<CSceneX>> m_pBatteryList;					//バッテリーのリスト
+	Vec<S_ptr<CSceneX>> m_pRCA_List;					//RCAのリスト
+	Vec<S_ptr<CSceneX>> m_pUSB_List;					//USBのリスト
+
+	Vec<EXTERIOR_TYPE> m_ExteriorList;					//外装に何をつけるかのリスト
 
 
-	void SetExterior();						//外装に何を何個つけるか決める
-	void Create(D3DXMATRIX *pBombMtx);		//生成関数
+	void SetExterior();									//外装に何を何個つけるか決める
+	void Create(D3DXMATRIX *pBombMtx);					//生成関数
 
 	void CalcExteriorPosition(int const nCnt, D3DXVECTOR3 &pos, D3DXVECTOR3 &rot);
 

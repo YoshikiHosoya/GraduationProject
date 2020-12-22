@@ -29,6 +29,8 @@ public:
 		MODEL_BOMBBOX = 100,						//ボム
 		MODEL_BATTERY_SMALL,						//バッテリー
 		MODEL_BATTERY_BIG,							//バッテリー
+		MODEL_RCA_PORT,								//RCAポート
+		MODEL_USB_PORT,								//USBポート
 
 		//モジュール 200番台
 		MODEL_MODULE_DEFAULT = 200,					//モジュール

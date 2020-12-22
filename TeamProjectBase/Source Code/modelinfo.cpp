@@ -19,6 +19,8 @@ Vec<CModelInfo::MODELNAME> CModelInfo::m_aModelFileNameList =
 	{ "data/MODEL/BombBox/bombbox.x" ,										MODEL_BOMBBOX },									//爆弾
 	{ "data/MODEL/Battery/Battery_1.x" ,									MODEL_BATTERY_SMALL },								//小バッテリー
 	{ "data/MODEL/Battery/Battery_2.x" ,									MODEL_BATTERY_BIG },								//大バッテリー
+	{ "data/MODEL/ConnectionPort/Rca.x" ,									MODEL_RCA_PORT },									//LANポート
+	{ "data/MODEL/ConnectionPort/Usb.x" ,									MODEL_USB_PORT },									//USBポート
 
 	//モジュール
 	{ "data/MODEL/test/test_module.x" ,										MODEL_MODULE_DEFAULT },								//モジュール

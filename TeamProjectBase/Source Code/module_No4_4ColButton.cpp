@@ -347,18 +347,32 @@ void CModule_No4_4ColButton::NextButtonSet()
 		m_pColButtonList[nCnt]->SetClearFlag(false);
 	}
 
+	//バッテリーがついているか
+	bool bButtery =		(CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_BIG) ||
+						CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_SMALL));
+
+	//ポートがついているか
+	bool bConnectionPorts =		(CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::RCA_PORT) ||
+								CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::USB_PORT));
+
 	//次に押すボタン設定
 	BUTTON NextButton = BUTTON::NONE;
 
-	//バッテリーがついていた場合
-	if (CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_BIG) ||
-		CModule_Base::GetBombWeakPtr()._Get()->GetBombExterior()->CountExteriorNum(CBomb_Exterior::BATTERY_SMALL))
+	//接続ポートがついているか
+	if (bConnectionPorts)
 	{
-		SetNextButton_YesBattery_NotSerialNo(NextButton);
+		//バッテリーの有無確認
+		bButtery ?
+			SetNextButton_YesConnectionPort_YesBattery(NextButton) :		//接続ポート有_バッテリー有
+			SetNextButton_YesConnectionPort_NotBattery(NextButton);			//接続ポート有_バッテリー無
+
 	}
 	else
 	{
-		SetNextButton_NotBattery_NotSerialNo(NextButton);
+		//バッテリーの有無確認
+		bButtery ?
+			SetNextButton_NotConnectionPort_YesBattery(NextButton) :		//接続ポート無_バッテリー有
+			SetNextButton_NotConnectionPort_NotBattery(NextButton);			//接続ポート無_バッテリー無
 
 	}
 
@@ -428,12 +442,70 @@ bool CModule_No4_4ColButton::CheckModuleClear()
 	return false;
 }
 
+
 //------------------------------------------------------------------------------
 //次に押すボタン設定
+//接続ポート有
 //バッテリ有
-//シリアルナンバー母音無し
 //------------------------------------------------------------------------------
-void CModule_No4_4ColButton::SetNextButton_YesBattery_NotSerialNo(BUTTON & NextButton)
+void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_YesBattery(BUTTON & NextButton)
+{
+	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	{
+	case BUTTON::RED:
+		NextButton = BUTTON::GREEN;
+		break;
+
+	case BUTTON::BLUE:
+		NextButton = BUTTON::YELLOW;
+		break;
+
+	case BUTTON::YELLOW:
+		NextButton = BUTTON::RED;
+		break;
+
+	case BUTTON::GREEN:
+		NextButton = BUTTON::BLUE;
+		break;
+
+	}
+}
+
+//------------------------------------------------------------------------------
+//次に押すボタン設定
+//接続ポート有
+//バッテリ無
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_NotBattery(BUTTON & NextButton)
+{
+	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	{
+	case BUTTON::RED:
+		NextButton = BUTTON::BLUE;
+		break;
+
+	case BUTTON::BLUE:
+		NextButton = BUTTON::RED;
+		break;
+
+	case BUTTON::YELLOW:
+		NextButton = BUTTON::GREEN;
+		break;
+
+	case BUTTON::GREEN:
+		NextButton = BUTTON::YELLOW;
+		break;
+
+	}
+}
+
+
+//------------------------------------------------------------------------------
+//次に押すボタン設定
+//接続ポート無
+//バッテリ有
+//------------------------------------------------------------------------------
+void CModule_No4_4ColButton::SetNextButton_NotConnectionPort_YesBattery(BUTTON & NextButton)
 {
 	switch (m_QuestionButtonList[m_nPlayerPushNum])
 	{
@@ -457,10 +529,10 @@ void CModule_No4_4ColButton::SetNextButton_YesBattery_NotSerialNo(BUTTON & NextB
 
 //------------------------------------------------------------------------------
 //次に押すボタン設定
+//接続ポート無
 //バッテリ無
-//シリアルナンバー母音無し
 //------------------------------------------------------------------------------
-void CModule_No4_4ColButton::SetNextButton_NotBattery_NotSerialNo(BUTTON & NextButton)
+void CModule_No4_4ColButton::SetNextButton_NotConnectionPort_NotBattery(BUTTON & NextButton)
 {
 	switch (m_QuestionButtonList[m_nPlayerPushNum])
 	{
@@ -482,4 +554,3 @@ void CModule_No4_4ColButton::SetNextButton_NotBattery_NotSerialNo(BUTTON & NextB
 
 	}
 }
-
