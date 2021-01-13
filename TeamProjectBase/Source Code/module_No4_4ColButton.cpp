@@ -49,7 +49,6 @@ CModule_No4_4ColButton::CModule_No4_4ColButton()
 	m_nNowFlashNumber = -1;
 	m_nClearNum = 0;
 	m_pProgressLamp.reset();
-	m_nPlayerPushNum = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -137,7 +136,6 @@ void CModule_No4_4ColButton::Update()
 
 
 	case CModule_No4_4ColButton::STATE::START:
-	case CModule_No4_4ColButton::STATE::INTERVAL:
 		if (m_nButtonLightingCnt <= 0)
 		{
 			//点灯状態にする
@@ -145,7 +143,6 @@ void CModule_No4_4ColButton::Update()
 		}
 		break;
 
-	case CModule_No4_4ColButton::STATE::PLAYER_INPUT:
 	case CModule_No4_4ColButton::STATE::RESET_INTERVAL:
 		if (m_nButtonLightingCnt <= 0)
 		{
@@ -183,8 +180,6 @@ void CModule_No4_4ColButton::ShowDebugInfo()
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "m_nNowSelectButton [%d]\n", m_nNowSelectButton);
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "m_nClearNum [%d]\n", m_nClearNum);
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "m_buttonState [%d]\n", m_buttonState);
-
-	CDebugProc::Print(CDebugProc::PLACE_LEFT, "m_nPlayerPushNum [%d]\n", m_nPlayerPushNum);
 
 	for (size_t nCnt = 0; nCnt < m_pColButtonList.size(); nCnt++)
 	{
@@ -250,7 +245,7 @@ void CModule_No4_4ColButton::ModuleAction()
 	if (m_pColButtonList[m_nNowSelectButton].get())
 	{
 		//プレイヤーの入力状態
-		SetButtonState(STATE::PLAYER_INPUT);
+		SetButtonState(STATE::RESET_INTERVAL);
 		m_pColButtonList[m_nNowSelectButton]->SetButtonLighting(true);
 
 		//押したボタンがクリアボタンだった場合
@@ -295,40 +290,18 @@ void CModule_No4_4ColButton::SetButtonState(STATE state)
 		break;
 
 	case CModule_No4_4ColButton::STATE::START:
-		m_nNowFlashNumber = -1;
-
 		//プレイヤーの入力情報リセット
 		PlayerInputReset();
 		break;
 
-	case CModule_No4_4ColButton::STATE::INTERVAL:
-		//ボタンの点灯の間隔設定
-		m_nButtonLightingCnt = COL_BUTTON_LIGHT_FLASH_INTERVAL;
-
-		break;
 
 	case CModule_No4_4ColButton::STATE::LIGHTING:
-		m_nNowFlashNumber++;
-
-		//基底回数以上にならないように設定
-		CHossoLibrary::RangeLimit_Equal(m_nNowFlashNumber, 0, 3);
-
 		//ボタンを光らせる
-		m_pColButtonList[m_QuestionButtonList[m_nNowFlashNumber]]->SetButtonLighting(true);
+		m_pColButtonList[m_QuestionButtonList[m_nClearNum]]->SetButtonLighting(true);
 
-
-		//点灯回数が規定までいったかどうか
-		m_nClearNum > m_nNowFlashNumber ?
-			SetButtonState(STATE::INTERVAL) :				//点灯のインターバル
-			SetButtonState(STATE::RESET_INTERVAL);			//点灯終了
+		SetButtonState(STATE::RESET_INTERVAL);			//点灯終了
 
 		break;
-
-	case CModule_No4_4ColButton::STATE::PLAYER_INPUT:
-		m_nButtonLightingCnt = INPUT_GRACE;
-
-		break;
-
 	case CModule_No4_4ColButton::STATE::RESET_INTERVAL:
 		m_nButtonLightingCnt = COL_BUTTON_LIGHT_LOOP_INTERVAL;
 
@@ -392,7 +365,6 @@ void CModule_No4_4ColButton::NextButtonSet()
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::PlayerInputReset()
 {
-	m_nPlayerPushNum = 0;
 	NextButtonSet();
 
 }
@@ -402,18 +374,12 @@ void CModule_No4_4ColButton::PlayerInputReset()
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::ButtonPushSuccess()
 {
-	//プレイヤーのボタンクリア回数++
-	m_nPlayerPushNum++;
 
-	//クリア回数に到達したとき
-	if (m_nPlayerPushNum > m_nClearNum)
-	{
-		//クリアに必要なキー数追加
-		m_nClearNum++;
+	//クリアに必要なキー数追加
+	m_nClearNum++;
 
-		//進捗ランプ更新
-		m_pProgressLamp->SetProgress(m_nClearNum);
-	}
+	//進捗ランプ更新
+	m_pProgressLamp->SetProgress(m_nClearNum);
 
 	//モジュールクリアしてない時
 	if (!CheckModuleClear())
@@ -422,7 +388,6 @@ void CModule_No4_4ColButton::ButtonPushSuccess()
 		NextButtonSet();
 	}
 }
-
 
 //------------------------------------------------------------------------------
 //モジュールクリアしたか確認
@@ -450,7 +415,7 @@ bool CModule_No4_4ColButton::CheckModuleClear()
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_YesBattery(BUTTON & NextButton)
 {
-	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	switch (m_QuestionButtonList[m_nClearNum])
 	{
 	case BUTTON::RED:
 		NextButton = BUTTON::GREEN;
@@ -478,7 +443,7 @@ void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_YesBattery(BUTTON &
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_NotBattery(BUTTON & NextButton)
 {
-	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	switch (m_QuestionButtonList[m_nClearNum])
 	{
 	case BUTTON::RED:
 		NextButton = BUTTON::BLUE;
@@ -507,7 +472,7 @@ void CModule_No4_4ColButton::SetNextButton_YesConnectionPort_NotBattery(BUTTON &
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::SetNextButton_NotConnectionPort_YesBattery(BUTTON & NextButton)
 {
-	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	switch (m_QuestionButtonList[m_nClearNum])
 	{
 	case BUTTON::RED:
 		NextButton = BUTTON::YELLOW;
@@ -534,7 +499,7 @@ void CModule_No4_4ColButton::SetNextButton_NotConnectionPort_YesBattery(BUTTON &
 //------------------------------------------------------------------------------
 void CModule_No4_4ColButton::SetNextButton_NotConnectionPort_NotBattery(BUTTON & NextButton)
 {
-	switch (m_QuestionButtonList[m_nPlayerPushNum])
+	switch (m_QuestionButtonList[m_nClearNum])
 	{
 	case BUTTON::RED:
 		NextButton = BUTTON::GREEN;

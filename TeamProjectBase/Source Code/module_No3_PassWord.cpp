@@ -291,6 +291,11 @@ void CModule_No3_PassWord::CreateButton()
 	//ëóêMÉ{É^Éìê∂ê¨
 	m_pDecitionButton = CSceneX::CreateShared(DECITION_BUTTON_OFFSET, ZeroVector3, GetMtxWorldPtr(), OBJTYPE_MODULE_PARTS, CModelInfo::MODEL_MODULEPARTS_NO3_DECITION_BUTTON);
 
+	S_ptr<CScene3D> pLocalPtr = CSceneBase::ScenePolygonCreateShared<CScene3D>(D3DXVECTOR3(0.0f, 0.0f, -3.0f), D3DXVECTOR3(15.0f, 10.0f, 0.0f), WhiteColor,
+												CTexture::GetTexture(CTexture::TEX_MODULEPARTS_MODULE03_SENDBUTTON), CScene::OBJTYPE_MODULE_PARTS_SYMBOL);
+
+	pLocalPtr->SetParentMtxPtr(m_pDecitionButton->GetMtxWorldPtr());
+
 }
 
 //------------------------------------------------------------------------------

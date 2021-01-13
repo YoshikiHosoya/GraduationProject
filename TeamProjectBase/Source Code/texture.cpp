@@ -24,6 +24,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/renga.jpg" },						//マテリアル
 
+	{ "data/TEXTURE/ModuleParts/SendButton_Module03.png" },		//送信ボタン
+
 	{ "data/TEXTURE/CHAT/chatTab_back.png" },					// チャットタブの背景
 	{ "data/TEXTURE/CHAT/chatTab_title.png" },					// チャットタブのタイトル
 	{ "data/TEXTURE/CHAT/chatTab_writeWindow.png" },			// チャットタブの書き込みウィンドウ

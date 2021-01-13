@@ -36,6 +36,8 @@ public:
 		TEX_MATERIAL_FIELD003,					//マテリアル
 		TEX_MATERIAL_FIELD004,					//マテリアル
 
+		TEX_MODULEPARTS_MODULE03_SENDBUTTON,	//送信ボタン
+
 		TEX_CHAT_BACK,							// チャットタブの背景
 		TEX_CHAT_TITLE,							// チャットタブのタイトル
 		TEX_CHAT_WRITEWINDOW,					// チャットタブの書き込みウィンドウ

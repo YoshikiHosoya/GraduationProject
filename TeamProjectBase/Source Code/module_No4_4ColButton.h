@@ -36,8 +36,6 @@ public:
 		READY,				//準備
 		START,				//開始
 		LIGHTING,			//点灯
-		INTERVAL,			//次のボタン点滅までのインターバル
-		PLAYER_INPUT,		//プレイヤー入力中
 		RESET_INTERVAL,		//次の周回へのインターバル
 		END,
 
@@ -75,9 +73,6 @@ private:
 	int m_nNowFlashNumber;											//現在の点灯してるバターン
 	int m_nClearNum;												//クリアした数
 	int m_nButtonLightingCnt;										//ボタンのライト点滅用のカウント
-
-	int m_nPlayerPushNum;											//プレイヤーの入力した回数
-
 
 	void SetNextButton_NotConnectionPort_NotBattery(BUTTON &NextButton);
 	void SetNextButton_NotConnectionPort_YesBattery(BUTTON &NextButton);
