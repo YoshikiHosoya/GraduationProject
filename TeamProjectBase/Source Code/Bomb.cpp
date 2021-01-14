@@ -464,11 +464,11 @@ void CBomb::CreateModule()
 	CHossoLibrary::RangeLimit_Equal(m_nModuleNum, 0, MAX_MODULE_NUM);
 
 	//モジュールランダム生成
-	//CreateModule_Random();
+	CreateModule_Random();
 
 //Debug用
 #ifdef _DEBUG
-	CreateModuleDebug();
+	//CreateModuleDebug();
 #endif //_DEBUG
 
 

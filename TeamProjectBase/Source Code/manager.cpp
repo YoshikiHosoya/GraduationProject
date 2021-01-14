@@ -15,10 +15,11 @@
 #include "keyboard.h"
 #include "pad_XInput.h"
 #include "fade.h"
-#include "game.h"
-#include "title.h"
-#include "result.h"
 #include "basemode.h"
+#include "title.h"
+#include "game.h"
+#include "tutorial.h"
+#include "result.h"
 #include "scene.h"
 #include "TestMode.h"
 #include "mouse.h"
@@ -296,6 +297,13 @@ void CManager::SetMode(MODE nextmode)
 		m_pBaseMode.reset(new CGame);
 		std::cout << "new BaseMode[Game]" << NEWLINE;
 		//m_pSound->Play(CSound::LABEL_BGM_GAME);
+		break;
+
+		//result
+	case MODE_TUTORIAL:
+		m_pBaseMode.reset(new CTutorial);
+		std::cout << "new BaseMode[result]" << NEWLINE;
+		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
 		//result

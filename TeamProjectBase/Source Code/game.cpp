@@ -29,7 +29,7 @@
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
 bool CGame::m_bClear = false;
-CBomb::DIFFICULTY CGame::m_bDifficulty = CBomb::EASY;
+CBomb::DIFFICULTY CGame::m_bDifficulty = CBomb::HARD;
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -70,7 +70,7 @@ HRESULT CGame::Init(HWND hWnd)
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
 
 	//初期化
-	SetState(STATE::STATE_NORMAL);
+	SetState(STATE::STATE_READY);
 	//パーティクルのマネージャ
 	CParticleManager::Create();
 

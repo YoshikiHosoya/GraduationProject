@@ -97,7 +97,11 @@ void CBaseMode::DebugCommand()
 		{
 			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT);
 		}
-
+		//チュートリアル
+		if (pKeyboard->GetTrigger(DIK_NUMPAD5))
+		{
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
+		}
 		//エフェクトビューワ
 		if (pKeyboard->GetTrigger(DIK_NUMPAD8))
 		{
