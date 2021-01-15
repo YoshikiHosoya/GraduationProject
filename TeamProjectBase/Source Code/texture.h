@@ -36,6 +36,8 @@ public:
 		TEX_MATERIAL_FIELD003,					//マテリアル
 		TEX_MATERIAL_FIELD004,					//マテリアル
 
+		TEX_MODULEPARTS_MODULE03_SENDBUTTON,	//送信ボタン
+
 		TEX_CHAT_BACK,							// チャットタブの背景
 		TEX_CHAT_TITLE,							// チャットタブのタイトル
 		TEX_CHAT_WRITEWINDOW,					// チャットタブの書き込みウィンドウ
@@ -79,6 +81,14 @@ public:
 		TEX_UI_TITLE_LOGO,						//UI タイトルロゴ
 		TEX_UI_TITLE_START,						//UI タイトル　スタート
 		TEX_UI_TITLE_END,						//UI タイトル　エンド
+
+		TEX_UI_TUTORIAL_REMOVE01,				//UI チュートリアル　解読１
+		TEX_UI_TUTORIAL_REMOVE02,				//UI チュートリアル　解読２
+		TEX_UI_TUTORIAL_REMOVE03,				//UI チュートリアル　解読３
+		TEX_UI_TUTORIAL_SOLVE01,				//UI チュートリアル　解除１
+		TEX_UI_TUTORIAL_SOLVE02,				//UI チュートリアル　解除２
+		TEX_UI_TUTORIAL_SOLVE03,				//UI チュートリアル　解除３
+
 
 		TEX_UI_RESULT_LOGO,						//UI リザルトロゴ
 		TEX_UI_RESULT_TIMER,					//UI リザルト　タイム

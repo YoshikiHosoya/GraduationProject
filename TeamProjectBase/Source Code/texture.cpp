@@ -24,6 +24,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/Material/field003.jpg" },					//マテリアル
 	{ "data/TEXTURE/Material/renga.jpg" },						//マテリアル
 
+	{ "data/TEXTURE/ModuleParts/SendButton_Module03.png" },		//送信ボタン
+
 	{ "data/TEXTURE/CHAT/chatTab_back.png" },					// チャットタブの背景
 	{ "data/TEXTURE/CHAT/chatTab_title.png" },					// チャットタブのタイトル
 	{ "data/TEXTURE/CHAT/chatTab_writeWindow.png" },			// チャットタブの書き込みウィンドウ
@@ -68,11 +70,19 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Title/Start.png" },						//UI タイトル
 	{ "data/TEXTURE/UI/Title/End.png" },						//UI タイトル
 
+	{ "data/TEXTURE/UI/Tutorial/Remove01.png" },				//UI チュートリアル　解読１
+	{ "data/TEXTURE/UI/Tutorial/Remove02.png" },				//UI チュートリアル　解読２
+	{ "data/TEXTURE/UI/Tutorial/Remove03.png" },				//UI チュートリアル　解読３
+	{ "data/TEXTURE/UI/Tutorial/Solve01.png" },					//UI チュートリアル　解除１
+	{ "data/TEXTURE/UI/Tutorial/Solve02.png" },					//UI チュートリアル　解除２
+	{ "data/TEXTURE/UI/Tutorial/Solve03.png" },					//UI チュートリアル　解除３
+
+
 	{ "data/TEXTURE/UI/Result/Result.png" },					//UI リザルト
 	{ "data/TEXTURE/UI/Result/PlayTime.png" },					//UI リザルト
 	{ "data/TEXTURE/UI/Result/Success.png" },					//UI リザルト
 	{ "data/TEXTURE/UI/Result/Failed.png" },					//UI リザルト
-	{ "data/TEXTURE/UI/Result/PlaytimeBar.png" },					//UI リザルト
+	{ "data/TEXTURE/UI/Result/PlaytimeBar.png" },				//UI リザルト
 	{ "data/TEXTURE/UI/Result/Plate.png" },						//UI リザルト
 	{ "data/TEXTURE/UI/Result/Retry.png" },						//UI リザルト
 	{ "data/TEXTURE/UI/Result/End.png" },						//UI リザルト

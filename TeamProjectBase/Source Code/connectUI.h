@@ -124,6 +124,8 @@ public:
 	static void RecvGuestSelect(int nSelect);
 	static void RecvGuestWait(void);
 
+	static int GetSelectMode() { return m_nSelectMode[PLAYER_ONE]; };
+
 private:
 	static void ReadFromLine(CONST_STRING cnpLine, CONST_STRING cnpEntryType, CONST_STRING cnpEntryData);
 	static void SetBothInfo(CONST_STRING str, CONST_STRING type);

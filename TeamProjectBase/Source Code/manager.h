@@ -39,6 +39,7 @@ public:
 		MODE_NONE = -1,						//無し
 		MODE_TITLE,							//タイトル
 		MODE_DECODING,						// 解読
+		MODE_TUTORIAL,						//チュートリアル
 		MODE_GAME,							//ゲーム
 		MODE_RESULT,						//リザルト
 		MODE_TEST,							//テスト画面

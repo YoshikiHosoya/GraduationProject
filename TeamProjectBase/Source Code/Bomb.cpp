@@ -841,7 +841,7 @@ void CBomb::CreateModuleDebug()
 	//1”Ô–Ú
 	CBomb::CreateModuleOne<CModule_Timer>();
 	//2”Ô–Ú
-	CBomb::CreateModuleOne<CModule_No3_PassWord>();
+	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//3”Ô–Ú
 	CBomb::CreateModuleOne<CModule_No4_4ColButton>();
 	//4”Ô–Ú

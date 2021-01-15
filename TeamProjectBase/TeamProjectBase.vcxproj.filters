@@ -303,6 +303,9 @@
     <ClCompile Include="Source Code\UI_Base.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\tutorial.cpp">
+      <Filter>Mode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\camera.h">
@@ -565,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\UI_Base.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\tutorial.h">
+      <Filter>Mode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
