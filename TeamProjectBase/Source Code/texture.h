@@ -71,6 +71,9 @@ public:
 		TEX_CONNECT_CAUTION_MODE,				// モード選択時の注意
 		TEX_CONNECT_CAUTION_LEVEL,				// レベル選択時の注意
 
+		TEX_CONNECT_LOADING,					// ロード中
+		TEX_CONNECT_OUT_GUEST,					// ゲスト離脱による接続終了
+
 		TEX_UI_PRESSBUTTON,						//UI プレス
 
 		TEX_UI_TITLE_LOGO,						//UI タイトルロゴ
@@ -87,7 +90,6 @@ public:
 		TEX_UI_RESULT_END,						//UI リザルト　終了
 		TEX_UI_RESULT_COMMA,					//UI リザルト　コンマ
 		TEX_UI_RESULT_SEMICOLON,				//UI リザルト　セミコロン
-
 
 
 
@@ -138,6 +140,8 @@ public:
 		SEPARATE_TEX_MODULEPARTS_MODULE01,					//モジュールナンバー1 〇×△□
 		SEPARATE_TEX_MODULEPARTS_MODULE03,					//モジュールナンバー3 パスワードの模様
 
+		//ロードアイコン
+		SEPARATE_TEX_LOADICON,								// ロードアイコン
 
 		SEPARATE_TEX_MAX									//MAX
 	};

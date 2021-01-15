@@ -19,6 +19,8 @@
 #include "timer.h"
 #include "mouse.h"
 #include "UI_Base.h"
+#include "client.h"
+
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
@@ -34,6 +36,11 @@ CResult::CResult()
 {
 	m_nCntState = 0;
 	m_state = RESULT_STATE::UP_BAR_IN;
+
+	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+	{
+		m_nSelectMode[nPlayer] = 0;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -74,6 +81,7 @@ void CResult::Update()
 	//ステートに応じた更新
 	UpdateState();
 
+#ifdef _DEBUG
 	//フェードしてない時
 	if (CManager::GetRenderer()->GetFade()->GetFadeState() == CFade::FADE_NONE)
 	{
@@ -83,6 +91,24 @@ void CResult::Update()
 				//ステート変更
 				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
 				CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
+		}
+	}
+#endif
+
+	if (m_nSelectMode[0] == CClient::ORDER_RETRY)
+	{
+		static int nIcon = 0;
+		static int nAnim = 0;
+		nIcon++;
+		if (nIcon >= 5)
+		{
+			nAnim++;
+			m_pPolygonList[LOADICON]->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(nAnim, CTexture::SEPARATE_TEX_LOADICON), D3DXVECTOR2(1.0f / 8, 1.0f));
+			nIcon = 0;
+			if (nAnim >= 7)
+			{
+				nAnim = 0;
+			}
 		}
 	}
 }
@@ -152,18 +178,44 @@ void CResult::Collision()
 	//クリック時
 	if (pMouse->GetTrigger(0))
 	{
-		//マウスとポリゴンの判定
-		if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pPolygonList[RESULT_POLYGON_TYPE::RETRY].get()))
+		if (m_nSelectMode[0] == 0)
 		{
-			//暗転
-			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+			//マウスとポリゴンの判定
+			if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pPolygonList[RESULT_POLYGON_TYPE::RETRY].get()))
+			{
+				//暗転
+				m_nSelectMode[0] = CClient::ORDER_RETRY;
+				m_pPolygonList.emplace_back(
+					CUI_Base::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(600.0f, 200.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_CONNECT_LOADING), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
+				m_pPolygonList.emplace_back(
+					CUI_Base::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 25.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_CONNECT_LOAD), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
+				m_pPolygonList[LOADICON]->SetAnimation(CHossoLibrary::CalcUV_StaticFunc(0, CTexture::SEPARATE_TEX_LOADICON), D3DXVECTOR2(1.0f / 8, 1.0f));
+
+				CClient::SendRetry();
+			}
+			//マウスとポリゴンの判定
+			if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pPolygonList[RESULT_POLYGON_TYPE::END].get()))
+			{
+				//ゲーム終了
+				m_nSelectMode[0] = CClient::ORDER_END_GAME;
+				CClient::SendEndGame();
+				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
+			}
 		}
-		//マウスとポリゴンの判定
-		if (CHossoLibrary::Collision_PointTo2DPolygon(pos, m_pPolygonList[RESULT_POLYGON_TYPE::END].get()))
-		{
-			//ゲーム終了
-			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
-		}
+	}
+	
+	// 終了
+	if (m_nSelectMode[1] == CClient::ORDER_END_GAME)
+	{
+		m_pPolygonList.emplace_back(
+			CUI_Base::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(600.0f, 200.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_CONNECT_OUT_GUEST), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
+
+		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
+	}
+	// リトライ
+	else if (m_nSelectMode[0] == CClient::ORDER_RETRY && m_nSelectMode[1] == CClient::ORDER_RETRY)
+	{
+		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
 	}
 
 }
@@ -244,4 +296,12 @@ void CResult::SetState(RESULT_STATE state)
 	default:
 		break;
 	}
+}
+
+//------------------------------------------------------------------------------
+// ゲストのリトライを設定
+//------------------------------------------------------------------------------
+void CResult::SetGuestMode(int nSelect)
+{
+	m_nSelectMode[1] = nSelect;
 }

@@ -59,6 +59,9 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CONNECTMODE/caution_mode.png" },			// モード選択時の注意
 	{ "data/TEXTURE/CONNECTMODE/caution_level.png" },			// レベル選択時の注意
 
+	{ "data/TEXTURE/CONNECTMODE/loading.png" },					// ロード中
+	{ "data/TEXTURE/CONNECTMODE/out_guest.png" },				// ゲスト離脱によるゲーム終了
+
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 
 	{ "data/TEXTURE/UI/Title/Title.png" },						//UI タイトル
@@ -116,6 +119,8 @@ FILENAME_LIST CTexture::m_aSeparateTexFileNameList =
 	{ "data/TEXTURE/ModuleParts/Icon_Module01.png" },					//爆発
 	{ "data/TEXTURE/ModuleParts/Icon_Module03.png" },					//爆発
 
+	{ "data/TEXTURE/CONNECTMODE/LoadIcon.png" },				// 接続中のロードアイコン
+
 };
 
 
@@ -131,6 +136,7 @@ std::vector<CTexture::SEPARATE_TEX_INFO> CTexture::m_apSeparateTexInfoList =
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE00,				D3DXVECTOR2(12,2),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE01,				D3DXVECTOR2(4,1),	ZeroVector2 },		//爆発
 	{ nullptr, CTexture::SEPARATE_TEX_MODULEPARTS_MODULE03,				D3DXVECTOR2(6,1),	ZeroVector2 },		//爆発
+	{ nullptr, CTexture::SEPARATE_TEX_LOADICON,							D3DXVECTOR2(8,1),	ZeroVector2 },		//爆発
 
 };
 

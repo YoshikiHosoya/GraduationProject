@@ -11,6 +11,8 @@
 //------------------------------------------------------------------------------
 #include "main.h"
 #include "basemode.h"
+#include "polygon2D.h"
+
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
@@ -52,10 +54,13 @@ public:
 		SELECTION_WINDOW,
 		RETRY,
 		END,
+
+		LOADING,
+		LOADICON,
+		OUT_GUEST,
+
 		MAX,
 	};
-
-
 
 	HRESULT Init(HWND hWnd);			//初期化
 	void Update();						//更新
@@ -66,8 +71,11 @@ public:
 	void Collision();
 	void SetState(RESULT_STATE state);
 
+	void SetGuestMode(int nSelect);
+
 private:
-	int m_nCntState;	//カウンタ
+	int m_nCntState;		//カウンタ
+	int m_nSelectMode[2];	// プレイヤーが選択したモード
 
 	S_ptr<CTimer> m_pTimer;
 	RESULT_STATE m_state;
