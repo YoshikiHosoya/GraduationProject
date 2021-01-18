@@ -36,11 +36,6 @@ CTutorial::CTutorial()
 	m_pTutorialPolygon.reset();
 	m_type = (CTutorial::TUTORIL_TYPE)CConnectUI::GetSelectMode();
 	m_bTutorialEndFlag = false;
-
-
-	//m_type = CTutorial::TUTORIAL_REMOVE;
-	m_type = CTutorial::TUTORIAL_SOLVE;
-
 }
 
 //------------------------------------------------------------------------------
@@ -151,7 +146,7 @@ void CTutorial::Collision()
 		m_nPage++;
 	}
 
-	if (pMouse->GetPress(1))
+	if (pMouse->GetPress(0))
 	{
 		nMousePressCnt++;
 	}
