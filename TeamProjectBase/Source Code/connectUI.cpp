@@ -184,19 +184,13 @@ void CConnectUI::Update(void)
 		if (m_flow == CONNECTFLOW_END)
 		{
 			//ステート変更
-			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
-				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
-			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
-				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
 		}
 #ifdef _DEBUG
 		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) && CManager::GetKeyboard()->GetPress(DIK_RETURN))
 		{
 			//ステート変更
-			if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
-				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
-			else if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
-				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
 		}
 #endif
 	}

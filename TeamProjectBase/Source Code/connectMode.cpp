@@ -56,12 +56,14 @@ HRESULT CConnectMode::Init(HWND hWnd)
 //==========================================================================================================================================================
 void CConnectMode::Update()
 {
+#ifdef _DEBUG
 	//なんかボタン押されたとき
-	if (CHossoLibrary::CheckAnyButton())
+	/*if (CHossoLibrary::CheckAnyButton())
 	{
 		//チュートリアルに遷移
-		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
-	}
+		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
+	}*/
+#endif
 }
 
 //==========================================================================================================================================================
