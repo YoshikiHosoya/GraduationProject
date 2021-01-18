@@ -17,6 +17,8 @@
 #include "picture.h"
 #include <sys/stat.h>
 #include "connectUI.h"
+#include "basemode.h"
+#include "result.h"
 
 // ===================================================================
 // マクロ定義
@@ -218,6 +220,11 @@ void CClient::WaitRecieve(void)
 		if (cData[0] == ORDER_SENDWAIT)
 		{
 			RecvWait();
+		}
+		// リトライ受信
+		if (cData[0] == ORDER_RETRY)
+		{
+			RecvRetry();
 		}
 	}
 }
@@ -548,6 +555,68 @@ void CClient::SendWait(void)
 void CClient::RecvWait(void)
 {
 	CConnectUI::RecvGuestWait();
+}
+
+// ===================================================================
+// リトライの受信
+// ===================================================================
+void CClient::SendRetry(void)
+{
+	char buffer[1];
+
+	buffer[0] = ORDER_RETRY;
+
+	send(m_socket, buffer, 1, 0);
+}
+
+// ===================================================================
+// リトライの受信
+// ===================================================================
+void CClient::RecvRetry(void)
+{
+	if (CManager::GetMode() == CManager::MODE_RESULT)
+	{
+		CResult *pResult = (CResult*)CManager::GetBaseMode();
+		pResult->SetGuestMode((int)ORDER_RETRY);
+	}
+}
+
+// ===================================================================
+// ゲーム終了の送信
+// ===================================================================
+void CClient::SendEndGame(void)
+{
+	char buffer[1];
+
+	buffer[0] = ORDER_END_GAME;
+
+	send(m_socket, buffer, 1, 0);
+}
+
+// ===================================================================
+// ゲーム終了の受信
+// ===================================================================
+void CClient::RecvEndGame(void)
+{
+	if (CManager::GetMode() == CManager::MODE_RESULT)
+	{
+		CResult *pResult = (CResult*)CManager::GetBaseMode();
+		pResult->SetGuestMode((int)ORDER_END_GAME);
+	}
+}
+
+// ===================================================================
+// 接続終了の送信
+// ===================================================================
+void CClient::SendEndAccept(void)
+{
+	char buffer[1];
+
+	// 待ち状態命令
+	buffer[0] = ORDER_CLOSED_SOCKET;
+
+	// 送信
+	send(m_socket, buffer, 1, 0);
 }
 
 #ifdef _DEBUG

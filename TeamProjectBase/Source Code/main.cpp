@@ -14,6 +14,7 @@
 #include "mylibrary.h"
 #include "mouse.h"
 #include "chatTab.h"
+#include "client.h"
 
 //------------------------------------------------------------------------------
 //マクロ定義
@@ -260,6 +261,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_ESCAPE:	//ESCキーを押された際のメッセージ
 			//WM_DESTROYを発生
+			CClient::SendEndAccept();
 			DestroyWindow(hWnd);
 			break;
 		}

@@ -27,13 +27,21 @@ class CClient
 public:
 	typedef enum
 	{
-		ORDER_NONE = 0,	// 指示なし
-		ORDER_GUEST_BE_ACCEPT,	// 接続完了
+		ORDER_NONE = 0,			// 指示なし
+		ORDER_GUEST_BE_ACCEPT,	// 接続成功
+
 		ORDER_SENDTEXT,			// テキスト送信
 		ORDER_SENDPICTURE,		// ピクチャ送信
-		ORDER_SENDSELECT,		// 選択を送信
+
+		ORDER_SENDSELECT,		// 選択送信
 		ORDER_SENDWAIT,			// 待ち状態の送信
-	} SERVER_ORDER;
+
+		ORDER_END_GAME,			// ゲーム終了
+		ORDER_RETRY,			// リトライ
+		ORDER_CLOSED_SOCKET,	// 接続終了
+
+		ORDER_MAX
+	} CLIENT_ORDER;
 
 	typedef enum
 	{
@@ -74,14 +82,24 @@ public:
 	static void SetClientState(CLIENTSTATE state)	{ m_state = state; }		// 状態の設定
 
 	static void SendText(void);													// 文章の送信
-	static void SendPicture(void);												// ピクチャの送信
 	static void RecvText(char *data);											// 文章の受信
+
+	static void SendPicture(void);												// ピクチャの送信
 	static void RecvPicture(char *data);										// ピクチャの受信
+
 	static void SendSelect(int nSelect);										// 選択の送信
 	static void RecvSelect(char *data);											// 選択の受信
+
 	static void SendWait(void);													// 待ち状態の送信
 	static void RecvWait(void);													// 待ち状態の受信
 
+	static void SendRetry(void);												// リトライの送信
+	static void RecvRetry(void);												// リトライの受信
+
+	static void SendEndGame(void);												// ゲーム終了の送信
+	static void RecvEndGame(void);												// ゲーム終了の受信
+
+	static void SendEndAccept(void);											// 接続終了の送信
 private:
 	static CLIENTSTATE m_state;			// クライアントの状態
 	static bool m_bAccept;			// クライアント受け入れのフラグ
