@@ -116,7 +116,7 @@ public:
 	static bool Check3DCameraStick(D3DXVECTOR3 &Rot, float fHolizonMove, float fVerticalMove);						//3D用　RStick　移動量計算
 
 	static void StartVibration(int nCntVibration);					//バイブレーション処理
-
+	
 	static void CalcMatrix(D3DXMATRIX *pMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rRot, D3DXVECTOR3 const &rScale);		//ワールドマトリックス計算
 	static void CalcShadowMatrix(D3DXMATRIX &rShadowMtx, D3DXVECTOR3 const &rPos, D3DXVECTOR3 const &rNor);						//シャドーマトリックスの計算
 	static D3DXVECTOR3 CalcMtxToVector3(D3DXMATRIX const & rMtx);																//マトリックスをVector3に変換

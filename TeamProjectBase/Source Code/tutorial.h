@@ -32,24 +32,31 @@ public:
 		TUTORIAL_NONE = 0,
 		TUTORIAL_REMOVE,	// 解除
 		TUTORIAL_SOLVE,		// 解読
-
 	};
-
 
 	HRESULT Init(HWND hWnd);			//初期化
 	void Update();						//更新
 	void Draw();						//描画
 	void ShowDebugInfo() {};			//デバッグ情報表記
 
-	void CreateUI();
-	void UpdateState();
-	void Collision();
+	void CreateUI();					//ＵＩ生成
+	void UpdateState();					//ステート更新
+	void Collision();					//判定
+
+	void PageChange();					//ページ変更
+	void Ready();						//準備完了
 
 private:
-	int m_nCntState;	//カウンタ
-	TUTORIL_TYPE m_state;
+	int m_nCntState;					//カウンタ
+	int m_nPage;						//ページ
+	TUTORIL_TYPE m_type;				//タイプ
 
-	Vec<S_ptr<CScene2D>> m_pPolygonList;
+	bool m_bTutorialEndFlag;			//終了フラグ
+
+	S_ptr<CScene2D> m_pReady;
+	S_ptr<CScene2D> m_pTutorialPolygon;
+	S_ptr<CScene2D> m_pNextPage;
+
 };
 
 #endif
