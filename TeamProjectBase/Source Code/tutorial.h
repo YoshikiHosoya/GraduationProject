@@ -46,12 +46,15 @@ public:
 	void PageChange();					//ページ変更
 	void Ready();						//準備完了
 
+	static void GuestEndTutorial() { m_bGuestFlag = true; }		// ゲストの準備完了
+
 private:
 	int m_nCntState;					//カウンタ
 	int m_nPage;						//ページ
 	TUTORIL_TYPE m_type;				//タイプ
 
 	bool m_bTutorialEndFlag;			//終了フラグ
+	static bool m_bGuestFlag;			// ゲストの終了フラグ
 
 	S_ptr<CScene2D> m_pReady;
 	S_ptr<CScene2D> m_pTutorialPolygon;

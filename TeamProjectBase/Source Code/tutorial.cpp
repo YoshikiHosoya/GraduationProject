@@ -19,6 +19,8 @@
 #include "connectUI.h"
 #include "mouse.h"
 #include "UI_Base.h"
+#include "client.h"
+
 //------------------------------------------------------------------------------
 //マクロ
 //------------------------------------------------------------------------------
@@ -26,6 +28,7 @@
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
 //------------------------------------------------------------------------------
+bool CTutorial::m_bGuestFlag = false;
 
 //------------------------------------------------------------------------------
 //コンストラクタ
@@ -36,6 +39,7 @@ CTutorial::CTutorial()
 	m_pTutorialPolygon.reset();
 	m_type = (CTutorial::TUTORIL_TYPE)CConnectUI::GetSelectMode();
 	m_bTutorialEndFlag = false;
+	m_bGuestFlag = false;
 }
 
 //------------------------------------------------------------------------------
@@ -70,18 +74,17 @@ void CTutorial::Update()
 
 	Collision();
 
-	////フェードしてない時
-	//if (CManager::GetRenderer()->GetFade()->GetFadeState() == CFade::FADE_NONE)
-	//{
-	//	//何かボタン押したとき
-	//	if (CHossoLibrary::CheckAnyButton())
-	//	{
-	//		//ステート変更
-	//		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
-
-	//		CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
-	//	}
-	//}
+	//フェードしてない時
+	if (CManager::GetRenderer()->GetFade()->GetFadeState() == CFade::FADE_NONE)
+	{
+		//ゲスト・プレイヤーが待機中のとき
+		if (m_bGuestFlag && m_bTutorialEndFlag)
+		{
+			// ゲームへ遷移
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+			CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -206,4 +209,6 @@ void CTutorial::Ready()
 {
 	//テクスチャ差し替え
 	m_pReady->BindTexture(CTexture::GetTexture(CTexture::TEX_MATERIAL_FIELD000));
+	// 待ち状態の送信
+	CClient::SendWait();
 }

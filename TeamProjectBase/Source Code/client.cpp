@@ -19,6 +19,7 @@
 #include "connectUI.h"
 #include "basemode.h"
 #include "result.h"
+#include "tutorial.h"
 
 // ===================================================================
 // マクロ定義
@@ -554,7 +555,12 @@ void CClient::SendWait(void)
 // ===================================================================
 void CClient::RecvWait(void)
 {
-	CConnectUI::RecvGuestWait();
+	// サーバー接続
+	if (CManager::GetMode() == CManager::MODE_CONNECT_SERVER)
+		CConnectUI::RecvGuestWait();
+	// チュートリアル
+	else if (CManager::GetMode() == CManager::MODE_TUTORIAL)
+		CTutorial::GuestEndTutorial();
 }
 
 // ===================================================================
