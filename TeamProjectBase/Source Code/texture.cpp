@@ -73,9 +73,11 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Tutorial/Remove01.png" },				//UI チュートリアル　解読１
 	{ "data/TEXTURE/UI/Tutorial/Remove02.png" },				//UI チュートリアル　解読２
 	{ "data/TEXTURE/UI/Tutorial/Remove03.png" },				//UI チュートリアル　解読３
+	{ "data/TEXTURE/UI/Tutorial/Remove04.png" },				//UI チュートリアル　解読３
 	{ "data/TEXTURE/UI/Tutorial/Solve01.png" },					//UI チュートリアル　解除１
 	{ "data/TEXTURE/UI/Tutorial/Solve02.png" },					//UI チュートリアル　解除２
 	{ "data/TEXTURE/UI/Tutorial/Solve03.png" },					//UI チュートリアル　解除３
+	{ "data/TEXTURE/UI/Tutorial/Solve04.png" },					//UI チュートリアル　解除３
 
 
 	{ "data/TEXTURE/UI/Result/Result.png" },					//UI リザルト

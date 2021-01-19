@@ -169,7 +169,7 @@ void CTutorial::Collision()
 		m_bTutorialEndFlag = true;
 	}
 
-	CHossoLibrary::RangeLimit_Equal(m_nPage, 0, 2);
+	CHossoLibrary::RangeLimit_Equal(m_nPage, 0, 3);
 
 	//ページ変更
 	PageChange();

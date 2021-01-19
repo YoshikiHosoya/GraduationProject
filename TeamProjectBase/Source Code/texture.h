@@ -85,9 +85,11 @@ public:
 		TEX_UI_TUTORIAL_REMOVE01,				//UI チュートリアル　解読１
 		TEX_UI_TUTORIAL_REMOVE02,				//UI チュートリアル　解読２
 		TEX_UI_TUTORIAL_REMOVE03,				//UI チュートリアル　解読３
+		TEX_UI_TUTORIAL_REMOVE04,				//UI チュートリアル　解読４
 		TEX_UI_TUTORIAL_SOLVE01,				//UI チュートリアル　解除１
 		TEX_UI_TUTORIAL_SOLVE02,				//UI チュートリアル　解除２
 		TEX_UI_TUTORIAL_SOLVE03,				//UI チュートリアル　解除３
+		TEX_UI_TUTORIAL_SOLVE04,				//UI チュートリアル　解除４
 
 
 		TEX_UI_RESULT_LOGO,						//UI リザルトロゴ
