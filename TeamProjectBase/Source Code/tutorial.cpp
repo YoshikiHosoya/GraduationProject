@@ -81,7 +81,11 @@ void CTutorial::Update()
 		if (m_bGuestFlag && m_bTutorialEndFlag)
 		{
 			// ƒQ[ƒ€‚Ö‘JˆÚ
-			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+			if (m_type == CTutorial::TUTORIAL_REMOVE)
+				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+			else if (m_type == CTutorial::TUTORIAL_SOLVE)
+				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
+			// SE
 			CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
 		}
 	}

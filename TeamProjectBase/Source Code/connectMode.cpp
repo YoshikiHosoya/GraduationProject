@@ -48,6 +48,9 @@ HRESULT CConnectMode::Init(HWND hWnd)
 	// ƒ`ƒƒƒbƒg‚Ì¶¬
 	m_pChatBase = CChatBase::Create();
 
+	std::thread t1(CClient::ConnectServer);
+	t1.detach();
+
 	return S_OK;
 }
 
