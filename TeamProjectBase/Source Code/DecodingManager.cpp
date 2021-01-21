@@ -14,6 +14,7 @@
 #include "mouse.h"
 #include "manager.h"
 #include "DecodingWindow.h"
+#include "sound.h"
 
 //-------------------------------------------------------------------------------------------------------------
 // マクロ定義
@@ -337,12 +338,19 @@ void CDecodingManager::UpdateSelect(void)
 			// 描画フラグを設定
 			m_pUi[UI_BACKLIGHT]->SetDispFlag(true);
 			m_nSelectIndex = nCntUi;
+
+			//選択音
+			CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
+
 		}
 		bOverlap = true;
 		// 右クリックを離した時かつ選択された番号と同じとき
 		if (pMouse->GetRelease(0) &&
 			m_nSelectIndex == nCntUi)
 		{
+			//選択音
+			CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
+
 			m_pActiveWind = m_pWind[nCntUi - 1].get();
 			m_pActiveWind->PreparingAppear();
 			SstMode(MODE_SHOW);
@@ -403,6 +411,10 @@ void CDecodingManager::UpdateShow(void)
 	if (m_pActiveWind->CloseButtonProc(pMouse, &MousePos) == true)
 	{
 		SstMode(MODE_SELECT);
+
+		//キャンセル
+		CManager::GetSound()->Play(CSound::LABEL_SE_CANCEL);
+
 	}
 	else
 	{
