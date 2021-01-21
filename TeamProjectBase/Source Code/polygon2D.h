@@ -58,6 +58,7 @@ public:
 	D3DXVECTOR2 &GetSize(void)	{ return m_size; }						// ‘å‚«‚³æ“¾ˆ—
 	D3DXCOLOR	&GetCol(void)	{ return m_col; }						// ƒJƒ‰[‚Ìæ“¾
 	bool GetbShow(void)			{ return m_bShow; }						// •`‰æ‚·‚é‚©æ“¾
+	LPDIRECT3DTEXTURE9 GetTexture(void) { return m_pTexture; }
 
 	bool ReturnHit(D3DXVECTOR2 &pos);
 

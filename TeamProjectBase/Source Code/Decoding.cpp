@@ -25,6 +25,18 @@
 #include "DecodingManager.h"
 #include "DecodingWindow.h"
 #include "keyboard.h"
+#include "game.h"
+
+//------------------------------------------------------------------------------
+// マクロ定義
+//------------------------------------------------------------------------------
+#define GAMEEND_UI_SIZE	(D3DXVECTOR3(800.0f, 250.0f, 0.0f))
+
+//------------------------------------------------------------------------------
+// 静的メンバ変数の初期化
+//------------------------------------------------------------------------------
+CDecoding::GAMEENDSTATE CDecoding::m_endState = CDecoding::GAMEEND_NONE;
+int CDecoding::m_nCntState = 0;
 
 //------------------------------------------------------------------------------
 // コンストラクタ
@@ -73,6 +85,8 @@ HRESULT CDecoding::Init(HWND hWnd)
 	CDecodingWindow::Load();
 	// 解読マネージャーの生成
 	m_pDecodingManager = CDecodingManager::Create();
+	// 終了状態の初期化
+	m_endState = CDecoding::GAMEEND_NONE;
 
 	//チャット機能
 	CChatBase::Create();
@@ -84,6 +98,13 @@ HRESULT CDecoding::Init(HWND hWnd)
 //------------------------------------------------------------------------------
 void CDecoding::Update()
 {
+	// ゲームを終了するとき
+	if (m_endState != GAMEEND_NONE)
+	{
+		UpdateEndState();
+	}
+
+#ifdef _DEBUG
 	//なんかボタン押されたとき
 	if (CManager::GetKeyboard()->GetPress(DIK_RSHIFT) && 
 		CManager::GetKeyboard()->GetPress(DIK_RETURN))
@@ -91,6 +112,7 @@ void CDecoding::Update()
 		//チュートリアルに遷移
 		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
 	}
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -170,8 +192,7 @@ void CDecoding::SetState(STATE state)
 		case CDecoding::STATE_PAUSE:
 			break;
 		case CDecoding::STATE_GAMEOVER:
-			m_nCntState = 120;
-			CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(SCREEN_CENTER_POS, SCREEN_SIZE, BlackColor, nullptr, CScene::OBJTYPE_FRONT);
+
 			break;
 		case CDecoding::STATE_GAMECLEAR:
 			m_nCntState = 120;
@@ -206,5 +227,39 @@ void CDecoding::SetGaze(GAZE gaze)
 		}
 
 
+	}
+}
+
+//------------------------------------------------------------------------------
+// 終了時の更新
+//------------------------------------------------------------------------------
+void CDecoding::UpdateEndState(void)
+{
+	// 最初
+	if (m_nCntState >= 120)
+	{
+		// UIを生成し、クリアフラグを設定
+		if (m_endState == GAMEEND_CLEAR)
+		{
+			CGame::SetClearFlag(true);
+			CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(SCREEN_CENTER_POS, GAMEEND_UI_SIZE, WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_GAMECLEAR), CScene::OBJTYPE_FRONT);
+		}
+		else if (m_endState == GAMEEND_MISS)
+		{
+			CGame::SetClearFlag(false);
+			CSceneBase::ScenePolygonCreateSceneManagement<CScene2D>(SCREEN_CENTER_POS, GAMEEND_UI_SIZE, WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_GAMEOVER), CScene::OBJTYPE_FRONT);
+		}
+	}
+
+	m_nCntState--;
+
+	// カウント経過
+	if (m_nCntState <= 0)
+	{
+		SetState(CDecoding::STATE_NONE);
+		// UIを生成
+		m_endState == GAMEEND_CLEAR ?
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT) :
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_RESULT, BlackColor);
 	}
 }

@@ -24,6 +24,7 @@
 #include "client.h"
 #include "tablet.h"
 #include "TabletButton.h"
+#include "client.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -199,9 +200,14 @@ void CGame::SetState(STATE state)
 			//音再生
 			CManager::GetSound()->Play(CSound::LABEL_SE_EXPLOSION_00);
 
+			// ゲームオーバー送信
+			CClient::SendGameOver();
+
 			break;
 		case CGame::STATE_GAMECLEAR:
 			m_nCntState = 120;
+			// ゲームクリア送信
+			CClient::SendGameClear();
 
 			break;
 		case CGame::STATE_DEBUG:

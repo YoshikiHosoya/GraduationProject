@@ -42,6 +42,11 @@ int CConnectUI::m_nSelectMode[PLAYER_MAX] = {};
 int CConnectUI::m_nSelectLevel[PLAYER_MAX] = {};
 bool CConnectUI::m_bGuestWait = false;
 
+bool CConnectUI::m_bCreateFlagBoth[2][CONNECTUI_BOTH_MAX] = {};
+bool CConnectUI::m_bCreateFlagOnly[CONNECTUI_ONLY_MAX] = {};
+bool CConnectUI::m_bDeleteFlagBoth[2][CONNECTUI_BOTH_MAX] = {};
+bool CConnectUI::m_bDeleteFlagOnly[CONNECTUI_ONLY_MAX] = {};
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -113,108 +118,6 @@ HRESULT CConnectUI::Load(void)
 		return E_FAIL;
 	}
 	return S_OK;
-}
-
-//=============================================================================
-// 初期化
-//=============================================================================
-HRESULT CConnectUI::Init(void)
-{
-	// 要素の初期化
-	m_nCntAnim = 0;
-	m_nCntPattern = 0;
-	m_nCntState = 0;
-	m_flow = CONNECTFLOW_CONNECTING;
-	m_state = FLOWSTATE_BEGIN;
-	m_bGuestWait = false;
-
-	for (int nPlayer = 0; nPlayer < PLAYER_MAX; nPlayer++)
-	{
-		m_bConnect[nPlayer] = false;
-		m_nSelectMode[PLAYER_TWO] = SELECTMODE_NONE;
-		m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_NONE;
-	}
-
-	return S_OK;
-}
-
-//=============================================================================
-// 更新
-//=============================================================================
-void CConnectUI::Update(void)
-{
-	switch (m_flow)
-	{
-		// 接続中の処理
-	case CONNECTFLOW_CONNECTING:
-		Connecting();
-		break;
-		// 接続完了の処理
-	case CONNECTFLOW_CONNECTED:
-		Connected();
-		break;
-		// モードの選択処理
-	case CONNECTFLOW_SELECT_MODE:
-		SelectMode();
-		break;
-	case CONNECTFLOW_SELECT_LEVEL:
-		SelectLevel();
-		break;
-	}
-
-	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
-	{
-		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
-		{
-			if (m_pUIBoth[nPlayer][nUI])
-				m_pUIBoth[nPlayer][nUI]->Update();
-		}
-	}
-
-	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
-	{
-		if (m_pUIOnly[nUI])
-			m_pUIOnly[nUI]->Update();
-	}
-
-
-	//フェードしてない時
-	if (CManager::GetRenderer()->GetFade()->GetFadeState() == CFade::FADE_NONE)
-	{
-		if (m_flow == CONNECTFLOW_END)
-		{
-			//ステート変更
-			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
-		}
-#ifdef _DEBUG
-		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) && CManager::GetKeyboard()->GetPress(DIK_RETURN))
-		{
-			//ステート変更
-			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
-		}
-#endif
-	}
-}
-
-//=============================================================================
-// 描画
-//=============================================================================
-void CConnectUI::Draw(void)
-{
-	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
-	{
-		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
-		{
-			if (m_pUIBoth[nPlayer][nUI])
-				m_pUIBoth[nPlayer][nUI]->Draw();
-		}
-	}
-
-	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
-	{
-		if (m_pUIOnly[nUI])
-			m_pUIOnly[nUI]->Draw();
-	}
 }
 
 //=============================================================================
@@ -308,6 +211,161 @@ void CConnectUI::SetOnlyInfo(CONST_STRING str, CONST_STRING type)
 	if (sscanf(str, "color = %f %f %f %f", &Col.r, &Col.g, &Col.b, &Col.a) == 4)
 	{
 		m_UIInfoOnly[nType].color = Col;
+	}
+}
+
+//=============================================================================
+// 初期化
+//=============================================================================
+HRESULT CConnectUI::Init(void)
+{
+	// 要素の初期化
+	m_nCntAnim = 0;
+	m_nCntPattern = 0;
+	m_nCntState = 0;
+	m_flow = CONNECTFLOW_CONNECTING;
+	m_state = FLOWSTATE_BEGIN;
+	m_bGuestWait = false;
+
+	for (int nPlayer = 0; nPlayer < PLAYER_MAX; nPlayer++)
+	{
+		m_bConnect[nPlayer] = false;
+		m_nSelectMode[PLAYER_TWO] = SELECTMODE_NONE;
+		m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_NONE;
+
+		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
+		{
+			m_bCreateFlagBoth[nPlayer][nUI] = false;
+			m_bDeleteFlagBoth[nPlayer][nUI] = false;
+			m_UIInfoBoth[nPlayer][nUI].buttonState = BUTTON_NORMAL;
+		}
+	}
+
+	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
+	{
+		m_bCreateFlagOnly[nUI] = false;
+		m_bDeleteFlagOnly[nUI] = false;
+		m_UIInfoOnly[nUI].buttonState = BUTTON_NORMAL;
+		m_UIInfoOnly[nUI].color = WhiteColor;
+	}
+
+	return S_OK;
+}
+
+//=============================================================================
+// 更新
+//=============================================================================
+void CConnectUI::Update(void)
+{
+	// UI生成
+	CreateUI();
+	// UI破棄
+	DeleteUI();
+
+	switch (m_flow)
+	{
+		// 接続中の処理
+	case CONNECTFLOW_CONNECTING:
+		Connecting();
+		break;
+		// 接続完了の処理
+	case CONNECTFLOW_CONNECTED:
+		Connected();
+		break;
+		// モードの選択処理
+	case CONNECTFLOW_SELECT_MODE:
+		SelectMode();
+		break;
+	case CONNECTFLOW_SELECT_LEVEL:
+		SelectLevel();
+		break;
+	}
+
+	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+	{
+		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
+		{
+			if (m_pUIBoth[nPlayer][nUI])
+			{
+				if (m_UIInfoBoth[nPlayer][nUI].type == UITYPE_BUTTON)
+					ButtonAnimBoth(nPlayer, nUI);
+
+				m_pUIBoth[nPlayer][nUI]->Update();
+			}
+		}
+	}
+
+	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
+	{
+		if (m_pUIOnly[nUI])
+		{
+			if (m_UIInfoOnly[nUI].type == UITYPE_BUTTON)
+				ButtonAnimOnly(nUI);
+
+			m_pUIOnly[nUI]->Update();
+		}
+	}
+
+
+	//フェードしてない時
+	if (CManager::GetRenderer()->GetFade()->GetFadeState() == CFade::FADE_NONE)
+	{
+		if (m_flow == CONNECTFLOW_END)
+		{
+			//ステート変更
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
+		}
+#ifdef _DEBUG
+		if (CManager::GetKeyboard()->GetPress(DIK_LSHIFT) && CManager::GetKeyboard()->GetPress(DIK_RETURN))
+		{
+			//ステート変更
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TUTORIAL);
+		}
+#endif
+	}
+}
+
+//=============================================================================
+// ボタンのアニメーション
+//=============================================================================
+void CConnectUI::ButtonAnimBoth(int nPlayer, int type)
+{
+	switch (m_UIInfoBoth[nPlayer][type].buttonState)
+	{
+	case BUTTON_NORMAL: m_pUIBoth[nPlayer][type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 0), UV_BUTTON); break;
+	case BUTTON_PRESS:	m_pUIBoth[nPlayer][type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 1), UV_BUTTON); break;
+	case BUTTON_SELECT: m_pUIBoth[nPlayer][type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 2), UV_BUTTON); break;
+	}
+}
+
+void CConnectUI::ButtonAnimOnly(int type)
+{
+	switch (m_UIInfoOnly[type].buttonState)
+	{
+	case BUTTON_NORMAL: m_pUIOnly[type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 0), UV_BUTTON); break;
+	case BUTTON_PRESS:	m_pUIOnly[type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 1), UV_BUTTON); break;
+	case BUTTON_SELECT: m_pUIOnly[type]->SetAnim(D3DXVECTOR2(0.0f, 0.0f + (1.0f / 3) * 2), UV_BUTTON); break;
+	}
+}
+
+//=============================================================================
+// 描画
+//=============================================================================
+void CConnectUI::Draw(void)
+{
+	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+	{
+		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
+		{
+			if (m_pUIBoth[nPlayer][nUI])
+				m_pUIBoth[nPlayer][nUI]->Draw();
+		}
+	}
+
+	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
+	{
+		if (m_pUIOnly[nUI])
+			m_pUIOnly[nUI]->Draw();
 	}
 }
 
@@ -448,6 +506,140 @@ void CConnectUI::DebugCommand(void)
 #endif
 
 //=============================================================================
+// UI生成
+//=============================================================================
+void CConnectUI::CreateUI(void)
+{
+	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+	{
+		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
+		{
+			// 存在せず、生成フラグ有効
+			if (m_bCreateFlagBoth[nPlayer][nUI] && !m_pUIBoth[nPlayer][nUI])
+			{
+				// 生成
+				m_pUIBoth[nPlayer][nUI] = CreateBothUI(nPlayer, (CONNECTUITYPE_BOTH)nUI);
+				m_pUIBoth[nPlayer][nUI]->BindTexture(CTexture::GetTexture((CTexture::TEX_TYPE)GetTexNumberBoth(nPlayer, (CONNECTUITYPE_BOTH)nUI)));
+			}
+			// フラグ完了
+			m_bCreateFlagBoth[nPlayer][nUI] = false;
+		}
+	}
+
+	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
+	{
+		// 存在せず、生成フラグ有効
+		if (m_bCreateFlagOnly[nUI] && !m_pUIOnly[nUI])
+		{
+			// 生成
+			m_pUIOnly[nUI] = CreateOnlyUI((CONNECTUITYPE_ONLY)nUI);
+			m_pUIOnly[nUI]->BindTexture(CTexture::GetTexture((CTexture::TEX_TYPE)GetTexNumberOnly((CONNECTUITYPE_ONLY)nUI)));
+		}
+		// フラグ完了
+		m_bCreateFlagOnly[nUI] = false;
+	}
+}
+
+//=============================================================================
+// UI破棄
+//=============================================================================
+void CConnectUI::DeleteUI(void)
+{
+	for (int nPlayer = 0; nPlayer < 2; nPlayer++)
+	{
+		for (int nUI = 0; nUI < CONNECTUI_BOTH_MAX; nUI++)
+		{
+			// 存在し、フラグ有効
+			if (m_bDeleteFlagBoth[nPlayer][nUI] && m_pUIBoth[nPlayer][nUI])
+			{
+				// 破棄
+				DeleteBothUI(nPlayer, (CONNECTUITYPE_BOTH)nUI);
+			}
+			// フラグ完了
+			m_bDeleteFlagBoth[nPlayer][nUI] = false;
+		}
+	}
+
+	for (int nUI = 0; nUI < CONNECTUI_ONLY_MAX; nUI++)
+	{
+		// 存在し、フラグ有効
+		if (m_bDeleteFlagOnly[nUI] && m_pUIOnly[nUI])
+		{
+			// 破棄
+			DeleteOnlyUI((CONNECTUITYPE_ONLY)nUI);
+		}
+		// フラグ完了
+		m_bDeleteFlagOnly[nUI] = false;
+	}
+}
+
+//=============================================================================
+// UIのテクスチャ番号取得
+//=============================================================================
+int CConnectUI::GetTexNumberBoth(int nPlayer, CONNECTUITYPE_BOTH type)
+{
+	if (nPlayer == 0)
+	{
+		switch (type)
+		{
+		case CONNECTUI_BOTH_BACK:				return CTexture::TEX_CONNECT_BACK_00; break;			// 背景
+		case CONNECTUI_BOTH_LOADICON:			return CTexture::TEX_CONNECT_LOAD; break;				// ロードアイコン
+		case CONNECTUI_BOTH_STATE_CONNECTING:	return CTexture::TEX_CONNECT_CONNECTING; break;			// 接続中
+		case CONNECTUI_BOTH_STATE_CONNECTED:	return CTexture::TEX_CONNECT_CONNECTED; break;			// 接続完了
+		case CONNECTUI_BOTH_STATE_SELECTING:	return CTexture::TEX_CONNECT_GUEST_SELECTING; break;	// 選択中
+		case CONNECTUI_BOTH_STATE_SELECTED:		return CTexture::TEX_CONNECT_GUEST_SELECTED; break;		// 選択完了
+		case CONNECTUI_BOTH_SELECT_MODE:		return CTexture::TEX_CONNECT_SELECT_MODE; break;		// 選択 モード
+		case CONNECTUI_BOTH_SELECT_LEVEL:		return CTexture::TEX_CONNECT_SELECT_LEVEL; break;		// 選択 レベル
+		case CONNECTUI_BOTH_MODE_REMOVE:		return CTexture::TEX_CONNECT_SELECT_REMOVE; break;		// モード 解除
+		case CONNECTUI_BOTH_MODE_SOLVE:			return CTexture::TEX_CONNECT_SELECT_SOLVE; break;		// モード 解読
+		case CONNECTUI_BOTH_LEVEL_EASY:			return CTexture::TEX_CONNECT_SELECT_EASY; break;		// 難易度 イージー
+		case CONNECTUI_BOTH_LEVEL_NORMAL:		return CTexture::TEX_CONNECT_SELECT_NORMAL; break;		// 難易度 ノーマル
+		case CONNECTUI_BOTH_LEVEL_HARD:			return CTexture::TEX_CONNECT_SELECT_HARD; break;		// 難易度 ハード
+		}
+	}
+	else if (nPlayer == 1)
+	{
+		switch (type)
+		{
+		case CONNECTUI_BOTH_BACK:				return CTexture::TEX_CONNECT_BACK_01; break;			// 背景
+		case CONNECTUI_BOTH_LOADICON:			return CTexture::TEX_CONNECT_LOAD; break;				// ロードアイコン
+		case CONNECTUI_BOTH_STATE_CONNECTING:	return CTexture::TEX_CONNECT_CONNECTING; break;			// 接続中
+		case CONNECTUI_BOTH_STATE_CONNECTED:	return CTexture::TEX_CONNECT_CONNECTED; break;			// 接続完了
+		case CONNECTUI_BOTH_STATE_SELECTING:	return CTexture::TEX_CONNECT_GUEST_SELECTING; break;	// 選択中
+		case CONNECTUI_BOTH_STATE_SELECTED:		return CTexture::TEX_CONNECT_GUEST_SELECTED; break;		// 選択完了
+		case CONNECTUI_BOTH_SELECT_MODE:		return CTexture::TEX_CONNECT_SELECT_MODE; break;		// 選択 モード
+		case CONNECTUI_BOTH_SELECT_LEVEL:		return CTexture::TEX_CONNECT_SELECT_LEVEL; break;		// 選択 レベル
+		case CONNECTUI_BOTH_MODE_REMOVE:		return CTexture::TEX_CONNECT_SELECT_REMOVE; break;		// モード 解除
+		case CONNECTUI_BOTH_MODE_SOLVE:			return CTexture::TEX_CONNECT_SELECT_SOLVE; break;		// モード 解読
+		case CONNECTUI_BOTH_LEVEL_EASY:			return CTexture::TEX_CONNECT_SELECT_EASY; break;		// 難易度 イージー
+		case CONNECTUI_BOTH_LEVEL_NORMAL:		return CTexture::TEX_CONNECT_SELECT_NORMAL; break;		// 難易度 ノーマル
+		case CONNECTUI_BOTH_LEVEL_HARD:			return CTexture::TEX_CONNECT_SELECT_HARD; break;		// 難易度 ハード
+		}
+	}
+
+	return 0;
+}
+
+//=============================================================================
+// UIのテクスチャ番号取得
+//=============================================================================
+int CConnectUI::GetTexNumberOnly(CONNECTUITYPE_ONLY type)
+{
+	switch (type)
+	{
+	case CONNECTUI_ONLY_BUTTON_DESIDE:	return CTexture::TEX_CONNECT_DECIDE; break;				// 決定ボタン
+	case CONNECTUI_ONLY_COMMENT_REMOVE:	return CTexture::TEX_CONNECT_COMMENT_REMOVE; break;		// コメント 解除
+	case CONNECTUI_ONLY_COMMENT_SOLVE:	return CTexture::TEX_CONNECT_COMMENT_SOLVE; break;		// コメント 解読
+	case CONNECTUI_ONLY_COMMENT_EASY:	return CTexture::TEX_CONNECT_COMMENT_EASY; break;		// コメント イージー
+	case CONNECTUI_ONLY_COMMENT_NORMAL:	return CTexture::TEX_CONNECT_COMMENT_NORMAL; break;		// コメント ノーマル
+	case CONNECTUI_ONLY_COMMENT_HARD:	return CTexture::TEX_CONNECT_COMMENT_HARD; break;		// コメント ハード
+	case CONNECTUI_ONLY_CAUTION_MODE:	return CTexture::TEX_CONNECT_CAUTION_MODE; break;		// モード選択の注意
+	case CONNECTUI_ONLY_CAUTION_LEVEL:	return CTexture::TEX_CONNECT_CAUTION_LEVEL; break;		// レベル選択の注意
+	}
+	return 0;
+}
+
+//=============================================================================
 // 1P2P毎に使うUI生成
 //=============================================================================
 CPolygon2D * CConnectUI::CreateBothUI(int nPlayer, CONNECTUITYPE_BOTH type)
@@ -461,16 +653,27 @@ CPolygon2D * CConnectUI::CreateBothUI(int nPlayer, CONNECTUITYPE_BOTH type)
 	pPolygon->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
 	pPolygon->SetCol(m_UIInfoBoth[nPlayer][type].color);
 
-	// ボタンのUIはUV座標を設定する
 	if (type == CONNECTUI_BOTH_MODE_REMOVE ||
 		type == CONNECTUI_BOTH_MODE_SOLVE ||
 		type == CONNECTUI_BOTH_LEVEL_EASY ||
 		type == CONNECTUI_BOTH_LEVEL_NORMAL ||
 		type == CONNECTUI_BOTH_LEVEL_HARD)
 	{
-		pPolygon->SetAnim(ZeroVector2, D3DXVECTOR2(1.0f, 1.0f / 3));
+		m_UIInfoBoth[nPlayer][type].type = UITYPE_BUTTON;
 	}
-	
+	else if (type == CONNECTUI_BOTH_LOADICON)
+	{
+		m_UIInfoBoth[nPlayer][type].type = UITYPE_LOADICON;
+	}
+
+	// ボタンはUV値を変更
+	if (m_UIInfoBoth[nPlayer][type].type == UITYPE_BUTTON)
+		pPolygon->SetAnim(ZeroVector2, D3DXVECTOR2(1.0f, 1.0f / 3));
+
+	// ロードアイコンはUV値を変更
+	if (m_UIInfoBoth[nPlayer][type].type == UITYPE_LOADICON)
+		pPolygon->SetAnim(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / NUM_ANIMPATTER_LOADICON, 1.0f));
+
 	// 値を返す
 	return pPolygon;
 }
@@ -489,11 +692,11 @@ CPolygon2D * CConnectUI::CreateOnlyUI(CONNECTUITYPE_ONLY type)
 	pPolygon->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
 	pPolygon->SetCol(m_UIInfoOnly[type].color);
 
-	// ボタンのUIはUV座標を設定する
 	if (type == CONNECTUI_ONLY_BUTTON_DESIDE)
-	{
+		m_UIInfoOnly[type].type = UITYPE_BUTTON;
+
+	if (m_UIInfoOnly[type].type == UITYPE_BUTTON)
 		pPolygon->SetAnim(ZeroVector2, D3DXVECTOR2(1.0f, 1.0f / 3));
-	}
 
 	// 値を返す
 	return pPolygon;
@@ -568,15 +771,11 @@ void CConnectUI::CheckConnect(void)
 			continue;
 
 		// ロードアイコン・接続中のUIを破棄
-		if (m_pUIBoth[nPlayer][CONNECTUI_BOTH_LOADICON])
-			DeleteBothUI(nPlayer, CONNECTUI_BOTH_LOADICON);
-		if (m_pUIBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTING])
-			DeleteBothUI(nPlayer, CONNECTUI_BOTH_STATE_CONNECTING);
-
+		m_bDeleteFlagBoth[nPlayer][CONNECTUI_BOTH_LOADICON] = true;
+		m_bDeleteFlagBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTING] = true;
 
 		// 接続完了UIを生成
-		m_pUIBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTED] = CreateBothUI(nPlayer, CONNECTUI_BOTH_STATE_CONNECTED);
-		m_pUIBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTED]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CONNECTED));
+		m_bCreateFlagBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTED] = true;
 	}
 }
 
@@ -631,13 +830,15 @@ void CConnectUI::SelectMode(void)
 		return;
 	}
 
-	// ボタンのアニメーション
-	ButtonAnim();
-
 	// マウスのポインタ取得
 	CMouse *pMouse = CManager::GetMouse();
 	// マウス座標を取得
 	D3DXVECTOR2 mousePos = pMouse->GetMousePos();
+
+	if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_NONE)
+	{
+		m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE - 1 + m_nSelectMode[PLAYER_ONE]].buttonState = BUTTON_SELECT;
+	}
 
 	// カーソル位置がUIと重なっている
 	if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->ReturnHit(mousePos))
@@ -650,9 +851,9 @@ void CConnectUI::SelectMode(void)
 		// クリックしてなければ、処理しない
 		if (pMouse->GetPress(0))
 		{
-			// アニメーションを設定
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE].buttonState = BUTTON_PRESS;
+			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE].buttonState = BUTTON_NORMAL;
+
 			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_REMOVE)
 			{
 				m_nSelectMode[PLAYER_ONE] = SELECTMODE_REMOVE;
@@ -679,8 +880,9 @@ void CConnectUI::SelectMode(void)
 		// クリックしてなければ、処理しない
 		if (pMouse->GetPress(0))
 		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE].buttonState = BUTTON_PRESS;
+			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE].buttonState = BUTTON_NORMAL;
+
 			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_SOLVE)
 			{
 				m_nSelectMode[PLAYER_ONE] = SELECTMODE_SOLVE;
@@ -736,8 +938,10 @@ void CConnectUI::SelectLevel(void)
 
 	if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
 	{
-		// ボタンのアニメーション
-		ButtonAnim();
+		if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_NONE)
+		{
+			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY - 1 + m_nSelectLevel[PLAYER_ONE]].buttonState = BUTTON_SELECT;
+		}
 
 		// カーソル位置がUIと重なっている
 		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->ReturnHit(mousePos))
@@ -750,10 +954,10 @@ void CConnectUI::SelectLevel(void)
 			// クリックしてなければ、処理しない
 			if (pMouse->GetPress(0))
 			{
-				// アニメーションを設定
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_PRESS;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_NORMAL;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_NORMAL;
+
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_EASY)
 				{
 					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_EASY;
@@ -780,9 +984,10 @@ void CConnectUI::SelectLevel(void)
 			// クリックしてなければ、処理しない
 			if (pMouse->GetPress(0))
 			{
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_PRESS;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_NORMAL;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_NORMAL;
+
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_NORMAL)
 				{
 					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_NORMAL;
@@ -809,9 +1014,10 @@ void CConnectUI::SelectLevel(void)
 			// クリックしてなければ、処理しない
 			if (pMouse->GetPress(0))
 			{
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-				m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_PRESS;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_NORMAL;
+				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_NORMAL;
+
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_HARD)
 				{
 					m_nSelectLevel[PLAYER_ONE] = SELECTLEVEL_HARD;
@@ -831,10 +1037,7 @@ void CConnectUI::SelectLevel(void)
 		{
 			if (m_nSelectLevel[PLAYER_ONE])
 			{
-				// 決定ボタンを生成
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = CreateOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_DECIDE));
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+				m_bCreateFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
 
 				// 注意書きを破棄
 				if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL])
@@ -849,9 +1052,7 @@ void CConnectUI::SelectLevel(void)
 			// 決定ボタンを生成
 			if (m_nSelectLevel[PLAYER_TWO] != SELECTLEVEL_NONE)
 			{
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = CreateOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_DECIDE));
-				m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+				m_bCreateFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
 
 				// 決定ボタンを破棄
 				if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL])
@@ -879,35 +1080,25 @@ void CConnectUI::SetGuestMode(SELECTMODE mode)
 	// 選択
 	if (!m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED])
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTED);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_GUEST_SELECTED));
-
-		// 選択中を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTING);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = true;
 	}
 
 	// 解除
 	if (mode == SELECTMODE_REMOVE)
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_REMOVE);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_REMOVE));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE] = true;
+		m_UIInfoBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE].buttonState = BUTTON_SELECT;
 
-		// 解読を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_SOLVE);
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE] = true;
 	}
 	// 解読
 	if (mode == SELECTMODE_SOLVE)
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_SOLVE);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_SOLVE));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE] = true;
+		m_UIInfoBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE].buttonState = BUTTON_SELECT;
 
-		// 解除を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_REMOVE);
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE] = true;
 	}
 }
 
@@ -925,51 +1116,35 @@ void CConnectUI::SetGuestLevel(SELECTLEVEL level)
 	// 選択
 	if (!m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED])
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTED);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_GUEST_SELECTED));
-
-		// 選択中を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTING);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = true;
 	}
 
 	// イージー
 	if (level == SELECTLEVEL_EASY)
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_EASY);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_EASY));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY] = true;
+		m_UIInfoBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_SELECT;
 
-		// 他の難易度を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_NORMAL);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_HARD);
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD] = true;
 	}
 	// 解読
 	if (level == SELECTLEVEL_NORMAL)
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_NORMAL);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_NORMAL));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+		m_UIInfoBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_SELECT;
 
-		// 他の難易度を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_EASY);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_HARD);
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD] = true;
 	}
 	if (level == SELECTLEVEL_HARD)
 	{
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_HARD);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_HARD));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD] = true;
+		m_UIInfoBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_SELECT;
 
-		// 他の難易度を破棄
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_NORMAL);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_EASY);
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY] = true;
 	}
 }
 
@@ -1010,75 +1185,44 @@ void CConnectUI::Begin(CONNECTFLOW_TYPE flow)
 		// 生成
 		for (int nPlayer = 0; nPlayer < PLAYER_MAX; nPlayer++)
 		{
-			// 背景
-			m_pUIBoth[nPlayer][CONNECTUI_BOTH_BACK] = CreateBothUI(nPlayer, CONNECTUI_BOTH_BACK);
-			// ロードアイコン
-			m_pUIBoth[nPlayer][CONNECTUI_BOTH_LOADICON] = CreateBothUI(nPlayer, CONNECTUI_BOTH_LOADICON);
-			m_pUIBoth[nPlayer][CONNECTUI_BOTH_LOADICON]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), D3DXVECTOR2(1.0f / NUM_ANIMPATTER_LOADICON, 1.0f));
-			// 接続中
-			m_pUIBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTING] = CreateBothUI(nPlayer, CONNECTUI_BOTH_STATE_CONNECTING);
+			m_bCreateFlagBoth[nPlayer][CONNECTUI_BOTH_BACK] = true;
+			m_bCreateFlagBoth[nPlayer][CONNECTUI_BOTH_LOADICON] = true;
+			m_bCreateFlagBoth[nPlayer][CONNECTUI_BOTH_STATE_CONNECTING] = true;
 		}
-		// テクスチャのバインド
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_BACK]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_BACK_00));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_BACK]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_BACK_01));
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LOADICON]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_LOAD));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LOADICON]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_LOAD));
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_STATE_CONNECTING]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CONNECTING));
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_CONNECTING]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CONNECTING));
 		break;
 
 		// モード選択
 	case CONNECTFLOW_SELECT_MODE:
-		// プレイヤーのUI
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_MODE] = CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_SELECT_MODE);
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE] = CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_MODE_REMOVE);
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE] = CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_MODE_SOLVE);
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_MODE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_MODE));
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_REMOVE));
-		m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_SOLVE));
-		// ゲストのUI
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTING);
-		m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_GUEST_SELECTING));
-		// 他のUI
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE] = CreateOnlyUI(CONNECTUI_ONLY_CAUTION_MODE);
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_REMOVE] = CreateOnlyUI(CONNECTUI_ONLY_COMMENT_REMOVE);
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_SOLVE] = CreateOnlyUI(CONNECTUI_ONLY_COMMENT_SOLVE);
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CAUTION_MODE));
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_REMOVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_COMMENT_REMOVE));
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_SOLVE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_COMMENT_SOLVE));
+		m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_MODE] = true;
+		m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE] = true;
+		m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE] = true;
+		m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_CAUTION_MODE] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_COMMENT_REMOVE] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_COMMENT_SOLVE] = true;
 		break;
 
 		// レベル選択時
 	case CONNECTFLOW_SELECT_LEVEL:
+		m_UIInfoOnly[CONNECTUI_ONLY_BUTTON_DESIDE].buttonState = BUTTON_NORMAL;
 		// プレイヤーのUI
 		if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
 		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_LEVEL]	= CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_SELECT_LEVEL);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]	= CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_EASY);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]	= CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_NORMAL);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]	= CreateBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_HARD);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_LEVEL]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_LEVEL));
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_EASY));
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_NORMAL));
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_SELECT_HARD));
+			m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_LEVEL] = true;
+			m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY] = true;
+			m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+			m_bCreateFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD] = true;
 		}
 		// ゲストのUI
 		else if (m_nSelectMode[PLAYER_TWO] == SELECTMODE_REMOVE)
 		{
-			m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = CreateBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTING);
-			m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_GUEST_SELECTING));
+			m_bCreateFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = true;
 		}
 
-		// 他のUI
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL] = CreateOnlyUI(CONNECTUI_ONLY_CAUTION_LEVEL);
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_EASY] = CreateOnlyUI(CONNECTUI_ONLY_COMMENT_EASY);
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_NORMAL] = CreateOnlyUI(CONNECTUI_ONLY_COMMENT_NORMAL);
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_HARD] = CreateOnlyUI(CONNECTUI_ONLY_COMMENT_HARD);
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CAUTION_LEVEL));
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_EASY]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_COMMENT_EASY));
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_NORMAL]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_COMMENT_NORMAL));
-		m_pUIOnly[CONNECTUI_ONLY_COMMENT_HARD]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_COMMENT_HARD));
-
+		m_bCreateFlagOnly[CONNECTUI_ONLY_CAUTION_LEVEL] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_COMMENT_EASY] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_COMMENT_NORMAL] = true;
+		m_bCreateFlagOnly[CONNECTUI_ONLY_COMMENT_HARD] = true;
 		break;
 	}
 
@@ -1100,11 +1244,8 @@ void CConnectUI::End(CONNECTFLOW_TYPE flow)
 		break;
 
 	case CONNECTFLOW_CONNECTED:
-		// 接続完了のUIを破棄
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_STATE_CONNECTED])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_STATE_CONNECTED);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_CONNECTED])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_CONNECTED);
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_STATE_CONNECTED] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_CONNECTED] = true;
 		// カウンタをリセット
 		m_nCntState = 0;
 		// 次のフローへ
@@ -1112,66 +1253,40 @@ void CConnectUI::End(CONNECTFLOW_TYPE flow)
 		break;
 
 	case CONNECTFLOW_SELECT_MODE:
-		// プレイヤー
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_MODE])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_SELECT_MODE);
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_MODE_REMOVE);
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_MODE_SOLVE);
-		// ゲスト
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTED);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTING);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_REMOVE);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_MODE_SOLVE);
-		// コメント
-		if (m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
-			DeleteOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
-		if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE])
-			DeleteOnlyUI(CONNECTUI_ONLY_CAUTION_MODE);
-		if (m_pUIOnly[CONNECTUI_ONLY_COMMENT_REMOVE])
-			DeleteOnlyUI(CONNECTUI_ONLY_COMMENT_REMOVE);
-		if (m_pUIOnly[CONNECTUI_ONLY_COMMENT_SOLVE])
-			DeleteOnlyUI(CONNECTUI_ONLY_COMMENT_SOLVE);
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_MODE] = true;
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE] = true;
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE] = true;
+
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTING] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_REMOVE] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_MODE_SOLVE] = true;
+		
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_CAUTION_MODE] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_COMMENT_REMOVE] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_COMMENT_SOLVE] = true;
 		// 次のフローへ
 		m_flow = CONNECTFLOW_SELECT_LEVEL;
 		break;
 	case CONNECTFLOW_SELECT_LEVEL:
-		// プレイヤー
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_LEVEL])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_SELECT_LEVEL);
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_EASY);
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_NORMAL);
-		if (m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD])
-			DeleteBothUI(PLAYER_ONE, CONNECTUI_BOTH_LEVEL_HARD);
-		// ゲスト
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_EASY);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_NORMAL);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_LEVEL_HARD);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTED);
-		if (m_pUIBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED])
-			DeleteBothUI(PLAYER_TWO, CONNECTUI_BOTH_STATE_SELECTED);
-		// 他のUI
-		if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_LEVEL])
-			DeleteOnlyUI(CONNECTUI_ONLY_CAUTION_LEVEL);
-		if (m_pUIOnly[CONNECTUI_ONLY_COMMENT_EASY])
-			DeleteOnlyUI(CONNECTUI_ONLY_COMMENT_EASY);
-		if (m_pUIOnly[CONNECTUI_ONLY_COMMENT_NORMAL])
-			DeleteOnlyUI(CONNECTUI_ONLY_COMMENT_NORMAL);
-		if (m_pUIOnly[CONNECTUI_ONLY_COMMENT_HARD])
-			DeleteOnlyUI(CONNECTUI_ONLY_COMMENT_HARD);
-		if (m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
-			DeleteOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_SELECT_LEVEL] = true;
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY] = true;
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+		m_bDeleteFlagBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD] = true;
+
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_EASY] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_NORMAL] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_LEVEL_HARD] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = true;
+		m_bDeleteFlagBoth[PLAYER_TWO][CONNECTUI_BOTH_STATE_SELECTED] = true;
+
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_CAUTION_LEVEL] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_COMMENT_EASY] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_COMMENT_NORMAL] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_COMMENT_HARD] = true;
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
+
 		m_flow = CONNECTFLOW_END;
 		// 難易度を設定
 		m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE ?
@@ -1257,52 +1372,6 @@ void CConnectUI::LoadIconAnim(void)
 }
 
 //=============================================================================
-// ボタンのアニメーション
-//=============================================================================
-void CConnectUI::ButtonAnim(void)
-{
-	if (m_flow == CONNECTFLOW_SELECT_MODE)
-	{
-		// 解除
-		if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE)
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
-		// 解読
-		if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE)
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
-		// どちらでもない
-		if (m_nSelectMode[PLAYER_ONE] == SELECTMODE_NONE)
-		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-		}
-	}
-	if (m_flow == CONNECTFLOW_SELECT_LEVEL)
-	{
-		// イージー
-		if (m_nSelectLevel[PLAYER_ONE] == SELECTLEVEL_EASY)
-		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-		}
-		// ノーマル
-		if (m_nSelectLevel[PLAYER_ONE] == SELECTLEVEL_NORMAL)
-		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-		}
-		// ハード
-		if (m_nSelectLevel[PLAYER_ONE] == SELECTLEVEL_HARD)
-		{
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3 * 2), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-			m_pUIBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
-		}
-	}
-}
-
-//=============================================================================
 // 同じモードを選択していないか確認処理
 //=============================================================================
 void CConnectUI::CheckSameMode(void)
@@ -1314,28 +1383,22 @@ void CConnectUI::CheckSameMode(void)
 		// 決定ボタンを生成
 		if (!m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
 		{
-			m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = CreateOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
-			m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_DECIDE));
-			m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 0.0f), UV_BUTTON);
+			m_bCreateFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
 		}
 
 		// 決定ボタンを破棄
 		if (m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE])
-			DeleteOnlyUI(CONNECTUI_ONLY_CAUTION_MODE);
+			m_bDeleteFlagOnly[CONNECTUI_ONLY_CAUTION_MODE] = true;
 		return;
 	}
 
 	// 決定ボタンを破棄
 	if (m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE])
-		DeleteOnlyUI(CONNECTUI_ONLY_BUTTON_DESIDE);
-
+		m_bDeleteFlagOnly[CONNECTUI_ONLY_BUTTON_DESIDE] = true;
 
 	// 注意書きを生成
 	if (!m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE])
-	{
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE] = CreateOnlyUI(CONNECTUI_ONLY_CAUTION_MODE);
-		m_pUIOnly[CONNECTUI_ONLY_CAUTION_MODE]->BindTexture(CTexture::GetTexture(CTexture::TEX_CONNECT_CAUTION_MODE));
-	}
+		m_bCreateFlagOnly[CONNECTUI_ONLY_CAUTION_MODE] = true;
 }
 
 //=============================================================================
@@ -1351,7 +1414,7 @@ void CConnectUI::ClickDecide(CMouse *pMouse)
 	if (pMouse->GetPress(0))
 	{
 		// ゲストを待つ状態へ
-		m_pUIOnly[CONNECTUI_ONLY_BUTTON_DESIDE]->SetAnim(D3DXVECTOR2(0.0f, 1.0f / 3), UV_BUTTON);
+		m_UIInfoOnly[CONNECTUI_ONLY_BUTTON_DESIDE].buttonState = BUTTON_PRESS;
 		// サーバーへ待ち状態を送信
 		if (m_state != FLOWSTATE_WAIT)
 		{
