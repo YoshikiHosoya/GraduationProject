@@ -64,6 +64,9 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CONNECTMODE/loading.png" },					// ロード中
 	{ "data/TEXTURE/CONNECTMODE/out_guest.png" },				// ゲスト離脱によるゲーム終了
 
+	{ "data/TEXTURE/UI/gameclear.png" },						//UI ゲームクリア
+	{ "data/TEXTURE/UI/gameover.png" },							//UI ゲームオーバー
+
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 
 	{ "data/TEXTURE/UI/Title/Title.png" },						//UI タイトル
@@ -79,6 +82,8 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/UI/Tutorial/Solve03.png" },					//UI チュートリアル　解除３
 	{ "data/TEXTURE/UI/Tutorial/Solve04.png" },					//UI チュートリアル　解除３
 
+	{ "data/TEXTURE/UI/Tutorial/prepare.png" },					//UI チュートリアル　準備中
+	{ "data/TEXTURE/UI/Tutorial/end_prepare.png" },				//UI チュートリアル　準備完了
 
 	{ "data/TEXTURE/UI/Result/Result.png" },					//UI リザルト
 	{ "data/TEXTURE/UI/Result/PlayTime.png" },					//UI リザルト

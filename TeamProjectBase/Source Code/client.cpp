@@ -20,6 +20,8 @@
 #include "basemode.h"
 #include "result.h"
 #include "tutorial.h"
+#include "timer.h"
+#include "Decoding.h"
 
 // ===================================================================
 // マクロ定義
@@ -53,9 +55,10 @@ HRESULT CClient::LoadIP(void)
 {
 	// 変数宣言
 	FILE *pFile;
-	char cReadText[MAX_TEXT];
-	char cHeadText[MAX_TEXT] = "\0";
-	char cAddress[64] = "\0";
+	char cReadText[MAX_TEXT] = { "\0" };
+	char cHeadText[MAX_TEXT] = { "\0" };
+	char cDie[MAX_TEXT] = { "\0" };
+	char cAddress[64] = { "\0" };
 	u_short port = 0;
 
 	// ファイルを開く
@@ -94,10 +97,11 @@ HRESULT CClient::LoadIP(void)
 				continue;
 			// IPアドレス
 			if (strcmp(cHeadText, "IPアドレス") == 0)
-				sscanf(cReadText, "IPアドレス : %s", cAddress);
+				sscanf(cReadText, "%s %s %s", cDie, cDie, cAddress);
 			// ポート番号
 			if (strcmp(cHeadText, "ポート番号") == 0)
-				sscanf(cReadText, "ポート番号 : %hd", &port);
+				sscanf(cReadText, "%s %s %hd", cDie, cDie, &port);
+
 		}
 	}
 
@@ -227,6 +231,21 @@ void CClient::WaitRecieve(void)
 		{
 			RecvRetry();
 		}
+		// 終了受信
+		if (cData[0] == ORDER_END_GAME)
+		{
+			RecvEndGame();
+		}
+		// ゲームオーバー受信
+		if (cData[0] == ORDER_GAMEOVER)
+		{
+			RecvGameOver(cData);
+		}
+		// ゲームクリア受信
+		if (cData[0] == ORDER_GAMECLEAR)
+		{
+			RecvGameClear(cData);
+		}
 	}
 }
 
@@ -345,7 +364,7 @@ void CClient::SendText(void)
 	send(m_socket, buffer, 5 + stbuf.st_size, 0);
 
 	// 履歴に追加
-	CChatTab::CreateKeep(CChatBase::OWNER_OWN, &buffer[5]);
+	CChatTab::AddRecvKeep(CChatBase::OWNER_OWN, &buffer[5]);
 
 	// 記入した文字列をリセット
 	CChatTab::GetSendText()->GetChatText().clear();
@@ -419,7 +438,7 @@ void CClient::SendPicture(void)
 	link = LINK_SENDPICTURE;
 	CPicture::Reading(pTexture, link);
 	// 履歴に追加
-	CChatTab::AddPicture(CChatBase::OWNER_OWN, pTexture);
+	CChatTab::AddRecvPicture(CChatBase::OWNER_OWN, pTexture);
 
 	delete[] buffer;
 }
@@ -456,7 +475,7 @@ void CClient::RecvText(char *data)
 	printf("テキスト受信 > %s [%d字]\n", cTextData, *pSize);
 #endif
 	// 履歴に追加
-	CChatTab::CreateKeep(CChatBase::OWNER_GUEST, cTextData);
+	CChatTab::AddRecvKeep(CChatBase::OWNER_GUEST, cTextData);
 
 	delete[] cTextData;
 }
@@ -506,7 +525,7 @@ void CClient::RecvPicture(char *data)
 	link = LINK_RECVPICTURE;
 	CPicture::Reading(pTexture, link);
 
-	CChatTab::AddPicture(CChatBase::OWNER_GUEST, pTexture);
+	CChatTab::AddRecvPicture(CChatBase::OWNER_GUEST, pTexture);
 
 	delete[] cPicData;
 }
@@ -585,6 +604,60 @@ void CClient::RecvRetry(void)
 		CResult *pResult = (CResult*)CManager::GetBaseMode();
 		pResult->SetGuestMode((int)ORDER_RETRY);
 	}
+}
+
+// ===================================================================
+// ゲームオーバーの送信
+// ===================================================================
+void CClient::SendGameOver(void)
+{
+	char buffer[5];
+
+	buffer[0] = ORDER_GAMEOVER;
+	int nTime = CTimer::GetClearFlame();
+	buffer[1] = nTime;
+	printf("time : %d\n", nTime);
+
+	send(m_socket, buffer, 5, 0);
+}
+
+// ===================================================================
+// ゲームオーバーの受信
+// ===================================================================
+void CClient::RecvGameOver(char *data)
+{
+	int *pTime = (int*)&data[1];
+	// タイムを設定
+	CTimer::SetClearFrame(*pTime);
+	// 解説モードを終了
+	CDecoding::SetGameEndState(CDecoding::GAMEEND_MISS);
+}
+
+// ===================================================================
+// ゲームクリアの送信
+// ===================================================================
+void CClient::SendGameClear(void)
+{
+	char buffer[5];
+
+	buffer[0] = ORDER_GAMECLEAR;
+	int nTime = CTimer::GetClearFlame();
+	buffer[1] = nTime;
+	printf("time : %d\n", nTime);
+
+	send(m_socket, buffer, 5, 0);
+}
+
+// ===================================================================
+// ゲームクリアの受信
+// ===================================================================
+void CClient::RecvGameClear(char *data)
+{
+	int *pTime = (int*)&data[1];
+	// タイムを設定
+	CTimer::SetClearFrame(*pTime);
+	// 解説モードを終了
+	CDecoding::SetGameEndState(CDecoding::GAMEEND_CLEAR);
 }
 
 // ===================================================================

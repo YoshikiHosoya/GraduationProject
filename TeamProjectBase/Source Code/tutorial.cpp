@@ -105,7 +105,7 @@ void CTutorial::CreateUI()
 {
 
 	m_pReady = CSceneBase::ScenePolygonCreateShared<CScene2D>
-		(D3DXVECTOR3(1110.0f, 100.0f, 0.0f), D3DXVECTOR3(100.0f, 100.0f, 0.0f), RedColor, CTexture::GetTexture(CTexture::TEX_NONE), CScene::OBJTYPE_FRONT);
+		(D3DXVECTOR3(1110.0f, 140.0f, 0.0f), D3DXVECTOR3(250.0f, 100.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_UI_TUTORIAL_PREPARE), CScene::OBJTYPE_FRONT);
 
 
 	switch (m_type)
@@ -222,7 +222,7 @@ void CTutorial::PageChange()
 void CTutorial::Ready()
 {
 	//テクスチャ差し替え
-	m_pReady->BindTexture(CTexture::GetTexture(CTexture::TEX_MATERIAL_FIELD000));
+	m_pReady->BindTexture(CTexture::GetTexture(CTexture::TEX_UI_TUTORIAL_ENDPREPARE));
 	// 待ち状態の送信
 	CClient::SendWait();
 }

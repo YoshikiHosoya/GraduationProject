@@ -55,6 +55,15 @@ public:
 		ROLE_MAX				// 最大
 	};
 
+	// ゲーム終了の状態
+	enum GAMEENDSTATE
+	{
+		GAMEEND_NONE,			// 初期状態
+		GAMEEND_CLEAR,			// ゲームクリア
+		GAMEEND_MISS,			// ゲームオーバー
+		GAMEEND_MAX				// 最大
+	};
+
 	CDecoding();											// コンストラクタ
 	~CDecoding();											// デストラクタ
 	virtual HRESULT Init(HWND hWnd);						//初期化
@@ -71,16 +80,28 @@ public:
 	CPicture *GetPicture(void) { return m_pPicture.get(); }	// ピクチャポインタの取得
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
 	CDecodingManager * GetDecodingManager(void) { return m_pDecodingManager.get(); }
+	
+	static void SetGameEndState(GAMEENDSTATE state) 
+	{
+		m_endState = state; 
+		m_nCntState = 120; 
+	}	// ゲーム終了の設定
+
 protected:
 
 private:
+	void UpdateEndState(void);				// 終了時の更新
+	void EndDecoding(GAMEENDSTATE state);	// このモードを終了
+
 	STATE            m_State;								// ゲームステート
 	GAZE             m_Gaze;								// 視線
-	int              m_nCntState;							//ステートのカウンタ
 	S_ptr<CChatBase> m_pChatBase;							// チャットのポインタ
 	S_ptr<CPicture>  m_pPicture;							// ピクチャポインタ
 	S_ptr<CTablet>   m_pTablet;								// タブレットポインタ
 	S_ptr<CDecodingManager> m_pDecodingManager;				// 解読書マネージャー
+
+	static GAMEENDSTATE m_endState;							// ゲーム終了時の状態
+	static int          m_nCntState;						//ステートのカウンタ
 };
 
 #endif

@@ -76,6 +76,9 @@ public:
 		TEX_CONNECT_LOADING,					// ロード中
 		TEX_CONNECT_OUT_GUEST,					// ゲスト離脱による接続終了
 
+		TEX_UI_GAMECLEAR,						// UI ゲームクリア
+		TEX_UI_GAMEOVER,						// UI ゲームオーバー
+
 		TEX_UI_PRESSBUTTON,						//UI プレス
 
 		TEX_UI_TITLE_LOGO,						//UI タイトルロゴ
@@ -91,6 +94,8 @@ public:
 		TEX_UI_TUTORIAL_SOLVE03,				//UI チュートリアル　解除３
 		TEX_UI_TUTORIAL_SOLVE04,				//UI チュートリアル　解除４
 
+		TEX_UI_TUTORIAL_PREPARE,				// 準備
+		TEX_UI_TUTORIAL_ENDPREPARE,				// 準備完了
 
 		TEX_UI_RESULT_LOGO,						//UI リザルトロゴ
 		TEX_UI_RESULT_TIMER,					//UI リザルト　タイム

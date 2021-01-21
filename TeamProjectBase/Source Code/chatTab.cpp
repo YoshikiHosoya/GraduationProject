@@ -69,7 +69,8 @@ int					CChatTab::m_nCntPress = 0;
 int					CChatTab::m_nPressKey = 0;
 CChatText			*CChatTab::m_SendText = nullptr;
 CChatText			*CChatTab::m_leftText = nullptr;
-std::vector<CChatTab::CHATKEEP>	CChatTab::m_chatKeep = {};	// 保持できるテキスト
+std::vector<CChatTab::CHATKEEP>	CChatTab::m_chatKeep = {};
+std::vector<CChatTab::CHATKEEP>	CChatTab::m_recvKeep = {};
 CChatTab::TABSTATE	CChatTab::m_tabletState = CChatTab::TABSTATE_CLOSED;
 bool				CChatTab::m_bClickTab = false;
 
@@ -129,6 +130,103 @@ CChatTab::~CChatTab()
 		}
 	}
 	m_chatKeep.clear();
+}
+
+//=============================================================================
+// チャット履歴の生成
+//=============================================================================
+void CChatTab::CreateChatKeep(void)
+{
+	// 保持してる数だけ繰り返す
+	for (int nRecv = 0; nRecv < (int)m_recvKeep.size(); nRecv++)
+	{
+		CHATKEEP keep;
+		keep.pPolyBack = CPolygon2D::Create();
+		keep.pPolyBack->SetPos(m_recvKeep[nRecv].pPolyBack->GetPos());
+		keep.pPolyBack->SetSize(m_recvKeep[nRecv].pPolyBack->GetSize());
+		keep.pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+		keep.owner = m_recvKeep[nRecv].owner;
+
+		if (m_recvKeep[nRecv].type == KEEPTYPE_TEXT)
+		{
+			keep.pKeepText = CChatText::Create();
+			keep.pKeepText->SetKeepColor(BlackColor);
+			keep.pKeepText->SetKeepRectBegin(D3DXVECTOR2((float)m_recvKeep[nRecv].pKeepText->GetRect().left, (float)m_recvKeep[nRecv].pKeepText->GetRect().top));
+			keep.pKeepText->SetChatText((char*)m_recvKeep[nRecv].pKeepText->GetChatText().c_str());
+			keep.owner == CChatBase::OWNER_OWN ?
+				keep.pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_00)) :
+				keep.pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_01));
+		}
+		else if (m_recvKeep[nRecv].type == KEEPTYPE_PICTURE)
+		{
+			keep.pPolyPic = CPolygon2D::Create();
+			keep.pPolyPic->SetPos(m_recvKeep[nRecv].pPolyPic->GetPos());
+			keep.pPolyPic->SetSize(m_recvKeep[nRecv].pPolyPic->GetSize());
+			keep.pPolyPic->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
+			keep.pPolyPic->BindTexture(m_recvKeep[nRecv].pPolyPic->GetTexture());
+
+			keep.owner == CChatBase::OWNER_OWN ?
+				keep.pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_02)) :
+				keep.pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_03));
+		}
+
+		keep.type = m_recvKeep[nRecv].type;
+
+		// 履歴の末尾に追加
+		m_chatKeep.emplace_back(keep);
+
+		// 末尾の番号を取得
+		int nNumber = (int)m_chatKeep.size() - 1;
+
+		for (int nCnt = nNumber - 1; nCnt > -1; nCnt--)
+		{
+			if (!m_chatKeep[nCnt].pKeepText)
+				continue;
+
+			// 座標更新
+			D3DXVECTOR2 pos = m_chatKeep[nCnt + 1].pPolyBack->GetPos();
+			m_chatKeep[nCnt].pPolyBack->SetPos(D3DXVECTOR2(pos.x, pos.y + SIZE_Y_TEXTBOX));
+			pos = m_chatKeep[nCnt].pPolyBack->GetPos();
+			m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+		}
+
+		// チャット・ピクチャのどちらかのみ
+		if (m_chatKeep[nNumber].type == KEEPTYPE_TEXT)
+		{
+			m_chatKeep[nNumber].pPolyPic = nullptr;
+			m_recvKeep[nRecv].pPolyPic = nullptr;
+		}
+		else if (m_chatKeep[nNumber].type == KEEPTYPE_PICTURE)
+		{
+			m_chatKeep[nNumber].pKeepText = nullptr;
+			m_recvKeep[nRecv].pKeepText = nullptr;
+		}
+
+		// 最大数を超えたら、古いほうから削除
+		if (nNumber >= MAX_KEEPTEXT)
+			m_chatKeep.erase(m_chatKeep.begin());
+	}
+
+	for (int nCnt = 0; nCnt < (int)m_recvKeep.size(); nCnt++)
+	{
+		if (m_recvKeep[nCnt].pPolyBack)
+		{
+			delete m_recvKeep[nCnt].pPolyBack;
+			m_recvKeep[nCnt].pPolyBack = nullptr;
+		}
+		if (m_recvKeep[nCnt].pPolyPic)
+		{
+			delete m_recvKeep[nCnt].pPolyPic;
+			m_recvKeep[nCnt].pPolyPic = nullptr;
+		}
+		if (m_recvKeep[nCnt].pKeepText)
+		{
+			m_recvKeep[nCnt].pKeepText->Uninit();
+			delete m_recvKeep[nCnt].pKeepText;
+			m_recvKeep[nCnt].pKeepText = nullptr;
+		}
+	}
+	m_recvKeep.clear();
 }
 
 //=============================================================================
@@ -325,6 +423,10 @@ HRESULT CChatTab::Init(void)
 //=============================================================================
 void CChatTab::Update(void)
 {
+	// 受信していれば、チャット履歴を生成
+	if (m_recvKeep.size() > 0)
+		CreateChatKeep();
+
 	CMouse *pMouse = CManager::GetMouse();
 	CKeyboard *pKey = CManager::GetKeyboard();
 	D3DXVECTOR2 mousePos = D3DXVECTOR2((float)pMouse->GetMouseX(), (float)pMouse->GetMouseY());
@@ -537,50 +639,6 @@ void CChatTab::SendChatText(void)
 }
 
 //==========================================================================================================================================================
-// ピクチャの追加
-//==========================================================================================================================================================
-void CChatTab::AddPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture)
-{
-	// テキストを末尾に追加
-	CHATKEEP keep;
-	m_chatKeep.push_back(keep);
-	// 末尾の番号を取得
-	int nNumber = (int)m_chatKeep.size() - 1;
-
-	// 背景ポリゴンの生成
-	m_chatKeep[nNumber].pPolyBack = CPolygon2D::Create();
-	m_chatKeep[nNumber].pPolyBack->SetPos(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX));
-	m_chatKeep[nNumber].pPolyBack->SetSize(D3DXVECTOR2(SIZE_X_TEXTBOX_PIC, SIZE_Y_TEXTBOX_PIC));
-	m_chatKeep[nNumber].pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
-	owner == CChatBase::OWNER_OWN ?
-		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_02)) :
-		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_03));
-
-	// 文字列の生成
-	D3DXVECTOR2 BackPos = m_chatKeep[nNumber].pPolyBack->GetPos();
-	m_chatKeep[nNumber].pPolyPic = CPolygon2D::Create();
-	m_chatKeep[nNumber].pPolyPic->SetPos(BackPos);
-	m_chatKeep[nNumber].pPolyPic->SetSize(D3DXVECTOR2(SIZE_X_PICTURE, SIZE_Y_PICTURE));
-	m_chatKeep[nNumber].pPolyPic->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
-	m_chatKeep[nNumber].pPolyPic->BindTexture(pTexture);
-
-	m_chatKeep[nNumber].pKeepText = nullptr;
-
-	// 古いほうから削除
-	if (nNumber >= MAX_KEEPTEXT)
-		m_chatKeep.erase(m_chatKeep.begin());
-}
-
-//==========================================================================================================================================================
-// テキストの受信
-//==========================================================================================================================================================
-void CChatTab::RecvChatText(char *cText)
-{
-	// チャットキープの生成
-	CreateKeep(CChatBase::OWNER_GUEST, cText);
-}
-
-//==========================================================================================================================================================
 // マウススクロールによる座標上昇
 //==========================================================================================================================================================
 void CChatTab::ScrollUp(void)
@@ -613,52 +671,66 @@ void CChatTab::ScrollDown(void)
 //==========================================================================================================================================================
 // チャットキープの生成
 //==========================================================================================================================================================
-void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
+void CChatTab::AddRecvKeep(CChatBase::TEXTOWNER owner, char *cText)
 {
-	char *cNewText = new char[strlen(cText) + 1];
-	strcpy(cNewText, cText);
+	// サイズ確保
+	char *cRecvText = new char[strlen(cText) + 1];
+	// テキストを格納
+	strcpy(cRecvText, cText);
 
+	// 情報格納用
+	CHATKEEP keep;
+	// 背景ポリゴン
+	keep.pPolyBack = CPolygon2D::Create();
+	keep.pPolyBack->SetPos(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX));
+	keep.pPolyBack->SetSize(D3DXVECTOR2(SIZE_X_TEXTBOX, SIZE_Y_TEXTBOX));
+	keep.pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+		// 文字列
+	D3DXVECTOR3 BackPos = keep.pPolyBack->GetPos();
+	keep.pKeepText = CChatText::Create();
+	keep.pKeepText->SetKeepColor(BlackColor);
+	keep.pKeepText->SetKeepRectBegin(D3DXVECTOR2(BackPos.x + DIFPOS_X_KEEPTEXT, BackPos.y + DIFPOS_Y_KEEPTEXT));
+	D3DXVECTOR2 pos = keep.pPolyBack->GetPos();
+	keep.pPolyBack->SetPos(D3DXVECTOR2(pos.x, pos.y + SIZE_Y_TEXTBOX));
+	pos = keep.pPolyBack->GetPos();
+	keep.pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
+	// 文字列格納
+	keep.pKeepText->SetChatText(cRecvText);
+
+	keep.owner = owner;
+	keep.type = KEEPTYPE_TEXT;
+	// 受信用キープに格納
+	m_recvKeep.push_back(keep);
+
+	delete[] cRecvText;
+}
+
+//==========================================================================================================================================================
+// ピクチャの追加
+//==========================================================================================================================================================
+void CChatTab::AddRecvPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture)
+{
 	// テキストを末尾に追加
 	CHATKEEP keep;
-	m_chatKeep.push_back(keep);
-	// 末尾の番号を取得
-	int nNumber = (int)m_chatKeep.size() - 1;
 
 	// 背景ポリゴンの生成
-	m_chatKeep[nNumber].pPolyBack = CPolygon2D::Create();
-	m_chatKeep[nNumber].pPolyBack->SetPos(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX));
-	m_chatKeep[nNumber].pPolyBack->SetSize(D3DXVECTOR2(SIZE_X_TEXTBOX, SIZE_Y_TEXTBOX));
-	m_chatKeep[nNumber].pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
-	owner == CChatBase::OWNER_OWN ?
-		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_00)) :
-		m_chatKeep[nNumber].pPolyBack->BindTexture(CTexture::GetTexture(CTexture::TEX_CHAT_BOX_01));
+	keep.pPolyBack = CPolygon2D::Create();
+	keep.pPolyBack->SetPos(D3DXVECTOR2(m_TabPos.x + DIFPOS_X_TEXTBOX, DIFPOS_Y_TEXTBOX));
+	keep.pPolyBack->SetSize(D3DXVECTOR2(SIZE_X_TEXTBOX_PIC, SIZE_Y_TEXTBOX_PIC));
+	keep.pPolyBack->SetPosStart(CPolygon2D::POSSTART_TOP_LEFT);
+	keep.owner = owner;
+	keep.type = KEEPTYPE_PICTURE;
 
-	// 文字列の生成
-	D3DXVECTOR3 BackPos = m_chatKeep[nNumber].pPolyBack->GetPos();
-	m_chatKeep[nNumber].pKeepText = CChatText::Create();
-	m_chatKeep[nNumber].pKeepText->SetKeepColor(BlackColor);
-	m_chatKeep[nNumber].pKeepText->SetKeepRectBegin(D3DXVECTOR2(BackPos.x + DIFPOS_X_KEEPTEXT, BackPos.y + DIFPOS_Y_KEEPTEXT));
+	// ピクチャの生成
+	D3DXVECTOR2 BackPos = keep.pPolyBack->GetPos();
+	keep.pPolyPic = CPolygon2D::Create();
+	keep.pPolyPic->SetPos(BackPos);
+	keep.pPolyPic->SetSize(D3DXVECTOR2(SIZE_X_PICTURE, SIZE_Y_PICTURE));
+	keep.pPolyPic->SetPosStart(CPolygon2D::POSSTART_CENTRAL_CENTRAL);
+	keep.pPolyPic->BindTexture(pTexture);
 
-	for (int nCnt = nNumber - 1; nCnt > -1; nCnt--)
-	{
-		if (!m_chatKeep[nCnt].pKeepText)
-			continue;
-
-		D3DXVECTOR2 pos = m_chatKeep[nCnt + 1].pPolyBack->GetPos();
-		m_chatKeep[nCnt].pPolyBack->SetPos(D3DXVECTOR2(pos.x, pos.y + SIZE_Y_TEXTBOX));
-		pos = m_chatKeep[nCnt].pPolyBack->GetPos();
-		m_chatKeep[nCnt].pKeepText->SetKeepRectBegin(D3DXVECTOR2(pos.x + DIFPOS_X_KEEPTEXT, pos.y + DIFPOS_Y_KEEPTEXT));
-	}
-
-	// チャットに保存
-	m_chatKeep[nNumber].pKeepText->SetChatText(cNewText);
-
-	delete[] cNewText;
-	m_chatKeep[nNumber].pPolyPic = nullptr;
-
-	// 古いほうから削除
-	if (nNumber >= MAX_KEEPTEXT)
-		m_chatKeep.erase(m_chatKeep.begin());
+	// キープの末尾に追加
+	m_recvKeep.push_back(keep);
 }
 
 //==========================================================================================================================================================
@@ -667,7 +739,6 @@ void CChatTab::CreateKeep(CChatBase::TEXTOWNER owner, char *cText)
 bool CChatTab::CheckMouseHit(POLYTYPE polygon)
 {
 	return 	m_pChatPoly[polygon]->ReturnHit(CManager::GetMouse()->GetMousePos());
-
 }
 
 //==========================================================================================================================================================
