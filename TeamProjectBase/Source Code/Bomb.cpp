@@ -419,11 +419,12 @@ void CBomb::ModuleMiss()
 	//全部ミスしたとき
 	if (GetModuleTimerPtr()->MissCountUp())
 	{
+		//クリアタイム設定
+		GetModuleTimerPtr()->GetTimerPtr()->SaveClearTime();
+
 		//ゲームオーバー
 		CManager::GetGame()->SetState(CGame::STATE_GAMEOVER);
 
-		//クリアタイム設定
-		GetModuleTimerPtr()->GetTimerPtr()->SaveClearTime();
 
 	}
 	else

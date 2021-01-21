@@ -613,6 +613,7 @@ void CClient::SendGameOver(void)
 
 	buffer[0] = ORDER_GAMEOVER;
 	buffer[1] = CTimer::GetClearFlame();
+	printf("time : %d\n", CTimer::GetClearFlame());
 
 	send(m_socket, buffer, 2, 0);
 }
@@ -638,6 +639,7 @@ void CClient::SendGameClear(void)
 
 	buffer[0] = ORDER_GAMECLEAR;
 	buffer[1] = CTimer::GetClearFlame();
+	printf("time : %d\n", CTimer::GetClearFlame());
 
 	send(m_socket, buffer, 2, 0);
 }
