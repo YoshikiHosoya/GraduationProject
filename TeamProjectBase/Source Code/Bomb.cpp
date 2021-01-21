@@ -396,11 +396,11 @@ void CBomb::ModuleClearCheck()
 	if (std::count_if(m_pModuleList.begin(), m_pModuleList.end(),
 		[](S_ptr<CModule_Base> pModule) {return pModule->GetModuleClearFlag(); }) >= m_nModuleNum)
 	{
-		//ゲームクリア
-		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
-
 		//クリアタイム設定
 		GetModuleTimerPtr()->GetTimerPtr()->SaveClearTime();
+
+		//ゲームクリア
+		CManager::GetGame()->SetState(CGame::STATE_GAMECLEAR);
 	}
 }
 
