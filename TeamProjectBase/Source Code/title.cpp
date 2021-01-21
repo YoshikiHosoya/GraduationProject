@@ -21,6 +21,7 @@
 #include "module_Timer.h"
 #include "mouse.h"
 #include "timer.h"
+#include "sound.h"
 //------------------------------------------------------------------------------
 //ƒ}ƒNƒ
 //------------------------------------------------------------------------------
@@ -183,6 +184,8 @@ void CTitle::SetState(STATE state)
 	case CTitle::STATE_BLACKOUT:
 		CManager::GetRenderer()->GetLight()->SetBlackLight();
 		m_pBomb->GetModuleTimerPtr()->GetTimerPtr()->SetStop(false);
+		CManager::GetSound()->Play(CSound::LABEL_SE_BLACK_OUT);
+
 		m_nCntState = 90;
 		break;
 	case CTitle::STATE_FADE:

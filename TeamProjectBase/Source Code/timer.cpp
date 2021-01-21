@@ -70,9 +70,13 @@ void CTimer::UpdateTimer()
 		//数値の更新
 		ChangeNumber();
 
-		if (m_nCntFlame % 60 == 0)
+		//ゲーム中なら音出す
+		if (CManager::GetMode() == CManager::MODE_GAME)
 		{
-			CManager::GetSound()->Play(CSound::LABEL_SE_COUNTDOWN_TIMER);
+			if (m_nCntFlame % 60 == 0)
+			{
+				CManager::GetSound()->Play(CSound::LABEL_SE_COUNTDOWN_TIMER);
+			}
 		}
 
 		//タイマーが0になった時

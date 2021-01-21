@@ -16,6 +16,7 @@
 #include "Debug\debugproc.h"
 #include "game.h"
 #include "Bomb.h"
+#include "sound.h"
 
 //=============================================================================
 // マクロ定義
@@ -849,10 +850,13 @@ void CConnectUI::SelectMode(void)
 			m_pUIOnly[CONNECTUI_ONLY_COMMENT_REMOVE]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, col.a + (1.0f / TIME_ALPHA_COMMENT)));
 
 		// クリックしてなければ、処理しない
-		if (pMouse->GetPress(0))
+		if (pMouse->GetTrigger(0))
 		{
 			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE].buttonState = BUTTON_PRESS;
 			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE].buttonState = BUTTON_NORMAL;
+
+			//音再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 
 			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_REMOVE)
 			{
@@ -878,10 +882,12 @@ void CConnectUI::SelectMode(void)
 			m_pUIOnly[CONNECTUI_ONLY_COMMENT_SOLVE]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, col.a + (1.0f / TIME_ALPHA_COMMENT)));
 
 		// クリックしてなければ、処理しない
-		if (pMouse->GetPress(0))
+		if (pMouse->GetTrigger(0))
 		{
 			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_SOLVE].buttonState = BUTTON_PRESS;
 			m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_MODE_REMOVE].buttonState = BUTTON_NORMAL;
+			//音再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 
 			if (m_nSelectMode[PLAYER_ONE] != SELECTMODE_SOLVE)
 			{
@@ -952,11 +958,14 @@ void CConnectUI::SelectLevel(void)
 				m_pUIOnly[CONNECTUI_ONLY_COMMENT_EASY]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, col.a + (1.0f / TIME_ALPHA_COMMENT)));
 
 			// クリックしてなければ、処理しない
-			if (pMouse->GetPress(0))
+			if (pMouse->GetTrigger(0))
 			{
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_PRESS;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_NORMAL;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_NORMAL;
+
+				//音再生
+				CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_EASY)
 				{
@@ -982,11 +991,14 @@ void CConnectUI::SelectLevel(void)
 				m_pUIOnly[CONNECTUI_ONLY_COMMENT_NORMAL]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, col.a + (1.0f / TIME_ALPHA_COMMENT)));
 
 			// クリックしてなければ、処理しない
-			if (pMouse->GetPress(0))
+			if (pMouse->GetTrigger(0))
 			{
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_PRESS;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_NORMAL;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_NORMAL;
+
+				//音再生
+				CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_NORMAL)
 				{
@@ -1012,11 +1024,14 @@ void CConnectUI::SelectLevel(void)
 				m_pUIOnly[CONNECTUI_ONLY_COMMENT_HARD]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, col.a + (1.0f / TIME_ALPHA_COMMENT)));
 
 			// クリックしてなければ、処理しない
-			if (pMouse->GetPress(0))
+			if (pMouse->GetTrigger(0))
 			{
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_HARD].buttonState = BUTTON_PRESS;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_EASY].buttonState = BUTTON_NORMAL;
 				m_UIInfoBoth[PLAYER_ONE][CONNECTUI_BOTH_LEVEL_NORMAL].buttonState = BUTTON_NORMAL;
+
+				//音再生
+				CManager::GetSound()->Play(CSound::LABEL_SE_SELECT);
 
 				if (m_nSelectLevel[PLAYER_ONE] != SELECTLEVEL_HARD)
 				{
@@ -1316,7 +1331,7 @@ void CConnectUI::Wait(CONNECTFLOW_TYPE flow)
 			m_state = FLOWSTATE_NORMAL;
 		}
 		// 両者とも待ち状態で、選択も重複しない
-		if (m_bGuestWait && 
+		if (m_bGuestWait &&
 			((m_nSelectMode[PLAYER_ONE] == SELECTMODE_REMOVE && m_nSelectMode[PLAYER_TWO] == SELECTMODE_SOLVE) ||
 			(m_nSelectMode[PLAYER_ONE] == SELECTMODE_SOLVE && m_nSelectMode[PLAYER_TWO] == SELECTMODE_REMOVE)))
 		{
@@ -1413,6 +1428,9 @@ void CConnectUI::ClickDecide(CMouse *pMouse)
 	// クリックしている
 	if (pMouse->GetPress(0))
 	{
+		//選択音
+		CManager::GetSound()->Play(CSound::LABEL_SE_DECISION);
+
 		// ゲストを待つ状態へ
 		m_UIInfoOnly[CONNECTUI_ONLY_BUTTON_DESIDE].buttonState = BUTTON_PRESS;
 		// サーバーへ待ち状態を送信

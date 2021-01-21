@@ -146,24 +146,34 @@ void CTutorial::Collision()
 	if(pMouse->GetTrigger(0))
 	{
 		m_nPage--;
+		if (!CHossoLibrary::RangeLimit_Equal(m_nPage, 0, 3))
+		{
+			CManager::GetSound()->Play(CSound::LABEL_SE_TUTORIALPAGE);
+		}
 	}
 	//右クリック
 	if (pMouse->GetTrigger(1))
 	{
 		m_nPage++;
+		if (!CHossoLibrary::RangeLimit_Equal(m_nPage, 0, 3))
+		{
+			CManager::GetSound()->Play(CSound::LABEL_SE_TUTORIALPAGE);
+		}
 	}
 
-	if (pMouse->GetPress(0))
+	//長押し
+	if (pMouse->GetPress(0) || pMouse->GetPress(1))
 	{
+		//カウントアップ
 		nMousePressCnt++;
 	}
+	//押してない時リセット
 	else
 	{
 		nMousePressCnt = 0;
 	}
 
-
-
+	//ある程度長押しで準備完了
 	if (nMousePressCnt >= 60)
 	{
 		//フラグたってない時
@@ -176,7 +186,7 @@ void CTutorial::Collision()
 		m_bTutorialEndFlag = true;
 	}
 
-	CHossoLibrary::RangeLimit_Equal(m_nPage, 0, 3);
+
 
 	//ページ変更
 	PageChange();

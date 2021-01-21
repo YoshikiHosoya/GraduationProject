@@ -18,6 +18,7 @@
 #include "mouse.h"
 #include "sound.h"
 #include "scene3D.h"
+#include "sound.h"
 
 //------------------------------------------------------------------------------
 //静的メンバ変数の初期化
@@ -170,6 +171,9 @@ void CModule_No3_PassWord::ModuleAction()
 	//決定ボタンが選択されていた時
 	if (m_pDecitionButton->GetSelect())
 	{
+		//プッシュボタン
+		CManager::GetSound()->Play(CSound::LABEL_SE_MODULE_PUSH);
+
 		//クリアチェック
 		CheckClear();
 	}
@@ -194,6 +198,8 @@ void CModule_No3_PassWord::ModuleAction()
 
 		//ディスプレイの番号変更
 		ChangeDisplayNum();
+
+		CManager::GetSound()->Play(CSound::LABEL_SE_SELECT_BUTTON);
 
 	}
 }
