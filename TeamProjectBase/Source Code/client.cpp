@@ -609,13 +609,14 @@ void CClient::RecvRetry(void)
 // ===================================================================
 void CClient::SendGameOver(void)
 {
-	char buffer[2];
+	char buffer[5];
 
 	buffer[0] = ORDER_GAMEOVER;
 	buffer[1] = CTimer::GetClearFlame();
+	printf("time : %d\n", (int)&buffer[1]);
 	printf("time : %d\n", CTimer::GetClearFlame());
 
-	send(m_socket, buffer, 2, 0);
+	send(m_socket, buffer, 5, 0);
 }
 
 // ===================================================================
@@ -635,13 +636,14 @@ void CClient::RecvGameOver(char *data)
 // ===================================================================
 void CClient::SendGameClear(void)
 {
-	char buffer[2];
+	char buffer[5];
 
 	buffer[0] = ORDER_GAMECLEAR;
 	buffer[1] = CTimer::GetClearFlame();
+	printf("time : %d\n", *(int*)&buffer[1]);
 	printf("time : %d\n", CTimer::GetClearFlame());
 
-	send(m_socket, buffer, 2, 0);
+	send(m_socket, buffer, 5, 0);
 }
 
 // ===================================================================
