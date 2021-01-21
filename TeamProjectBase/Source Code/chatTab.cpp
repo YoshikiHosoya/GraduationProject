@@ -64,7 +64,7 @@
 //=============================================================================
 D3DXVECTOR2			CChatTab::m_TabPos		= ZeroVector2;
 float				CChatTab::m_fScrollPosY = 0.0f;
-CChatTab::TABSTATE	CChatTab::m_tabState	= CChatTab::TABSTATE_CLOSED;
+CChatTab::TABSTATE	CChatTab::m_tabState	= CChatTab::TABSTATE_OPENNING;
 int					CChatTab::m_nCntPress = 0;
 int					CChatTab::m_nPressKey = 0;
 CChatText			*CChatTab::m_SendText = nullptr;

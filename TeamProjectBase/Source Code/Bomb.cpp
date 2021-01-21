@@ -27,6 +27,7 @@
 #include "module_No4_4ColButton.h"
 #include "sound.h"
 #include "timer.h"
+#include "chatTab.h"
 //------------------------------------------------------------------------------
 //Ã“Iƒƒ“ƒo•Ï”‚Ì‰Šú‰»
 //------------------------------------------------------------------------------
@@ -287,6 +288,12 @@ void CBomb::Operation_Mouse()
 		if (m_nSelectModuleNum < 0)
 		{
 			break;
+		}
+
+
+		if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED)
+		{
+			return;
 		}
 
 		//— •\”½“]

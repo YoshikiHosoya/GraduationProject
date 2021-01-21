@@ -45,6 +45,8 @@ HRESULT CModule_None::Init()
 	CModule_Base::SetCanModuleSelect(false);
 
 	CSceneX::Init();
+
+	//SetPos(D3DXVECTOR3(0.0f, 0.0f, -55.0f));
 	return S_OK;
 }
 

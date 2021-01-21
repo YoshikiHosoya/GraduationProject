@@ -51,7 +51,7 @@ CCamera::CCamera()
 	m_move = ZeroVector3;
 	m_fDistance = 0.0f;
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	m_CameraState = CCamera::CAMERA_DEBUG;
+	m_CameraState = CCamera::CAMERA_GAME;
 	m_MousePosCurrent = ZeroVector2;
 	m_MousePosOld = ZeroVector2;
 	m_MouseRotSave = ZeroVector2;
@@ -109,7 +109,7 @@ void CCamera::Update(void)
 		//Operation();
 
 		//ƒJƒƒ‰ˆÚ“®
-		MoveCameraDebug();
+		//MoveCameraDebug();
 
 		//ƒJƒƒ‰‰ñ“]
 		CalcRotationCamera();
