@@ -9,9 +9,9 @@ MoveCoeff = 0.25
 FrameDest = 4
 
 GamePosDest = 30.0 -50.0 400.0
-GameNeutralPosDest = 300.0 120.0 0.0
+GameNeutralPosDest = 300.0 200.0 0.0
 DecodingPosDest = 0.0 100.0 0.0
-DecodingNeutralPosDest = 0.0 0.0 0.0
+DecodingNeutralPosDest = 0.0 200.0 0.0
 
 PenButtonPos = 100.0 0.0 -8.0
 EraserButtonPos = 100.0 -30.0 -8.0
