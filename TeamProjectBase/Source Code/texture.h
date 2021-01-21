@@ -76,6 +76,9 @@ public:
 		TEX_CONNECT_LOADING,					// ロード中
 		TEX_CONNECT_OUT_GUEST,					// ゲスト離脱による接続終了
 
+		TEX_UI_GAMECLEAR,						// UI ゲームクリア
+		TEX_UI_GAMEOVER,						// UI ゲームオーバー
+
 		TEX_UI_PRESSBUTTON,						//UI プレス
 
 		TEX_UI_TITLE_LOGO,						//UI タイトルロゴ

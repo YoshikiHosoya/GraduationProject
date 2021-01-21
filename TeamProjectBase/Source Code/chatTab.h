@@ -24,6 +24,7 @@
 // ===================================================================
 class CPolygon2D;
 class CChatText;
+class CChatBase;
 
 class CChatTab
 {
@@ -38,11 +39,20 @@ public:
 		POLY_MAX
 	} POLYTYPE;
 
+	typedef enum
+	{
+		KEEPTYPE_TEXT,
+		KEEPTYPE_PICTURE,
+		KEEPTYPE_MAX
+	} KEEPTYPE;
+
 	typedef struct
 	{	// チャットキープの情報
 		CChatText *pKeepText;	// テキスト
 		CPolygon2D *pPolyPic;	// ポリゴン (ピクチャ)
 		CPolygon2D *pPolyBack;	// ポリゴン (背景)
+		CChatBase::TEXTOWNER owner;	// 発言者
+		KEEPTYPE type;			// キープの種類
 	} CHATKEEP;
 
 	typedef enum
@@ -81,16 +91,17 @@ public:
 	static CChatText	*GetSendText(void)			{ return m_SendText; }						// テキストの背景ポリゴン取得
 	static void			SetTabPos(D3DXVECTOR2 &pos)	{ m_TabPos = pos; }							// タブ座標の設定
 	static void			SendChatText(void);														// テキストの送信
-	static void			AddPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture);	// ピクチャの追加
-	static void			RecvChatText(char *cText);												// テキストの受信
 	static void			ScrollUp(void);															// チャット履歴の上スクロール
 	static void			ScrollDown(void);														// チャット履歴の下スクロール
-	static void			CreateKeep(CChatBase::TEXTOWNER owner, char *cText);					// チャットキープの生成
+	static void			AddRecvKeep(CChatBase::TEXTOWNER owner, char *cText);					// 受信したキープの追加
+	static void			AddRecvPicture(CChatBase::TEXTOWNER owner, LPDIRECT3DTEXTURE9 pTexture);	// ピクチャの追加
 
 	CPolygon2D *GetChatPly(POLYTYPE polygon) { m_pChatPoly[polygon]; };
 	bool CheckMouseHit(POLYTYPE polygon);
 
 private:
+	void		CreateChatKeep(void);
+	void		CreateChatPic(void);
 	void		ClickTab(void);											// タブクリック
 	void		ClickTabletTab(void);									// タブクリック
 	void		SlideTab(void);											// タブスライド
@@ -100,6 +111,8 @@ private:
 	void		SetChatShiftKeyInfo(int nKeyID);						// シフトキーを用いた入力
 
 	static std::vector<CHATKEEP>	m_chatKeep;							// 保持できるテキスト
+	static std::vector<CHATKEEP>	m_recvKeep;							// 受信したテキスト
+
 	static TABSTATE					m_tabState;							// タブの状態
 	static D3DXVECTOR2				m_TabPos;							// タブの親座標
 	static float					m_fScrollPosY;						// マウススクロールの座標

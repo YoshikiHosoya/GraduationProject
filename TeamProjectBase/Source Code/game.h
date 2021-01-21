@@ -68,7 +68,9 @@ public:
 	CTablet * GetTablet(void) { return m_pTablet.get(); }	// タブレットポインタの取得
 	CChatBase *GetChatBase() { return m_pChatBase.get(); };	// チャットベースポインタ取得
 
-	static bool GetClearFlag() { return m_bClear; };			//クリアフラグ取得
+	static bool GetClearFlag() { return m_bClear; };				//クリアフラグ取得
+	static void SetClearFlag(bool bClear) { m_bClear = bClear; }	// クリアフラグの設定
+
 	static void SetDifficulty(CBomb::DIFFICULTY Diff) { m_bDifficulty = Diff; }	// 難易度の設定
 protected:
 

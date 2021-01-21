@@ -20,6 +20,7 @@
 #include "mouse.h"
 #include "UI_Base.h"
 #include "client.h"
+#include "connectUI.h"
 
 //------------------------------------------------------------------------------
 //マクロ
@@ -199,6 +200,7 @@ void CResult::Collision()
 				//ゲーム終了
 				m_nSelectMode[0] = CClient::ORDER_END_GAME;
 				CClient::SendEndGame();
+				CClient::SendEndAccept();
 				CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
 			}
 		}
@@ -209,13 +211,16 @@ void CResult::Collision()
 	{
 		m_pPolygonList.emplace_back(
 			CUI_Base::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), D3DXVECTOR3(600.0f, 200.0f, 0.0f), WhiteColor, CTexture::GetTexture(CTexture::TEX_CONNECT_OUT_GUEST), CScene::OBJTYPE_UI, CUI_Base::APPEAR_PATTERN::NORMAL, 0));
-
+		CClient::SendEndAccept();
 		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_TITLE);
 	}
 	// リトライ
 	else if (m_nSelectMode[0] == CClient::ORDER_RETRY && m_nSelectMode[1] == CClient::ORDER_RETRY)
 	{
-		CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+		if (CConnectUI::GetSelectMode() == CConnectUI::SELECTMODE_REMOVE)
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_GAME);
+		else if (CConnectUI::GetSelectMode() == CConnectUI::SELECTMODE_SOLVE)
+			CManager::GetRenderer()->GetFade()->SetModeFade(CManager::MODE_DECODING);
 	}
 
 }

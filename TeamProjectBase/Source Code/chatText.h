@@ -55,6 +55,8 @@ public:
 	// 保持するテキストの位置設定
 	void SetKeepRectBegin(D3DXVECTOR2 rectBegin)
 	{ m_rect = { (LONG)rectBegin.x, (LONG)rectBegin.y, SCREEN_WIDTH, SCREEN_HEIGHT }; }
+	RECT GetRect(void)
+	{ return m_rect; }
 	// 保持するテキストのカラー設定
 	void SetKeepColor(D3DXCOLOR col)
 	{ m_col = col; }

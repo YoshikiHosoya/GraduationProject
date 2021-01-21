@@ -64,6 +64,9 @@ FILENAME_LIST CTexture::m_aTexFileName =
 	{ "data/TEXTURE/CONNECTMODE/loading.png" },					// ロード中
 	{ "data/TEXTURE/CONNECTMODE/out_guest.png" },				// ゲスト離脱によるゲーム終了
 
+	{ "data/TEXTURE/UI/gameclear.png" },						//UI ゲームクリア
+	{ "data/TEXTURE/UI/gameover.png" },							//UI ゲームオーバー
+
 	{ "data/TEXTURE/UI/PressButton.png" },						//UI プレスボタン
 
 	{ "data/TEXTURE/UI/Title/Title.png" },						//UI タイトル

@@ -36,6 +36,8 @@ public:
 		ORDER_SENDSELECT,		// 選択送信
 		ORDER_SENDWAIT,			// 待ち状態の送信
 
+		ORDER_GAMEOVER,			// ゲームオーバー
+		ORDER_GAMECLEAR,		// ゲームクリア
 		ORDER_END_GAME,			// ゲーム終了
 		ORDER_RETRY,			// リトライ
 		ORDER_CLOSED_SOCKET,	// 接続終了
@@ -95,6 +97,12 @@ public:
 
 	static void SendRetry(void);												// リトライの送信
 	static void RecvRetry(void);												// リトライの受信
+
+	static void SendGameOver(void);												// ゲームオーバーの送信
+	static void RecvGameOver(char *data);												// ゲームオーバーの受信
+
+	static void SendGameClear(void);											// ゲームクリアの送信
+	static void RecvGameClear(char *data);											// ゲームクリアの受信
 
 	static void SendEndGame(void);												// ゲーム終了の送信
 	static void RecvEndGame(void);												// ゲーム終了の受信

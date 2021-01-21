@@ -77,11 +77,29 @@ public:
 		FLOWSTATE_WAIT,		// 待ち状態
 	} FLOW_STATE;
 
+	typedef enum
+	{
+		UITYPE_NORMAL,		// 通常のUI
+		UITYPE_BUTTON,		// ボタンUI
+		UITYPE_LOADICON,	// ロードアイコン
+		UITYPE_MAX
+	} UITYPE;
+
+	enum BUTTON_STATE
+	{
+		BUTTON_NORMAL,			// 通常
+		BUTTON_PRESS,			// 押下
+		BUTTON_SELECT,			// 選択中
+		BUTTON_MAX
+	};
+
 	typedef struct
 	{	// UIの情報
-		D3DXVECTOR2 pos;			// 座標
-		D3DXVECTOR2 size;			// サイズ
-		D3DXCOLOR color;			// カラー
+		D3DXVECTOR2		pos;							// 座標
+		D3DXVECTOR2		size;							// サイズ
+		D3DXCOLOR		color;							// カラー
+		UITYPE			type = UITYPE_NORMAL;			// UIタイプ
+		BUTTON_STATE	buttonState = BUTTON_NORMAL;	// ボタンの状態
 	} CONNECTUI_INFO;
 
 	typedef enum
@@ -132,6 +150,11 @@ private:
 	static void SetOnlyInfo(CONST_STRING str, CONST_STRING type);
 	void DebugCommand(void);
 
+	void CreateUI(void);
+	void DeleteUI(void);
+	static int GetTexNumberBoth(int nPlayer, CONNECTUITYPE_BOTH type);
+	static int GetTexNumberOnly(CONNECTUITYPE_ONLY type);
+
 	static CPolygon2D *CreateBothUI(int nPlayer, CONNECTUITYPE_BOTH type);
 	CPolygon2D *CreateOnlyUI(CONNECTUITYPE_ONLY type);
 	static void DeleteBothUI(int nPlayer, CONNECTUITYPE_BOTH type);
@@ -147,8 +170,10 @@ private:
 	void End(CONNECTFLOW_TYPE flow);						// フローごとの終了時の処理
 	void Wait(CONNECTFLOW_TYPE flow);						// フローごとの待ち状態の処理
 
+	void ButtonAnimBoth(int nPlayer, int type);
+	void ButtonAnimOnly(int type);
+
 	void LoadIconAnim(void);								// ロードアイコンのアニメーション処理
-	void ButtonAnim(void);									// ボタンのアニメーション処理
 	void CheckSameMode(void);								// 同じモードを選択していないか確認処理
 	void ClickDecide(CMouse *pMouse);						// 決定ボタンを押す
 
@@ -168,6 +193,12 @@ private:
 	static int m_nSelectMode[PLAYER_MAX];		// プレイヤーが選択中の番号
 	static int m_nSelectLevel[PLAYER_MAX];		// プレイヤーが選択中の番号
 	static bool m_bGuestWait;					// ゲストの待ち状態のフラグ
+
+	static bool m_bCreateFlagBoth[2][CONNECTUI_BOTH_MAX];	// UI生成フラグ
+	static bool m_bCreateFlagOnly[CONNECTUI_ONLY_MAX];		// UI生成フラグ
+
+	static bool m_bDeleteFlagBoth[2][CONNECTUI_BOTH_MAX];	// UI破棄フラグ
+	static bool m_bDeleteFlagOnly[CONNECTUI_ONLY_MAX];		// UI破棄フラグ
 };
 
 #endif

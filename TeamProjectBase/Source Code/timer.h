@@ -40,6 +40,7 @@ public:
 
 	bool GetStop() { return m_bStop; };											//タイマーストップしてるかどうか
 	static int GetClearFlame() { return m_nClearFlame; };						//クリアタイム
+	static void SetClearFrame(int nFrame) { m_nClearFlame = nFrame; }			// クリアタイムを設定
 private:
 	Vec<S_ptr<CMultiNumber>> m_pMultiNumber;									//ナンバーのポインタ
 	int m_nCntFlame;															//カウント フレーム
