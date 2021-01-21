@@ -55,9 +55,10 @@ HRESULT CClient::LoadIP(void)
 {
 	// 変数宣言
 	FILE *pFile;
-	char cReadText[MAX_TEXT];
-	char cHeadText[MAX_TEXT] = "\0";
-	char cAddress[64] = "\0";
+	char cReadText[MAX_TEXT] = { "\0" };
+	char cHeadText[MAX_TEXT] = { "\0" };
+	char cDie[MAX_TEXT] = { "\0" };
+	char cAddress[64] = { "\0" };
 	u_short port = 0;
 
 	// ファイルを開く
@@ -96,10 +97,11 @@ HRESULT CClient::LoadIP(void)
 				continue;
 			// IPアドレス
 			if (strcmp(cHeadText, "IPアドレス") == 0)
-				sscanf(cReadText, "IPアドレス : %s", cAddress);
+				sscanf(cReadText, "%s %s %s", cDie, cDie, cAddress);
 			// ポート番号
 			if (strcmp(cHeadText, "ポート番号") == 0)
-				sscanf(cReadText, "ポート番号 : %hd", &port);
+				sscanf(cReadText, "%s %s %hd", cDie, cDie, &port);
+
 		}
 	}
 
@@ -612,9 +614,9 @@ void CClient::SendGameOver(void)
 	char buffer[5];
 
 	buffer[0] = ORDER_GAMEOVER;
-	buffer[1] = CTimer::GetClearFlame();
-	printf("time : %d\n", (int)&buffer[1]);
-	printf("time : %d\n", CTimer::GetClearFlame());
+	int nTime = CTimer::GetClearFlame();
+	buffer[1] = nTime;
+	printf("time : %d\n", nTime);
 
 	send(m_socket, buffer, 5, 0);
 }
@@ -639,9 +641,9 @@ void CClient::SendGameClear(void)
 	char buffer[5];
 
 	buffer[0] = ORDER_GAMECLEAR;
-	buffer[1] = CTimer::GetClearFlame();
-	printf("time : %d\n", *(int*)&buffer[1]);
-	printf("time : %d\n", CTimer::GetClearFlame());
+	int nTime = CTimer::GetClearFlame();
+	buffer[1] = nTime;
+	printf("time : %d\n", nTime);
 
 	send(m_socket, buffer, 5, 0);
 }
