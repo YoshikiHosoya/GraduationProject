@@ -52,6 +52,10 @@ CTimer::~CTimer()
 //------------------------------------------------------------------------------
 void CTimer::UpdateTimer()
 {
+
+	CDebugProc::Print(CDebugProc::PLACE_RIGHT, "m_nCntFlame >> %d", m_nCntFlame);
+	CDebugProc::Print(CDebugProc::PLACE_RIGHT, "m_nClearFlame >> %d", m_nClearFlame);
+
 	//ƒQ[ƒ€‚ªis‚µ‚Ä‚È‚¢‚Íreturn
 	if (CManager::GetMode() == CManager::MODE_GAME)
 	{

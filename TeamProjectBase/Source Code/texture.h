@@ -94,6 +94,8 @@ public:
 		TEX_UI_TUTORIAL_SOLVE03,				//UI チュートリアル　解除３
 		TEX_UI_TUTORIAL_SOLVE04,				//UI チュートリアル　解除４
 
+		TEX_UI_TUTORIAL_PREPARE,				// 準備
+		TEX_UI_TUTORIAL_ENDPREPARE,				// 準備完了
 
 		TEX_UI_RESULT_LOGO,						//UI リザルトロゴ
 		TEX_UI_RESULT_TIMER,					//UI リザルト　タイム
