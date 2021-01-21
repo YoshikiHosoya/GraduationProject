@@ -622,8 +622,9 @@ void CClient::SendGameOver(void)
 // ===================================================================
 void CClient::RecvGameOver(char *data)
 {
+	int *pTime = (int*)&data[1];
 	// タイムを設定
-	CTimer::SetClearFrame((int)&data[1]);
+	CTimer::SetClearFrame(*pTime);
 	// 解説モードを終了
 	CDecoding::SetGameEndState(CDecoding::GAMEEND_MISS);
 }
@@ -646,8 +647,9 @@ void CClient::SendGameClear(void)
 // ===================================================================
 void CClient::RecvGameClear(char *data)
 {
+	int *pTime = (int*)&data[1];
 	// タイムを設定
-	CTimer::SetClearFrame((int)&data[1]);
+	CTimer::SetClearFrame(*pTime);
 	// 解説モードを終了
 	CDecoding::SetGameEndState(CDecoding::GAMEEND_CLEAR);
 }

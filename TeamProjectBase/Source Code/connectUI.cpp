@@ -247,7 +247,6 @@ HRESULT CConnectUI::Init(void)
 		m_bCreateFlagOnly[nUI] = false;
 		m_bDeleteFlagOnly[nUI] = false;
 		m_UIInfoOnly[nUI].buttonState = BUTTON_NORMAL;
-		m_UIInfoOnly[nUI].color = WhiteColor;
 	}
 
 	return S_OK;
