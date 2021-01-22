@@ -308,18 +308,18 @@ void CCamera::CalcRotationCamera()
 	CDebugProc::Print(CDebugProc::PLACE_LEFT, "TabletState >> %d\n", CChatTab::GetTabletState());
 
 
-	if (CManager::GetMode() == CManager::MODE_GAME)
-	{
-		//チャットかタブレットを開いている時
-		if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED ||
-			CChatTab::GetTabState() == CChatTab::TABSTATE_OPENED ||
-			CChatTab::GetTabState() == CChatTab::TABSTATE_OPENNING)
+	//if (CManager::GetMode() == CManager::MODE_GAME)
+	//{
+	//	//チャットかタブレットを開いている時
+	//	if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED ||
+	//		CChatTab::GetTabState() == CChatTab::TABSTATE_OPENED ||
+	//		CChatTab::GetTabState() == CChatTab::TABSTATE_OPENNING)
 
-		{
-			//スライド座標
-			LocalPos += SLIDE_POS_VALUE;
-		}
-	}
+	//	{
+	//		//スライド座標
+	//		LocalPos += SLIDE_POS_VALUE;
+	//	}
+	//}
 
 	// 注視点の更新
 	m_posR += (LocalPos - m_posR) * 0.15f;
@@ -365,6 +365,14 @@ void CCamera::LeaveCamera()
 	m_posRDest = DEFAULT_POS_R;
 	m_bApproach = false;
 
+}
+
+//-------------------------------------------------------------------------------------------------------------
+// カメラ設定
+//-------------------------------------------------------------------------------------------------------------
+void CCamera::SetDecodingCamera()
+{
+	m_fDistance = DEFAULT_DISTANCE + 400.0f;
 }
 
 //-------------------------------------------------------------------------------------------------------------

@@ -291,10 +291,10 @@ void CBomb::Operation_Mouse()
 		}
 
 
-		if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED)
-		{
-			return;
-		}
+		//if (CChatTab::GetTabletState() == CChatTab::TABSTATE_OPENED)
+		//{
+		//	return;
+		//}
 
 		//— •\”½“]
 		m_nSelectModuleNum += (m_bCameraDir * 6);

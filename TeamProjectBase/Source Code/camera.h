@@ -39,6 +39,8 @@ public:
 	void ApproachCamera(D3DXVECTOR3 posRDest);								//ƒJƒƒ‰‚ğ‹ß‚Ã‚¯‚éˆ—
 	void LeaveCamera();														//ƒJƒƒ‰‚ğ—£‚ê‚é
 
+	void SetDecodingCamera();
+
 	void Operation(void);
 
 	D3DXVECTOR3 GetCameraRot()		{ return m_rot; };						//‰ñ“]î•ñæ“¾

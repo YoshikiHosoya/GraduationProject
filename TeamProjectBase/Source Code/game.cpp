@@ -92,15 +92,15 @@ HRESULT CGame::Init(HWND hWnd)
 	//マップ生成
 	CMap::Create();
 
-	// タブレットの読み込み
-	CTablet::Load();
-	// タブレットボタンの読み込み
-	CTabletButton::Load();
-	// タブレットの生成
-	m_pTablet = CTablet::Create();
+	//// タブレットの読み込み
+	//CTablet::Load();
+	//// タブレットボタンの読み込み
+	//CTabletButton::Load();
+	//// タブレットの生成
+	//m_pTablet = CTablet::Create();
 	// ピクチャの静的メンバの初期化
-	CPicture::InitStaticMember();
-	m_pPicture = CPicture::Create(m_pTablet->GetMtxWorldPtr());
+	//CPicture::InitStaticMember();
+	//m_pPicture = CPicture::Create(m_pTablet->GetMtxWorldPtr());
 
 	// チャットの生成
 	m_pChatBase = CChatBase::Create();

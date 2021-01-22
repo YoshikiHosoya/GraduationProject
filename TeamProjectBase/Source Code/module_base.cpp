@@ -92,7 +92,7 @@ void CModule_Base::Operation_Mouse()
 		if (!CHossoLibrary::MouseRayCollision_Boolean(GetMtxWorldPtr(), GetModelInfo()->GetMesh()))
 		{
 			//チャットタブらへんをクリックしていない時
-			if (!(CManager::GetGame()->GetChatBase()->GetTabPtr()->CheckMouseHit(CChatTab::POLY_TABLET) ||
+			if (!(/*CManager::GetGame()->GetChatBase()->GetTabPtr()->CheckMouseHit(CChatTab::POLY_TABLET) ||*/
 				CManager::GetGame()->GetChatBase()->GetTabPtr()->CheckMouseHit(CChatTab::POLY_TAB)))
 			{
 				//モジュールの選択解除

@@ -68,17 +68,18 @@ HRESULT CDecoding::Init(HWND hWnd)
 {
 	//カメラ座標設定
 	CManager::GetRenderer()->GetCamera()->SetState(CCamera::CAMERA_DEBUG);
+	CManager::GetRenderer()->GetCamera()->SetDecodingCamera();
 	//初期化
 	SetState(STATE::STATE_NORMAL);
-	// タブレットの読み込み
-	CTablet::Load();
-	// タブレットボタンの読み込み
-	CTabletButton::Load();
-	// タブレットの生成
-	m_pTablet = CTablet::Create();
-	// ピクチャの静的メンバの初期化
-	CPicture::InitStaticMember();
-	m_pPicture = CPicture::Create(m_pTablet->GetMtxWorldPtr());
+	//// タブレットの読み込み
+	//CTablet::Load();
+	//// タブレットボタンの読み込み
+	//CTabletButton::Load();
+	//// タブレットの生成
+	//m_pTablet = CTablet::Create();
+	//// ピクチャの静的メンバの初期化
+	//CPicture::InitStaticMember();
+	//m_pPicture = CPicture::Create(m_pTablet->GetMtxWorldPtr());
 	// 解読マネージャーの読み込み
 	CDecodingManager::Load();
 	// 解読ウィンドウの読み込み
@@ -87,6 +88,9 @@ HRESULT CDecoding::Init(HWND hWnd)
 	m_pDecodingManager = CDecodingManager::Create();
 	// 終了状態の初期化
 	m_endState = CDecoding::GAMEEND_NONE;
+
+	//マップ生成
+	CMap::Create();
 
 	//チャット機能
 	CChatBase::Create();
@@ -106,7 +110,7 @@ void CDecoding::Update()
 
 #ifdef _DEBUG
 	//なんかボタン押されたとき
-	if (CManager::GetKeyboard()->GetPress(DIK_RSHIFT) && 
+	if (CManager::GetKeyboard()->GetPress(DIK_RSHIFT) &&
 		CManager::GetKeyboard()->GetPress(DIK_RETURN))
 	{
 		//チュートリアルに遷移

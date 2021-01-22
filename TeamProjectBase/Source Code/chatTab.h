@@ -35,7 +35,7 @@ public:
 		POLY_TITLE,			// タイトル
 		POLY_WRITEWINDOW,	// 書き込みウィンドウ
 		POLY_TAB,			// 開閉タブ
-		POLY_TABLET,		// タブレットの開閉タブ
+		//POLY_TABLET,		// タブレットの開閉タブ
 		POLY_MAX
 	} POLYTYPE;
 
